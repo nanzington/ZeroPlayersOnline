@@ -1,0 +1,69 @@
+Immediately important stuff to get working:
+- A flexible system to track a requirement, useable for connection nodes, using an item, starting a quest, spell, etc
+- Quests, Quest Log, Quest Rewards
+- An achievement tracking thing where performing an action can check to see if doing it progresses an achievement/task, also have a screen to show all achieves with some sort options
+- Move data from being hardcoded to json files
+- Make all skills accessible somewhere on tutorial island?
+- - Runecrafting, need an altar, a talisman, and a rune essence rock. Probably just slap an air altar there in addition to the one near falador
+- - Agility, small agility course on island somewhere, going to have to make agility obstacles work for connection nodes (optional alternate fail location or damage plus exp granted)
+- - Crafting, maybe newts can also drop hide to be tanned and crafted, or just put some cows somewhere
+- - Hunter, some butterflies or implings or something somewhere, need to work out variable presence (implings) hunter targets and static targets
+- - Farming, small seed shop or stall to steal from, going to have to track patches globally in the player save
+- - Herblore at least using eye of newt and guam to make attack potion
+
+
+Less immediate but still important:
+- Find a less clunky way to do smithing, current method involves so many clicks
+
+
+
+=========================================
+
+How will this even be possible?
+- Bossing with unique mechanics
+- Summoning/necromancy where they do the combat for you
+- Player owned house? Make it useful to have somehow?
+- Dungeoneering
+- Make wilderness dangerous but rewarding?
+
+=========================================
+
+Prayer
+- Each prayer has an associated upkeep cost
+- Total points you can have active is your prayer level
+- Doesn't drain, so maybe have some other reason to visit altars
+- Prayer potions now raise your level temporarily
+- Prayers to raise at least the combat skills by variable amounts (only for combat calcs, not item unlocks)
+
+Runecrafting
+- Probably just have the altars as location options in the appropriate place, make it so location nodes can require an item or stat to pass
+
+Treasure Trails
+- Have some way to dig at arbitrary locations
+- Make caskets work
+- How would emote clues even work? Guess an emote system has to be added and it can just print to the chat log
+- Consider whether or not it's even worth adding sliding puzzles when they kinda suck, maybe let players force them open with strength score/check
+
+Difficulty modes
+x Ironman kinda pointless but could add it anyways, maybe have a GE despite there being no other players? And iron blocks it
+x Bronzeman, can only use GE for items you've already acquired somehow.
+x x Would need to log everything acquired naturally which could be a pain
+x Hardcore
+x Nightmare mode (1hp hardcore)? This could be difficult due to how combat works, but I guess that's the point
+- Randomizer (item outputs and drop tables get remapped to other items, this would be a pain in the ASS to make but would be fun)
+- - Needs a way to store your seed or a log of all new drop tables so that it stays consistent on a character
+- Location lock (all things possible at a location to unlock a "location point", spend LP to unlock new screens.)
+- - would require a way to track what can be done where
+x Region lock (can't leave a specific region or regions)
+- - optionally a way to unlock more regions
+- - needs quest autocompletes for quests that unlock things in a region but are not done in the region
+- - make the player start in that region, if they choose one besides misthalin
+- - give them any relevant starting items that are needed in the region but not obtaintable there
+(DONE) - EXP limiter modes, configurable per skill
+(DONE) x x EXP multipliers, 0x, 1x, 2x, 5x, 10x 
+(DONE) x x Goldman: can only gain exp in the skill by purchasing it for exp, configurable rate of gp to xp pre-multiplier
+x Drop rate config (0x, 1x, 2x, 5x, 10x, optionally apply to clue caskets?) 
+- Kill controls
+- - Can only get exp/drops from bosses, their adds, and monsters for quests during their quests
+- - Limited kill count per unique monster then no xp/drops
+- Have to unlock skills/areas/bosses somehow (possibly with exp, gp, or task completion)

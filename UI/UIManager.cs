@@ -8,7 +8,8 @@ namespace ZeroPlayersOnline.UI {
         public SadConsole.UI.Colors? CustomColors;
         public Dictionary<string, InstantUI> Interfaces = new();
 
-        public UI_EmbeddedMini zpoWrap; 
+        public UI_EmbeddedMini zpoWrap;
+        public UI_EmbeddedMini mainMenu;
 
         public UIManager() {
             IsVisible = true;
@@ -39,13 +40,20 @@ namespace ZeroPlayersOnline.UI {
             if (!GameLoop.SoundManager.Music.IsCurrentlyPlaying("./sounds/music/" + GameLoop.SoundManager.CurrentSong + ".ogg"))
                 GameLoop.SoundManager.PickMusic();
             */
+
+            bool anyVisible = false;
+
             foreach (KeyValuePair<string, InstantUI> kv in Interfaces) {
                 if (kv.Value.Win.IsVisible) {
                     kv.Value.Update();
                     kv.Value.Input();
-                    kv.Value.Win.IsFocused = true; 
+                    kv.Value.Win.IsFocused = true;
+                    anyVisible = true;
                 }
             }
+
+            if (!anyVisible)
+                mainMenu.Win.IsVisible = true;
 
             if (GameHost.Instance.Keyboard.KeysDown.Count == 0)
                 Helper.ClearKeys();
@@ -56,8 +64,14 @@ namespace ZeroPlayersOnline.UI {
         public void Init() {
             SetupCustomColors(); 
 
-            zpoWrap = new UI_EmbeddedMini(150, 50, "ZeroPlayersOnline", new ZeroPlayersOnline()); 
-            zpoWrap.Win.IsVisible = true;
+            zpoWrap = new UI_EmbeddedMini(150, 50, "ZeroPlayersOnline", new ZeroPlayersOnline());
+
+            GameLoop.ZPO = (ZeroPlayersOnline) zpoWrap.Game;
+
+            //zpoWrap.Win.IsVisible = true;
+            mainMenu = new UI_EmbeddedMini(150, 50, "MainMenu", new MainMenu());
+            mainMenu.Win.IsVisible = true;
+            ((MainMenu)mainMenu.Game).SetupTheBG(mainMenu);
         }
 
 

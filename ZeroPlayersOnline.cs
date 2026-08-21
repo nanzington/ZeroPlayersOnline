@@ -109,12 +109,17 @@ namespace ZeroPlayersOnline {
             player.Skills.TryAdd("Thieving", new Skill("Thieving"));
             player.Skills.TryAdd("Cooking", new Skill("Cooking"));
             player.Skills.TryAdd("Fishing", new Skill("Fishing"));
+            player.Skills.TryAdd("Runecrafting", new Skill("Runecrafting"));
+            player.Skills.TryAdd("Crafting", new Skill("Crafting"));
+            player.Skills.TryAdd("Farming", new Skill("Farming"));
+            player.Skills.TryAdd("Herblore", new Skill("Herblore"));
+            player.Skills.TryAdd("Agility", new Skill("Agility"));
 
             player.Skills.TryAdd("Constitution", new Skill("Constitution") { Level = 10 });
             player.Skills.TryAdd("Attack", new Skill("Attack"));
             player.Skills.TryAdd("Strength", new Skill("Strength"));
             player.Skills.TryAdd("Defense", new Skill("Defense"));
-            player.Skills.TryAdd("Prayer", new Skill("Prayer"));
+            player.Skills.TryAdd("Prayer", new Skill("Prayer")); 
         }
 
         public void GuideDraw() {
@@ -552,7 +557,20 @@ namespace ZeroPlayersOnline {
 
                         mini.Con.Print(1, 17 + i, playerSkills[i].Name, mouseHovering ? Color.Yellow : Color.White);
                         mini.Con.Print(20, 17 + i, playerSkills[i].Level.ToString().PadLeft(3), mouseHovering ? Color.Yellow : Color.White);
-                        mini.Con.Print(31, 17 + i, playerSkills[i].ExpToLevel().ToString().PadLeft(8), mouseHovering ? Color.Yellow : Color.White);
+
+                        if (player.PayToWin == 0) { 
+                            mini.Con.Print(31, 17 + i, playerSkills[i].ExpToLevel().ToString().PadLeft(8), mouseHovering ? Color.Yellow : Color.White);
+                        } else {
+                            int actualExpNeeded = (int)Math.Ceiling((double) playerSkills[i].EXPNeeded() / (double) player.ExpMultiplier);
+                            Color couldBuy = Color.Lime;
+                            if (player.HeldGold < player.PayToWin * actualExpNeeded) { couldBuy = Color.Crimson; }
+
+                            mini.Con.PrintClickable(31, 17 + i, new ColoredString(playerSkills[i].EXPNeeded().ToString().PadLeft(8), mouseHovering ? couldBuy : Color.White, Color.Black), () => {
+                                player.TryGrantExp(playerSkills[i].Name, actualExpNeeded, Log, RecentlyTrainedSkills, true);
+                            });
+                        }
+
+
                         mini.Con.Print(46, 17 + i, playerSkills[i].Exp.ToString().PadLeft(8), mouseHovering ? Color.Yellow : Color.White);
                     }
                 }
@@ -1123,22 +1141,26 @@ namespace ZeroPlayersOnline {
         }
 
         public void Close(UI_EmbeddedMini mini) {
+            ManualSave(false);
             Reset();
             mini.Toggle();
         }
 
         public void Reset() {
-
+            HardResetPlayer();
         }
 
 
-        public void ManualSave() {
-            GameLoop.SaveFile.zpoPlayer = Helper.Clone(player);
-            GameLoop.ManualSave();
+        public void ManualSave(bool announce = true) {
+            if (!Directory.Exists("./saves/")) {
+                Directory.CreateDirectory("./saves/");
+            }
 
+            Helper.SerializeToFile(player, "./saves/" + player.Name + ".json"); 
             SecondsSinceAutosave = 0;
 
-            Log.AddMessage("Player data saved!");
+            if (announce)
+                Log.AddMessage("Player data saved!");
         }
 
         public void TickTime() {
@@ -1146,9 +1168,8 @@ namespace ZeroPlayersOnline {
 
             SecondsSinceAutosave++;
 
-            if (SecondsSinceAutosave >= 600) {
-                GameLoop.SaveFile.zpoPlayer = Helper.Clone(player);
-                GameLoop.ManualSave();
+            if (SecondsSinceAutosave >= 600) { 
+                ManualSave();
 
                 SecondsSinceAutosave = 0;
 
@@ -1159,7 +1180,7 @@ namespace ZeroPlayersOnline {
         public void UseItem(Item item) {
             if (item.UseString == "GetGold") {
                 player.HeldGold += item.UseInt; 
-                Log.AddMessage("You open the " + item.Name + " and find 5 gold pieces.");
+                Log.AddMessage("You open the " + item.Name + " and find " + item.UseInt + " gold pieces.");
             } else if (item.UseString == "Bones") {
                 Log.AddMessage("You bury the " + item.Name.ToLowerInvariant() + " and get " + item.UseInt + " prayer experience.");
                 player.TryGrantExp("Prayer", 5, Log, RecentlyTrainedSkills);
@@ -1167,6 +1188,32 @@ namespace ZeroPlayersOnline {
                 player.CurrentHP = Math.Clamp(player.CurrentHP + item.UseInt, player.CurrentHP, player.Skills["Constitution"].Level);
                 Log.AddMessage(new ColoredString("You eat the " + item.Name.ToLowerInvariant() + " and recover some hitpoints.", Color.Goldenrod, Color.Black));
             }
+        }
+
+
+        public void HardResetPlayer() {
+            player = new();
+            TryAddSkills();
+            player.CurrentHP = 10;
+
+            Log.Log.Clear();
+            Log.AddMessage(new ColoredString("Press F1 at any time to open/close the guidebook.", Color.Turquoise, Color.Black));
+        }
+
+        public void SoftResetPlayer() {
+            player.Inventory.Clear();
+            player.Equipment.Clear();
+
+            player.Skills.Clear();
+            TryAddSkills();
+            player.CurrentHP = 10;
+
+
+            player.CollectionLog.Clear();
+            player.BankedItems.Clear();
+            player.ItemsEverObtained.Clear();
+             
+            Log.AddMessage(new ColoredString("Character soft-reset complete.", Color.Turquoise, Color.Black));
         }
     }
 }

@@ -38,7 +38,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 },
                 {
                     40,
-                    new("Repeat this until until the plans are full, indicated by the fraction at the end. Then use an Anvil station to complete it.", new() {
+                    new("Repeat this until the plans are full, indicated by the fraction at the end. Then use an Anvil station to complete it.", new() {
                         new DialogueChoice("(NEXT)", 50),
                         byeThen
                     })

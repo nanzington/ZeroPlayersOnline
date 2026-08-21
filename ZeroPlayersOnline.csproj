@@ -21,6 +21,7 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="10.10.0" />
     <PackageReference Include="SadConsole.Extended" Version="10.10.0" />
+    <PackageReference Include="SadRex" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +44,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="irrKlang.NET4.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="loginbg.xp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

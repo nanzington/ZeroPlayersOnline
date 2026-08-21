@@ -153,14 +153,14 @@ namespace ZeroPlayersOnline {
             Color fg = new Color(r, g, b);
 
             if (mode == 0) {
-                con.DrawLine(new Point(LeftXin, TopY), new Point(RightXin, TopY), 320, fg);
-                con.DrawLine(new Point(LeftXin, BottomY), new Point(RightXin, BottomY), 320, fg);
-                con.DrawLine(new Point(LeftX, TopYin), new Point(LeftX, BottomYin), 321, fg);
-                con.DrawLine(new Point(RightX, TopYin), new Point(RightX, BottomYin), 321, fg);
-                con.Print(LeftX, BottomY, 322.AsString(), fg);
-                con.Print(RightX, BottomY, 323.AsString(), fg);
-                con.Print(LeftX, TopY, 324.AsString(), fg); 
-                con.Print(RightX, TopY, 325.AsString(), fg);
+                con.DrawLine(new Point(LeftXin, TopY), new Point(RightXin, TopY), 320, fg, Color.Black);
+                con.DrawLine(new Point(LeftXin, BottomY), new Point(RightXin, BottomY), 320, fg, Color.Black);
+                con.DrawLine(new Point(LeftX, TopYin), new Point(LeftX, BottomYin), 321, fg, Color.Black);
+                con.DrawLine(new Point(RightX, TopYin), new Point(RightX, BottomYin), 321, fg, Color.Black);
+                con.Print(LeftX, BottomY, 322.AsString(), fg, Color.Black);
+                con.Print(RightX, BottomY, 323.AsString(), fg, Color.Black);
+                con.Print(LeftX, TopY, 324.AsString(), fg, Color.Black); 
+                con.Print(RightX, TopY, 325.AsString(), fg, Color.Black);
             } else if (mode == 1) {
                 con.DrawLine(new Point(LeftXin, TopY), new Point(RightXin, TopY), 190, fg);
                 con.DrawLine(new Point(LeftXin, BottomY), new Point(RightXin, BottomY), 190, fg);

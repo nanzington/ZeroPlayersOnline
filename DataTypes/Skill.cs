@@ -11,7 +11,7 @@
         public void GrantExp(int amt, MessageLog log, List<Skill> RecentSkills) {
             Exp += amt;
             
-            if (Exp >= ExpToLevel() && Level < 120) {
+            while (Exp >= ExpToLevel() && Level < 120) {
                 Level++;
                  
                 log.AddMessage("You levelled " + Name + " to " + Level + ".");
