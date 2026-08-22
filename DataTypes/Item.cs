@@ -19,15 +19,11 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool Noteable = true;
 
         public string EquipSlot = "";
-        public string MiscString = "";
+        public string MiscString = ""; 
 
         public int Value;
         public int HighAlch;
         public int LowAlch; 
-
-        public string CooksInto = "";
-        public int CookLevel = 0;
-        public int CookExp = 0;
 
         public int EquipTier = 0;
         public string EquipDamageType = "";
@@ -39,12 +35,11 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool ConsumedOnUse = true;
         public string UseString = "";
         public string UseString2 = "";
+        public string UseString3 = "";
         public int UseInt = 0;
-
-        [JsonIgnore]
-        public int X = -2;
-        [JsonIgnore]
-        public int Y = -2;
+        public int UseInt2 = 0;
+        public int UseInt3 = 0;
+        public int UseInt4 = 0;
 
         public Item() { }
 

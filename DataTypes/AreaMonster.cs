@@ -21,6 +21,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public string DamageDice = "1d3"; 
         public string WeakType = "Slash";
+        public string DamageType = "Typeless";
 
 
         public int RespawnTime = 1;
@@ -35,7 +36,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double TimeLastAttacked = 0;
 
-        public AreaMonster(string n, string id, int lv, int hp, int dr, int aggroLv, bool aggro, string ddice, string weakness, int respawn) {
+        public AreaMonster(string n, string id, int lv, int hp, int dr, int aggroLv, bool aggro, string ddice, string weakness, int respawn, string dtype) {
             Name = n;
             ID = id;
             Level = lv;
@@ -48,6 +49,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
             DamageDice = ddice; 
             WeakType = weakness;
+            DamageType = dtype;
 
             RespawnTime = respawn;
         } 

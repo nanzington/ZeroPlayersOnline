@@ -13,8 +13,9 @@
         public int ExpGranted = 0;
 
         public string SoundPlayed = "";
+        public string MiscString = "";
 
-        public Recipe(string fI, string sI, string oI, int fQ = 1, int sQ = 1, int oQ = 1, string s = "", int lv = 1, int exp = 0, string sound = "") {
+        public Recipe(string fI, string sI, string oI, int fQ = 1, int sQ = 1, int oQ = 1, string s = "", int lv = 1, int exp = 0, string sound = "", string miscStr = "") {
             FirstItem = fI;
             SecondItem = sI;
             OutputItem = oI;
@@ -28,6 +29,7 @@
             ExpGranted = exp;
 
             SoundPlayed = sound;
+            MiscString = miscStr;
         }
     }
 }

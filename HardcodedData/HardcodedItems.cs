@@ -1,17 +1,28 @@
-﻿using ZeroPlayersOnline.DataTypes;
-using SadConsole;
-using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ZeroPlayersOnline.DataTypes; 
 
 namespace ZeroPlayersOnline.Hardcodes {
     public static class HardcodedItems {
         public static void InitItems(Dictionary<string, Item> ItemLibrary) {
             List<Item> itemsToAdd = new();
             itemsToAdd.Add(new Item("Pine log", "A bundle of pine logs.", "logPine", 237, 202, 161, 4, 2, 1));
+            itemsToAdd.Add(new Item("Tinderbox", "An arsonist's best friend.", "tinderbox", 255, 255, 255, 1, 0, 0));
+            itemsToAdd.Add(new Item("Ashes", "A pile of wood ash.", "ashes", 200, 200, 200, 2, 1, 0));
+
+
+            itemsToAdd.Add(new Item("Potato seed", "Aren't potatoes potato seeds?", "seedPotato", 205, 127, 50, 5, 2, 1, true, note: false) {
+                UseString = "PlantSeed",
+                UseString2 = "Allotment", // Type of patch to plant in
+                UseString3 = "potato", // Output when grown
+                UseInt = 1, // Farming level to plant
+                UseInt2 = 10, // Exp on harvest
+                UseInt3 = 40 // Time to grow in seconds
+
+            });
+            itemsToAdd.Add(new Item("Potato", "A tuber most versatile.", "potato", 205, 127, 50, 5, 2, 1));
+            itemsToAdd.Add(new Item("Baked potato", "It'd taste even better with some toppings", "potatoBaked", 225, 147, 70, 10, 2, 1) {
+                UseString = "Heal",
+                UseInt = 4
+            });
 
             itemsToAdd.Add(new Item("Copper ore", "A pile of copper ore nuggets.", "oreCopper", 184, 115, 51, 3, 1, 1));
             itemsToAdd.Add(new Item("Tin ore", "A pile of tin ore nuggets.", "oreTin", 170, 170, 170, 3, 1, 1)); 

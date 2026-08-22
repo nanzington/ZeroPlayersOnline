@@ -32,6 +32,14 @@
         public int KillLimit = -1; // -1 = uncapped, otherwise after this many kills each unique monster name it will stop giving exp/drops
         public Dictionary<string, int> KillTracker = new(); // Log monsters by name and KC here
 
+        public Dictionary<string, string> ItemIDRemaps = new(); // For randomizer
+        public Dictionary<string, string> LocationIDRemaps = new(); // For randomizer
+        public Dictionary<string, string> GatheringSpotRemapes = new(); // For randomizer
+
+        public int RandomItems = 0; // 0 = not random, 1 = no logic rando set, 2 = no logic rando changing
+        public int RandomLocs = 0; // 0 = not random, 1 = no logic rando
+        public int RandomGathering = 0; // 0 = no random, 1 = no logic rando
+
         // End of Difficulty Settings
 
 
@@ -43,6 +51,12 @@
         public Dictionary<string, CollectionLogEntry> CollectionLog = new(); 
         public List<Item> BankedItems = new(); 
         public List<string> ItemsEverObtained = new();
+
+        public string PrayerBook = "Normal";
+        public Dictionary<string, Prayer> Prayers = new();
+
+        public List<PotionStat> ActivePotions = new(); 
+        public Dictionary<string, FarmingPatch> FarmingPatches = new();
 
         public int GetCombatLevel() {
             int atk = Skills["Attack"].Level;
@@ -59,7 +73,7 @@
             if (Equipment.ContainsKey("Weapon"))
                 weaponTier = Equipment["Weapon"].EquipTier + 1;
 
-            int strength = (int)Math.Clamp(Math.Floor(Skills["Strength"].Level / 5f) + 1, 1, 10);
+            int strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10);
 
             return weaponTier + "d" + strength;
         }
@@ -117,7 +131,7 @@
             
         }
 
-        public bool TakeDamage(int amt, MessageLog log) {
+        public bool TakeDamage(int amt, MessageLog log) {  
             CurrentHP -= amt;
 
             if (CurrentHP <= 0 || (NightmareMode && amt > 0)) {
@@ -156,6 +170,76 @@
                     }
                 }
             }
+        }
+
+        public bool PrayerActive(string which) {
+            if (Prayers.TryGetValue(which, out Prayer? p)) {
+                if (p != null) {
+                    return p.Active;
+                }
+            } 
+
+            return false;
+        }
+
+        public void TryTogglePrayer(string which) {
+            if (Prayers.TryGetValue(which, out Prayer? p)) {
+                if (p != null) {
+                    if (p.Active) {
+                        p.Active = false;
+                        return;
+                    } else { 
+                        int PrayerLev = Skills["Prayer"].Level;
+                        int EffectivePL = GetEffectiveSkillLevel("Prayer");
+
+                        if (p.Level <= PrayerLev) {
+                            if (TotalActivePrayers() + p.Level <= EffectivePL) {
+                                p.Active = true;
+                            } else { 
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You have too many prayers active to activate that one right now.", Color.Crimson, Color.Black));
+                            }
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage(new ColoredString("You aren't high enough level to activate that prayer yet.", Color.Crimson, Color.Black));
+                        }
+                    }
+                }
+            }
+        }
+
+        public int TotalActivePrayers() {
+            int count = 0;
+
+            foreach (var kv in Prayers) {
+                if (kv.Value.Active) {
+                    count += kv.Value.Level;
+                }
+            }
+
+            return count;
+        }
+
+        public int GetEffectiveSkillLevel(string which) {
+            if (Skills.TryGetValue(which, out Skill? s)) {
+                if (s != null) {
+                    int level = s.Level;
+
+                    foreach (var pot in ActivePotions) {
+                        if (pot.Stat == which) {
+                            level += pot.Change;
+                        }
+                    }
+
+                    foreach (var kv in Prayers) {
+                        if (kv.Value.Active && kv.Value.SkillBuffed == which) {
+                            level += (int) Math.Ceiling(kv.Value.Level / 2.0);
+                        }
+                    }
+
+                    return level;
+                }
+            }
+
+            return 1;  
         }
     }
 }

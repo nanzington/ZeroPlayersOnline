@@ -14,6 +14,17 @@ Immediately important stuff to get working:
 
 Less immediate but still important:
 - Find a less clunky way to do smithing, current method involves so many clicks
+- Make the fire animation on the main menu for the torches
+- Drop items on death, reset character on permadeath
+- Make drop rate multiplier apply, in addition to kill limit and good fortune prayer
+- Open UI for Crafting/Fletching, have a new kind of recipe list where it specifies item you're working and gives all possible outputs. Optionally able to require extra tools or only at a station
+
+
+Randomizer Options - Basically just provide an option for ID remaps
+- Items, No Logic (this is kinda working but need to make on-ground items not spawn infinitely)
+- Monsters, No Logic
+- Gathering Spot, No Logic
+- Locations, No Logic (this will be almost guaranteed to result in areas that are impossible to get to, maybe make spells also go to a random map)
 
 
 
@@ -23,15 +34,14 @@ How will this even be possible?
 - Bossing with unique mechanics
 - Summoning/necromancy where they do the combat for you
 - Player owned house? Make it useful to have somehow?
-- Dungeoneering
+- Dungeoneering (maybe have "dungeon" type areas in the world be assigned a DG level needed to harvest anything there, and you get a portion of skilling/combat exp in there to DG?)
 - Make wilderness dangerous but rewarding?
 
 =========================================
 
 Prayer
-- Each prayer has an associated upkeep cost
-- Total points you can have active is your prayer level
-- Doesn't drain, so maybe have some other reason to visit altars
+- Prayers to still get working: all stats, good fortune
+- Attack and defense levels don't actually factor into combat at all right now so boosting them is kinda pointless?
 - Prayer potions now raise your level temporarily
 - Prayers to raise at least the combat skills by variable amounts (only for combat calcs, not item unlocks)
 

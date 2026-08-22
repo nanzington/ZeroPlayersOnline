@@ -22,7 +22,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 Recipes = new() {
                     new ProcessingRecipe("meatRawNewt", "meatCookedNewt", "Cooking", 1, 15),
                     new ProcessingRecipe("fishRawShrimp", "fishCookedShrimp", "Cooking", 1, 15),
-                    new ProcessingRecipe("fishRawAnchovies", "fishCookedAnchovies", "Cooking", 1, 15)
+                    new ProcessingRecipe("fishRawAnchovies", "fishCookedAnchovies", "Cooking", 1, 15),
+                    new ProcessingRecipe("potato", "potatoBaked", "Cooking", 7, 15)
                 }
             });
 

@@ -4,6 +4,8 @@ using ZeroPlayersOnline.UI;
 using SadConsole.Input;
 using SadConsole.UI; 
 using Key = SadConsole.Input.Keys;
+using ZeroPlayersOnline.HardcodedData;
+using System.Diagnostics;
 
 namespace ZeroPlayersOnline {
     public class ZeroPlayersOnline : MiniDream {
@@ -16,6 +18,7 @@ namespace ZeroPlayersOnline {
         public Dictionary<TwoWayString, Recipe> UseRecipes = new();
         public Dictionary<string, NPC> NPCLibrary = new();
         public Dictionary<string, AreaMonster> MonsterLibrary = new();
+        public Dictionary<string, Prayer> PrayerLibrary = new();
 
         public MessageLog Log = new();
 
@@ -49,6 +52,9 @@ namespace ZeroPlayersOnline {
         public Rectangle ActivityRect = new Rectangle(new Point(111, 10), new Point(147, 34));
         public int ActivityItemTop = 0;
 
+        public int SidebarScrollTop = 0;
+        public Rectangle SidebarRect = new Rectangle(new Point(0, 15), new Point(54, 34));
+
 
         public ZeroPlayersOnline() {
             CollectionLog = new(70, 30);
@@ -64,15 +70,10 @@ namespace ZeroPlayersOnline {
 
             player = new();
 
-            HardcodedItems.InitItems(ItemLibrary);
-            HardcodedGathering.InitGathers(GatherSpots);
-            HardcodedProcessing.InitProcessors(ProcessingStations);
-            HardcodedUseRecipes.InitUseRecipes(UseRecipes);
-            HardcodedMonsters.InitMonsters(MonsterLibrary);
-            HardcodedLocations.InitLocs(Atlas, GatherSpots, MonsterLibrary);
-            HardcodedNPCs.InitNPCs(NPCLibrary);
+            RebuildLibraries();
 
             TryAddSkills();
+            TryAddPrayers();
 
             player.CurrentHP = 10;
 
@@ -114,12 +115,21 @@ namespace ZeroPlayersOnline {
             player.Skills.TryAdd("Farming", new Skill("Farming"));
             player.Skills.TryAdd("Herblore", new Skill("Herblore"));
             player.Skills.TryAdd("Agility", new Skill("Agility"));
+            player.Skills.TryAdd("Firemaking", new Skill("Firemaking"));
 
             player.Skills.TryAdd("Constitution", new Skill("Constitution") { Level = 10 });
             player.Skills.TryAdd("Attack", new Skill("Attack"));
             player.Skills.TryAdd("Strength", new Skill("Strength"));
             player.Skills.TryAdd("Defense", new Skill("Defense"));
             player.Skills.TryAdd("Prayer", new Skill("Prayer")); 
+        }
+
+        public void TryAddPrayers() {
+            player.Prayers.Clear();
+
+            foreach (var kv in PrayerLibrary) {
+                player.Prayers.Add(kv.Key, kv.Value);
+            }
         }
 
         public void GuideDraw() {
@@ -260,13 +270,21 @@ namespace ZeroPlayersOnline {
                 Location curr = Atlas[player.NavLoc];
 
 
-                if (curr.ItemSpawns.Count > 0) {
-                    for (int i = 0; i < curr.ItemSpawns.Count; i++) {
+                if (curr.ItemSpawns.Count > 0) {  
+                    for (int i = 0; i < curr.ItemSpawns.Count; i++) {  
                         if (curr.ItemSpawns[i].LastPickedUp + (curr.ItemSpawns[i].RespawnTimer * 1000) < Helper.Time() || curr.ItemSpawns[i].LastPickedUp == 0) {
                             bool itemSpawnedAlready = false;
                             for (int j = 0; j < curr.ItemsHere.Count; j++) {
-                                if (curr.ItemsHere[j].ID == curr.ItemSpawns[i].ItemID) {
-                                    itemSpawnedAlready = true;
+                                if (player.RandomItems == 0) {
+                                    if (curr.ItemsHere[j].ID == curr.ItemSpawns[i].ItemID) {
+                                        itemSpawnedAlready = true;
+                                    }
+                                } else {
+                                    if (ItemLibrary.ContainsKey(curr.ItemSpawns[i].ItemID)) {
+                                        if (curr.ItemsHere[j].ID == ItemLibrary[curr.ItemSpawns[i].ItemID].ID) {
+                                            itemSpawnedAlready = true;
+                                        }
+                                    }
                                 }
                             }
 
@@ -322,10 +340,18 @@ namespace ZeroPlayersOnline {
                             if (player.Inventory[i].UseString != "") {
                                 mini.Con.PrintClickable(46, 15 + i, new ColoredString("* ", Color.Yellow, Color.Black), () => {
                                     Item item = player.Inventory[i];
-                                    UseItem(item);
+                                    bool success = UseItem(item);
 
-                                    if (item.ConsumedOnUse) {
-                                        item.Quantity -= 1;
+                                    if (item.ConsumedOnUse && success) {
+                                        if (player.PrayerActive("Cornucopia")) {
+                                            if (GameLoop.rand.Next(5) != 0) { 
+                                                item.Quantity -= 1;
+                                            } else { 
+                                                Log.AddMessage(new ColoredString("The blessing of the cornucopia preserves your item.", Color.Goldenrod, Color.Black));
+                                            }
+                                        } else {
+                                            item.Quantity -= 1;
+                                        }
                                     }
 
                                     if (item.Quantity <= 0) {
@@ -441,14 +467,31 @@ namespace ZeroPlayersOnline {
                                         if (secondItem.Quantity <= 0)
                                             player.Inventory.Remove(secondItem);
 
-                                        if (ItemLibrary.ContainsKey(rec.OutputItem)) {
-                                            Item made = Helper.Clone(ItemLibrary[rec.OutputItem]);
-                                            made.Quantity = rec.OutputQty;
+                                        if (rec.OutputItem[0] != '_') {
+                                            if (ItemLibrary.ContainsKey(rec.OutputItem)) {
+                                                Item made = Helper.Clone(ItemLibrary[rec.OutputItem]);
+                                                made.Quantity = rec.OutputQty;
 
-                                            player.TryPickup(made);
-                                        }
-                                        else {
-                                            Log.AddMessage(new ColoredString("You get the feeling that should've resulted in " + rec.OutputItem + ", but that item doesn't exist.", Color.Crimson, Color.Black));
+                                                player.TryPickup(made);
+                                            } else {
+                                                Log.AddMessage(new ColoredString("You get the feeling that should've resulted in " + rec.OutputItem + ", but that item doesn't exist.", Color.Crimson, Color.Black));
+                                            }
+                                        } else {
+                                            if (rec.OutputItem == "_fire") {
+                                                if (Atlas.ContainsKey(player.NavLoc)) {
+                                                    Location curr = Atlas[player.NavLoc];
+                                                     
+                                                    ProcessingStation fire = Helper.Clone(ProcessingStations["Range"]);
+                                                    fire.Name = "Fire";
+                                                    fire.TimeLeft = rec.OutputQty;
+                                                    fire.TimeMade = Helper.Time();
+                                                    fire.ItemOnExpire = rec.MiscString;
+                                                     
+                                                    curr.TempStations.Add(fire);
+                                                }
+                                                
+                                                Log.AddMessage(new ColoredString("You start a fire with the " + secondItem.Name + ".", Color.OrangeRed, Color.Black));
+                                            }
                                         }
 
                                         player.TryGrantExp(rec.SkillUsed, rec.ExpGranted, Log, RecentlyTrainedSkills);
@@ -574,6 +617,37 @@ namespace ZeroPlayersOnline {
                         mini.Con.Print(46, 17 + i, playerSkills[i].Exp.ToString().PadLeft(8), mouseHovering ? Color.Yellow : Color.White);
                     }
                 }
+
+                else if (SidebarMenu == "Prayer") {
+                    mini.Con.Print(1, 15, "Prayer Name");
+                    mini.Con.Print(20, 15, "Lv");
+                    mini.Con.Print(23, 15, "Description");
+                    mini.Con.DrawLine(new Point(0, 16), new Point(54, 16), 196);
+
+                    List<Prayer> prayers = player.Prayers.Values.ToList();
+                    int printLine = 17;
+                    int skipped = 0;
+
+                    int prayLv = player.Skills["Prayer"].Level;
+
+                    mini.Con.PrintClickable(43, 15, new ColoredString("Disable All", Color.Crimson, Color.Black), () => {
+                        foreach (var kv in player.Prayers) {
+                            kv.Value.Active = false;
+                        }
+                    });
+
+                    for (int i = 0; i < prayers.Count; i++) {
+                        if (prayers[i].Book == player.PrayerBook) {
+                            if (skipped >= SidebarScrollTop && printLine < 35) {
+                                mini.Con.PrintClickable(1, printLine, new ColoredString(prayers[i].Name, prayers[i].Active ? Color.Lime : prayers[i].Level > prayLv ? Color.DarkSlateGray : Color.White, Color.Black), () => { player.TryTogglePrayer(prayers[i].Name); });
+                                mini.Con.Print(20, printLine, prayers[i].Level.ToString(), prayers[i].Level > prayLv ? Color.DarkSlateGray : Color.White);
+                                mini.Con.Print(23, printLine++, prayers[i].Description, prayers[i].Level > prayLv ? Color.DarkSlateGray : Color.White);
+                            } else {
+                                skipped++;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -606,8 +680,8 @@ namespace ZeroPlayersOnline {
                     mini.Con.Print(57, printY++, "Connected Locations: ");
 
                     for (int i = 0; i < curr.ConnectedLocations.Count; i++) {
-                        if (Atlas.ContainsKey(curr.ConnectedLocations[i])) {
-                            Location dest = Atlas[curr.ConnectedLocations[i]];
+                        if (Atlas.ContainsKey(curr.ConnectedLocations[i].Destination)) {
+                            Location dest = Atlas[curr.ConnectedLocations[i].Destination];
                             mini.Con.PrintClickable(57, printY++, "| " + dest.DisplayName, () => {
                                 player.NavLoc = dest.ID;
                                 GraceTimeStart = Helper.Time();
@@ -621,7 +695,7 @@ namespace ZeroPlayersOnline {
                             });
                         }
                         else {
-                            mini.Con.Print(57, printY++, "| " + curr.ConnectedLocations[i], Color.DarkSlateGray);
+                            mini.Con.Print(57, printY++, "| " + curr.ConnectedLocations[i].Destination, Color.DarkSlateGray);
                         }
                     }
 
@@ -674,8 +748,17 @@ namespace ZeroPlayersOnline {
                                 thisOne.TimeLastAttacked = Helper.Time();
 
                                 int dmg = GoRogue.DiceNotation.Dice.Roll(thisOne.DamageDice);
+                                int modified = dmg;
 
-                                Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
+                                if ((player.PrayerActive("Protect from Magic") && thisOne.DamageType == "Magic") || (player.PrayerActive("Protect from Melee") && thisOne.DamageType == "Melee") || (player.PrayerActive("Protect from Range") && thisOne.DamageType == "Range")) {
+                                    modified = (int)Math.Floor(dmg / 2.0);
+                                }
+
+                                if (dmg != modified) {
+                                    Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + ", reduced to " + modified + "!", Color.Crimson, Color.Black)); 
+                                } else {
+                                    Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
+                                }
 
                                 bool died = player.TakeDamage(dmg, Log);
 
@@ -775,13 +858,15 @@ namespace ZeroPlayersOnline {
                 mini.Con.Print(resourceX + 4, resourceY, "|");
                 mini.Con.PrintClickable(resourceX + 6, resourceY, new ColoredString("N", SelectedMenu == "NPCs" ? Color.Yellow : curr.NPCsHere.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "NPCs"; });
                 mini.Con.Print(resourceX + 8, resourceY, "|");
-                mini.Con.PrintClickable(resourceX + 10, resourceY, new ColoredString("P", SelectedMenu == "Processing" ? Color.Yellow : curr.ProcessingStations.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Processing"; });
+                mini.Con.PrintClickable(resourceX + 10, resourceY, new ColoredString("P", SelectedMenu == "Processing" ? Color.Yellow : curr.ProcessingStations.Count > 0 || curr.TempStations.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Processing"; });
                 mini.Con.Print(resourceX + 12, resourceY, "|");
                 mini.Con.PrintClickable(resourceX + 14, resourceY, new ColoredString("R", SelectedMenu == "Resources" ? Color.Yellow : curr.LocalGathers.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Resources"; });
                 mini.Con.Print(resourceX + 16, resourceY, "|");
                 mini.Con.PrintClickable(resourceX + 18, resourceY, new ColoredString("C", SelectedMenu == "Chat" ? Color.Yellow : ConversationPartner != null ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Chat"; });
                 mini.Con.Print(resourceX + 20, resourceY, "|");
                 mini.Con.PrintClickable(resourceX + 22, resourceY, new ColoredString("S", SelectedMenu == "Shop" ? Color.Yellow : curr.ShopItemsHere.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Shop"; });
+                mini.Con.Print(resourceX + 24, resourceY, "|");
+                mini.Con.PrintClickable(resourceX + 26, resourceY, new ColoredString("F", SelectedMenu == "Farming" ? Color.Yellow : curr.FarmingPatchesHere.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Farming"; });
 
 
                 resourceY++;
@@ -892,16 +977,35 @@ namespace ZeroPlayersOnline {
                 else if (SelectedMenu == "Processing") {
                     mini.Con.Print(resourceX + 2, resourceY++, "Processing Stations Here");
 
-                    if (curr.ProcessingStations.Count > 0) {
+                    if (curr.ProcessingStations.Count > 0 || curr.TempStations.Count > 0) {
                         for (int i = 0; i < curr.ProcessingStations.Count; i++) {
                             if (ProcessingStations.ContainsKey(curr.ProcessingStations[i])) {
                                 ProcessingStation station = ProcessingStations[curr.ProcessingStations[i]];
-                                mini.Con.Print(resourceX + 2, resourceY, "|");
+                                mini.Con.Print(resourceX + 2, resourceY, "|");  
                                 mini.Con.PrintClickable(resourceX + 4, resourceY++, station.Name, () => { station.TryProcessItem(player, Log, ItemLibrary, RecentlyTrainedSkills); });
                             }
                             else {
                                 mini.Con.Print(resourceX + 2, resourceY, "|");
                                 mini.Con.Print(resourceX + 4, resourceY++, curr.ProcessingStations[i], Color.DarkSlateGray);
+                            }
+                        }
+
+                        for (int i = curr.TempStations.Count - 1; i >= 0; i--) { 
+                            ProcessingStation station = curr.TempStations[i];
+
+                            int secondsSinceMade = (int) Math.Floor((station.TimeMade + (station.TimeLeft * 60000)) - Helper.Time()) / 1000;
+
+                            mini.Con.Print(resourceX + 2, resourceY, "|");
+                            mini.Con.PrintClickable(resourceX + 4, resourceY++, station.Name + " [" + secondsSinceMade + "]", () => { station.TryProcessItem(player, Log, ItemLibrary, RecentlyTrainedSkills); });
+
+                            if (station.TimeLeft != -1) {
+                                if (station.TimeMade + (station.TimeLeft * 60000) <= Helper.Time()) {
+                                    if (ItemLibrary.ContainsKey(station.ItemOnExpire)) {
+                                        curr.ItemsHere.Add(Helper.Clone(ItemLibrary[station.ItemOnExpire]));
+                                    }
+
+                                    curr.TempStations.RemoveAt(i); 
+                                }
                             }
                         }
                     }
@@ -1046,6 +1150,70 @@ namespace ZeroPlayersOnline {
                         mini.Con.Print(resourceX + 4, resourceY++, "(no shop items here)", Color.DarkSlateGray);
                     }
                 }
+                else if (SelectedMenu == "Farming") {
+                    mini.Con.Print(resourceX + 2, resourceY++, "Farming Patches Here"); 
+                    if (curr.FarmingPatchesHere.Count > 0) {
+                        for (int i = 0; i < curr.FarmingPatchesHere.Count; i++) {
+                            if (player.FarmingPatches.ContainsKey(curr.FarmingPatchesHere[i])) {
+                                FarmingPatch patch = player.FarmingPatches[curr.FarmingPatchesHere[i]];
+
+                                mini.Con.Print(resourceX + 2, resourceY, "|");
+
+                                if (patch.SeedPlanted == "") { 
+                                    mini.Con.Print(resourceX + 4, resourceY, "(Empty " + patch.PatchType + " Patch)");
+                                } else {
+                                    if (patch.TimeLeft == 0) { 
+                                        mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(ResolveItemName(patch.SeedPlanted) + " [" + patch.TimeLeft + "]", Color.Lime, Color.Black), () => {
+                                            Item? seed = ResolveItem(patch.SeedPlanted);
+                                            if (seed != null) {
+                                                Item? output = Helper.Clone(ResolveItem(seed.UseString3));
+                                                if (output != null) {
+                                                    int qty = 5 + (int) Math.Floor((player.Skills["Farming"].Level - seed.UseInt) / 5.0) + patch.Compost;
+
+                                                    if (output.Stackable) {
+                                                        output.Quantity = qty; 
+                                                        player.TryGrantExp("Farming", seed.UseInt2 * qty, Log, RecentlyTrainedSkills);
+                                                        if (!player.TryPickup(output)) {
+                                                            curr.ItemsHere.Add(output);  
+                                                            Log.AddMessage(new ColoredString("Your inventory is full, so the " + output.Name + "s fall to the ground." , Color.Crimson, Color.Black));
+                                                        }
+                                                    } else {
+                                                        for (int i = 0; i < qty; i++) {
+                                                            player.TryGrantExp("Farming", seed.UseInt2, Log, RecentlyTrainedSkills);
+                                                            if (!player.TryPickup(output)) {
+                                                                curr.ItemsHere.Add(output); 
+                                                                Log.AddMessage(new ColoredString("Your inventory is full, so the " + output.Name + " falls to the ground.", Color.Crimson, Color.Black)); 
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    Log.AddMessage(new ColoredString("The harvested item crumbles away in your hands, this should be reported as a bug.", Color.Crimson, Color.Black));
+                                                }
+                                            } else { 
+                                                Log.AddMessage(new ColoredString("The harvested seed crumbles away in your hands, this should be reported as a bug.", Color.Crimson, Color.Black));
+                                            } 
+
+                                            patch.ClearPatch();
+                                        });
+                                    } else {
+                                        mini.Con.Print(resourceX + 4, resourceY, ResolveItemName(patch.SeedPlanted) + " [" + patch.TimeLeft + "]");
+                                    }
+                                    mini.Con.PrintClickable(resourceX + 2, resourceY, new ColoredString("X", Color.Crimson, Color.Black), () => { patch.ClearPatch(); });
+                                } 
+                                 
+
+                                resourceY++;
+                            } else {
+                                mini.Con.Print(resourceX + 2, resourceY, "|");
+                                mini.Con.Print(resourceX + 4, resourceY++, curr.FarmingPatchesHere[i], Color.DarkSlateGray);
+                            }
+                        }
+                    } else {
+                        mini.Con.Print(resourceX + 2, resourceY, "|");
+                        mini.Con.Print(resourceX + 4, resourceY++, "(no farming patches here)", Color.DarkSlateGray);
+                    }
+                }
+
 
             }
 
@@ -1113,6 +1281,13 @@ namespace ZeroPlayersOnline {
                 if (Helper.ScrolledDown()) { Log.TopIndex = Math.Clamp(Log.TopIndex + 1, 0, Log.Log.Count); }
             }
 
+            if (SidebarRect.Contains(mousePos)) {
+                if (SidebarMenu == "Prayer") {
+                    if (Helper.ScrolledUp()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop - 1, 0, player.Prayers.Count - 18); }
+                    if (Helper.ScrolledDown()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop + 1, 0, player.Prayers.Count - 18); }
+                }
+            }
+
             if (Helper.HotkeyDown(Key.Tab)) {
                 for (int i = 0; i < activityTabs.Count; i++) {
                     if (activityTabs[i] == SelectedMenu) {
@@ -1175,11 +1350,17 @@ namespace ZeroPlayersOnline {
 
                 Log.AddMessage("Player autosave complete.");
             }
+
+            foreach (var kv in player.FarmingPatches) {
+                if (kv.Value.SeedPlanted != "" && kv.Value.TimeLeft > 0) {
+                    kv.Value.TimeLeft -= 1;
+                }
+            }
         }
 
-        public void UseItem(Item item) {
+        public bool UseItem(Item item) {
             if (item.UseString == "GetGold") {
-                player.HeldGold += item.UseInt; 
+                player.HeldGold += item.UseInt;
                 Log.AddMessage("You open the " + item.Name + " and find " + item.UseInt + " gold pieces.");
             } else if (item.UseString == "Bones") {
                 Log.AddMessage("You bury the " + item.Name.ToLowerInvariant() + " and get " + item.UseInt + " prayer experience.");
@@ -1187,14 +1368,42 @@ namespace ZeroPlayersOnline {
             } else if (item.UseString == "Heal") {
                 player.CurrentHP = Math.Clamp(player.CurrentHP + item.UseInt, player.CurrentHP, player.Skills["Constitution"].Level);
                 Log.AddMessage(new ColoredString("You eat the " + item.Name.ToLowerInvariant() + " and recover some hitpoints.", Color.Goldenrod, Color.Black));
+            } else if (item.UseString == "PlantSeed") {
+                if (Atlas.ContainsKey(player.NavLoc)) {
+                    Location curr = Atlas[player.NavLoc];
+
+                    for (int i = 0; i < curr.FarmingPatchesHere.Count; i++) {
+                        if (player.FarmingPatches.ContainsKey(curr.FarmingPatchesHere[i])) {
+                            FarmingPatch patch = player.FarmingPatches[curr.FarmingPatchesHere[i]];
+
+                            if (patch.PatchType == item.UseString2 && patch.SeedPlanted == "") {
+                                if (player.Skills["Farming"].Level >= item.UseInt) {
+                                    patch.SeedPlanted = item.ID;
+                                    patch.TimeLeft = item.UseInt3;
+                                    Log.AddMessage(new ColoredString("You plant the " + item.Name.ToLowerInvariant() + ".", Color.Goldenrod, Color.Black));
+                                } else {
+                                    Log.AddMessage(new ColoredString("You need " + item.UseInt + " Farming to plant that.", Color.Crimson, Color.Black));
+                                    return false;
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                }
             }
+
+            return true;
         }
 
 
         public void HardResetPlayer() {
             player = new();
             TryAddSkills();
+            TryAddPrayers();
             player.CurrentHP = 10;
+
+            RebuildLibraries();
 
             Log.Log.Clear();
             Log.AddMessage(new ColoredString("Press F1 at any time to open/close the guidebook.", Color.Turquoise, Color.Black));
@@ -1206,14 +1415,91 @@ namespace ZeroPlayersOnline {
 
             player.Skills.Clear();
             TryAddSkills();
+            TryAddPrayers();
             player.CurrentHP = 10;
 
 
             player.CollectionLog.Clear();
             player.BankedItems.Clear();
             player.ItemsEverObtained.Clear();
+            player.ActivePotions.Clear();
+            
+            foreach (var patch in player.FarmingPatches) {
+                patch.Value.ClearPatch();
+            }
+
+            foreach (var prayer in player.Prayers) {
+                prayer.Value.Active = false;
+            }
              
             Log.AddMessage(new ColoredString("Character soft-reset complete.", Color.Turquoise, Color.Black));
+        }
+
+        public void RemapItems(bool justApply = false) {
+            if (!justApply) {
+                List<string> itemIDs = ItemLibrary.Keys.ToList();
+                int mapTo = 0;
+
+                foreach (var kv in ItemLibrary) {
+                    mapTo = GameLoop.rand.Next(itemIDs.Count);
+                    player.ItemIDRemaps.Add(kv.Key, itemIDs[mapTo]);
+                    itemIDs.RemoveAt(mapTo);
+                }
+            }
+
+            Dictionary<string, Item> cloneLib = ItemLibrary.Clone();
+
+            ItemLibrary.Clear();
+
+            foreach (var kv in player.ItemIDRemaps) {
+                ItemLibrary.Add(kv.Value, cloneLib[kv.Key]);
+            }
+        } 
+
+        public void RebuildLibraries() {
+            ItemLibrary.Clear();
+            GatherSpots.Clear();
+            ProcessingStations.Clear();
+            UseRecipes.Clear();
+            MonsterLibrary.Clear();
+            Atlas.Clear();
+            NPCLibrary.Clear();
+            PrayerLibrary.Clear();
+            player.FarmingPatches.Clear();
+
+            HardcodedItems.InitItems(ItemLibrary);
+            HardcodedGathering.InitGathers(GatherSpots);
+            HardcodedProcessing.InitProcessors(ProcessingStations);
+            HardcodedUseRecipes.InitUseRecipes(UseRecipes);
+            HardcodedMonsters.InitMonsters(MonsterLibrary);
+            HardcodedLocations.InitLocs(Atlas, GatherSpots, MonsterLibrary);
+            HardcodedNPCs.InitNPCs(NPCLibrary);
+            HardcodedPrayers.InitPrayers(PrayerLibrary);
+            HardcodedFarmPatches.InitPatches(player.FarmingPatches);
+        }
+
+        public Item? ResolveItem(string ID) {
+            if (player.RandomItems == 0) {
+                if (ItemLibrary.ContainsKey(ID)) {
+                    return ItemLibrary[ID];
+                }
+            } else {
+                if (player.ItemIDRemaps.ContainsKey(ID)) {
+                    if (ItemLibrary.ContainsKey(player.ItemIDRemaps[ID])) {
+                        return ItemLibrary[player.ItemIDRemaps[ID]];
+                    }
+                }
+            } 
+
+            return null;
+        }
+
+        public string ResolveItemName(string ID) {
+            if (ResolveItem(ID) is Item item && item != null) {
+                return item.Name;
+            }
+
+            return ID;
         }
     }
 }

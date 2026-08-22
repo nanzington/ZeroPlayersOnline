@@ -5,6 +5,9 @@ namespace ZeroPlayersOnline.Hardcodes {
         public static void InitUseRecipes(Dictionary<TwoWayString, Recipe> RecipeLib) {
             List<Recipe> toAdd = new();
 
+
+            toAdd.Add(new("tinderbox", "logPine", "_fire", 0, 1, 1, "Firemaking", 1, 40, miscStr: "ashes"));
+
             toAdd.Add(new("oreCopper", "oreTin", "oreMixBronze", 1, 1, 1, "Smithing", 1, 2));
 
             toAdd.Add(new("plansHelmet", "barBronze", "progHelmBronze1", 0, 1, 1, "Smithing", 1, 0));

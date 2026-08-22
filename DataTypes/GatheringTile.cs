@@ -48,7 +48,7 @@ namespace ZeroPlayersOnline.DataTypes {
                 int success = GameLoop.rand.Next(100) + 1;
 
                 if (LevelBasedSuccess && p.Skills.ContainsKey(Skill))
-                    success += (p.Skills[Skill].Level - Level);
+                    success += (p.GetEffectiveSkillLevel(Skill) - Level);
 
                 if (success <= SuccessChance) {
                     string output = PickItem();
@@ -70,7 +70,16 @@ namespace ZeroPlayersOnline.DataTypes {
                     int deplete = GameLoop.rand.Next(100) + 1;
 
                     if (deplete <= DepleteChance) {
-                        LastGathered = Helper.Time();
+
+                        if (p.PrayerActive("Enduring Nature")) {
+                            deplete = GameLoop.rand.Next(100) + 1;
+
+                            if (deplete <= DepleteChance) { 
+                                LastGathered = Helper.Time();
+                            }
+                        } else {
+                            LastGathered = Helper.Time();
+                        }
                     }
                 } else {
                     log.AddMessage(new ColoredString("You failed to " + InteractVerb.ToLower() + " the " + Name.ToLower() + ".", Color.Red, Color.Black));

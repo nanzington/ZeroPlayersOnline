@@ -6,12 +6,13 @@
         public string Description = "";
         public bool IsBank = false;
 
-        public List<string> ConnectedLocations = new();
+        public List<Connection> ConnectedLocations = new();
 
         public List<string> GatheringSpots = new();
         public List<GatheringTile> LocalGathers = new();
 
         public List<string> ProcessingStations = new();
+        public List<ProcessingStation> TempStations = new();
 
         public List<ItemSpot> ItemSpawns = new();
 
@@ -25,5 +26,7 @@
         public List<string> NPCsHere = new();
 
         public List<string> ShopItemsHere = new();
+
+        public List<string> FarmingPatchesHere = new();
     }
 }

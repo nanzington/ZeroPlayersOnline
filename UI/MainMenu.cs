@@ -1,4 +1,5 @@
-﻿using ZeroPlayersOnline.DataTypes;
+﻿using System.Security.Cryptography.X509Certificates;
+using ZeroPlayersOnline.DataTypes;
 using Key = SadConsole.Input.Keys;
 
 namespace ZeroPlayersOnline.UI {
@@ -145,16 +146,36 @@ namespace ZeroPlayersOnline.UI {
                 mini.Con.PrintClickableBool(27, 18, "Only Pay to Win: ", ref GameLoop.ZPO.player.OnlyPayToWin);
                  
                 mini.Con.Print(27, 19, "Drop Multiplier:");
-
-
+                mini.Con.PrintClickable(28 + 16, 19, new ColoredString("0", GameLoop.ZPO.player.DropMultiplier == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 0; });
+                mini.Con.PrintClickable(28 + 18, 19, new ColoredString("1", GameLoop.ZPO.player.DropMultiplier == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 1; });
+                mini.Con.PrintClickable(28 + 20, 19, new ColoredString("2", GameLoop.ZPO.player.DropMultiplier == 2 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 2; });
+                mini.Con.PrintClickable(28 + 22, 19, new ColoredString("5", GameLoop.ZPO.player.DropMultiplier == 5 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 5; });
+                mini.Con.PrintClickable(28 + 24, 19, new ColoredString("10", GameLoop.ZPO.player.DropMultiplier == 10 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 10; });
+                 
                 mini.Con.PrintScrollableInteger(21, 20, "Max Kills Per Monster: ", ref GameLoop.ZPO.player.KillLimit, false, -1);
+
+                mini.Con.Print(27, 21, "Item Randomizer:");
+                mini.Con.PrintClickable(44, 21, new ColoredString("Off", GameLoop.ZPO.player.RandomItems == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 0; });
+                mini.Con.PrintClickable(48, 21, new ColoredString("No Logic", GameLoop.ZPO.player.RandomItems == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 1; });
+                mini.Con.PrintClickable(57, 21, new ColoredString("No Logic+", GameLoop.ZPO.player.RandomItems == 2 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 2; });
+
+                mini.Con.Print(23, 22, "Location Randomizer:");
+                mini.Con.PrintClickable(44, 22, new ColoredString("Off", GameLoop.ZPO.player.RandomLocs == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomLocs = 0; });
+                mini.Con.PrintClickable(48, 22, new ColoredString("No Logic", GameLoop.ZPO.player.RandomLocs == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomLocs = 1; });
+
+                mini.Con.Print(22, 23, "Gathering Randomizer:");
+                mini.Con.PrintClickable(44, 23, new ColoredString("Off", GameLoop.ZPO.player.RandomGathering == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomGathering = 0; });
+                mini.Con.PrintClickable(48, 23, new ColoredString("No Logic", GameLoop.ZPO.player.RandomGathering == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomGathering = 1; });
+
+
+
 
                 mini.Con.PrintClickable(22, 44, "<- Nevermind", () => { MenuMode = "Main"; });
 
                 if (GameLoop.ZPO.player.Name != "") {
-                    mini.Con.PrintClickable(107, 44, "Begin Adventure ->", () => {
+                    mini.Con.PrintClickable(107, 44, "Begin Adventure ->", () => { 
                         GameLoop.ZPO.ManualSave(false); 
-                        SwapToGame();
+                        SwapToGame(false);
                     });
                 } else {
                     mini.Con.Print(107, 44, "A Hero Needs a Name");
@@ -183,7 +204,7 @@ namespace ZeroPlayersOnline.UI {
                             Player p = Helper.DeserializeFromFile<Player>("./saves/" + saves[i] + ".json");
                             GameLoop.ZPO.player = p;
 
-                            SwapToGame();
+                            SwapToGame(true);
                         });
                     } else {
                         mini.Con.Print(65, 18 + i, "(Empty Save Slot)", Color.DarkSlateGray);
@@ -236,10 +257,15 @@ namespace ZeroPlayersOnline.UI {
             menuXP.Close();
         }
 
-        public void SwapToGame() { 
+        public void SwapToGame(bool loading) { 
+            if (GameLoop.ZPO.player.RandomItems != 0) {
+                GameLoop.ZPO.RemapItems(loading);
+            }
+
             GameLoop.UIManager.mainMenu.Win.IsVisible = false;
             GameLoop.UIManager.zpoWrap.Win.IsVisible = true;
             MenuMode = "Main";
+            GameLoop.ZPO.TimeLastTicked = Helper.Time();
         }
     }
 }

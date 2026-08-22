@@ -1,10 +1,21 @@
-﻿namespace ZeroPlayersOnline.DataTypes {
+﻿using Newtonsoft.Json;
+
+namespace ZeroPlayersOnline.DataTypes {
     public class ProcessingStation {
         public string Name = ""; 
 
         public List<ProcessingRecipe> Recipes = new();
 
         public string OpensUI = "";
+
+        [JsonIgnore]
+        public int TimeLeft = -1;
+
+        [JsonIgnore]
+        public double TimeMade = 0;
+
+        [JsonIgnore]
+        public string ItemOnExpire = "";
 
         public ProcessingStation(string n, string ui = "") {
             Name = n;  

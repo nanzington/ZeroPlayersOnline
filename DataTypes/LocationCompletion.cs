@@ -6,6 +6,9 @@
 
 
         public void CheckCompletion(Player p) {
+            if (Completed)
+                return;
+
             if (RequiredFeats.Count == 0) {
                 Completed = true;
                 return;
@@ -18,6 +21,7 @@
             }
 
             Completed = true;
+            p.LocationPoints++;
         }
     }
 }
