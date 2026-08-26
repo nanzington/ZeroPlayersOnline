@@ -10,6 +10,21 @@ namespace ZeroPlayersOnline.Hardcodes {
         public static void InitGathers(Dictionary<string, GatheringTile> GatherSpots) {
             List<GatheringTile> tiles = new();
             tiles.Add(new GatheringTile() {
+                ID = "plantFlax",
+                Name = "Wild Flax",
+                Skill = "Farming",
+                InteractVerb = "Pick",
+                Level = 1,
+                ExpGranted = 0,
+                ExpOnFail = 0,
+                SuccessChance = 100,
+                DepleteChance = 60,
+                RestockTime = 10,
+                DamageOnFail = 0,
+                PossibleItems = new() { new("flax", 1) }
+            });
+
+            tiles.Add(new GatheringTile() {
                 ID = "treePine",
                 Name = "Pine Tree",
                 Skill = "Woodcutting",
@@ -22,6 +37,36 @@ namespace ZeroPlayersOnline.Hardcodes {
                 RestockTime = 15,
                 DamageOnFail = 0,
                 PossibleItems = new() { new("logPine", 1) }
+            });
+
+            tiles.Add(new GatheringTile() {
+                ID = "rockEssence",
+                Name = "Essence Rock",
+                Skill = "Mining",
+                InteractVerb = "Mine",
+                Level = 1,
+                ExpGranted = 5,
+                ExpOnFail = 0,
+                SuccessChance = 100,
+                DepleteChance = 0,
+                RestockTime = 15,
+                DamageOnFail = 0,
+                PossibleItems = new() { new("pureEssence", 1) }
+            });
+
+            tiles.Add(new GatheringTile() {
+                ID = "rockClay",
+                Name = "Clay Deposit",
+                Skill = "Mining",
+                InteractVerb = "Mine",
+                Level = 1,
+                ExpGranted = 5,
+                ExpOnFail = 0,
+                SuccessChance = 100,
+                DepleteChance = 0,
+                RestockTime = 15,
+                DamageOnFail = 0,
+                PossibleItems = new() { new("clayDust", 1) }
             });
 
             tiles.Add(new GatheringTile() {

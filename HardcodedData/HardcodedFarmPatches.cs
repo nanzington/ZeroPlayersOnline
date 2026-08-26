@@ -11,7 +11,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
 
             for (int i = 0; i < toAdd.Count; i++) {
-                playerPatchData.Add(toAdd[i].ID, toAdd[i]);
+                playerPatchData.TryAdd(toAdd[i].ID, toAdd[i]);
             }
         }
     }

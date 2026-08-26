@@ -12,7 +12,7 @@
 
         // Difficulty Settings
 
-        public int GrandExchangeMode = 0; // 0 = full, 1 = limited/bronze, 2 = none/iron
+        public int GrandExchangeMode = 1; // 0 = full, 1 = limited/bronze, 2 = none/iron
         public int DeathMode = 1; // 0 = no death penalty, 1 = drop items, 2 = reset character
         public bool NightmareMode = false; // if true, any damage taken will kill the player
 
@@ -48,7 +48,8 @@
         public List<Item> Inventory = new();
         public Dictionary<string, Item> Equipment = new(); 
         public Dictionary<string, Skill> Skills = new(); 
-        public Dictionary<string, CollectionLogEntry> CollectionLog = new(); 
+        public Dictionary<string, CollectionLogEntry> CollectionLog = new();
+        public Dictionary<string, CollectionLogEntry> CollectionLogClues = new();
         public List<Item> BankedItems = new(); 
         public List<string> ItemsEverObtained = new();
 
@@ -57,6 +58,21 @@
 
         public List<PotionStat> ActivePotions = new(); 
         public Dictionary<string, FarmingPatch> FarmingPatches = new();
+
+        public string CurrentClueTutorial = "";
+        public int StepsDoneTutorial = 0;
+        public string CurrentClueBeginner = "";
+        public int StepsDoneBeginner = 0;
+        public string CurrentClueEasy = "";
+        public int StepsDoneEasy = 0;
+        public string CurrentClueMedium = "";
+        public int StepsDoneMedium = 0;
+        public string CurrentClueHard = "";
+        public int StepsDoneHard = 0;
+        public string CurrentClueElite = "";
+        public int StepsDoneElite = 0;
+        public string CurrentClueMaster = "";
+        public int StepsDoneMaster = 0;
 
         public int GetCombatLevel() {
             int atk = Skills["Attack"].Level;
@@ -240,6 +256,115 @@
             }
 
             return 1;  
+        } 
+
+
+        public bool CanCraft(CraftRecipe craft) {
+            if (!Skills.ContainsKey(craft.Skill))
+                return false;
+            if (Skills[craft.Skill].Level < craft.Level)
+                return false;
+            if (!GameLoop.ZPO.ItemLibrary.ContainsKey(craft.OutputItem))
+                return false;
+
+            if (craft.ExtraTool != "") {
+                bool hasTool = false;
+                for (int i = 0; i < Inventory.Count; i++) {
+                    if (Inventory[i].ID == craft.ExtraTool) {
+                        hasTool = true;
+                        break;
+                    }
+                }
+
+                if (!hasTool)
+                    return false;
+            }
+
+            int reagentCount = 0;
+
+            for (int i = 0; i < Inventory.Count; i++) {
+                if (Inventory[i].ID == craft.NeededItem) {
+                    reagentCount += Inventory[i].Quantity;
+                }
+            }
+
+            if (reagentCount < craft.NeededQty)
+                return false;
+
+            return true;
+        }
+
+        public void TryCraft(CraftRecipe craft) {
+            if (!CanCraft(craft))
+                return;
+
+            int stillNeeded = craft.NeededQty;
+
+            for (int i = Inventory.Count - 1; i >= 0; i--) {
+                if (Inventory[i].ID == craft.NeededItem) {
+                    if (Inventory[i].Quantity >= stillNeeded) {
+                        Inventory[i].Quantity -= stillNeeded;
+                        stillNeeded = 0;
+                    } else {
+                        stillNeeded -= Inventory[i].Quantity;
+                        Inventory[i].Quantity = 0; 
+                    }
+
+                    if (Inventory[i].Quantity <= 0) {
+                        Inventory.RemoveAt(i);
+                    }
+                }
+
+                if (stillNeeded <= 0)
+                    break;
+            }
+
+            Item item = Helper.Clone(GameLoop.ZPO.ItemLibrary[craft.OutputItem]);
+            item.Quantity = craft.OutputQty;
+
+            TryPickup(item);
+            TryGrantExp(craft.Skill, craft.ExpGranted, GameLoop.ZPO.Log, GameLoop.ZPO.RecentlyTrainedSkills);
+        }
+
+
+        public int TotalArmorValue(string against) {
+            int count = 0;
+
+            foreach (var kv in Equipment) {
+                int num = kv.Value.UseInt;
+                if (kv.Value.EquipSkill == "Defense") {
+                    if (kv.Value.MiscString == "DefenseMelee") {
+                        if (against == "Ranged") {
+                            num *= 2;
+                        }
+                        if (against == "Magic") {
+                            num = (int)Math.Ceiling(num / 2.0);
+                        }
+                    }
+
+                    if (kv.Value.MiscString == "DefenseMagic") {
+                        if (against == "Melee") {
+                            num *= 2;
+                        }
+                        if (against == "Ranged") {
+                            num = (int)Math.Ceiling(num / 2.0);
+                        }
+                    }
+
+                    if (kv.Value.MiscString == "DefenseRange") {
+                        if (against == "Magic") {
+                            num *= 2;
+                        }
+                        if (against == "Melee") {
+                            num = (int)Math.Ceiling(num / 2.0);
+                        }
+                    }
+
+                    count += num;
+                }
+            }
+
+            return count;
         }
     }
 }

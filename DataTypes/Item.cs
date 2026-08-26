@@ -17,6 +17,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool Stackable = false;
         public bool Tradeable = true;
         public bool Noteable = true;
+        public bool Noted = false;
 
         public string EquipSlot = "";
         public string MiscString = ""; 
@@ -28,7 +29,9 @@ namespace ZeroPlayersOnline.DataTypes {
         public int EquipTier = 0;
         public string EquipDamageType = "";
         public int EquipLevel = 0;
-        public string EquipSkill = ""; 
+        public string EquipSkill = "";
+        public double AttackSpeed = 1; // Speed in seconds between attacks
+        public string EquipAmmo = "";
 
         public List<PotionStat> Potion = new();
 
@@ -40,10 +43,14 @@ namespace ZeroPlayersOnline.DataTypes {
         public int UseInt2 = 0;
         public int UseInt3 = 0;
         public int UseInt4 = 0;
+        public List<ItemDrop> DropTable = new();
+
+        public bool DestroyOnDrop = false;
+        public bool Cosmetic = false;
 
         public Item() { }
 
-        public Item(string n, string ex, string id, int r, int g, int b, int v, int ha, int la, bool stack = false, bool trade = true, bool note = true, string equip = "", string misc = "") {
+        public Item(string n, string ex, string id, int r, int g, int b, int v, int ha, int la, bool stack = false, bool trade = true, string equip = "", string misc = "") {
             Name = n;
             ID = id;
             ExamineText = ex;
@@ -57,15 +64,18 @@ namespace ZeroPlayersOnline.DataTypes {
             LowAlch = la; 
 
             Stackable = stack;
-            Tradeable = trade;
-            Noteable = note;
+            Tradeable = trade; 
 
             EquipSlot = equip;
             MiscString = misc; 
+        } 
+
+        public int ColorSum() {
+            return colR + colG + colB;
         }
 
-        public ColoredString GetAppearance() {
-            return new ColoredString(glyph.AsString(), new Color(colR, colG, colB), Color.Black);
+        public Color GetColor() {
+            return new Color(colR, colG, colB);
         }
     }
 }

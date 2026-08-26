@@ -6,14 +6,14 @@ namespace ZeroPlayersOnline.Hardcodes {
             List<Recipe> toAdd = new();
 
 
-            toAdd.Add(new("tinderbox", "logPine", "_fire", 0, 1, 1, "Firemaking", 1, 40, miscStr: "ashes"));
+            toAdd.Add(new("tinderbox", "logPine", "_fire", 0, 1, 1, "Firemaking", 1, 40, miscStr: "ashes")); 
 
             toAdd.Add(new("oreCopper", "oreTin", "oreMixBronze", 1, 1, 1, "Smithing", 1, 2));
 
-            toAdd.Add(new("plansHelmet", "barBronze", "progHelmBronze1", 0, 1, 1, "Smithing", 1, 0));
-            toAdd.Add(new("progHelmBronze1", "barBronze", "progHelmBronze2", 1, 1, 1, "Smithing", 1, 0));
+            toAdd.Add(new("bowstring", "shortbowPineU", "shortbowPine", 1, 1, 1, "Fletching", 1, 5));
+            toAdd.Add(new("arrowshaft", "feather", "headlessShaft", 15, 15, 15, "Fletching", 1, 15)); 
+            toAdd.Add(new("headlessShaft", "arrowheadsBronze", "arrowsBronze", 15, 15, 15, "Fletching", 1, 20)); 
 
-            toAdd.Add(new("plansDagger", "barBronze", "progDaggerBronze", 0, 1, 1, "Smithing", 1, 0));
 
 
             for (int i = 0; i < toAdd.Count; i++) {

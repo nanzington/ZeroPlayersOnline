@@ -2,9 +2,12 @@
     public class Location {
         public string DisplayName = "";
         public string ID = "";
+        public string Region = "";
 
         public string Description = "";
         public bool IsBank = false;
+
+        public string DigItem = "";
 
         public List<Connection> ConnectedLocations = new();
 

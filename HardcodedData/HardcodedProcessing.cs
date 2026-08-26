@@ -11,16 +11,26 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
+            toAdd.Add(new("Tannery") {
+                Recipes = new() {
+                    new ProcessingRecipe("cowhide", "leatherSoft", "Crafting", 1, 5),
+                    new ProcessingRecipe("leatherSoft", "leatherHard", "Crafting", 1, 5)
+                }
+            });
+
             toAdd.Add(new("Anvil") {
                 Recipes = new() {
                     new ProcessingRecipe("progHelmBronze2", "helmBronze", "Smithing", 1, 30),
                     new ProcessingRecipe("progDaggerBronze", "daggerBronze", "Smithing", 1, 15)
-                }
+                },
+                OpensUI = "Smithing"
             });
 
             toAdd.Add(new("Range") {
                 Recipes = new() {
                     new ProcessingRecipe("meatRawNewt", "meatCookedNewt", "Cooking", 1, 15),
+                    new ProcessingRecipe("meatRawBeef", "meatCookedBeef", "Cooking", 1, 15),
+                    new ProcessingRecipe("meatRawChicken", "meatCookedChicken", "Cooking", 1, 15),
                     new ProcessingRecipe("fishRawShrimp", "fishCookedShrimp", "Cooking", 1, 15),
                     new ProcessingRecipe("fishRawAnchovies", "fishCookedAnchovies", "Cooking", 1, 15),
                     new ProcessingRecipe("potato", "potatoBaked", "Cooking", 7, 15)
@@ -29,7 +39,20 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Sink") {
                 Recipes = new() {
-                    new ProcessingRecipe("bucketEmpty", "bucketWater", "", 0, 0)
+                    new ProcessingRecipe("bucketEmpty", "bucketWater", "", 0, 0), 
+                    new ProcessingRecipe("clayDust", "claySoft", "", 0, 0)
+                }
+            });
+
+            toAdd.Add(new("Air Altar") {
+                Recipes = new() {
+                    new ProcessingRecipe("pureEssence", "runeAir", "Runecrafting", 1, 5, extra: true)
+                }
+            });
+
+            toAdd.Add(new("Spinning Wheel") {
+                Recipes = new() {
+                    new ProcessingRecipe("flax", "bowstring", "Crafting", 1, 5)
                 }
             });
 

@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using ZeroPlayersOnline.DataTypes;
+using ZeroPlayersOnline.Hardcodes;
 using Key = SadConsole.Input.Keys;
 
 namespace ZeroPlayersOnline.UI {
@@ -11,6 +12,10 @@ namespace ZeroPlayersOnline.UI {
 
         public string MenuMode = "Main";
         public string TypingBox = "";
+
+
+        public List<Particle> LeftParticles = new();
+        public List<Particle> RightParticles = new(); 
 
         public void Update(UI_EmbeddedMini mini) {
             mini.Con.Clear();
@@ -100,6 +105,68 @@ namespace ZeroPlayersOnline.UI {
             mini.SingleSquare.Print(offX + 48, offY + 4, "XXXXX", Color.White, Color.Black);
 
 
+            if (LeftParticles.Count < 100) {
+                int randColor = GameLoop.rand.Next(3);
+                Color col = randColor == 0 ? Color.Red : randColor == 1 ? Color.Orange : Color.Yellow;
+                LeftParticles.Add(new(GameLoop.rand.Next(18), 24, '\\', col.R, col.G, col.B));
+            }
+
+            foreach (var pL in LeftParticles) {
+                mini.Con.Print(pL.X, pL.Y, pL.Glyph.AsString(), new Color(pL.R, pL.G, pL.B));
+
+                if (pL.LastMoved + 200 < Helper.Time()) {
+                    pL.Y -= 1;
+                    pL.LastMoved = Helper.Time();
+
+
+                    int randGlyph = GameLoop.rand.Next(3);
+
+                    pL.Glyph = randGlyph == 0 ? '\\' : randGlyph == 1 ? '/' : '-';
+                }
+            }
+
+
+            for (int i = LeftParticles.Count - 1; i >= 0; i--) {
+                int distFromMiddle = LeftParticles[i].X - 9;
+                if (distFromMiddle < 0)
+                    distFromMiddle *= -1;
+
+                if (LeftParticles[i].Y < 15 + distFromMiddle) {
+                    LeftParticles.RemoveAt(i);
+                }
+            }
+
+            if (RightParticles.Count < 100) {
+                int randColor = GameLoop.rand.Next(3);
+                Color col = randColor == 0 ? Color.Red : randColor == 1 ? Color.Orange : Color.Yellow;
+                RightParticles.Add(new(129 + GameLoop.rand.Next(18), 24, '\\', col.R, col.G, col.B));
+            }
+
+            foreach (var pL in RightParticles) {
+                mini.Con.Print(pL.X, pL.Y, pL.Glyph.AsString(), new Color(pL.R, pL.G, pL.B));
+
+                if (pL.LastMoved + 200 < Helper.Time()) {
+                    pL.Y -= 1;
+                    pL.LastMoved = Helper.Time();
+
+
+                    int randGlyph = GameLoop.rand.Next(3);
+
+                    pL.Glyph = randGlyph == 0 ? '\\' : randGlyph == 1 ? '/' : '-';
+                }
+            }
+
+
+            for (int i = RightParticles.Count - 1; i >= 0; i--) {
+                int distFromMiddle = (RightParticles[i].X - 129) - 9;
+                if (distFromMiddle < 0)
+                    distFromMiddle *= -1;
+
+                if (RightParticles[i].Y < 15 + distFromMiddle) {
+                    RightParticles.RemoveAt(i);
+                }
+            }
+
             if (MenuMode == "Main") {
                 mini.Con.Print(63, 11, "SERVER STATUS:");
                 mini.Con.Print(79, 11, "ONLINE", Color.Lime);
@@ -116,59 +183,90 @@ namespace ZeroPlayersOnline.UI {
 
                 mini.Con.PrintStringField(38, 11, "Name: ", ref GameLoop.ZPO.player.Name, ref TypingBox, "playerName");
 
-                mini.Con.Print(28, 13, "Grand Exchange:");
-                mini.Con.PrintClickable(44, 13, new ColoredString("Full", GameLoop.ZPO.player.GrandExchangeMode == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.GrandExchangeMode = 0; });
-                mini.Con.PrintClickable(49, 13, new ColoredString("Bronze", GameLoop.ZPO.player.GrandExchangeMode == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.GrandExchangeMode = 1; });
-                mini.Con.PrintClickable(56, 13, new ColoredString("None", GameLoop.ZPO.player.GrandExchangeMode == 2 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.GrandExchangeMode = 2; });
+                int printY = 13;
 
-                mini.Con.Print(29, 14, "Death Penalty:");
-                mini.Con.PrintClickable(44, 14, new ColoredString("None", GameLoop.ZPO.player.DeathMode == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DeathMode = 0; });
-                mini.Con.PrintClickable(49, 14, new ColoredString("Drop Inv", GameLoop.ZPO.player.DeathMode == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DeathMode = 1; });
-                mini.Con.PrintClickable(58, 14, new ColoredString("Permadeath", GameLoop.ZPO.player.DeathMode == 2 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DeathMode = 2; });
+                mini.Con.Print(28, printY, "Grand Exchange:");
+                mini.Con.PrintClickable(44, printY, new ColoredString("Full", GameLoop.ZPO.player.GrandExchangeMode == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.GrandExchangeMode = 0; });
+                mini.Con.PrintClickable(49, printY, new ColoredString("Bronze", GameLoop.ZPO.player.GrandExchangeMode == 1 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.GrandExchangeMode = 1; });
+                mini.Con.PrintClickable(56, printY, new ColoredString("None", GameLoop.ZPO.player.GrandExchangeMode == 2 ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.GrandExchangeMode = 2; });
 
-                mini.Con.PrintClickableBool(27, 15, "Instadeath Mode: ", ref GameLoop.ZPO.player.NightmareMode);
+                printY++;
 
-                mini.Con.Print(28, 16, "Exp Multiplier:");
-                mini.Con.PrintClickable(28 + 16, 16, new ColoredString("0", GameLoop.ZPO.player.ExpMultiplier == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 0; });
-                mini.Con.PrintClickable(28 + 18, 16, new ColoredString("1", GameLoop.ZPO.player.ExpMultiplier == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 1; });
-                mini.Con.PrintClickable(28 + 20, 16, new ColoredString("2", GameLoop.ZPO.player.ExpMultiplier == 2 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 2; });
-                mini.Con.PrintClickable(28 + 22, 16, new ColoredString("5", GameLoop.ZPO.player.ExpMultiplier == 5 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 5; });
-                mini.Con.PrintClickable(28 + 24, 16, new ColoredString("10", GameLoop.ZPO.player.ExpMultiplier == 10 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 10; });
+                mini.Con.Print(29, printY, "Death Penalty:");
+                mini.Con.PrintClickable(44, printY, new ColoredString("None", GameLoop.ZPO.player.DeathMode == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DeathMode = 0; });
+                mini.Con.PrintClickable(49, printY, new ColoredString("Drop Inv", GameLoop.ZPO.player.DeathMode == 1 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DeathMode = 1; });
+                mini.Con.PrintClickable(58, printY, new ColoredString("Permadeath", GameLoop.ZPO.player.DeathMode == 2 ? Color.Red : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DeathMode = 2; });
+
+                printY++;
+
+                mini.Con.Print(27, printY, "Instadeath Mode: "); 
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("OFF", !GameLoop.ZPO.player.NightmareMode ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.NightmareMode = false; });
+                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("ON", GameLoop.ZPO.player.NightmareMode ? (Helper.Time() % 10 < 5 ? Color.Red : Color.White) : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.NightmareMode = true; });
+
+                printY++;
+
+                mini.Con.Print(28, printY, "Exp Multiplier:");
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("0", GameLoop.ZPO.player.ExpMultiplier == 0 ? Color.Red : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 0; });
+                mini.Con.PrintClickable(28 + 18, printY, new ColoredString("1", GameLoop.ZPO.player.ExpMultiplier == 1 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 1; });
+                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("2", GameLoop.ZPO.player.ExpMultiplier == 2 ? Color.ForestGreen : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 2; });
+                mini.Con.PrintClickable(28 + 22, printY, new ColoredString("5", GameLoop.ZPO.player.ExpMultiplier == 5 ? Color.AnsiGreen : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 5; });
+                mini.Con.PrintClickable(28 + 24, printY, new ColoredString("10", GameLoop.ZPO.player.ExpMultiplier == 10 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.ExpMultiplier = 10; });
+
+                printY++;
+
+                mini.Con.Print(27, printY, "GP to Buy 1 EXP:");
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("0", GameLoop.ZPO.player.PayToWin == 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 0; });
+                mini.Con.PrintClickable(28 + 18, printY, new ColoredString("1", GameLoop.ZPO.player.PayToWin == 1 ? Color.DarkRed : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 1; });
+                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("2", GameLoop.ZPO.player.PayToWin == 2 ? Color.AnsiRed : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 2; });
+                mini.Con.PrintClickable(28 + 22, printY, new ColoredString("5", GameLoop.ZPO.player.PayToWin == 5 ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 5; });
+                mini.Con.PrintClickable(28 + 24, printY, new ColoredString("10", GameLoop.ZPO.player.PayToWin == 10 ? Color.Red : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 10; });
+                mini.Con.PrintClickable(28 + 27, printY, new ColoredString("100", GameLoop.ZPO.player.PayToWin == 100 ? (Helper.Time() % 10 < 5 ? Color.Red : Color.White) : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 100; });
+                mini.Con.PrintClickable(28 + 31, printY, new ColoredString("1000", GameLoop.ZPO.player.PayToWin == 1000 ? Color.AnsiBlackBright : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 1000; });
+
+                printY++;
+
+                mini.Con.PrintClickableBool(27, printY, "Only Pay to Win: ", ref GameLoop.ZPO.player.OnlyPayToWin);
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("OFF", !GameLoop.ZPO.player.OnlyPayToWin ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.OnlyPayToWin = false; });
+                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("ON", GameLoop.ZPO.player.OnlyPayToWin ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.OnlyPayToWin = true; });
+
+                printY++;
+
+                mini.Con.Print(27, printY, "Drop Multiplier:");
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("0", GameLoop.ZPO.player.DropMultiplier == 0 ? Color.Red : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 0; });
+                mini.Con.PrintClickable(28 + 18, printY, new ColoredString("1", GameLoop.ZPO.player.DropMultiplier == 1 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 1; });
+                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("2", GameLoop.ZPO.player.DropMultiplier == 2 ? Color.ForestGreen : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 2; });
+                mini.Con.PrintClickable(28 + 22, printY, new ColoredString("5", GameLoop.ZPO.player.DropMultiplier == 5 ? Color.AnsiGreen : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 5; });
+                mini.Con.PrintClickable(28 + 24, printY, new ColoredString("10", GameLoop.ZPO.player.DropMultiplier == 10 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 10; });
+
+                printY++;
+
+                mini.Con.PrintScrollableInteger(21, printY, "Max Kills Per Monster: ", ref GameLoop.ZPO.player.KillLimit, false, -1);
+                
+                printY++;
+
+                mini.Con.Print(27, printY, "Item Randomizer:");
+                mini.Con.PrintClickable(44, printY, new ColoredString("Off", GameLoop.ZPO.player.RandomItems == 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 0; });
+                mini.Con.PrintClickable(48, printY, new ColoredString("No Logic", GameLoop.ZPO.player.RandomItems == 1 ? Color.Red : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 1; });
+                mini.Con.PrintClickable(57, printY, new ColoredString("No Logic+", GameLoop.ZPO.player.RandomItems == 2 ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 2; });
+
+                printY++;
+
+                mini.Con.Print(23, printY, "Location Randomizer:");
+                mini.Con.PrintClickable(44, printY, new ColoredString("Off", GameLoop.ZPO.player.RandomLocs == 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomLocs = 0; });
+                mini.Con.PrintClickable(48, printY, new ColoredString("No Logic", GameLoop.ZPO.player.RandomLocs == 1 ? Color.Red : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomLocs = 1; });
+
+                printY++;
+
+                mini.Con.Print(22, printY, "Gathering Randomizer:");
+                mini.Con.PrintClickable(44, printY, new ColoredString("Off", GameLoop.ZPO.player.RandomGathering == 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomGathering = 0; });
+                mini.Con.PrintClickable(48, printY, new ColoredString("No Logic", GameLoop.ZPO.player.RandomGathering == 1 ? Color.Red : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomGathering = 1; });
+
+                printY++;
 
 
-                mini.Con.Print(27, 17, "GP to Buy 1 EXP:");
-                mini.Con.PrintClickable(28 + 16, 17, new ColoredString("0", GameLoop.ZPO.player.PayToWin == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 0; });
-                mini.Con.PrintClickable(28 + 18, 17, new ColoredString("1", GameLoop.ZPO.player.PayToWin == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 1; });
-                mini.Con.PrintClickable(28 + 20, 17, new ColoredString("2", GameLoop.ZPO.player.PayToWin == 2 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 2; });
-                mini.Con.PrintClickable(28 + 22, 17, new ColoredString("5", GameLoop.ZPO.player.PayToWin == 5 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 5; });
-                mini.Con.PrintClickable(28 + 24, 17, new ColoredString("10", GameLoop.ZPO.player.PayToWin == 10 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 10; });
-
-                mini.Con.PrintClickableBool(27, 18, "Only Pay to Win: ", ref GameLoop.ZPO.player.OnlyPayToWin);
-                 
-                mini.Con.Print(27, 19, "Drop Multiplier:");
-                mini.Con.PrintClickable(28 + 16, 19, new ColoredString("0", GameLoop.ZPO.player.DropMultiplier == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 0; });
-                mini.Con.PrintClickable(28 + 18, 19, new ColoredString("1", GameLoop.ZPO.player.DropMultiplier == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 1; });
-                mini.Con.PrintClickable(28 + 20, 19, new ColoredString("2", GameLoop.ZPO.player.DropMultiplier == 2 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 2; });
-                mini.Con.PrintClickable(28 + 22, 19, new ColoredString("5", GameLoop.ZPO.player.DropMultiplier == 5 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 5; });
-                mini.Con.PrintClickable(28 + 24, 19, new ColoredString("10", GameLoop.ZPO.player.DropMultiplier == 10 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 10; });
-                 
-                mini.Con.PrintScrollableInteger(21, 20, "Max Kills Per Monster: ", ref GameLoop.ZPO.player.KillLimit, false, -1);
-
-                mini.Con.Print(27, 21, "Item Randomizer:");
-                mini.Con.PrintClickable(44, 21, new ColoredString("Off", GameLoop.ZPO.player.RandomItems == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 0; });
-                mini.Con.PrintClickable(48, 21, new ColoredString("No Logic", GameLoop.ZPO.player.RandomItems == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 1; });
-                mini.Con.PrintClickable(57, 21, new ColoredString("No Logic+", GameLoop.ZPO.player.RandomItems == 2 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 2; });
-
-                mini.Con.Print(23, 22, "Location Randomizer:");
-                mini.Con.PrintClickable(44, 22, new ColoredString("Off", GameLoop.ZPO.player.RandomLocs == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomLocs = 0; });
-                mini.Con.PrintClickable(48, 22, new ColoredString("No Logic", GameLoop.ZPO.player.RandomLocs == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomLocs = 1; });
-
-                mini.Con.Print(22, 23, "Gathering Randomizer:");
-                mini.Con.PrintClickable(44, 23, new ColoredString("Off", GameLoop.ZPO.player.RandomGathering == 0 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomGathering = 0; });
-                mini.Con.PrintClickable(48, 23, new ColoredString("No Logic", GameLoop.ZPO.player.RandomGathering == 1 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomGathering = 1; });
-
-
-
+                mini.Con.Print(22, 40, "White options are considered the default method of play.", Color.White);
+                mini.Con.Print(22, 41, "Green options are considered to make the game easier, brighter means even easier.", Color.Lime);
+                mini.Con.Print(22, 42, "Red options are considered to make the game harder, and may make the game impossible.", Color.Crimson); 
 
                 mini.Con.PrintClickable(22, 44, "<- Nevermind", () => { MenuMode = "Main"; });
 
@@ -203,6 +301,8 @@ namespace ZeroPlayersOnline.UI {
                         mini.Con.PrintClickable(65, 18 + i, saves[i].Align(HorizontalAlignment.Center, 18), () => {
                             Player p = Helper.DeserializeFromFile<Player>("./saves/" + saves[i] + ".json");
                             GameLoop.ZPO.player = p;
+
+                            PerformUpdateMaintenance();
 
                             SwapToGame(true);
                         });
@@ -266,6 +366,12 @@ namespace ZeroPlayersOnline.UI {
             GameLoop.UIManager.zpoWrap.Win.IsVisible = true;
             MenuMode = "Main";
             GameLoop.ZPO.TimeLastTicked = Helper.Time();
+        }
+
+        public void PerformUpdateMaintenance() {
+            HardcodedFarmPatches.InitPatches(GameLoop.ZPO.player.FarmingPatches);
+            GameLoop.ZPO.TryAddSkills();
+            GameLoop.ZPO.TryAddPrayers();
         }
     }
 }

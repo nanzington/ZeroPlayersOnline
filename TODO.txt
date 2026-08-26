@@ -4,38 +4,93 @@ Immediately important stuff to get working:
 - An achievement tracking thing where performing an action can check to see if doing it progresses an achievement/task, also have a screen to show all achieves with some sort options
 - Move data from being hardcoded to json files
 - Make all skills accessible somewhere on tutorial island?
-- - Runecrafting, need an altar, a talisman, and a rune essence rock. Probably just slap an air altar there in addition to the one near falador
 - - Agility, small agility course on island somewhere, going to have to make agility obstacles work for connection nodes (optional alternate fail location or damage plus exp granted)
-- - Crafting, maybe newts can also drop hide to be tanned and crafted, or just put some cows somewhere
-- - Hunter, some butterflies or implings or something somewhere, need to work out variable presence (implings) hunter targets and static targets
-- - Farming, small seed shop or stall to steal from, going to have to track patches globally in the player save
+- - Crafting, do some basic pottery
+- - Fletching. Logs into arrow shafts or unstrung bow, make bow string by spinning flax, string bow. Smith arrowheads with smithing, get feathers somehow, combine to make arrows.
+- - Hunter, some butterflies or implings or something somewhere, need to work out variable presence (implings) hunter targets and static targets 
 - - Herblore at least using eye of newt and guam to make attack potion
 
 
 Less immediate but still important:
-- Find a less clunky way to do smithing, current method involves so many clicks
-- Make the fire animation on the main menu for the torches
 - Drop items on death, reset character on permadeath
 - Make drop rate multiplier apply, in addition to kill limit and good fortune prayer
-- Open UI for Crafting/Fletching, have a new kind of recipe list where it specifies item you're working and gives all possible outputs. Optionally able to require extra tools or only at a station
+- Skill guides, preferably auto-populated using game data so it doesn't have to be manually updated
+- Make extra runes from high enough levels work  
+- If using ranged or magic, can't be attacked by enemies that only do melee (safespotting)
+- Get ranged combat working (bow, knives, make sure arrows are increasing damage a bit)
+- Get magic combat working
+- Emote clue steps, can finally craft all the items needed for the two tutorial ones so make the emote menu and tie it into the clue logic
+- Make armor reduce damage taken (need to decide on actual numbers for this)
 
+
+Difficulty things
+- Make difficulty options considered to make the game *harder* red, and easier *green* while normal is white
+- Farming grow speed (realtime-ish, 1/60th, instant)
+- No banks
+- No trading (once multiplayer is added, maybe just fold it into the no GE thing)
+- No shops
+- Limited Inventory Slots
 
 Randomizer Options - Basically just provide an option for ID remaps
-- Items, No Logic (this is kinda working but need to make on-ground items not spawn infinitely)
+- Items, No Logic (DONE), No Logic+ (every minute it re-randomizes the mappings)
 - Monsters, No Logic
 - Gathering Spot, No Logic
 - Locations, No Logic (this will be almost guaranteed to result in areas that are impossible to get to, maybe make spells also go to a random map)
 
 
+Tutorial Island Completionist Cape
+- Level 10 in all skills
+- Finish the quest on the island (maybe this should be mandatory anyways since you can't come back)
+- Finish the completion log for the boss on the island
+- Finish the tutorial clue collection log (probably just like some T10-30ish gear for each style?)
+
+
+Bossing
+- Maybe a button to spawn the boss at the appropriate location, and a system for "temporary" monsters?
+
+Multiplayer?
+- See eachother walking around in the world, possibly also see players in adjacent locations somehow
+- Friends list to message eachother from afar?
+- Type in chat and display to players in the same location
+
+
+Farming Notes
+- When fruit trees and bushes get added, don't clear them from the patch on harvest, let them regrow after a bit to keep harvesting. maybe do the same with regular trees
+
+
+
+Meta Story
+- Switches scattered across obscure parts of the map that all have to be flipped to begin the end sequence?
+- When the last switch is flipped, teleport to a copy of Tutorial island (disable all teleports while the sequence is happening, replace with a message saying that location doesn't exist)
+- Collapse sequence where other locations slowly disappear (log them all in the chat, very fast at first until it gets down to the last hundred or so maps when it slows down, then delete the TI ones last until only the map you're on is left)
+- When no maps are left, make Wizard Terrova (end sequence version) appear on the map with you to give some final exposition and say thank you
+- When the conversation with Terrova ends, return to the main menu screen but change the server status to offline and player count to something like ERROR, disable all buttons but exit until game is relaunched
+- Switch locations should require nothing to reach by default, but add a difficulty option to place them in hard locations (near-max to win) or completely random locations
+
+
+
+Random Utility Things
+- Spell to locate an NPC? Enter their name and it tells you what map they're (currently?) in
+
+
+Material Tiers/Levels
+1 - Bronze, Pine, Leather, Cloth
+10 - Iron, Oak, Hard Leather, 
+20 - Steel, Willow, Studded Leather
+30 - Mithril, Teak, Carapace
+40 - Adamant, Maple, Green Dhide
+50 - Rune, Acadia, Blue Dhide 
+60 - Oric, Yew, Black Dhide
 
 =========================================
 
 How will this even be possible?
-- Bossing with unique mechanics
+- Bossing with unique mechanics (maybe make and place a boss on tutorial island to introduce the concept)
 - Summoning/necromancy where they do the combat for you
 - Player owned house? Make it useful to have somehow?
 - Dungeoneering (maybe have "dungeon" type areas in the world be assigned a DG level needed to harvest anything there, and you get a portion of skilling/combat exp in there to DG?)
 - Make wilderness dangerous but rewarding?
+- Some of the popular minigames, at least where possible to play singleplayer (though maybe show ways it should be multiplayer)
 
 =========================================
 
@@ -49,9 +104,10 @@ Runecrafting
 - Probably just have the altars as location options in the appropriate place, make it so location nodes can require an item or stat to pass
 
 Treasure Trails
-- Have some way to dig at arbitrary locations
 - Make caskets work
-- How would emote clues even work? Guess an emote system has to be added and it can just print to the chat log
+- Get emote steps working and actually make the items possible to get for the steps made so far
+- Furniture "gathering spots" for clue step possibilities (boxes, crates, drawers, cupboard, chest)
+- Collection log, list all items and drop rates
 - Consider whether or not it's even worth adding sliding puzzles when they kinda suck, maybe let players force them open with strength score/check
 
 Difficulty modes
@@ -76,4 +132,5 @@ x Drop rate config (0x, 1x, 2x, 5x, 10x, optionally apply to clue caskets?)
 - Kill controls
 - - Can only get exp/drops from bosses, their adds, and monsters for quests during their quests
 - - Limited kill count per unique monster then no xp/drops
-- Have to unlock skills/areas/bosses somehow (possibly with exp, gp, or task completion)
+- Have to unlock skills/areas/bosses somehow (possibly with exp, gp, or task completion)  
+- Permadeath but with multiple lives before it resets

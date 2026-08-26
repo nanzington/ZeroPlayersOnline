@@ -585,77 +585,7 @@ namespace ZeroPlayersOnline {
                     toggler.Flip();
                 }
             }
-        }
-
-        public static void PrintClickable(this SadConsole.Console instance, int x, int y, string str, Action<string> OnClick, string ID) {
-            instance.PrintClickable(x, y, new ColoredString(str), OnClick, ID);
-        }
-
-        public static void PrintClickable(this SadConsole.Console instance, int x, int y, ColoredString str, Action<string> OnClick, string ID) {
-            MouseScreenObjectState mouse = new MouseScreenObjectState(instance, GameHost.Instance.Mouse);
-            Point mousePos = mouse.CellPosition;
-            bool mouseOn = mouse.IsOnScreenObject;
-
-            if (mousePos.X >= x && mousePos.X < x + str.Length && mousePos.Y == y) {
-                instance.Print(x, y, str.GetDarker());
-            }
-            else {
-                instance.Print(x, y, str);
-            }
-
-            if (GameHost.Instance.Mouse.LeftClicked && !ProcessedClick) {
-                if (mousePos.X >= x && mousePos.X < x + str.Length && mousePos.Y == y && mouseOn) {
-                    OnClick(ID);
-                    ProcessedClick = true;
-                }
-            }
-        }
-
-        public static void PrintClickable<T1>(this Console instance, int x, int y, ColoredString str, Action<string, T1> OnClick, string ID, T1 arg) {
-            MouseScreenObjectState mouse = new MouseScreenObjectState(instance, GameHost.Instance.Mouse);
-            Point mousePos = mouse.CellPosition;
-            bool mouseOn = mouse.IsOnScreenObject;
-
-            int length = str.Length;
-            var temp = str.ToArray();
-
-            if (mousePos.X >= x && mousePos.X < x + str.Length && mousePos.Y == y) {
-                instance.Print(x, y, str.GetDarker());
-            }
-            else {
-                instance.Print(x, y, str);
-            }
-
-            if (GameHost.Instance.Mouse.LeftClicked && !ProcessedClick) {
-                if (mousePos.X >= x && mousePos.X < x + length && mousePos.Y == y && mouseOn) {
-                    OnClick(ID, arg);
-                    ProcessedClick = true;
-                } 
-            }
-        }
-
-        public static void PrintClickable<T1, T2>(this SadConsole.Console instance, int x, int y, ColoredString str, Action<string, T1, T2> OnClick, string ID, T1 arg1, T2 arg2) {
-            MouseScreenObjectState mouse = new MouseScreenObjectState(instance, GameHost.Instance.Mouse);
-            Point mousePos = mouse.CellPosition;
-            bool mouseOn = mouse.IsOnScreenObject;
-
-            int length = str.Length;
-            var temp = str.ToArray();
-
-            if (mousePos.X >= x && mousePos.X < x + str.Length && mousePos.Y == y && mouseOn) {
-                instance.Print(x, y, str.GetDarker());
-            }
-            else {
-                instance.Print(x, y, str);
-            }
-
-            if (GameHost.Instance.Mouse.LeftClicked && !ProcessedClick) {
-                if (mousePos.X >= x && mousePos.X < x + length && mousePos.Y == y) {
-                    OnClick(ID, arg1, arg2);
-                    ProcessedClick = true;
-                } 
-            }
-        }
+        }  
 
         public static void PrintClickable(this SadConsole.Console instance, int x, int y, string str, Action OnClick) {
             instance.PrintClickable(x, y, new ColoredString(str), OnClick);
@@ -665,10 +595,15 @@ namespace ZeroPlayersOnline {
             MouseScreenObjectState mouse = new MouseScreenObjectState(instance, GameHost.Instance.Mouse);
             Point mousePos = mouse.CellPosition;
             bool mouseOn = mouse.IsOnScreenObject;
-
             int length = str.Length - 1;
 
             instance.Print(x, y, mousePos.X >= x && mousePos.X <= x + length && mousePos.Y == y ? str.GetDarker() : str);
+
+            if ((GameLoop.ZPO.Guide.IsVisible && instance != GameLoop.ZPO.Guide) 
+                || (GameLoop.ZPO.CollectionLog.IsVisible && instance != GameLoop.ZPO.CollectionLog)
+                || (GameLoop.ZPO.CraftingMenu.IsVisible && instance != GameLoop.ZPO.CraftingMenu)) {
+                return;
+            }
 
             if (GameHost.Instance.Mouse.LeftClicked) {
                 if (mousePos.X >= x && mousePos.X <= x + length && mousePos.Y == y && mouseOn) {
