@@ -40,6 +40,11 @@
         public int RandomLocs = 0; // 0 = not random, 1 = no logic rando
         public int RandomGathering = 0; // 0 = no random, 1 = no logic rando
 
+        public int InventoryLimit = 20;
+        public bool CanUseShops = true;
+        public bool CanUseBanks = true;
+        public int FarmGrowthIncrement = 60;
+
         // End of Difficulty Settings
 
 
@@ -109,7 +114,7 @@
                 }
             }
              
-            if (Inventory.Count < 20) {
+            if (Inventory.Count < InventoryLimit) {
                 Inventory.Add(item);
                 return true;
             }
@@ -160,13 +165,34 @@
 
         public void Die(MessageLog log) {
             if (DeathMode == 1) { // Drop all items
+                if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? deathSpot)) {
+                    if (deathSpot != null) {
+                        for (int i = Inventory.Count - 1; i >= 0; i--) {
+                            bool found = false;
+                            for (int j = 0; j < deathSpot.ItemsHere.Count; j++) {
+                                if (deathSpot.ItemsHere[j].ID == Inventory[i].ID && Inventory[i].Stackable) {
+                                    deathSpot.ItemsHere[j].Quantity += Inventory[i].Quantity;
+                                    found = true;
+                                    break;
+                                }
+                            }
 
+                            if (!found) {
+                                deathSpot.ItemsHere.Add(Inventory[i]);
+                            }
+
+                            Inventory.RemoveAt(i);
+                        }
+                    }
+                }
             }
+
+            log.AddMessage(new ColoredString("Oh no, you died!", Color.Crimson, Color.Black));
 
             if (DeathMode == 2) { // Reset character and whole world so you can't cheese it by dropping items before dying then picking them up
-
-            }
-            log.AddMessage(new ColoredString("Oh no, you died!", Color.Crimson, Color.Black));
+                GameLoop.ZPO.RebuildLibraries();
+                GameLoop.ZPO.SoftResetPlayer();
+            } 
 
             NavLoc = NavRespawn;
             CurrentHP = Skills["Constitution"].Level;

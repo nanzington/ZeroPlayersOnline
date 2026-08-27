@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline.DataTypes {
     public class GatheringTile {
@@ -45,13 +46,15 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public void Gather(Player p, MessageLog log, Dictionary<string, Item> itemLibrary, Location currentLoc, List<Skill> Recents) {
             if (CanGather(p)) {
+                ClueLogic.GenericStep(p, log, "Gather", ID);
+
                 int success = GameLoop.rand.Next(100) + 1;
 
                 if (LevelBasedSuccess && p.Skills.ContainsKey(Skill))
                     success += (p.GetEffectiveSkillLevel(Skill) - Level);
 
                 if (success <= SuccessChance) {
-                    string output = PickItem();
+                    string output = PickItem(); 
                     if (itemLibrary.ContainsKey(output)) {
                         Item receive = Helper.Clone(itemLibrary[output]);
                         if (p.TryPickup(receive)) {
@@ -62,8 +65,12 @@ namespace ZeroPlayersOnline.DataTypes {
                         }
 
                         p.TryGrantExp(Skill, ExpGranted, log, Recents);
-                    } else { 
-                        log.AddMessage(new ColoredString("You " + InteractVerb.ToLower() + " the " + Name.ToLower() + ", but output item doesn't exist.", Color.Firebrick, Color.Black));
+                    } else {
+                        if (output != "") {
+                            log.AddMessage(new ColoredString("You " + InteractVerb.ToLower() + " the " + Name.ToLower() + ", but output item doesn't exist.", Color.Firebrick, Color.Black));
+                        } else {
+                            log.AddMessage(new ColoredString("You " + InteractVerb.ToLower() + " the " + Name.ToLower() + ", but get nothing.", Color.Firebrick, Color.Black));
+                        }
                         p.TryGrantExp(Skill, ExpGranted, log, Recents);
                     }
 
@@ -89,7 +96,7 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                 }
             }
-        }
+        } 
 
         public bool CanGather(Player p) { 
             if (p.Skills.ContainsKey(Skill) && p.Skills[Skill].Level < Level)

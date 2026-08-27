@@ -295,7 +295,7 @@ namespace ZeroPlayersOnline {
             instance = !instance;
         }
 
-        public static void PrintScrollableInteger(this Console instance, int x, int y, string prefaceText, ref int number, bool asString = false, int min = int.MinValue, int max = int.MaxValue, int baseStep = 1, int shiftStep = 5, int controlStep = 10, bool onlyPreface = false) {
+        public static void PrintScrollableInteger(this Console instance, int x, int y, string prefaceText, ref int number, bool asString = false, int min = int.MinValue, int max = int.MaxValue, int baseStep = 1, int shiftStep = 5, int controlStep = 10, bool onlyPreface = false, int r = 255, int g = 255, int b = 255) {
             Point mousePos = new MouseScreenObjectState(instance, GameHost.Instance.Mouse).CellPosition;
             string numString = number.ToString();
 
@@ -328,7 +328,7 @@ namespace ZeroPlayersOnline {
             instance.Print(x, y, prefaceText);
 
             if (!onlyPreface)
-                instance.Print(x + prefaceText.Length, y, numString);
+                instance.Print(x + prefaceText.Length, y, numString, new Color(r, g, b));
         }
 
         public static void PrintStringField(this Console instance, int x, int y, string prefaceText, ref string field, ref string selected, string plainName, bool onlyPreface = false, bool censored = false) {

@@ -5,31 +5,27 @@ Immediately important stuff to get working:
 - Move data from being hardcoded to json files
 - Make all skills accessible somewhere on tutorial island?
 - - Agility, small agility course on island somewhere, going to have to make agility obstacles work for connection nodes (optional alternate fail location or damage plus exp granted)
-- - Crafting, do some basic pottery
-- - Fletching. Logs into arrow shafts or unstrung bow, make bow string by spinning flax, string bow. Smith arrowheads with smithing, get feathers somehow, combine to make arrows.
 - - Hunter, some butterflies or implings or something somewhere, need to work out variable presence (implings) hunter targets and static targets 
 - - Herblore at least using eye of newt and guam to make attack potion
+- - Construction might not be possible? Would have to have just one house instead of a house per area
+- - Summoning / Necromancy / Taming or maybe some kind of combo of the three into one "minion fights for you" combat skill
 
 
-Less immediate but still important:
-- Drop items on death, reset character on permadeath
-- Make drop rate multiplier apply, in addition to kill limit and good fortune prayer
-- Skill guides, preferably auto-populated using game data so it doesn't have to be manually updated
-- Make extra runes from high enough levels work  
-- If using ranged or magic, can't be attacked by enemies that only do melee (safespotting)
-- Get ranged combat working (bow, knives, make sure arrows are increasing damage a bit)
-- Get magic combat working
-- Emote clue steps, can finally craft all the items needed for the two tutorial ones so make the emote menu and tie it into the clue logic
+Less immediate but still important: 
+- Skill guides, preferably auto-populated using game data so it doesn't have to be manually updated 
+- Ranged: need to make arrows contribute to damage somehow, maybe derive ranged damage from the arrows, and you have to have a bow at least at the arrows level to use them?
+- Ranged: make some kind of breakage chance so you don't get all ammo back
+- Get magic combat working 
 - Make armor reduce damage taken (need to decide on actual numbers for this)
+- Allow withdrawing a specific amount of item in banks instead of all or nothing
+- Also make noted items work and add checks anywhere items are used or consumed to make sure they're not noted
+- Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
+- Do something to make the top-left corner of the UI nicer, figure out some more stuff to add there besides HP/level/damage/gold
 
 
 Difficulty things
-- Make difficulty options considered to make the game *harder* red, and easier *green* while normal is white
-- Farming grow speed (realtime-ish, 1/60th, instant)
-- No banks
-- No trading (once multiplayer is added, maybe just fold it into the no GE thing)
-- No shops
-- Limited Inventory Slots
+- No trading (once multiplayer is added, maybe just fold it into the no GE thing) 
+- Disable exp gain on skills selectively
 
 Randomizer Options - Basically just provide an option for ID remaps
 - Items, No Logic (DONE), No Logic+ (every minute it re-randomizes the mappings)
@@ -81,6 +77,15 @@ Material Tiers/Levels
 40 - Adamant, Maple, Green Dhide
 50 - Rune, Acadia, Blue Dhide 
 60 - Oric, Yew, Black Dhide
+
+Clue Step Notes
+- Tutorial should only require level 1s at most.
+- Beginner only up to level 10
+- Easy only up to level 20, may require novice quests
+- Medium only up to level 40, may require up to intermediate quests
+- Hard only up to level 60, may require up to experienced quests
+- Elite only up to level 80, may require up to master quests
+- Master up to 99, may require up to grandmaster quests
 
 =========================================
 

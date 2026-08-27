@@ -120,6 +120,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new Connection("TI_Main")
                 },
                 ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "needle", "knife" },
+                GatheringSpots = new List<string>() { "clueCrates" },
                 ProcessingStations = new List<string>() { "Tannery" },
                 NPCsHere = new() { "tiDrunkPirate" }
             });

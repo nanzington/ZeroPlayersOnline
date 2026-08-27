@@ -40,12 +40,21 @@ namespace ZeroPlayersOnline.DataTypes {
                             changedInv = true;
                         }
 
+                        int extra = 0;
+
                         if (ItemLibrary.ContainsKey(Recipes[j].OutputID)) {
                             Item item = Helper.Clone(ItemLibrary[Recipes[j].OutputID]);
+
+                            if (Recipes[j].HighSkillExtraOutputs) {
+                                int skillDiff = p.Skills[Recipes[j].SkillUsed].Level - Recipes[j].SkillLevel;
+                                extra = (int) Math.Floor(skillDiff / 10.0);
+                                item.Quantity += extra;
+                            }
+
                             p.TryPickup(item);
                         }
 
-                        p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP, log, RecentSkills); 
+                        p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills); 
                     }
                     if (changedInv)
                         break;

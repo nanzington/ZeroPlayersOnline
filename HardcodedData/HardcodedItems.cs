@@ -63,7 +63,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 UseString3 = "potato", // Output when grown
                 UseInt = 1, // Farming level to plant
                 UseInt2 = 10, // Exp on harvest
-                UseInt3 = 40 // Time to grow in seconds
+                UseInt3 = 2400 // Time to grow in seconds
 
             });
             itemsToAdd.Add(new Item("Potato", "A tuber most versatile.", "potato", 205, 127, 50, 5, 2, 1));
@@ -208,8 +208,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipSlot = "Ammo",
                 EquipTier = 1,
                 EquipSkill = "Ranged",
+                EquipDamageType = "Arrow",
                 EquipLevel = 1,
-                UseInt = 1,
+                UseInt = 1
             });
             itemsToAdd.Add(new Item("Bronze arrowheads", "I can make some arrows with these.", "arrowheadsBronze", 205, 127, 50, 44, 26, 17, true));
             itemsToAdd.Add(new Item("Bronze knives", "A finely balanced throwing knife.", "knivesBronze", 205, 127, 50, 44, 26, 17, true) {
@@ -217,7 +218,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipTier = 1,
                 EquipDamageType = "Stab",
                 EquipSkill = "Ranged",
-                AttackSpeed = 0.5
+                AttackSpeed = 0.5,
+                EquipAmmo = "Self"
             });
 
             itemsToAdd.Add(new Item("Bronze dagger", "Good for stabbing.", "daggerBronze", 205, 127, 50, 10, 6, 4) {

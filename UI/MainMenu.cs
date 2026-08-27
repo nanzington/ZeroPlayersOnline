@@ -200,8 +200,8 @@ namespace ZeroPlayersOnline.UI {
                 printY++;
 
                 mini.Con.Print(27, printY, "Instadeath Mode: "); 
-                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("OFF", !GameLoop.ZPO.player.NightmareMode ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.NightmareMode = false; });
-                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("ON", GameLoop.ZPO.player.NightmareMode ? (Helper.Time() % 10 < 5 ? Color.Red : Color.White) : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.NightmareMode = true; });
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("Off", !GameLoop.ZPO.player.NightmareMode ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.NightmareMode = false; });
+                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("On", GameLoop.ZPO.player.NightmareMode ? (Helper.Time() % 10 < 5 ? Color.Red : Color.White) : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.NightmareMode = true; });
 
                 printY++;
 
@@ -241,7 +241,34 @@ namespace ZeroPlayersOnline.UI {
                 printY++;
 
                 mini.Con.PrintScrollableInteger(21, printY, "Max Kills Per Monster: ", ref GameLoop.ZPO.player.KillLimit, false, -1);
-                
+                 
+                printY++;
+
+                if (GameLoop.ZPO.player.InventoryLimit == 20)
+                    mini.Con.PrintScrollableInteger(27, printY, "Inventory Slots: ", ref GameLoop.ZPO.player.InventoryLimit, false, 1, 20);
+                else
+                    mini.Con.PrintScrollableInteger(27, printY, "Inventory Slots: ", ref GameLoop.ZPO.player.InventoryLimit, false, 1, 20, r: 155 + (20 - GameLoop.ZPO.player.InventoryLimit) * 5, g: 0, b: 0);
+
+                printY++;
+
+                mini.Con.PrintClickableBool(29, printY, "Can Use Banks: ", ref GameLoop.ZPO.player.CanUseBanks);
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("Yes", GameLoop.ZPO.player.CanUseBanks ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.CanUseBanks = true; });
+                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("No", !GameLoop.ZPO.player.CanUseBanks ? Color.AnsiRed : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.CanUseBanks = false; });
+                 
+                printY++;
+
+                mini.Con.PrintClickableBool(29, printY, "Can Use Shops: ", ref GameLoop.ZPO.player.CanUseShops);
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("Yes", GameLoop.ZPO.player.CanUseShops ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.CanUseShops = true; });
+                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("No", !GameLoop.ZPO.player.CanUseShops ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.CanUseShops = false; });
+
+                printY++;
+
+                mini.Con.PrintClickableBool(26, printY, "Farm Growth Time: ", ref GameLoop.ZPO.player.CanUseShops);
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("Slow", GameLoop.ZPO.player.FarmGrowthIncrement == 1 ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.FarmGrowthIncrement = 1; });
+                mini.Con.PrintClickable(28 + 21, printY, new ColoredString("Normal", GameLoop.ZPO.player.FarmGrowthIncrement == 60 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.FarmGrowthIncrement = 60; });
+                mini.Con.PrintClickable(28 + 28, printY, new ColoredString("Fast", GameLoop.ZPO.player.FarmGrowthIncrement == 1000 ? Color.AnsiGreen : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.FarmGrowthIncrement = 1000; });
+                mini.Con.PrintClickable(28 + 33, printY, new ColoredString("Instant", GameLoop.ZPO.player.FarmGrowthIncrement == 10000 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.FarmGrowthIncrement = 10000; });
+
                 printY++;
 
                 mini.Con.Print(27, printY, "Item Randomizer:");

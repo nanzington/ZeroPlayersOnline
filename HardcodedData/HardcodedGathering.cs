@@ -114,6 +114,13 @@ namespace ZeroPlayersOnline.Hardcodes {
                 PossibleItems = new() { new("fishRawShrimp", 3), new("fishRawAnchovies", 1) }
             });
 
+            tiles.Add(new GatheringTile() {
+                ID = "clueCrates",
+                Name = "Crates", 
+                InteractVerb = "Search",
+                Level = 0
+            });
+
 
 
             for (int i = 0; i < tiles.Count; i++) {

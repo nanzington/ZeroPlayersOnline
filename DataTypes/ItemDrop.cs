@@ -13,13 +13,17 @@ namespace ZeroPlayersOnline.DataTypes {
         public int QuantityMin = 0;
         public int QuantityMax = 1;
 
-        public ItemDrop(string id, int x, int y, int min, int max) {
+        public bool EvenAt0x = false;
+
+        public ItemDrop(string id, int x, int y, int min, int max, bool evenIf0 = false) {
             ItemID = id;
             DropX = x;
             InY = y;
 
             QuantityMin = min;
             QuantityMax = max;
+
+            EvenAt0x = evenIf0;
         }
 
         // Rolls 0 to InY, if less than DropX, success

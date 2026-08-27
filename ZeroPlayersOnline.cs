@@ -385,20 +385,22 @@ namespace ZeroPlayersOnline {
                 mini.Con.PrintClickable(19, 13, new ColoredString("MAG", SidebarMenu == "Magic" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Magic"; });
                 mini.Con.Print(23, 13, "|");
                 mini.Con.PrintClickable(25, 13, new ColoredString("PRA", SidebarMenu == "Prayer" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Prayer"; });
+                mini.Con.Print(29, 13, "|");
+                mini.Con.PrintClickable(31, 13, new ColoredString("EMO", SidebarMenu == "Emote" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Emote"; });
 
 
                 mini.Con.DrawLine(new Point(0, 14), new Point(54, 14), 196);
 
                 if (SidebarMenu == "Inventory") {
 
-                    for (int i = 0; i < 20; i++) {
+                    for (int i = 0; i < player.InventoryLimit; i++) {
                         mini.Con.DrawLine(new Point(0, 15 + i), new Point(54, 15 + i), '-', Color.DarkSlateGray);
 
                         if (i < player.Inventory.Count) {
                             string line = player.Inventory[i].Name;
 
                             if (player.Inventory[i].Quantity > 1) {
-                                line += " (x" + player.Inventory[i].Quantity + ")";
+                                line += " x" + player.Inventory[i].Quantity;
                             }
 
                             int colorSum = player.Inventory[i].colR + player.Inventory[i].colG + player.Inventory[i].colB;
@@ -453,10 +455,16 @@ namespace ZeroPlayersOnline {
                                     if (canEquip) {
                                         player.Inventory.RemoveAt(i);
 
+                                        
                                         if (player.Equipment.ContainsKey(item.EquipSlot)) {
-                                            Item unequip = player.Equipment[item.EquipSlot];
-                                            player.TryPickup(unequip);
-                                            player.Equipment.Remove(item.EquipSlot);
+                                            if (player.Equipment[item.EquipSlot].ID == item.ID && item.Stackable) {
+                                                player.Equipment[item.EquipSlot].Quantity += item.Quantity;
+                                                return;
+                                            } else {
+                                                Item unequip = player.Equipment[item.EquipSlot];
+                                                player.TryPickup(unequip);
+                                                player.Equipment.Remove(item.EquipSlot);
+                                            }
                                         }
 
                                         player.Equipment.Add(item.EquipSlot, item);
@@ -480,12 +488,22 @@ namespace ZeroPlayersOnline {
 
 
                             mini.Con.PrintClickable(54, 15 + i, new ColoredString("X", Color.Crimson, Color.Black), () => {
-                                if (curr.IsBank) {
-                                    Item item = Helper.Clone(player.Inventory[i]); 
-                                    player.BankedItems.Add(item);
+                                if (curr.IsBank && player.CanUseBanks) {
+                                    Item item = Helper.Clone(player.Inventory[i]);
+
+                                    if (item.Stackable) {
+                                        for (int i = 0; i < player.BankedItems.Count; i++) {
+                                            if (player.BankedItems[i].ID == item.ID) {
+                                                player.BankedItems[i].Quantity += item.Quantity;
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        player.BankedItems.Add(item);
+                                    }
                                 }
                                 else {
-                                    if (curr.ShopItemsHere.Count == 0) { 
+                                    if (curr.ShopItemsHere.Count == 0 || !player.CanUseShops) { 
                                         Item item = Helper.Clone(player.Inventory[i]);
                                         if (item.DestroyOnDrop) {
                                             if (item.ID == "clueScrollTutorial") {
@@ -633,8 +651,8 @@ namespace ZeroPlayersOnline {
 
                     mini.Con.Print(1, printY, "|   Weapon: "); 
                     if (player.Equipment.ContainsKey("Weapon")) {
-                        string name = player.Equipment["Weapon"].Name + (player.Equipment["Weapon"].Quantity > 0 ? " x" + player.Equipment["Weapon"].Quantity : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Weapon"].Name, player.Equipment["Weapon"].GetColor(), player.Equipment["Weapon"].ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = player.Equipment["Weapon"].Name + (player.Equipment["Weapon"].Quantity > 1 ? " x" + player.Equipment["Weapon"].Quantity : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, player.Equipment["Weapon"].GetColor(), player.Equipment["Weapon"].ColorSum() < 60 ? Color.White : Color.Black), () => {
                             Item item = player.Equipment["Weapon"];
                             player.TryPickup(item);
                             player.Equipment.Remove("Weapon");
@@ -744,8 +762,8 @@ namespace ZeroPlayersOnline {
 
                     mini.Con.Print(1, printY, "|   Pocket: ");
                     if (player.Equipment.ContainsKey("Pocket")) {
-                        string name = player.Equipment["Pocket"].Name + (player.Equipment["Pocket"].Quantity > 0 ? " x" + player.Equipment["Pocket"].Quantity : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Pocket"].Name, player.Equipment["Pocket"].GetColor(), player.Equipment["Pocket"].ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = player.Equipment["Pocket"].Name + (player.Equipment["Pocket"].Quantity > 1 ? " x" + player.Equipment["Pocket"].Quantity : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, player.Equipment["Pocket"].GetColor(), player.Equipment["Pocket"].ColorSum() < 60 ? Color.White : Color.Black), () => {
                             Item item = player.Equipment["Pocket"];
                             player.TryPickup(item);
                             player.Equipment.Remove("Pocket");
@@ -756,8 +774,8 @@ namespace ZeroPlayersOnline {
 
                     mini.Con.Print(1, printY, "|     Ammo: ");
                     if (player.Equipment.ContainsKey("Ammo")) {
-                        string name = player.Equipment["Ammo"].Name + (player.Equipment["Ammo"].Quantity > 0 ? " x" + player.Equipment["Ammo"].Quantity : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name , player.Equipment["Ammo"].GetColor(), player.Equipment["Ammo"].ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = player.Equipment["Ammo"].Name + (player.Equipment["Ammo"].Quantity > 1 ? " x" + player.Equipment["Ammo"].Quantity : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, player.Equipment["Ammo"].GetColor(), player.Equipment["Ammo"].ColorSum() < 60 ? Color.White : Color.Black), () => {
                             Item item = player.Equipment["Ammo"];
                             player.TryPickup(item);
                             player.Equipment.Remove("Ammo");
@@ -831,6 +849,38 @@ namespace ZeroPlayersOnline {
                             }
                         }
                     }
+                } else if (SidebarMenu == "Emote") {
+                    mini.Con.Print(1, 15, "Emote Name"); 
+                    mini.Con.DrawLine(new Point(0, 16), new Point(54, 16), 196);
+
+                    int printY = 17; 
+                    mini.Con.PrintClickable(1, printY++, "Nod Head", () => { Log.AddMessage("You nod your head."); ClueLogic.GenericStep(player, Log, "Emote", "Nod"); });
+                    mini.Con.PrintClickable(1, printY++, "Shake Head", () => { Log.AddMessage("You shake your head."); ClueLogic.GenericStep(player, Log, "Emote", "Shake"); });
+                    mini.Con.PrintClickable(1, printY++, "Think", () => { Log.AddMessage("You ponder for a moment."); ClueLogic.GenericStep(player, Log, "Emote", "Think"); });
+                    mini.Con.PrintClickable(1, printY++, "Beckon", () => { Log.AddMessage("You beckon to nobody in particular."); ClueLogic.GenericStep(player, Log, "Emote", "Beckon"); });
+                    mini.Con.PrintClickable(1, printY++, "Dance", () => { Log.AddMessage("You shake your body in a dance."); ClueLogic.GenericStep(player, Log, "Emote", "Dance"); });
+                    mini.Con.PrintClickable(1, printY++, "Cry", () => { Log.AddMessage("You break down and cry for a moment."); ClueLogic.GenericStep(player, Log, "Emote", "Cry"); }); 
+                    mini.Con.PrintClickable(1, printY++, "Clap", () => { Log.AddMessage("You clap your hands."); ClueLogic.GenericStep(player, Log, "Emote", "Clap"); });
+                    mini.Con.PrintClickable(1, printY++, "Wave", () => { Log.AddMessage("You wave your arm vigorously."); ClueLogic.GenericStep(player, Log, "Emote", "Wave"); });
+
+                    printY = 17;
+                    mini.Con.PrintClickable(20, printY++, "Laugh", () => { Log.AddMessage("You throw your head back and laugh heartily."); ClueLogic.GenericStep(player, Log, "Emote", "Laugh"); });
+                    mini.Con.PrintClickable(20, printY++, "Jig", () => { Log.AddMessage("You dance a little jig."); ClueLogic.GenericStep(player, Log, "Emote", "Jig"); });
+                    mini.Con.PrintClickable(20, printY++, "Blow Kiss", () => { Log.AddMessage("You blow a kiss."); ClueLogic.GenericStep(player, Log, "Emote", "BlowKiss"); }); 
+                    mini.Con.PrintClickable(20, printY++, "Salute", () => { Log.AddMessage("You put your hand to your head in a crisp salute."); ClueLogic.GenericStep(player, Log, "Emote", "Salute"); });
+                    mini.Con.PrintClickable(20, printY++, "Bow", () => { Log.AddMessage("You take a bow."); ClueLogic.GenericStep(player, Log, "Emote", "Bow"); });
+                    mini.Con.PrintClickable(20, printY++, "Shrug", () => { Log.AddMessage("You shrug your shoulders."); ClueLogic.GenericStep(player, Log, "Emote", "Shrug"); });
+                    mini.Con.PrintClickable(20, printY++, "Jump for Joy", () => { Log.AddMessage("You jump for joy."); ClueLogic.GenericStep(player, Log, "Emote", "JumpForJoy"); });
+                    mini.Con.PrintClickable(20, printY++, "Spin", () => { Log.AddMessage("You twirl around quickly with your arms stretched out."); ClueLogic.GenericStep(player, Log, "Emote", "Spin"); });
+
+                    printY = 17;
+                    mini.Con.PrintClickable(40, printY++, "Panic", () => { Log.AddMessage("You panic for a moment."); ClueLogic.GenericStep(player, Log, "Emote", "Panic"); });
+                    mini.Con.PrintClickable(40, printY++, "Shake Fist", () => { Log.AddMessage("You shake your fist in anger."); ClueLogic.GenericStep(player, Log, "Emote", "ShakeFist"); });
+                    mini.Con.PrintClickable(40, printY++, "Cheer", () => { Log.AddMessage("You cheer. Hurray!"); ClueLogic.GenericStep(player, Log, "Emote", "Cheer"); });
+                    mini.Con.PrintClickable(40, printY++, "Yawn", () => { Log.AddMessage("You let out a yawn."); ClueLogic.GenericStep(player, Log, "Emote", "Yawn"); });
+                    mini.Con.PrintClickable(40, printY++, "Headbang", () => { Log.AddMessage("You bang your head to music only you can hear."); ClueLogic.GenericStep(player, Log, "Emote", "Headbang"); });
+                    mini.Con.PrintClickable(40, printY++, "Raspberry", () => { Log.AddMessage("You blow a raspberry."); ClueLogic.GenericStep(player, Log, "Emote", "Raspberry"); });
+                    mini.Con.PrintClickable(40, printY++, "Sit Down", () => { Log.AddMessage("You sit down for a bit. This was nice."); ClueLogic.GenericStep(player, Log, "Emote", "SitDown"); });
                 }
             }
         }
@@ -916,6 +966,11 @@ namespace ZeroPlayersOnline {
                     for (int i = 0; i < curr.MonstersHere.Count; i++) {
                         AreaMonster thisOne = curr.MonstersHere[i];
 
+                        bool reachedKillLimit = player.KillLimit == 0 ? true : false;
+                        if (player.CollectionLog.ContainsKey(thisOne.ID)) {
+                            reachedKillLimit = player.KillLimit != -1 && player.CollectionLog[thisOne.ID].KillCount >= player.KillLimit; 
+                        }
+
                         Color nameCol = Color.White;
 
                         if (thisOne.AggroLevel > player.GetCombatLevel() || thisOne.AlwaysAggro || thisOne.AttackingPlayer)
@@ -936,29 +991,41 @@ namespace ZeroPlayersOnline {
 
                                 int hitChance = GameLoop.rand.Next(100);
 
-                                if (hitChance < 25 + (player.GetEffectiveSkillLevel("Defense") / 4.0)) { 
-                                    Log.AddMessage(new ColoredString(thisOne.Name + " tried to hit you but missed!", Color.Yellow, Color.Black));
-                                } else { 
-                                    if ((player.PrayerActive("Protect from Magic") && thisOne.DamageType == "Magic") || (player.PrayerActive("Protect from Melee") && thisOne.DamageType == "Melee") || (player.PrayerActive("Protect from Range") && thisOne.DamageType == "Range")) {
-                                        modified = (int)Math.Floor(dmg / 2.0);
-                                    }
+                                bool safespotting = false;
 
-                                    if (dmg != modified) {
-                                        Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + ", reduced to " + modified + "!", Color.Crimson, Color.Black));
+                                if (player.Equipment.ContainsKey("Weapon")) {
+                                    if (player.Equipment["Weapon"].EquipSkill == "Ranged" || player.Equipment["Weapon"].EquipSkill == "Magic") {
+                                        if (thisOne.DamageType == "Melee") {
+                                            safespotting = true;
+                                        }
+                                    }
+                                }
+
+                                if (!safespotting) {
+                                    if (hitChance < 25 + (player.GetEffectiveSkillLevel("Defense") / 4.0)) {
+                                        Log.AddMessage(new ColoredString(thisOne.Name + " tried to hit you but missed!", Color.Yellow, Color.Black));
                                     } else {
-                                        Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
+                                        if ((player.PrayerActive("Protect from Magic") && thisOne.DamageType == "Magic") || (player.PrayerActive("Protect from Melee") && thisOne.DamageType == "Melee") || (player.PrayerActive("Protect from Range") && thisOne.DamageType == "Range")) {
+                                            modified = (int)Math.Floor(dmg / 2.0);
+                                        }
+
+                                        if (dmg != modified) {
+                                            Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + ", reduced to " + modified + "!", Color.Crimson, Color.Black));
+                                        } else {
+                                            Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
+                                        }
+
+                                        bool died = player.TakeDamage(dmg, Log);
+
+                                        if (player.DefenseExpSplit > 0 && !reachedKillLimit)
+                                            player.TryGrantExp("Defense", dmg * player.DefenseExpSplit, Log, RecentlyTrainedSkills);
+
+                                        if (player.DefenseExpSplit < 4 && !reachedKillLimit)
+                                            player.TryGrantExp("Constitution", dmg * (4 - player.DefenseExpSplit), Log, RecentlyTrainedSkills);
+
+                                        if (died)
+                                            break;
                                     }
-
-                                    bool died = player.TakeDamage(dmg, Log);
-
-                                    if (player.DefenseExpSplit > 0)
-                                        player.TryGrantExp("Defense", dmg * player.DefenseExpSplit, Log, RecentlyTrainedSkills);
-
-                                    if (player.DefenseExpSplit < 4)
-                                        player.TryGrantExp("Constitution", dmg * (4 - player.DefenseExpSplit), Log, RecentlyTrainedSkills);
-
-                                    if (died)
-                                        break;
                                 }
                             }
                         }
@@ -970,68 +1037,137 @@ namespace ZeroPlayersOnline {
                                 attackSpeed = wep.AttackSpeed;
                         }
 
+                        if (player.Equipment.TryGetValue("Ammo", out Item? ammo)) {
+
+                        }
+
+                        bool hasAmmo = true;
+                        bool usedAmmo = false;
+
                         if (AttackingMonster != null && LastHitTime + (1000 * attackSpeed) < Helper.Time() && AttackingMonster.CurrentHP > 0) {
                             LastHitTime = Helper.Time();
                             AttackingMonster.AttackingPlayer = true;
 
+                            reachedKillLimit = player.KillLimit == 0 ? true : false;
+                            if (player.CollectionLog.ContainsKey(AttackingMonster.ID)) {
+                                reachedKillLimit = player.KillLimit != -1 && player.CollectionLog[AttackingMonster.ID].KillCount >= player.KillLimit;
+                            }
 
-                            int hitChance = GameLoop.rand.Next(100);
+                            int hitChance = GameLoop.rand.Next(100); 
+                             
+                            // Remove a unit of ammo if this is a ranged weapon
+                            if (wep != null) {
+                                if (wep.EquipAmmo == "Self") {
+                                    wep.Quantity -= 1;
+                                    Item droppedAmmo = Helper.Clone(wep);
+                                    droppedAmmo.Quantity = 1;
+                                    TryPlaceItem(player.NavLoc, droppedAmmo);
+                                    usedAmmo = true;
+                                } else if (wep.EquipAmmo == "Arrow") {
+                                    if (ammo != null && ammo.EquipDamageType == "Arrow") {
+                                        ammo.Quantity -= 1;
+                                        Item droppedAmmo = Helper.Clone(ammo);
+                                        droppedAmmo.Quantity = 1;
+                                        TryPlaceItem(player.NavLoc, droppedAmmo);
+                                        usedAmmo = true;
+                                    } else {
+                                        hasAmmo = false;
+                                    }
+                                } else if (wep.EquipAmmo == "Bolt") {
+                                    if (ammo != null && ammo.EquipDamageType == "Bolt") {
+                                        ammo.Quantity -= 1;
+                                        Item droppedAmmo = Helper.Clone(ammo);
+                                        droppedAmmo.Quantity = 1;
+                                        TryPlaceItem(player.NavLoc, droppedAmmo);
+                                        usedAmmo = true;
+                                    } else {
+                                        hasAmmo = false;
+                                    }
+                                }
+                            }
 
-                            if (hitChance > 25 + (player.GetEffectiveSkillLevel("Attack") / 2.0)) { 
-                                Log.AddMessage(new ColoredString("You tried to hit the " + thisOne.Name + " but missed!", Color.Crimson, Color.Black));
-                            } else {
-                                int pdmg = GoRogue.DiceNotation.Dice.Roll(player.GetDamageDice());
+                            if (hasAmmo) {
+                                if (hitChance > 25 + (player.GetEffectiveSkillLevel("Attack") / 2.0)) {
+                                    Log.AddMessage(new ColoredString("You tried to hit the " + AttackingMonster.Name + " but missed!", Color.Crimson, Color.Black));
+                                } else {
+                                    int pdmg = GoRogue.DiceNotation.Dice.Roll(player.GetDamageDice());
 
-                                if (player.GetDamageType() == AttackingMonster.WeakType)
-                                    pdmg = (int)Math.Ceiling(pdmg * 1.5f);
+                                    if (player.GetDamageType() == AttackingMonster.WeakType)
+                                        pdmg = (int)Math.Ceiling(pdmg * 1.5f);
 
-                                AttackingMonster.CurrentHP -= pdmg;
+                                    AttackingMonster.CurrentHP -= pdmg;
 
-                                if (player.OffenseExpSplit > 0)
-                                    player.TryGrantExp("Attack", pdmg * player.OffenseExpSplit, Log, RecentlyTrainedSkills);
+                                    if (usedAmmo) { 
+                                        player.TryGrantExp("Ranged", pdmg * 4, Log, RecentlyTrainedSkills);
+                                    } else {
+                                        if (player.OffenseExpSplit > 0 && !reachedKillLimit)
+                                            player.TryGrantExp("Attack", pdmg * player.OffenseExpSplit, Log, RecentlyTrainedSkills);
 
-                                if (player.DefenseExpSplit < 4)
-                                    player.TryGrantExp("Strength", pdmg * (4 - player.OffenseExpSplit), Log, RecentlyTrainedSkills);
+                                        if (player.OffenseExpSplit < 4 && !reachedKillLimit)
+                                            player.TryGrantExp("Strength", pdmg * (4 - player.OffenseExpSplit), Log, RecentlyTrainedSkills);
+                                    }
 
-                                if (AttackingMonster.CurrentHP <= 0) {
-                                    AttackingMonster.TimeLastKilled = Helper.Time();
-                                    AttackingMonster.AttackingPlayer = false;
+                                    if (AttackingMonster.CurrentHP <= 0) {
+                                        AttackingMonster.TimeLastKilled = Helper.Time();
+                                        AttackingMonster.AttackingPlayer = false;
 
-                                    if (!player.CollectionLog.ContainsKey(AttackingMonster.ID))
-                                        player.CollectionLog.Add(AttackingMonster.ID, new(AttackingMonster.ID));
+                                        if (!player.CollectionLog.ContainsKey(AttackingMonster.ID))
+                                            player.CollectionLog.Add(AttackingMonster.ID, new(AttackingMonster.ID));
 
-                                    player.CollectionLog[AttackingMonster.ID].KillCount += 1;
+                                        player.CollectionLog[AttackingMonster.ID].KillCount += 1;
 
-                                    if (AttackingMonster.DropTable != null && AttackingMonster.DropTable.Count > 0) {
-                                        for (int j = 0; j < AttackingMonster.DropTable.Count; j++) {
-                                            ItemDrop drop = AttackingMonster.DropTable[j];
+                                        if (player.KillLimit != -1 && player.CollectionLog[AttackingMonster.ID].KillCount == player.KillLimit) {
+                                            Log.AddMessage(new ColoredString("You've killed " + player.KillLimit + " " + AttackingMonster.Name + "s and will no longer receive drops or exp from them."));
+                                        }
 
-                                            if (GameLoop.rand.Next(drop.InY) < drop.DropX) {
-                                                if (!player.CollectionLog[AttackingMonster.ID].DropsObtained.ContainsKey(drop.ItemID))
-                                                    player.CollectionLog[AttackingMonster.ID].DropsObtained.Add(drop.ItemID, 0);
-                                                player.CollectionLog[AttackingMonster.ID].DropsObtained[drop.ItemID] += 1;
+                                        if (AttackingMonster.DropTable != null && AttackingMonster.DropTable.Count > 0) {
+                                            for (int j = 0; j < AttackingMonster.DropTable.Count; j++) {
+                                                ItemDrop drop = AttackingMonster.DropTable[j];
 
-                                                if (ItemLibrary.ContainsKey(drop.ItemID)) {
-                                                    Item spawn = Helper.Clone(ItemLibrary[drop.ItemID]);
+                                                if (drop.EvenAt0x || !reachedKillLimit) {
+                                                    int dropX = drop.DropX;
 
-                                                    if (drop.QuantityMin == drop.QuantityMax)
-                                                        spawn.Quantity = drop.QuantityMin;
-                                                    else {
-                                                        int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
-                                                        spawn.Quantity = amt;
+                                                    dropX *= player.DropMultiplier;
+
+                                                    if (reachedKillLimit)
+                                                        dropX = 0;
+
+                                                    if (drop.EvenAt0x && dropX == 0)
+                                                        dropX = drop.DropX;
+
+                                                    int dropRoll = GameLoop.rand.Next(drop.InY);
+                                                    int dropRoll2 = GameLoop.rand.Next(drop.InY);
+
+                                                    if (dropRoll < dropX || (player.PrayerActive("Good Fortune") && dropRoll2 < dropX)) {
+                                                        if (!player.CollectionLog[AttackingMonster.ID].DropsObtained.ContainsKey(drop.ItemID))
+                                                            player.CollectionLog[AttackingMonster.ID].DropsObtained.Add(drop.ItemID, 0);
+                                                        player.CollectionLog[AttackingMonster.ID].DropsObtained[drop.ItemID] += 1;
+
+                                                        if (ItemLibrary.ContainsKey(drop.ItemID)) {
+                                                            Item spawn = Helper.Clone(ItemLibrary[drop.ItemID]);
+
+                                                            if (drop.QuantityMin == drop.QuantityMax)
+                                                                spawn.Quantity = drop.QuantityMin;
+                                                            else {
+                                                                int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
+                                                                spawn.Quantity = amt;
+                                                            }
+
+                                                            curr.ItemsHere.Add(spawn);
+                                                        }
                                                     }
-
-                                                    curr.ItemsHere.Add(spawn);
                                                 }
                                             }
                                         }
                                     }
                                 }
+                            } else { 
+                                Log.AddMessage(new ColoredString("You haven't got any valid ammo for your weapon!", Color.Crimson, Color.Black));
                             }
                         }
 
                         if (thisOne.CurrentHP <= 0 && thisOne.TimeLastKilled + (thisOne.RespawnTime * 1000) < Helper.Time()) {
-                            thisOne.CurrentHP = thisOne.MaxHP;
+                            thisOne.CurrentHP = thisOne.MaxHP; 
                             thisOne.TimeLastAttacked = Helper.Time();
                             thisOne.AttackingPlayer = false;
                         }
@@ -1046,6 +1182,19 @@ namespace ZeroPlayersOnline {
                             CollectionLog.IsVisible = true;
                             CollectionID = thisOne.ID;
                         });
+
+                        if (usedAmmo) {
+                            List<string> empties = new();
+                            foreach (var kv in player.Equipment) {
+                                if (kv.Value.Quantity <= 0) {
+                                    empties.Add(kv.Key);
+                                }
+                            }
+
+                            foreach (var rem in empties) {
+                                player.Equipment.Remove(rem);
+                            }
+                        }
                     }
                 }
 
@@ -1110,7 +1259,7 @@ namespace ZeroPlayersOnline {
                     }
                 }
                 else if (SelectedMenu == "Items") { 
-                    if (curr.IsBank) {
+                    if (curr.IsBank && player.CanUseBanks) {
                         mini.Con.Print(resourceX + 2, resourceY++, "Items in Bank"); 
                         ActivityItemTop = Math.Clamp(ActivityItemTop, 0, player.BankedItems.Count);
 
@@ -1124,8 +1273,10 @@ namespace ZeroPlayersOnline {
                                 Item item = player.BankedItems[i];
 
                                 string name = item.Name;
-                                if (name.Length > 20)
-                                    name = name[..20];
+                                if (name.Length > 25)
+                                    name = name[..25];
+
+                                name += item.Quantity > 1 ? " x" + item.Quantity : "";
 
                                 bool picked = false;
 
@@ -1237,7 +1388,7 @@ namespace ZeroPlayersOnline {
                                 NPC thisOne = NPCLibrary[curr.NPCsHere[i]];
 
                                 mini.Con.PrintClickable(resourceX + 2, resourceY, "| " + thisOne.Name, () => {
-                                    if (!ClueLogic.TalkStep(player, Log, thisOne.ID)) {
+                                    if (!ClueLogic.GenericStep(player, Log, "Speak", thisOne.ID) && !ClueLogic.GenericStep(player, Log, "Anagram", thisOne.ID)) {
                                         CurrDialogueStage = 0;
                                         ConversationPartner = thisOne;
 
@@ -1318,45 +1469,57 @@ namespace ZeroPlayersOnline {
 
                                 if (shop.Stackable) {
                                     mini.Con.PrintClickable(141, resourceY, "1", () => {
-                                        if (player.HeldGold >= shop.Value) {
-                                            player.HeldGold -= shop.Value;
-                                            player.TryPickup(shop);
-                                        }
-                                        else {
-                                            Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
+                                        if (player.CanUseShops) {
+                                            if (player.HeldGold >= shop.Value) {
+                                                player.HeldGold -= shop.Value;
+                                                player.TryPickup(shop);
+                                            } else {
+                                                Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
+                                            }
+                                        } else {
+                                            Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
                                         }
                                     });
 
                                     mini.Con.PrintClickable(143, resourceY, "10", () => {
-                                        if (player.HeldGold >= shop.Value * 10) {
-                                            player.HeldGold -= shop.Value * 10;
-                                            shop.Quantity = 10;
-                                            player.TryPickup(shop);
-                                        }
-                                        else {
-                                            Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
+                                        if (player.CanUseShops) {
+                                            if (player.HeldGold >= shop.Value * 10) {
+                                                player.HeldGold -= shop.Value * 10;
+                                                shop.Quantity = 10;
+                                                player.TryPickup(shop);
+                                            } else {
+                                                Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
+                                            }
+                                        } else {
+                                            Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
                                         }
                                     });
 
                                     mini.Con.PrintClickable(146, resourceY, "50", () => {
-                                        if (player.HeldGold >= shop.Value * 50) {
-                                            player.HeldGold -= shop.Value * 50;
-                                            shop.Quantity = 50;
-                                            player.TryPickup(shop);
-                                        }
-                                        else {
-                                            Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
+                                        if (player.CanUseShops) {
+                                            if (player.HeldGold >= shop.Value * 50) {
+                                                player.HeldGold -= shop.Value * 50;
+                                                shop.Quantity = 50;
+                                                player.TryPickup(shop);
+                                            } else {
+                                                Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
+                                            }
+                                        } else {
+                                            Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
                                         }
                                     });
                                 }
                                 else {
                                     mini.Con.PrintClickable(146, resourceY, "1", () => {
-                                        if (player.HeldGold >= shop.Value) {
-                                            player.HeldGold -= shop.Value;
-                                            player.TryPickup(shop);
-                                        }
-                                        else {
-                                            Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
+                                        if (player.CanUseShops) {
+                                            if (player.HeldGold >= shop.Value) {
+                                                player.HeldGold -= shop.Value;
+                                                player.TryPickup(shop);
+                                            } else {
+                                                Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
+                                            }
+                                        } else {
+                                            Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
                                         }
                                     });
                                 }
@@ -1386,7 +1549,8 @@ namespace ZeroPlayersOnline {
                                 if (patch.SeedPlanted == "") { 
                                     mini.Con.Print(resourceX + 4, resourceY, "(Empty " + patch.PatchType + " Patch)");
                                 } else {
-                                    if (patch.TimeLeft == 0) { 
+                                    if (patch.TimeLeft <= 0) {
+                                        patch.TimeLeft = 0;
                                         mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(ResolveItemName(patch.SeedPlanted) + " [" + patch.TimeLeft + "]", Color.Lime, Color.Black), () => {
                                             Item? seed = ResolveItem(patch.SeedPlanted);
                                             if (seed != null) {
@@ -1420,7 +1584,7 @@ namespace ZeroPlayersOnline {
                                             patch.ClearPatch();
                                         });
                                     } else {
-                                        mini.Con.Print(resourceX + 4, resourceY, ResolveItemName(patch.SeedPlanted) + " [" + patch.TimeLeft + "]");
+                                        mini.Con.Print(resourceX + 4, resourceY, ResolveItemName(patch.SeedPlanted) + " [" + (patch.TimeLeft / player.FarmGrowthIncrement) + "]");
                                     }
                                     mini.Con.PrintClickable(resourceX + 2, resourceY, new ColoredString("X", Color.Crimson, Color.Black), () => { patch.ClearPatch(); });
                                 } 
@@ -1549,7 +1713,7 @@ namespace ZeroPlayersOnline {
             }
 
             if (GameHost.Instance.Mouse.RightClicked) {
-                Log.AddMessage(mousePos.ToString());
+                //Log.AddMessage(mousePos.ToString()); 
             }
         }
 
@@ -1591,7 +1755,7 @@ namespace ZeroPlayersOnline {
 
             foreach (var kv in player.FarmingPatches) {
                 if (kv.Value.SeedPlanted != "" && kv.Value.TimeLeft > 0) {
-                    kv.Value.TimeLeft -= 1;
+                    kv.Value.TimeLeft -= player.FarmGrowthIncrement;
                 }
             }
         }
@@ -1630,7 +1794,7 @@ namespace ZeroPlayersOnline {
 
                 }
             } else if (item.UseString == "Dig") {
-                ClueLogic.DigStep(player, Log);
+                ClueLogic.GenericStep(player, Log, "Dig");
 
                 if (Atlas.TryGetValue(player.NavLoc, out Location? curr)) {
                     if (curr != null) {
@@ -1827,6 +1991,25 @@ namespace ZeroPlayersOnline {
                     string itemNeeded = ResolveItemName(craft.NeededItem);
                     if (itemNeeded == CraftingSubtype) {
                         ActiveRecipes.Add(craft);
+                    }
+                }
+            }
+        }
+
+        public void TryPlaceItem(string loc, Item item) {
+            if (Atlas.TryGetValue(loc, out Location? curr)) {
+                if (curr != null) {
+                    bool found = false;
+                    for (int i = 0; i < curr.ItemsHere.Count; i++) {
+                        if (curr.ItemsHere[i].ID == item.ID && item.Stackable) {
+                            curr.ItemsHere[i].Quantity += item.Quantity;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        curr.ItemsHere.Add(item);
                     }
                 }
             }
