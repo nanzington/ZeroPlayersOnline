@@ -19,10 +19,6 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             toAdd.Add(new("Anvil") {
-                Recipes = new() {
-                    new ProcessingRecipe("progHelmBronze2", "helmBronze", "Smithing", 1, 30),
-                    new ProcessingRecipe("progDaggerBronze", "daggerBronze", "Smithing", 1, 15)
-                },
                 OpensUI = "Smithing"
             });
 
@@ -34,6 +30,21 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("fishRawShrimp", "fishCookedShrimp", "Cooking", 1, 15),
                     new ProcessingRecipe("fishRawAnchovies", "fishCookedAnchovies", "Cooking", 1, 15),
                     new ProcessingRecipe("potato", "potatoBaked", "Cooking", 7, 15)
+                }
+            });
+
+            toAdd.Add(new("Pottery Wheel") {
+                OpensUI = "Clay"
+            });
+
+            toAdd.Add(new("Pottery Kiln") {
+                Recipes = new() {
+                    new ProcessingRecipe("unfiredPot", "potEmpty", "Crafting", 1, 7),
+                    new ProcessingRecipe("unfiredCup", "cupEmpty", "Crafting", 3, 9),
+                    new ProcessingRecipe("unfiredPieDish", "pieEmpty", "Crafting", 7, 15),
+                    new ProcessingRecipe("unfiredBowl", "bowlEmpty", "Crafting", 8, 18),
+                    new ProcessingRecipe("unfiredPlantPot", "plantPotEmpty", "Crafting", 19, 20),
+                    new ProcessingRecipe("unfiredPotLid", "potLid", "Crafting", 20, 30)
                 }
             });
 

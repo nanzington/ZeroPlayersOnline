@@ -7,12 +7,17 @@
 
         public List<DialogueChoice> Choices = new();
 
-        public DialogueStage(string t, List<DialogueChoice> choices, string quest = "", int questStage = 0) {
+        public List<string> ItemsGiven;
+        
+
+        public DialogueStage(string t, List<DialogueChoice> choices, string quest = "", int questStage = 0, List<string> items = null) {
             Text = t;
             Choices = choices;
 
             SetsQuest = quest;
             SetsQuestStageTo = questStage;
-        }
+
+            ItemsGiven = items;
+        } 
     }
 }

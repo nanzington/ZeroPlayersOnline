@@ -601,7 +601,8 @@ namespace ZeroPlayersOnline {
 
             if ((GameLoop.ZPO.Guide.IsVisible && instance != GameLoop.ZPO.Guide) 
                 || (GameLoop.ZPO.CollectionLog.IsVisible && instance != GameLoop.ZPO.CollectionLog)
-                || (GameLoop.ZPO.CraftingMenu.IsVisible && instance != GameLoop.ZPO.CraftingMenu)) {
+                || (GameLoop.ZPO.CraftingMenu.IsVisible && instance != GameLoop.ZPO.CraftingMenu)
+                || (GameLoop.ZPO.Quests.IsVisible && instance != GameLoop.ZPO.Quests)) {
                 return;
             }
 
@@ -698,15 +699,17 @@ namespace ZeroPlayersOnline {
             int cY = y;
 
             foreach (string word in words) {
-                if (cX + word.Length + 1 < x + width) {
+                if (cX + word.Length + 1 < x + width && word != "/n") {
                     instance.Print(cX, cY, word + " ", col, Color.Black);
                     cX += word.Length + 1;
                 }
                 else {
                     cX = x;
                     cY++;
-                    instance.Print(cX, cY, word + " ", col, Color.Black);
-                    cX += word.Length + 1;
+                    if (word != "/n") {
+                        instance.Print(cX, cY, word + " ", col, Color.Black);
+                        cX += word.Length + 1;
+                    }
                 }
             }
 

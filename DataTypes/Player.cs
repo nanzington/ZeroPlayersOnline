@@ -64,6 +64,8 @@
         public List<PotionStat> ActivePotions = new(); 
         public Dictionary<string, FarmingPatch> FarmingPatches = new();
 
+        public Dictionary<string, Quest> QuestLog = new();
+
         public string CurrentClueTutorial = "";
         public int StepsDoneTutorial = 0;
         public string CurrentClueBeginner = "";
@@ -91,9 +93,24 @@
         public string GetDamageDice() {
             int weaponTier = 1;
 
-            if (Equipment.ContainsKey("Weapon"))
+            if (Equipment.ContainsKey("Weapon")) {
                 weaponTier = Equipment["Weapon"].EquipTier + 1;
 
+                if (Equipment["Weapon"].EquipSkill == "Ranged") {
+                    if (Equipment["Weapon"].EquipAmmo == "Arrow" || Equipment["Weapon"].EquipAmmo == "Bolt") { // Only other option currently is Self, where we don't need to change weaponTier
+                        if (Equipment.ContainsKey("Ammo")) {
+                            if (Equipment["Ammo"].EquipLevel <= Equipment["Weapon"].EquipLevel) {
+                                weaponTier = Equipment["Ammo"].EquipTier + 1;
+                            } else {
+                                weaponTier = Equipment["Weapon"].EquipTier + 1;
+                            }
+                        } else {
+                            weaponTier = 0;
+                        }
+                    } 
+                }
+
+            }
             int strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10);
 
             return weaponTier + "d" + strength;
@@ -147,10 +164,8 @@
                 if (which == "Constitution" && oldLevel != Skills[which].Level) {
                     CurrentHP += (Skills[which].Level - oldLevel);
                 }
-            }
-
-            
-        }
+            } 
+        } 
 
         public bool TakeDamage(int amt, MessageLog log) {  
             CurrentHP -= amt;
@@ -346,25 +361,31 @@
             }
 
             Item item = Helper.Clone(GameLoop.ZPO.ItemLibrary[craft.OutputItem]);
-            item.Quantity = craft.OutputQty;
-
-            TryPickup(item);
+            if (item.Stackable) {
+                for (int i = 0; i < craft.OutputQty; i++) {
+                    Item clone = Helper.Clone(item);
+                    TryPickup(clone);
+                }
+            } else {
+                item.Quantity = craft.OutputQty; 
+                TryPickup(item);
+            }
             TryGrantExp(craft.Skill, craft.ExpGranted, GameLoop.ZPO.Log, GameLoop.ZPO.RecentlyTrainedSkills);
         }
 
 
         public int TotalArmorValue(string against) {
-            int count = 0;
+            double count = 0;
 
             foreach (var kv in Equipment) {
-                int num = kv.Value.UseInt;
+                double num = kv.Value.EquipTier;
                 if (kv.Value.EquipSkill == "Defense") {
                     if (kv.Value.MiscString == "DefenseMelee") {
                         if (against == "Ranged") {
                             num *= 2;
                         }
                         if (against == "Magic") {
-                            num = (int)Math.Ceiling(num / 2.0);
+                            num = (int)Math.Floor(num / 2.0);
                         }
                     }
 
@@ -373,7 +394,7 @@
                             num *= 2;
                         }
                         if (against == "Ranged") {
-                            num = (int)Math.Ceiling(num / 2.0);
+                            num = Math.Floor(num / 2.0);
                         }
                     }
 
@@ -382,7 +403,7 @@
                             num *= 2;
                         }
                         if (against == "Melee") {
-                            num = (int)Math.Ceiling(num / 2.0);
+                            num = Math.Floor(num / 2.0);
                         }
                     }
 
@@ -390,7 +411,9 @@
                 }
             }
 
-            return count;
+            count /= 5.0;
+
+            return (int) Math.Ceiling(count);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public List<ProcessingRecipe> Recipes = new();
 
-        public string OpensUI = "";
+        public bool OpensUI = false;
 
         [JsonIgnore]
         public int TimeLeft = -1;
@@ -17,12 +17,12 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public string ItemOnExpire = "";
 
-        public ProcessingStation(string n, string ui = "") {
+        public ProcessingStation(string n, bool ui = false) {
             Name = n;  
             OpensUI = ui;
         }
 
-        public void TryProcessItem(Player p, MessageLog log, Dictionary<string, Item> ItemLibrary, List<Skill> RecentSkills) {
+        public bool TryProcessItem(Player p, MessageLog log, Dictionary<string, Item> ItemLibrary, List<Skill> RecentSkills) {
             for (int i = 0; i < p.Inventory.Count; i++) {
                 bool changedInv = false;
                 for (int j = 0; j < Recipes.Count; j++) {
@@ -30,7 +30,7 @@ namespace ZeroPlayersOnline.DataTypes {
                         if (Recipes[j].SkillUsed != "") {
                             if (p.Skills.ContainsKey(Recipes[j].SkillUsed) && p.Skills[Recipes[j].SkillUsed].Level < Recipes[j].SkillLevel) {
                                 log.AddMessage(new ColoredString("You get the feeling you should have " + Recipes[j].SkillLevel + " " + Recipes[j].SkillUsed + " to try that.", Color.Crimson, Color.Black));
-                                return;
+                                return false;
                             } 
                         } 
 
@@ -54,7 +54,8 @@ namespace ZeroPlayersOnline.DataTypes {
                             p.TryPickup(item);
                         }
 
-                        p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills); 
+                        p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills);
+                        return true;
                     }
                     if (changedInv)
                         break;
@@ -62,6 +63,8 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (changedInv)
                     break;
             }
+
+            return false;
         }
     }
 }

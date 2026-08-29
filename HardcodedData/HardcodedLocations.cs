@@ -21,9 +21,12 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new Connection("TI_WizardHut")
                 },
                 GatheringSpots = new List<string>() { "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "fishNetSmall", "fishNetSmall" },
-                NPCsHere = new List<string>() { "tutorFarming", "man", "man", "man" },
+                NPCsHere = new List<string>() { "tutorFarming", "tutorFishing", "man", "man", "man", "tiForlornGhost2" },
                 FarmingPatchesHere = new List<string>() { "TI_allotment1", "TI_allotment2", "TI_allotment3" }, 
-                DigItem = "clueScrollTutorial"
+                DigItem = "clueScrollTutorial",
+                ItemSpawns = new List<ItemSpot>() {
+                    new ItemSpot("TI_HI_CrumpledNote", 1, new("QuestAt", 10, "TI_HauntedIsland"))
+                }
             });
 
             locsToAdd.Add(new Location() {
@@ -47,6 +50,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ConnectedLocations = new List<Connection>() { 
                     new Connection("TI_Main") 
                 },
+                NPCsHere = new List<string>() { "tutorBanking" },
                 IsBank = true
             });
 
@@ -57,7 +61,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ID = "TI_Temple",
                 ConnectedLocations = new List<Connection>() { 
                     new Connection("TI_Main")
-                }
+                },
+                NPCsHere = new() { "tiFatherGuy" }
             });
 
             locsToAdd.Add(new Location() {
@@ -70,8 +75,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new Connection("TI_Newts") 
                 },
                 ProcessingStations = new List<string>() { "Furnace", "Anvil" },
+                ItemSpawns = new List<ItemSpot>() {
+                    new ItemSpot("TI_HI_RustedSword", 1, new("QuestAt", 0, "TI_HauntedIsland"))
+                },
                 GatheringSpots = new List<string>() { "oreCopper", "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin", "oreTin", "rockEssence", "rockClay" },
-                NPCsHere = new() { "tutorSmithing", "tutorCombat" }
+                NPCsHere = new() { "tutorSmithing", "tutorCombat", "tiForlornGhost1" }
             });
 
             locsToAdd.Add(new Location() {
@@ -119,9 +127,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ConnectedLocations = new List<Connection>() {
                     new Connection("TI_Main")
                 },
-                ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "needle", "knife" },
+                ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "needle", "knife", "runeAir", "runeEarth", "runeFire", "runeWater", "runeMind", "runeBody" },
                 GatheringSpots = new List<string>() { "clueCrates" },
-                ProcessingStations = new List<string>() { "Tannery" },
+                ProcessingStations = new List<string>() { "Tannery", "Pottery Kiln", "Pottery Wheel" },
                 NPCsHere = new() { "tiDrunkPirate" }
             });
 
@@ -133,7 +141,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ConnectedLocations = new List<Connection>() {
                     new Connection("TI_Main")
                 },
-                NPCsHere = new() { "tiWizardTerrova" },
+                NPCsHere = new() { "tiWizardTerrova", "tiForlornGhost3" },
                 ProcessingStations = new List<string>() { "Spinning Wheel" }
             });
 

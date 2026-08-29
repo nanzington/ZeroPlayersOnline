@@ -74,7 +74,20 @@ namespace ZeroPlayersOnline.Hardcodes {
 
 
             itemsToAdd.Add(new Item("Clay dust", "Some hard dry clay.", "clayDust", 207, 185, 151, 1, 0, 0));
-            itemsToAdd.Add(new Item("Soft clay", "Clay soft enough to mould.", "claySoft", 205, 127, 50, 2, 1, 0) { UseString = "Clay", ConsumedOnUse = false });
+            itemsToAdd.Add(new Item("Soft clay", "Clay soft enough to mould.", "claySoft", 205, 127, 50, 2, 1, 0));
+            itemsToAdd.Add(new Item("Unfired pot", "I need to put this in a pottery kiln.", "unfiredPot", 205, 127, 50, 1, 0, 0));
+            itemsToAdd.Add(new Item("Unfired cup", "I need to put this in a pottery kiln.", "unfiredCup", 205, 127, 50, 2, 1, 0));
+            itemsToAdd.Add(new Item("Unfired pie dish", "I need to put this in a pottery kiln.", "unfiredPieDish", 205, 127, 50, 3, 1, 1));
+            itemsToAdd.Add(new Item("Unfired bowl", "I need to put this in a pottery kiln.", "unfiredBowl", 205, 127, 50, 2, 1, 0));
+            itemsToAdd.Add(new Item("Unfired plant pot", "I need to put this in a pottery kiln.", "unfiredPlantPot", 205, 127, 50, 1, 0, 0));
+            itemsToAdd.Add(new Item("Unfired pot lid", "I need to put this in a pottery kiln.", "unfiredPotLid", 205, 127, 50, 10, 6, 4));
+            itemsToAdd.Add(new Item("Pot", "This pot is empty.", "potEmpty", 207, 185, 151, 1, 0, 0));
+            itemsToAdd.Add(new Item("Empty cup", "An empty cup.", "cupEmpty", 255, 255, 255, 2, 1, 0));
+            itemsToAdd.Add(new Item("Pie dish", "Deceptively pie shaped.", "pieEmpty", 207, 185, 151, 3, 1, 1));
+            itemsToAdd.Add(new Item("Bowl", "Useful for mixing things.", "bowlEmpty", 207, 185, 151, 4, 2, 1));
+            itemsToAdd.Add(new Item("Empty plant pot", "An empty plant pot.", "plantPotEmpty", 207, 185, 151, 1, 0, 0));
+            itemsToAdd.Add(new Item("Pot lid", "This should fit on a normal-sized pot.", "potLid", 207, 185, 151, 15, 9, 6));
+            itemsToAdd.Add(new Item("Airtight pot", "This is pretty well sealed.", "potAirtight", 207, 185, 151, 10, 6, 4));
 
 
             itemsToAdd.Add(new Item("Flax", "I should use this with a spinning wheel.", "flax", 189, 246, 254, 5, 3, 2));
@@ -85,7 +98,6 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipTier = 1,
                 EquipSkill = "Defense",
                 EquipLevel = 1,
-                UseInt = 1,
                 MiscString = "DefenseRange"
             });
 
@@ -94,7 +106,6 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipTier = 1,
                 EquipSkill = "Defense",
                 EquipLevel = 1,
-                UseInt = 1,
                 MiscString = "DefenseRange"
             });
 
@@ -103,7 +114,6 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipTier = 1,
                 EquipSkill = "Defense",
                 EquipLevel = 1,
-                UseInt = 1,
                 MiscString = "DefenseRange"
             });
 
@@ -112,7 +122,6 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipTier = 1,
                 EquipSkill = "Defense",
                 EquipLevel = 1,
-                UseInt = 1,
                 MiscString = "DefenseRange"
             });
 
@@ -121,12 +130,16 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipTier = 1,
                 EquipSkill = "Defense",
                 EquipLevel = 1,
-                UseInt = 1,
                 MiscString = "DefenseRange"
             });
 
             itemsToAdd.Add(new Item("Pure essence", "An unimbued rune.", "pureEssence", 200, 200, 200, 4, 2, 1));
             itemsToAdd.Add(new Item("Air rune", "One of the 4 basic elemental runes.", "runeAir", 200, 200, 200, 4, 2, 1, true, true));
+            itemsToAdd.Add(new Item("Earth rune", "One of the 4 basic elemental runes.", "runeEarth", 200, 200, 200, 4, 2, 1, true, true));
+            itemsToAdd.Add(new Item("Fire rune", "One of the 4 basic elemental runes.", "runeFire", 200, 200, 200, 4, 2, 1, true, true));
+            itemsToAdd.Add(new Item("Water rune", "One of the 4 basic elemental runes.", "runeWater", 200, 200, 200, 4, 2, 1, true, true));
+            itemsToAdd.Add(new Item("Mind rune", "Used for basic level missile spells.", "runeMind", 200, 200, 200, 3, 1, 1, true, true));
+            itemsToAdd.Add(new Item("Body rune", "Used for curse spells.", "runeBody", 200, 200, 200, 3, 1, 1, true, true));
 
             itemsToAdd.Add(new Item("Copper ore", "A pile of copper ore nuggets.", "oreCopper", 184, 115, 51, 3, 1, 1));
             itemsToAdd.Add(new Item("Tin ore", "A pile of tin ore nuggets.", "oreTin", 170, 170, 170, 3, 1, 1)); 
@@ -182,7 +195,6 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipTier = 1,
                 EquipSkill = "Defense",
                 EquipLevel = 1,
-                UseInt = 1,
                 MiscString = "DefenseMelee"
             });
 
@@ -191,7 +203,6 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipTier = 1,
                 EquipSkill = "Defense",
                 EquipLevel = 1,
-                UseInt = 1,
                 MiscString = "DefenseMelee"
             });
 
@@ -200,7 +211,22 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipTier = 1,
                 EquipSkill = "Defense",
                 EquipLevel = 1,
-                UseInt = 1,
+                MiscString = "DefenseMelee"
+            });
+
+            itemsToAdd.Add(new Item("Bronze boots", "Provides minimal protection.", "bootsBronze", 205, 127, 50, 44, 26, 17) {
+                EquipSlot = "Feet",
+                EquipTier = 1,
+                EquipSkill = "Defense",
+                EquipLevel = 1,
+                MiscString = "DefenseMelee"
+            });
+
+            itemsToAdd.Add(new Item("Bronze gauntlets", "Provides minimal protection.", "gauntletsBronze", 205, 127, 50, 44, 26, 17) {
+                EquipSlot = "Hands",
+                EquipTier = 1,
+                EquipSkill = "Defense",
+                EquipLevel = 1,
                 MiscString = "DefenseMelee"
             });
 
@@ -254,6 +280,16 @@ namespace ZeroPlayersOnline.Hardcodes {
 
 
             itemsToAdd.Add(new Item("Eye of newt", "A basic herblore ingredient and only slightly gross.", "eyeNewt", 255, 255, 255, 3, 1, 1));
+
+
+            itemsToAdd.Add(new Item("Rusted sword [Q]", "The sword is useless now. You notice someone has scratched something into the handle: 'PlayerOne'.", "TI_HI_RustedSword", 205, 127, 50, 0, 0, 0, trade: false));
+            itemsToAdd.Add(new Item("Crumpled note [Q]", "A torn note. It reads 'okay this is actually pretty cool', and 'how do i save the game'.", "TI_HI_CrumpledNote", 255, 255, 255, 0, 0, 0, trade: false));
+            itemsToAdd.Add(new Item("Bank record [Q]", "A bank record. It reads 'ACCOUNT: PlayerOne', 'LAST ACCESS: [DATA UNAVAILABLE]'.", "TI_HI_BankRecord", 255, 255, 255, 0, 0, 0, trade: false));
+            itemsToAdd.Add(new Item("Strange rune [Q]", "You have absolutely no idea what this could be for. Someone might know more.", "TI_HI_StrangeRune", 147, 112, 219, 0, 0, 0, trade: false) {
+                UseString = "SecondExamine",
+                MiscString = "ERROR: SPELL SYSTEM NOT FOUND.",
+                ConsumedOnUse = false
+            });
 
 
             for (int i = 0; i < itemsToAdd.Count; i++) {

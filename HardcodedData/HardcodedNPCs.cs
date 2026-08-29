@@ -7,6 +7,173 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             List<NPC> toAdd = new();
 
+            toAdd.Add(new("Father Guy", "tiFatherGuy", new() {
+                {
+                    0,
+                    new("Welcome, child. Blessings of Saradomin upon you.", new() {
+                        new DialogueChoice("[Q] The Haunted Island", 10, new("QuestAt", -1, "TI_HauntedIsland")),
+                        new DialogueChoice("[Q] The Haunted Island", 13, new("QuestAt", 20, "TI_HauntedIsland")),
+                        new DialogueChoice("[Q] The Haunted Island", 16, new("QuestAt", 80, "TI_HauntedIsland")),
+                        byeThen
+                    })
+                },
+                {
+                    10,
+                    new("Ah, you've noticed our little problem, have you? Yes, it's true. A ghost haunts this place.", new() {
+                        new DialogueChoice("[Q+] Can I help somehow?", 11),
+                        byeThen
+                    })
+                },
+                {
+                    11,
+                    new("That would be lovely. No soul deserves to be stuck between this world and the next.", new() {
+                        new DialogueChoice("Any tips for where to start?", 12),
+                        byeThen
+                    }, "TI_HauntedIsland", 0)
+                },
+                {
+                    12,
+                    new("Look around the island to see if you can spot the ghost lingering somewhere. Perhaps you can find hints about how to help it move on.", new() {
+                        byeThen
+                    })
+                },
+                {
+                    13,
+                    new("You're back! How did the hunt for clues about our ghost go?", new() {
+                        new DialogueChoice("(SHOW ITEMS)", 14),
+                        byeThen
+                    })
+                },
+                {
+                    14,
+                    new("Fascinating... This must mean the ghost is somehow a player's avatar from long ago! Unfortunately I fear they were before my time.", new() {
+                        new DialogueChoice("(NEXT)", 15),
+                        byeThen
+                    })
+                },
+                {
+                    15,
+                    new("I cannot remember a time without this ghost haunting the island. You'll have to ask someone old enough to remember that far back.", new() {
+                        byeThen
+                    }, "TI_HauntedIsland", 30)
+                },
+                {
+                    16,
+                    new("You're back! You must've found some way to help PlayerOne move on, because I can't find their presence on the island anymore.", new() {
+                        new DialogueChoice("(EXPLAIN)", 17),
+                        byeThen
+                    })
+                },
+                {
+                    17,
+                    new("What a relief, that they've finally moved on. I can't say I understand the exact process behind it but I'm sure they're better off.", new() {
+                        new DialogueChoice("(NEXT)", 18),
+                        byeThen
+                    })
+                },
+                {
+                    18,
+                    new("Thank you for your help, hero. You've done a good thing here today. Blessings of Saradomin upon you, truly.", new() {
+                        byeThen
+                    }, "TI_HauntedIsland", 90)
+                }
+            }));
+
+            toAdd.Add(new("Old Fisherman", "tutorFishing", new() {
+                {
+                    0,
+                    new("Just click tha spot you want to fish at to fish. Now leave me be, there's fishin' ta be done.", new() {
+                        new DialogueChoice("[Q] The Haunted Island", 10, new("QuestAt", 30, "TI_HauntedIsland")),
+                        byeThen
+                    })
+                }, 
+                {
+                    10,
+                    new("PlayerOne, eh? Been a long time since I've heard that name. Still see 'im around here sometimes, but 'e's not the same these days.", new() {
+                        new DialogueChoice("(NEXT)", 11),
+                        byeThen 
+                    })
+                },
+                {
+                    11,
+                    new("'e was the first of you to come to the island. Wasn' aware back then so I'd just give 'im the spiel. 'e'd always ask the same things.", new() {
+                        new DialogueChoice("(NEXT)", 12),
+                        byeThen
+                    })
+                },
+                {
+                    12,
+                    new("'Where do I go after the tutorial?', 'How do I leave the island?'.", new() {
+                        new DialogueChoice("(NEXT)", 13),
+                        byeThen
+                    })
+                },
+                {
+                    13,
+                    new("I couldn' say anything else back then, and I reckon I don' know what I'd say even now.", new() {
+                        new DialogueChoice("(NEXT)", 14),
+                        byeThen
+                    })
+                },
+                {
+                    14,
+                    new("If you find a way to help 'im, tell 'im I'm sorry, wouldja?", new() {
+                        new DialogueChoice("Any tips about what to do?", 15),
+                        byeThen
+                    })
+                },
+                {
+                    15,
+                    new("Ye might have some luck asking around at the bank. Might be they have some leftover record of PlayerOne.", new() {
+                        byeThen
+                    }, "TI_HauntedIsland", 40)
+                }
+            }));
+
+            toAdd.Add(new("Banking Tutor", "tutorBanking", new() {
+                {
+                    0,
+                    new("Welcome to the First National Bank of Tutorial Island! How can I help you today?", new() {
+                        new DialogueChoice("How do I use the bank?", 1),
+                        new DialogueChoice("[Q] The Haunted Island", 10, new("QuestAt", 40, "TI_HauntedIsland")),
+                        byeThen
+                    })
+                },
+                {
+                    1,
+                    new("If you are permitted to use banks, simply drop items in a bank and we'll put them into your vault.", new() {
+                        new DialogueChoice("(NEXT)", 2),
+                        byeThen
+                    })
+                },
+                {
+                    2,
+                    new("Items in your bank can be accessed at any bank location in the Items menu. That's all there is to it!", new() {
+                        byeThen
+                    })
+                },
+                {
+                    10,
+                    new("PlayerOne? The name sounds familiar, let me take a look through the records.", new() {
+                        new DialogueChoice("(NEXT)", 20),
+                        byeThen
+                    })
+                },
+                {
+                    20,
+                    new("Ah yes, there was an error with that bank account and it had to be closed out.", new() {
+                        new DialogueChoice("(NEXT)", 30),
+                        byeThen
+                    })
+                },
+                {
+                    30,
+                    new("The owner never turned up to collect their things, so you might as well take them.", new() {
+                        byeThen
+                    }, "TI_HauntedIsland", 60, ["TI_HI_BankRecord", "fishCookedShrimp", "bucketEmpty", "TI_HI_StrangeRune"] )
+                }
+            }));
+
             toAdd.Add(new("Smithing Tutor", "tutorSmithing", new() {
                 {
                     0,
@@ -186,41 +353,76 @@ namespace ZeroPlayersOnline.Hardcodes {
                 {
                     0,
                     new("The arcane art of runecraft is not to be undertaken lightly. Do you wish to continue regardless?", new() {
-                        new DialogueChoice("(NEXT)", 10),
+                        new DialogueChoice("(NEXT)", 1),
+                        new DialogueChoice("[Q] The Haunted Island", 10, new("QuestAt", 60, "TI_HauntedIsland")),
                         byeThen
                     })
+                },
+                {
+                    1,
+                    new("First, seek a place to pull essence from the ground. The cavern near here has such a rock.", new() {
+                        new DialogueChoice("(NEXT)", 2),
+                        byeThen
+                    })
+                },
+                {
+                    2,
+                    new("Next, locate an altar with the energy you wish to imbue into the runes. This one creates air runes.", new() {
+                        new DialogueChoice("(NEXT)", 3),
+                        byeThen
+                    })
+                },
+                {
+                    3,
+                    new("Normally you would need an appropriate focus, a talisman or tiara, to enter the ruins.", new() {
+                        new DialogueChoice("(NEXT)", 4),
+                        byeThen
+                    })
+                },
+                {
+                    4,
+                    new("This ruin has been exposed to the world and may be used without such a focus.", new() {
+                        new DialogueChoice("(NEXT)", 5),
+                        byeThen
+                    })
+                },
+                {
+                    5,
+                    new("Simply press the essence against the altar to imbue it with energy, and claim that magic for yourself.", new() { byeThen })
                 },
                 {
                     10,
-                    new("First, seek a place to pull essence from the ground. The cavern near here has such a rock.", new() {
-                        new DialogueChoice("(NEXT)", 20),
+                    new("Where did you get this rune? They shouldn't even be possible to get anymore!", new() {
+                        new DialogueChoice("(EXPLAIN)", 11),
                         byeThen
                     })
                 },
                 {
-                    20,
-                    new("Next, locate an altar with the energy you wish to imbue into the runes. This one creates air runes.", new() {
-                        new DialogueChoice("(NEXT)", 30),
+                    11,
+                    new("One of the first visitors, eh? That certainly explains a few things. The magic system worked differently before.", new() {
+                        new DialogueChoice("(NEXT)", 12),
                         byeThen
                     })
                 },
                 {
-                    30,
-                    new("Normally you would need an appropriate focus, a talisman or tiara, to enter the ruins.", new() {
-                        new DialogueChoice("(NEXT)", 40),
+                    12,
+                    new("I preferred that system and could expound on its' virtues, but suffice to say this was needed to leave the island.", new() {
+                        new DialogueChoice("(NEXT)", 13),
                         byeThen
                     })
                 },
                 {
-                    40,
-                    new("This ruin has been exposed to the world and may be used without such a focus.", new() {
-                        new DialogueChoice("(NEXT)", 50),
+                    13,
+                    new("Now, Wizard Terrova simply teleports players who are ready to move on to Lumbridge. No runes required.", new() {
+                        new DialogueChoice("(NEXT)", 14),
                         byeThen
                     })
                 },
                 {
-                    50,
-                    new("Simply press the essence against the altar to imbue it with energy, and claim that magic for yourself.", new() { byeThen })
+                    14,
+                    new("Perhaps this visitor got this rune but hadn't left the island yet before things changed, then got stuck here.", new() { 
+                        byeThen
+                    }, "TI_HauntedIsland", 70)
                 }
             }));
 
@@ -229,7 +431,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                     0,
                     new("My my my... It's been a long time since we've seen any of your kind around here. The name is Terrova, 'hero'.", new() {
                         new DialogueChoice("What do you mean my kind?", 10),
-                        new DialogueChoice("Just teleport me, Wizard.", 1),
+                        new DialogueChoice("[Q] The Haunted Island", 100, new("QuestAt", 70, "TI_HauntedIsland"), false),
+                        new DialogueChoice("Just teleport me, Wizard.", 1, new("QuestAt", 90, "TI_HauntedIsland"), true),
                         byeThen
                     })
                 },
@@ -304,7 +507,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     60,
                     new("I suppose it doesn't matter. Save us or don't, the choice is yours. Regardless, if you are finished here I can teleport you away.", new() {
                         new DialogueChoice("Stay for now", 70),
-                        new DialogueChoice("(TELEPORT)", -1, tele: "MIST_LumbridgeCastleBailey", spawn: true),
+                        new DialogueChoice("(TELEPORT)", -1, new("QuestAt", 90, "TI_HauntedIsland"), true, "MIST_LumbridgeCastleBailey", true),
                         byeThen
                     })
                 },
@@ -313,10 +516,62 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("Suit yourself, 'hero'. I'll be waiting when you're ready to leave for Lumbridge.", new() {
                         byeThen
                     })
-                } 
+                },
+                {
+                    100,
+                    new("It's true, I have taken over duties moving players on.", new() {
+                        new DialogueChoice("Cast teleport on the ghost?", 110),
+                        byeThen
+                    })
+                },
+                {
+                    110,
+                    new("Hmm, I'd never considered that before. I suppose it's worth trying if it might help this ghost move on.", new() {
+                        new DialogueChoice("(NEXT)", 120),
+                        byeThen
+                    })
+                },
+                {
+                    120,
+                    new("(Wizard Terrova gestures at the ghost while muttering arcane words)", new() {
+                        new DialogueChoice("(NEXT)", 130),
+                        byeThen
+                    })
+                },
+                {
+                    130,
+                    new("(As it starts to fade away, the ghost finally looks at you and mouths the words 'thank you')", new() {
+                        new DialogueChoice("(NEXT)", 140),
+                        byeThen
+                    })
+                },
+                {
+                    140,
+                    new("Hmm, it seems to have worked but the spell didn't make any lights or sounds like normal.", new() {
+                        new DialogueChoice("(NEXT)", 150),
+                        byeThen
+                    })
+                },
+                {
+                    150,
+                    new("Perhaps the spell made whatever system governs this world take notice of him, and it finally moved to fix the error.", new() {
+                        new DialogueChoice("(NEXT)", 160),
+                        byeThen
+                    })
+                },
+                {
+                    160,
+                    new("Either way, he seems to have moved on now. Hopefully we won't see him around the island anymore.", new() {
+                        byeThen
+                    }, "TI_HauntedIsland", 80)
+                }
             }));
 
             toAdd.Add(new("Drunken pirate", "tiDrunkPirate", new() { { 0, new("Buried me scroll around here some- *hic* somewhere...", new() { byeThen }) } }));
+
+            toAdd.Add(new("Forlorn ghost", "tiForlornGhost1", new() { { 0, new("(The ghost says nothing, just stares longingly at the rusted sword on the ground)", new() { byeThen }) } }, req: new("QuestAt", 0, "TI_HauntedIsland")));
+            toAdd.Add(new("Forlorn ghost", "tiForlornGhost2", new() { { 0, new("(The ghost says nothing, just stares sadly at the crumpled note on the ground)", new() { byeThen }) } }, req: new("QuestAt", 10, "TI_HauntedIsland")));
+            toAdd.Add(new("Forlorn ghost", "tiForlornGhost3", new() { { 0, new("(The ghost says nothing, just stares hopefully at Wizard Terrova)", new() { byeThen }) } }, req: new("QuestAt", 70, "TI_HauntedIsland")));
 
             toAdd.Add(new("Man", "man", new() { { 0, new("Lovely day for it!", new() { byeThen }) } }, 1, 10) { PickpocketLoot = new() { new("coinPouchSmall", 1) } });
 

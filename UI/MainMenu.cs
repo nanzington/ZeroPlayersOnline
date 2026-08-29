@@ -399,6 +399,7 @@ namespace ZeroPlayersOnline.UI {
             HardcodedFarmPatches.InitPatches(GameLoop.ZPO.player.FarmingPatches);
             GameLoop.ZPO.TryAddSkills();
             GameLoop.ZPO.TryAddPrayers();
+            GameLoop.ZPO.TryAddQuests();
         }
     }
 }

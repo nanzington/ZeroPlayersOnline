@@ -1,6 +1,10 @@
+Minimum to finish Tutorial Island
+- Skills to implement: Agility, Hunter, Herblore, Construction, Slayer. Maybe also a proxy combat skill (necro, summoning, taming), divination, dungeoneering
+- Fill out the Tutorial clue casket loot table
+
+
 Immediately important stuff to get working:
-- A flexible system to track a requirement, useable for connection nodes, using an item, starting a quest, spell, etc
-- Quests, Quest Log, Quest Rewards
+- Start splitting stuff out of the ZPO file because it's getting ridiculous and it doesn't need to be that dense now
 - An achievement tracking thing where performing an action can check to see if doing it progresses an achievement/task, also have a screen to show all achieves with some sort options
 - Move data from being hardcoded to json files
 - Make all skills accessible somewhere on tutorial island?
@@ -9,18 +13,20 @@ Immediately important stuff to get working:
 - - Herblore at least using eye of newt and guam to make attack potion
 - - Construction might not be possible? Would have to have just one house instead of a house per area
 - - Summoning / Necromancy / Taming or maybe some kind of combo of the three into one "minion fights for you" combat skill
+- - Divination might be okay because I can make it not suck as much as in RS3
+
 
 
 Less immediate but still important: 
-- Skill guides, preferably auto-populated using game data so it doesn't have to be manually updated 
-- Ranged: need to make arrows contribute to damage somehow, maybe derive ranged damage from the arrows, and you have to have a bow at least at the arrows level to use them?
+- Skill guides, preferably auto-populated using game data so it doesn't have to be manually updated
 - Ranged: make some kind of breakage chance so you don't get all ammo back
-- Get magic combat working 
-- Make armor reduce damage taken (need to decide on actual numbers for this)
+- Get magic combat working  
 - Allow withdrawing a specific amount of item in banks instead of all or nothing
 - Also make noted items work and add checks anywhere items are used or consumed to make sure they're not noted
 - Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
-- Do something to make the top-left corner of the UI nicer, figure out some more stuff to add there besides HP/level/damage/gold
+- Skip Tutorial Island option? (Complete skip, skip with cape, skip with quest)
+- Clue collection log needs to be made and viewable
+- Allow CraftRecipes to have multiple inputs or come up with some other menu type for making teletabs
 
 
 Difficulty things
@@ -86,6 +92,27 @@ Clue Step Notes
 - Hard only up to level 60, may require up to experienced quests
 - Elite only up to level 80, may require up to master quests
 - Master up to 99, may require up to grandmaster quests
+
+
+
+Next quests to implement and things they need
+- Cooks Assistant
+- - Locations: Lumbridge Castle interior, Lumbridge farms
+- - Mechanics: Quests/dialogue consuming items
+- Demon Slayer
+- - Locations: Path from Lumbridge to Varrock, a decent portion of Varrock, Wizard tower so also path to Draynor
+- - Mechanics: Boss fight vs Delrith (or temporary monsters), partial item delivery for quest steps?
+- The Restless Ghost
+- - Locations: Lumbridge Swamp, Wizard Tower
+- - Mechanics: Temporary monsters
+- Romeo and Juliet
+- - Locations: Basically all of varrock and the surrounding area / the southeast mine
+- Sheep Shearer
+- - Locations: Nothing new by this point (Fred's Farm north of Lumbridge and the spinning wheel upstairs in the castle)
+- Shield of Arrav
+- - Locations: Seedy parts of Varrock, Varrock Castle
+- - Mechanics: Probably just use the RS3 changes to make it solo, can have multiplayer stuff if multiplayer is added later
+
 
 =========================================
 

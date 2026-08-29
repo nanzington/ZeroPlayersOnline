@@ -24,6 +24,7 @@ namespace ZeroPlayersOnline {
         public Dictionary<string, List<CraftRecipe>> CraftLib = new();
 
         public Dictionary<string, ClueStep> ClueStepLibrary = new();
+        public Dictionary<string, Quest> QuestLibrary = new();
 
         public MessageLog Log = new();
 
@@ -54,7 +55,12 @@ namespace ZeroPlayersOnline {
 
         public Window Guide;
         public string GuideTab = "Introduction";
-
+         
+        public Window Quests;
+        public string QuestFilter = "All";
+        public string ViewingQuestID = "";
+        public bool QuestOverview = true;
+        public int QuestBlockScrollTop = 0;
 
         public int SecondsSinceAutosave = 0;
         public double TimeLastTicked = 0;
@@ -83,6 +89,11 @@ namespace ZeroPlayersOnline {
             CraftingMenu.Position = new Point(25, 10);
             CraftingMenu.Title = "Crafting Menu".Align(HorizontalAlignment.Center, 98);
 
+            Quests = new(100, 30);
+            Quests.CanDrag = true;
+            Quests.Position = new Point(25, 10);
+            Quests.Title = "Quest Log".Align(HorizontalAlignment.Center, 98);
+
 
             player = new();
 
@@ -90,6 +101,7 @@ namespace ZeroPlayersOnline {
 
             TryAddSkills();
             TryAddPrayers();
+            TryAddQuests();
 
             player.CurrentHP = 10;
 
@@ -164,28 +176,16 @@ namespace ZeroPlayersOnline {
 
             if (GuideTab == "Introduction") {
 
-                printY = Guide.PrintMultiLine(22, printY, "Welcome to Zero Players Online! The interface can be a little intimidating but this guide will hopefully ease you into the process of playing the game.", 78);
-                printY += 2;
-
-                printY = Guide.PrintMultiLine(22, printY, "The area to the top left contains your important stats readout, including HP and Gold, and skills you've recently gained experience in.", 78);
-                printY += 2;
-
-                printY = Guide.PrintMultiLine(22, printY, "Below this readout is the content area, containing tabs you can switch between at the top to view your inventory, equipment, and more.", 78);
-                printY += 2;
-
-                printY = Guide.PrintMultiLine(22, printY, "Underneath this and the width of the screen is your message log, where important messages are sent by the game.", 78);
-                printY += 2;
-
-                printY = Guide.PrintMultiLine(22, printY, "The top of the right side of the screen is your current location, listing its description and title.", 78);
-                printY += 2;
-
-                printY = Guide.PrintMultiLine(22, printY, "To the left below this are connected locations and monsters at this location. You can click a connected location to move to it.", 78);
-                printY += 2;
-
-                printY = Guide.PrintMultiLine(22, printY, "Finally to the right is the activity box, containing resources you can collect, items on the ground, NPCs, shop items, and processing stations at this location. Pressing TAB will cycle the tab shown here, or you can click on the letters at the top to change to specific tabs.", 78);
-                printY += 3;
-
-                printY = Guide.PrintMultiLine(22, printY, "This is all a lot to take in, but hopefully with some practice it will become more natural to navigate.", 78);
+                printY = Guide.PrintMultiLine(22, printY,
+                    "Welcome to Zero Players Online! The interface can be a little intimidating but this guide will hopefully ease you into the process of playing the game." + " /n /n " +
+                    "The area to the top left contains your important stats readout, including HP and Gold, and skills you've recently gained experience in." + " /n /n " +
+                    "Below this readout is the content area, containing tabs you can switch between at the top to view your inventory, equipment, and more." + " /n /n " +
+                    "Underneath this and the width of the screen is your message log, where important messages are sent by the game." + " /n /n " +
+                    "The top of the right side of the screen is your current location, listing its description and title." + " /n /n " +
+                    "To the left below this are connected locations and monsters at this location. You can click a connected location to move to it." + " /n /n " +
+                    "Finally to the right is the activity box, containing resources you can collect, items on the ground, NPCs, shop items, and processing stations at this location. Pressing TAB will cycle the tab shown here, or you can click on the letters at the top to change to specific tabs." + " /n /n " +
+                    "This is all a lot to take in, but hopefully with some practice it will become more natural to navigate."
+                    , 78);
             }
         }
 
@@ -268,8 +268,10 @@ namespace ZeroPlayersOnline {
             }
 
             if (CraftingSubtype == "" || !ItemsUsed.Contains(CraftingSubtype)) {
-                CraftingSubtype = ItemsUsed[0];
-                PopulateCraftList();
+                if (ItemsUsed.Count > 0) {
+                    CraftingSubtype = ItemsUsed[0];
+                    PopulateCraftList();
+                }
             } 
 
             for (int i = 0; i < ItemsUsed.Count; i++) {
@@ -304,6 +306,156 @@ namespace ZeroPlayersOnline {
             CraftingMenu.PrintClickable(99, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { CraftingMenu.IsVisible = false; });
         }
 
+        public List<string> QuestLengths = [ "Very Short", "Short", "Medium", "Long", "Very Long" ];
+        public List<string> QuestDifficulties = ["Novice", "Intermediate", "Experienced", "Master", "Grandmaster" ];
+        public List<string> QuestRegions = [ "Asgarnia", "Desert", "Fremennik", "Kandarin", "Karamja", "Misthalin", "Morytania", "Wilderness" ];
+
+        public void QuestDraw() {
+            Quests.Clear();
+            Helper.DrawBox(Quests, 0, 0, 98, 28);
+            if (ViewingQuestID == "") {
+                Quests.Print(2, 0, "[Quest Log - " + QuestFilter + " Quests]");
+            } else { 
+                if (player.QuestLog.TryGetValue(ViewingQuestID, out Quest? currQuest)) { 
+                    Quests.Print(2, 0, "[Quest Log - " + currQuest.Name + "]");
+                } 
+            } 
+            Quests.DrawLine(new Point(17, 1), new Point(17, 28), 179);
+
+            Quests.PrintClickable(1, 1, new ColoredString("Show All Quests", QuestFilter == "All" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = "All"; ViewingQuestID = ""; });
+
+
+            int printSide = 3;
+            Quests.Print(1, printSide++, "By Length");
+            for (int i = 0; i < QuestLengths.Count; i++) {
+                Quests.PrintClickable(2, printSide++, new ColoredString(QuestLengths[i], QuestFilter == QuestLengths[i] ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = QuestLengths[i]; ViewingQuestID = ""; });
+            }
+            printSide++;
+
+            Quests.Print(1, printSide++, "By Difficulty");
+            for (int i = 0; i < QuestDifficulties.Count; i++) {
+                Quests.PrintClickable(2, printSide++, new ColoredString(QuestDifficulties[i], QuestFilter == QuestDifficulties[i] ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = QuestDifficulties[i]; ViewingQuestID = ""; });
+            }
+            printSide++;
+
+            Quests.Print(1, printSide, "By Region"); 
+            Quests.PrintClickable(11, printSide++, new ColoredString("(Mine)", QuestFilter == "MyRegions" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = "MyRegions"; ViewingQuestID = ""; });
+
+            for (int i = 0; i < QuestRegions.Count; i++) {
+                Quests.PrintClickable(2, printSide++, new ColoredString(QuestRegions[i], QuestFilter == QuestRegions[i] ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = QuestRegions[i]; ViewingQuestID = ""; });
+            }
+            printSide++;
+
+            List<Quest> QuestsInFilter = new();
+            QuestsInFilter = QuestsInFilter.OrderBy(o => o.Name).ToList();
+
+            foreach(var kv in player.QuestLog) {
+                if (QuestFilter == "MyRegions") {
+
+                }
+                else {
+                    if (QuestFilter == "All" || kv.Value.Difficulty == QuestFilter || kv.Value.Length == QuestFilter || kv.Value.RegionsNeeded.Contains(QuestFilter)) {
+                        QuestsInFilter.Add(kv.Value);
+                    }
+                }
+            }
+
+            if (ViewingQuestID == "") {
+                for(int i = 0; i < QuestsInFilter.Count; i++) {
+                    Color col = Color.DarkSlateGray;
+
+                    if (QuestsInFilter[i].CanStartQuest(player)) {
+                        col = Color.Crimson;
+                    }
+
+                    if (QuestsInFilter[i].CurrentStage != -1) {
+                        col = Color.Yellow;
+                    }
+
+                    if (QuestsInFilter[i].CurrentStage == QuestsInFilter[i].CompleteStage) {
+                        col = Color.Lime;
+                    }
+
+                    Quests.PrintClickable(19, 1 + i, new ColoredString(QuestsInFilter[i].Name, col, Color.Black), () => {
+                        ViewingQuestID = QuestsInFilter[i].ID;
+
+                        if (player.QuestLog.TryGetValue(ViewingQuestID, out Quest? nowViewing)) {
+                            if (nowViewing != null) {
+                                if (nowViewing.CurrentStage == -1) {
+                                    QuestOverview = true;
+                                } else {
+                                    QuestOverview = false; 
+                                    QuestBlockScrollTop = 0;
+                                }
+                            } else {
+                                QuestOverview = true;
+                            }
+                        } else {
+                            QuestOverview = true;
+                        }
+                    });
+                }
+            } else {
+                if (player.QuestLog.TryGetValue(ViewingQuestID, out Quest? currQuest)) {
+
+                    if (QuestOverview) {
+                        Quests.Print(19, 1, "Quest Name: " + currQuest.Name);
+                        Quests.Print(19, 2, "Difficulty: " + currQuest.Difficulty);
+                        Quests.Print(19, 3, "    Length: " + currQuest.Length);
+                        int afterDesc = Quests.PrintMultiLine(19, 5, currQuest.Description, 80) + 2;
+
+                        if (currQuest.CurrentStage != -1) {
+                            Quests.PrintClickable(19, afterDesc, "[View Quest Log]", () => { QuestOverview = false; QuestBlockScrollTop = 0; });
+
+                            if (currQuest.CurrentStage == currQuest.CompleteStage)
+                                Quests.Print(19, afterDesc + 2, "Quest Complete!", Color.Lime);
+                        }
+                    } else {
+                        int visibleStages = 0;
+                        
+                        foreach (var kv in currQuest.Stages) {
+                            if (kv.Key <= currQuest.CurrentStage) {
+                                visibleStages++;
+                            }
+                        }
+
+                        if (Helper.ScrolledUp()) { QuestBlockScrollTop = Math.Clamp(QuestBlockScrollTop - 1, 0, visibleStages - 1); }
+                        if (Helper.ScrolledDown()) { QuestBlockScrollTop = Math.Clamp(QuestBlockScrollTop + 1, 0, visibleStages - 1); }
+
+
+                        Quests.PrintClickable(19, 1, "[View Quest Overview]", () => { QuestOverview = true; });
+
+                        int printY = 3;
+                        int count = -1; 
+                        foreach (var kv in currQuest.Stages) {
+                            count++;
+                            if (count < QuestBlockScrollTop) { 
+                                continue;
+                            }
+
+                            if (kv.Key <= currQuest.CurrentStage) {
+                                Color col = Color.DarkSlateGray;
+
+                                if (kv.Key == currQuest.CurrentStage)
+                                    col = Color.White;
+
+                                printY = Quests.PrintMultiLine(19, printY, kv.Value.Description, 80, col.R, col.G, col.B);
+
+                                printY += 2;
+                            }
+                        }
+
+                        if (currQuest.CurrentStage == currQuest.CompleteStage)
+                            Quests.Print(19, printY, "Quest Complete!", Color.Lime);
+
+                        Quests.DrawLine(new Point(1, 29), (98, 29), 196, Color.White);
+                    }
+                } 
+            }
+
+            Quests.PrintClickable(99, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Quests.IsVisible = false; });
+        }
+
         public void SidebarDraw(UI_EmbeddedMini mini) {
             Point mousePos = new MouseScreenObjectState(mini.Con, GameHost.Instance.Mouse).CellPosition;
 
@@ -315,14 +467,17 @@ namespace ZeroPlayersOnline {
             }
 
 
-            mini.Con.Print(1, 0, "HP: " + player.CurrentHP + " / " + player.Skills["Constitution"].Level, Color.Crimson);
+            mini.Con.Print(0, 0, "    HP: " + player.CurrentHP.ToString().Align(HorizontalAlignment.Right, 4, ' ') + " / " + player.Skills["Constitution"].Level.ToString().Align(HorizontalAlignment.Right, 4, ' '), Color.Crimson);
+            mini.Con.Print(0, 1, "Prayer: " + player.TotalActivePrayers().ToString().Align(HorizontalAlignment.Right, 4, ' ') + " / " + player.GetEffectiveSkillLevel("Prayer").ToString().Align(HorizontalAlignment.Right, 4, ' '), Color.DodgerBlue);
 
-            mini.Con.Print(1, 2, "Level: " + player.GetCombatLevel(), Color.Yellow);
+            mini.Con.Print(0, 3, " Level: " + player.GetCombatLevel(), Color.Yellow); 
+            mini.Con.Print(0, 4, "Damage: " + player.GetDamageDice(), Color.Yellow);
+            mini.Con.Print(0, 5, "vMelee: " + player.TotalArmorValue("Melee"), Color.Yellow);
+            mini.Con.Print(0, 6, "vMagic: " + player.TotalArmorValue("Magic"), Color.Yellow);
+            mini.Con.Print(0, 7, "vRange: " + player.TotalArmorValue("Ranged"), Color.Yellow);
 
-            mini.Con.Print(1, 3, "Damage: " + player.GetDamageDice(), Color.Yellow);
 
-
-            mini.Con.Print(1, 11, "Gold: " + String.Format($"{player.HeldGold:n0}"), Color.Goldenrod);
+            mini.Con.Print(0, 11, "Gold: " + String.Format($"{player.HeldGold:n0}"), Color.Goldenrod);
 
 
             mini.Con.DrawLine(new Point(20, 0), new Point(20, 11), 179);
@@ -337,7 +492,6 @@ namespace ZeroPlayersOnline {
                 }
             }
 
-
             if (Atlas.ContainsKey(player.NavLoc)) {
                 Location curr = Atlas[player.NavLoc];
 
@@ -346,6 +500,10 @@ namespace ZeroPlayersOnline {
                     for (int i = 0; i < curr.ItemSpawns.Count; i++) {  
                         if (curr.ItemSpawns[i].LastPickedUp + (curr.ItemSpawns[i].RespawnTimer * 1000) < Helper.Time() || curr.ItemSpawns[i].LastPickedUp == 0) {
                             bool itemSpawnedAlready = false;
+                            if (curr.ItemSpawns[i].ReqToSpawn != null && !curr.ItemSpawns[i].ReqToSpawn.CheckRequirement(player)) {
+                                itemSpawnedAlready = true;
+                            } 
+
                             for (int j = 0; j < curr.ItemsHere.Count; j++) {
                                 if (player.RandomItems == 0) {
                                     if (curr.ItemsHere[j].ID == curr.ItemSpawns[i].ItemID) {
@@ -492,12 +650,17 @@ namespace ZeroPlayersOnline {
                                     Item item = Helper.Clone(player.Inventory[i]);
 
                                     if (item.Stackable) {
+                                        bool found = false;
                                         for (int i = 0; i < player.BankedItems.Count; i++) {
                                             if (player.BankedItems[i].ID == item.ID) {
                                                 player.BankedItems[i].Quantity += item.Quantity;
+                                                found = true;
                                                 break;
                                             }
                                         }
+
+                                        if (!found)
+                                            player.BankedItems.Add(item);
                                     } else {
                                         player.BankedItems.Add(item);
                                     }
@@ -534,7 +697,13 @@ namespace ZeroPlayersOnline {
                                 dropped = true;
                             });
 
-                            mini.Con.PrintClickable(52, 15 + i, new ColoredString("? ", Color.MediumPurple, Color.Black), () => { Log.AddMessage(player.Inventory[i].ExamineText); });
+                            mini.Con.PrintClickable(52, 15 + i, new ColoredString("? ", Color.MediumPurple, Color.Black), () => { 
+                                Log.AddMessage(new ColoredString(player.Inventory[i].ExamineText, Color.SandyBrown, Color.Black)); 
+
+                                foreach (var kv in player.QuestLog) {
+                                    kv.Value.CheckProgress(player, "ExamineItem", player.Inventory[i].ID, 0);
+                                }
+                            });
 
                             mini.Con.PrintClickable(50, 15 + i, new ColoredString("U ", UsingSlot == i ? Color.Green : Color.Yellow, Color.Black), () => {
                                 if (UsingSlot == -1) {
@@ -890,10 +1059,9 @@ namespace ZeroPlayersOnline {
 
             if (Atlas.ContainsKey(player.NavLoc)) {
                 Location curr = Atlas[player.NavLoc];
-
-                mini.Con.Print(57, 0, curr.DisplayName.Align(HorizontalAlignment.Center, 92));
-                mini.Con.DrawLine(new Point(56, 1), new Point(148, 1), 196);
-
+                 
+                mini.Con.Print(57, 0, curr.DisplayName.Align(HorizontalAlignment.Center, 91));
+                mini.Con.DrawLine(new Point(56, 1), new Point(148, 1), 196); 
 
                 int descY = mini.Con.PrintMultiLine(57, 3, curr.Description, 92);
 
@@ -909,7 +1077,7 @@ namespace ZeroPlayersOnline {
                 mini.Con.DrawLine(new Point(56, printY), new Point(148, printY++), 196);
 
                 int resourceY = printY;
-
+                 
                 if (curr.ConnectedLocations.Count > 0) {
                     mini.Con.Print(57, printY++, "Connected Locations: ");
 
@@ -933,7 +1101,7 @@ namespace ZeroPlayersOnline {
                         }
                     }
 
-                }
+                } 
 
                 if (curr.MonstersHere.Count > 0) {
                     mini.Con.DrawLine(new Point(56, printY), new Point(109, printY++), 196);
@@ -961,7 +1129,7 @@ namespace ZeroPlayersOnline {
                                 AttackingMonster = curr.MonstersHere[GameLoop.rand.Next(curr.MonstersHere.Count)];
                             }
                         }
-                    }
+                    } 
 
                     for (int i = 0; i < curr.MonstersHere.Count; i++) {
                         AreaMonster thisOne = curr.MonstersHere[i];
@@ -1005,17 +1173,23 @@ namespace ZeroPlayersOnline {
                                     if (hitChance < 25 + (player.GetEffectiveSkillLevel("Defense") / 4.0)) {
                                         Log.AddMessage(new ColoredString(thisOne.Name + " tried to hit you but missed!", Color.Yellow, Color.Black));
                                     } else {
-                                        if ((player.PrayerActive("Protect from Magic") && thisOne.DamageType == "Magic") || (player.PrayerActive("Protect from Melee") && thisOne.DamageType == "Melee") || (player.PrayerActive("Protect from Range") && thisOne.DamageType == "Range")) {
-                                            modified = (int)Math.Floor(dmg / 2.0);
-                                        }
+                                        modified -= player.TotalArmorValue(thisOne.DamageType);
 
+                                        if ((player.PrayerActive("Protect from Magic") && thisOne.DamageType == "Magic") || (player.PrayerActive("Protect from Melee") && thisOne.DamageType == "Melee") || (player.PrayerActive("Protect from Range") && thisOne.DamageType == "Ranged")) {
+                                            modified /= 2;
+                                        }
+                                         
                                         if (dmg != modified) {
-                                            Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + ", reduced to " + modified + "!", Color.Crimson, Color.Black));
+                                            if (modified <= 0) {
+                                                Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + ", but you took no damage!", Color.Crimson, Color.Black));
+                                            } else {
+                                                Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + ", reduced to " + modified + "!", Color.Crimson, Color.Black));
+                                            }
                                         } else {
                                             Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
                                         }
 
-                                        bool died = player.TakeDamage(dmg, Log);
+                                        bool died = player.TakeDamage(modified, Log);
 
                                         if (player.DefenseExpSplit > 0 && !reachedKillLimit)
                                             player.TryGrantExp("Defense", dmg * player.DefenseExpSplit, Log, RecentlyTrainedSkills);
@@ -1061,14 +1235,16 @@ namespace ZeroPlayersOnline {
                                     wep.Quantity -= 1;
                                     Item droppedAmmo = Helper.Clone(wep);
                                     droppedAmmo.Quantity = 1;
-                                    TryPlaceItem(player.NavLoc, droppedAmmo);
+                                    if (GameLoop.rand.Next(4) != 0)
+                                        TryPlaceItem(player.NavLoc, droppedAmmo);
                                     usedAmmo = true;
                                 } else if (wep.EquipAmmo == "Arrow") {
                                     if (ammo != null && ammo.EquipDamageType == "Arrow") {
                                         ammo.Quantity -= 1;
                                         Item droppedAmmo = Helper.Clone(ammo);
                                         droppedAmmo.Quantity = 1;
-                                        TryPlaceItem(player.NavLoc, droppedAmmo);
+                                        if (GameLoop.rand.Next(4) != 0)
+                                            TryPlaceItem(player.NavLoc, droppedAmmo);
                                         usedAmmo = true;
                                     } else {
                                         hasAmmo = false;
@@ -1078,7 +1254,8 @@ namespace ZeroPlayersOnline {
                                         ammo.Quantity -= 1;
                                         Item droppedAmmo = Helper.Clone(ammo);
                                         droppedAmmo.Quantity = 1;
-                                        TryPlaceItem(player.NavLoc, droppedAmmo);
+                                        if (GameLoop.rand.Next(4) != 0)
+                                            TryPlaceItem(player.NavLoc, droppedAmmo);
                                         usedAmmo = true;
                                     } else {
                                         hasAmmo = false;
@@ -1170,8 +1347,7 @@ namespace ZeroPlayersOnline {
                             thisOne.CurrentHP = thisOne.MaxHP; 
                             thisOne.TimeLastAttacked = Helper.Time();
                             thisOne.AttackingPlayer = false;
-                        }
-
+                        } 
                         mini.Con.Print(57, printY, "|");
                         mini.Con.PrintClickable(59, printY, new ColoredString(curr.MonstersHere[i].Name, nameCol, Color.Black), () => { AttackingMonster = thisOne; });
 
@@ -1196,8 +1372,7 @@ namespace ZeroPlayersOnline {
                             }
                         }
                     }
-                }
-
+                } 
 
                 int resourceX = 110;
 
@@ -1340,14 +1515,25 @@ namespace ZeroPlayersOnline {
                             if (ProcessingStations.ContainsKey(curr.ProcessingStations[i])) {
                                 ProcessingStation station = ProcessingStations[curr.ProcessingStations[i]];
                                 mini.Con.Print(resourceX + 2, resourceY, "|");  
-                                mini.Con.PrintClickable(resourceX + 4, resourceY++, station.Name, () => { 
+
+                                mini.Con.PrintClickable(resourceX + 4, resourceY, station.Name, () => { 
                                     station.TryProcessItem(player, Log, ItemLibrary, RecentlyTrainedSkills); 
 
-                                    if (station.OpensUI != "") {
+                                    if (station.OpensUI) {
                                         CraftingMenu.IsVisible = true;
                                         CraftingType = station.Name;
                                     }
                                 });
+
+                                if (!station.OpensUI) {
+                                    mini.Con.PrintClickable(resourceX + 2, resourceY, new ColoredString(236.AsString(), Color.MediumPurple, Color.Black), () => {
+                                        while (station.TryProcessItem(player, Log, ItemLibrary, RecentlyTrainedSkills)) {
+
+                                        }
+                                    });
+                                }
+
+                                resourceY++;
                             }
                             else {
                                 mini.Con.Print(resourceX + 2, resourceY, "|");
@@ -1387,6 +1573,10 @@ namespace ZeroPlayersOnline {
                             if (NPCLibrary.ContainsKey(curr.NPCsHere[i])) {
                                 NPC thisOne = NPCLibrary[curr.NPCsHere[i]];
 
+                                if (thisOne.ReqToSee != null && !thisOne.ReqToSee.CheckRequirement(player)) {
+                                    continue;
+                                }
+
                                 mini.Con.PrintClickable(resourceX + 2, resourceY, "| " + thisOne.Name, () => {
                                     if (!ClueLogic.GenericStep(player, Log, "Speak", thisOne.ID) && !ClueLogic.GenericStep(player, Log, "Anagram", thisOne.ID)) {
                                         CurrDialogueStage = 0;
@@ -1424,19 +1614,76 @@ namespace ZeroPlayersOnline {
                             if (dia.Choices != null && dia.Choices.Count > 0) {
                                 for (int i = 0; i < dia.Choices.Count; i++) {
                                     DialogueChoice choice = dia.Choices[i];
+
+                                    if (!choice.CanClick() && !choice.ShowAnyways) {
+                                        continue;
+                                    }
+
+
                                     mini.Con.Print(resourceX + 2, resourceY, "|");
-                                    mini.Con.PrintClickable(resourceX + 4, resourceY++, choice.Text, () => {
-                                        CurrDialogueStage = choice.LeadsToStage;
+                                    mini.Con.PrintClickable(resourceX + 4, resourceY++, new ColoredString(choice.Text, choice.CanClick() ? Color.White : Color.Crimson, Color.Black), () => {
+                                        if (choice.CanClick()) {
+                                            CurrDialogueStage = choice.LeadsToStage;
 
-                                        if (ConversationPartner.Dialogue.ContainsKey(CurrDialogueStage)) {
-                                            Log.AddMessage(ConversationPartner.Name + ": " + ConversationPartner.Dialogue[CurrDialogueStage].Text);
-                                        }
+                                            if (ConversationPartner.Dialogue.ContainsKey(CurrDialogueStage)) {
+                                                Log.AddMessage(ConversationPartner.Name + ": " + ConversationPartner.Dialogue[CurrDialogueStage].Text);
+                                            }
 
-                                        if (choice.TeleportTo != "") {
-                                            player.NavLoc = choice.TeleportTo; 
+                                            if (choice.TeleportTo != "") {
+                                                player.NavLoc = choice.TeleportTo;
 
-                                            if (choice.SetSpawnToo) {
-                                                player.NavRespawn = choice.TeleportTo;
+                                                if (choice.SetSpawnToo) {
+                                                    player.NavRespawn = choice.TeleportTo;
+                                                }
+                                            }
+
+                                            if (ConversationPartner.Dialogue.ContainsKey(CurrDialogueStage)) {
+                                                DialogueStage newDia = ConversationPartner.Dialogue[CurrDialogueStage];
+
+                                                if (newDia.SetsQuest != "") {
+                                                    if (player.QuestLog.TryGetValue(newDia.SetsQuest, out Quest? quest)) {
+                                                        if (quest != null) {
+                                                            if (quest.CurrentStage < newDia.SetsQuestStageTo) {
+                                                                quest.CurrentStage = newDia.SetsQuestStageTo;
+                                                            }
+
+                                                            if (quest.CurrentStage == quest.CompleteStage) {
+                                                                Log.AddMessage(new ColoredString("You have completed " + quest.Name + "!", Color.Lime, Color.Black));
+                                                                quest.ProcessRewards(player);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                if (newDia.ItemsGiven != null) {
+                                                    for (int i = 0; i < newDia.ItemsGiven.Count; i++) {
+                                                        if (newDia.ItemsGiven[i].Contains(",")) {
+                                                            string[] split = newDia.ItemsGiven[i].Split(",");
+
+                                                            if (ItemLibrary.TryGetValue(split[0], out Item? give)) {
+                                                                if (give != null) {
+                                                                    Item actualGive = Helper.Clone(give);
+
+                                                                    if (int.TryParse(split[1], out int qty)) {
+                                                                        actualGive.Quantity = qty;
+                                                                    }
+
+                                                                    player.TryPickup(Helper.Clone(actualGive));
+                                                                }
+                                                            }
+                                                        } else {
+                                                            if (ItemLibrary.TryGetValue(newDia.ItemsGiven[i], out Item? give)) {
+                                                                if (give != null) {
+                                                                    player.TryPickup(Helper.Clone(give));
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            if (choice.ClickReq != null) {
+                                                Log.AddMessage(new ColoredString("Requirement not met: " + choice.ClickReq.GetSummary(), Color.Crimson, Color.Black));
                                             }
                                         }
                                     });
@@ -1630,23 +1877,25 @@ namespace ZeroPlayersOnline {
             mini.QuadSquare.Clear();
 
 
-            SidebarDraw(mini);
-            LocationDraw(mini);
-            LogDraw(mini);
+            SidebarDraw(mini); 
+            LocationDraw(mini); 
+            LogDraw(mini); 
 
             if (CollectionLog.IsVisible)
                 CollectionLogDraw();
 
             if (Guide.IsVisible)
                 GuideDraw();
-
+             
             if (CraftingMenu.IsVisible)
                 CraftingMenuDraw();
 
+            if (Quests.IsVisible)
+                QuestDraw();
 
             if (TimeLastTicked + 1000 < Helper.Time()) {
                 TickTime();
-            }
+            } 
         }
 
         List<string> activityTabs = new() { "Items", "NPCs", "Processing", "Resources", "Chat", "Shop", "Farming" };
@@ -1666,6 +1915,10 @@ namespace ZeroPlayersOnline {
 
                 if (CraftingMenu.IsVisible) {
                     CraftingMenu.IsVisible = false;
+                }
+
+                if (Quests.IsVisible) {
+                    Quests.IsVisible = false;
                 }
 
                 Close(mini);
@@ -1704,16 +1957,25 @@ namespace ZeroPlayersOnline {
                 CollectionLog.IsVisible = !CollectionLog.IsVisible;
                 Guide.IsVisible = false;
                 CraftingMenu.IsVisible = false;
+                Quests.IsVisible = false;
             }
 
             if (Helper.HotkeyDown(Key.F1)) {
                 Guide.IsVisible = !Guide.IsVisible;
                 CollectionLog.IsVisible = false;
                 CraftingMenu.IsVisible = false;
+                Quests.IsVisible = false;
+            }
+
+            if (Helper.HotkeyDown(Key.Q)) {
+                Quests.IsVisible = !Quests.IsVisible;
+                Guide.IsVisible = false;
+                CollectionLog.IsVisible = false;
+                CraftingMenu.IsVisible = false;
             }
 
             if (GameHost.Instance.Mouse.RightClicked) {
-                //Log.AddMessage(mousePos.ToString()); 
+                Log.AddMessage(mousePos.ToString()); 
             }
         }
 
@@ -1851,12 +2113,15 @@ namespace ZeroPlayersOnline {
             } else if (item.UseString == "Needle") {
                 CraftingMenu.IsVisible = true;
                 CraftingType = "Needle";
-            } else if (item.UseString == "Clay") {
-                CraftingMenu.IsVisible = true;
-                CraftingType = "Clay";
             } else if (item.UseString == "Knife") {
                 CraftingMenu.IsVisible = true;
                 CraftingType = "Knife";
+            } else if (item.UseString == "SecondExamine") {
+                Log.AddMessage(new ColoredString(item.MiscString, Color.SandyBrown, Color.Black));
+
+                foreach (var kv in player.QuestLog) {
+                    kv.Value.CheckProgress(player, "ExamineItem", item.ID, 0);
+                }
             }
 
             return true;
@@ -1899,6 +2164,9 @@ namespace ZeroPlayersOnline {
             player.BankedItems.Clear();
             player.ItemsEverObtained.Clear();
             player.ActivePotions.Clear();
+
+            player.QuestLog.Clear();
+            TryAddQuests();
             
             foreach (var patch in player.FarmingPatches) {
                 patch.Value.ClearPatch();
@@ -1944,6 +2212,7 @@ namespace ZeroPlayersOnline {
             player.FarmingPatches.Clear();
             ClueStepLibrary.Clear();
             CraftLib.Clear();
+            QuestLibrary.Clear();
 
 
             HardcodedItems.InitItems(ItemLibrary);
@@ -1957,6 +2226,7 @@ namespace ZeroPlayersOnline {
             HardcodedFarmPatches.InitPatches(player.FarmingPatches);
             HardcodedClueSteps.InitClues(ClueStepLibrary);
             HardcodedCraftRecipes.InitCrafts(CraftLib);
+            HardcodedQuests.InitQuests(QuestLibrary);
         }
 
         public Item? ResolveItem(string ID) {
@@ -2012,6 +2282,12 @@ namespace ZeroPlayersOnline {
                         curr.ItemsHere.Add(item);
                     }
                 }
+            }
+        }
+
+        public void TryAddQuests() {
+            foreach (var kv in QuestLibrary) {
+                player.QuestLog.TryAdd(kv.Key, kv.Value);
             }
         }
     }

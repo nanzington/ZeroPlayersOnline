@@ -12,6 +12,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Anvil", "Smithing", 1, 30, "barBronze", 2, "helmBronze", tool: "hammer"));
             toAdd.Add(new("Anvil", "Smithing", 1, 75, "barBronze", 5, "platebodyBronze", tool: "hammer"));
             toAdd.Add(new("Anvil", "Smithing", 1, 45, "barBronze", 3, "platelegsBronze", tool: "hammer"));
+            toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "bootsBronze", tool: "hammer"));
+            toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "gauntletsBronze", tool: "hammer"));
             toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "arrowheadsBronze", 15, "hammer"));
             toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "knivesBronze", 5, "hammer"));
 
@@ -25,6 +27,15 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Knife", "Fletching", 1, 5, "logPine", 1, "arrowshaft", 15, "knife"));
             toAdd.Add(new("Knife", "Fletching", 1, 5, "logPine", 1, "shortbowPineU", tool: "knife"));
+
+
+
+            toAdd.Add(new("Pottery Wheel", "Crafting", 1, 7, "claySoft", 1, "unfiredPot"));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 3, 9, "claySoft", 1, "unfiredCup", 4));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 7, 15, "claySoft", 1, "unfiredPieDish"));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 8, 18, "claySoft", 1, "unfiredBowl"));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 19, 20, "claySoft", 1, "unfiredPlantPot"));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 25, 30, "claySoft", 1, "unfiredPotLid"));
 
 
 
