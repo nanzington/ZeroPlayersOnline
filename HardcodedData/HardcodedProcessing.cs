@@ -19,7 +19,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             toAdd.Add(new("Anvil") {
-                OpensUI = "Smithing"
+                OpensUI = true
             });
 
             toAdd.Add(new("Range") {
@@ -34,7 +34,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             toAdd.Add(new("Pottery Wheel") {
-                OpensUI = "Clay"
+                OpensUI = true
             });
 
             toAdd.Add(new("Pottery Kiln") {

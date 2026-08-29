@@ -545,6 +545,8 @@ namespace ZeroPlayersOnline {
                 mini.Con.PrintClickable(25, 13, new ColoredString("PRA", SidebarMenu == "Prayer" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Prayer"; });
                 mini.Con.Print(29, 13, "|");
                 mini.Con.PrintClickable(31, 13, new ColoredString("EMO", SidebarMenu == "Emote" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Emote"; });
+                mini.Con.Print(35, 13, "|");
+                mini.Con.PrintClickable(37, 13, new ColoredString("QST", SidebarMenu == "Quest" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Quest"; });
 
 
                 mini.Con.DrawLine(new Point(0, 14), new Point(54, 14), 196);
