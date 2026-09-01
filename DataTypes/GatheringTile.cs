@@ -1,11 +1,4 @@
 ﻿using Newtonsoft.Json;
-using SadConsole;
-using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline.DataTypes {
@@ -22,20 +15,38 @@ namespace ZeroPlayersOnline.DataTypes {
         public int SuccessChance = 100;
         public int DepleteChance = 100;
 
-        public int RestockTime = 1;
-
-        public int DepletedGlyph;
+        public int RestockTime = 1; 
 
         public int DamageOnFail = 0;
 
         public bool LevelBasedSuccess = false;
 
+        public string NeedToolCat = "";
 
-        public List<WeightedItem> PossibleItems = new();
 
+        public List<WeightedItem>? PossibleItems = null;
 
         [JsonIgnore]
         public double LastGathered = 0;
+
+        public GatheringTile(string id, string name, string verb, int succ, int deplete, int restock, string skill = "", int skLevel = 0, int exp = 0, int expFail = 0, int damageOnFail = 0, bool levelBasedSucc = false, string neededTool = "", List<WeightedItem>? items = null ) {
+            ID = id;
+            Name = name;
+            InteractVerb = verb;
+            SuccessChance = succ;
+            DepleteChance = deplete;
+            RestockTime = restock;
+
+            PossibleItems = items;
+            Skill = skill;
+            Level = skLevel;
+            ExpGranted = exp;
+            ExpOnFail = expFail;
+
+            DamageOnFail = damageOnFail;
+            LevelBasedSuccess = levelBasedSucc;
+            NeedToolCat = neededTool;
+        }
 
 
         public string PickItem() {
@@ -45,19 +56,39 @@ namespace ZeroPlayersOnline.DataTypes {
         }
 
         public void Gather(Player p, MessageLog log, Dictionary<string, Item> itemLibrary, Location currentLoc, List<Skill> Recents) {
-            if (CanGather(p)) {
+            if (CanGather(p) == "") {
                 ClueLogic.GenericStep(p, log, "Gather", ID);
 
                 int success = GameLoop.rand.Next(100) + 1;
 
                 if (LevelBasedSuccess && p.Skills.ContainsKey(Skill))
                     success += (p.GetEffectiveSkillLevel(Skill) - Level);
+                
+                int mod = 0;
+                if (NeedToolCat != "") { 
+                    mod = -100;
+                    foreach (var kv in p.Equipment) {
+                        if (kv.Value.MiscString == NeedToolCat) {
+                            if (kv.Value.EquipLevel <= p.GetEffectiveSkillLevel(Skill)) { 
+                                mod = Math.Max(mod, kv.Value.EquipLevel - Level);
+                            }
+                        }
+                    }
 
-                if (success <= SuccessChance) {
+                    for (int i = 0; i < p.Inventory.Count; i++) {
+                        if (p.Inventory[i].MiscString == NeedToolCat) {
+                            if (p.Inventory[i].EquipLevel <= p.GetEffectiveSkillLevel(Skill)) {
+                                mod = Math.Max(mod, p.Inventory[i].EquipLevel - Level);
+                            }
+                        }
+                    }
+                }
+
+                if (success <= SuccessChance + mod) {
                     string output = PickItem(); 
                     if (itemLibrary.ContainsKey(output)) {
                         Item receive = Helper.Clone(itemLibrary[output]);
-                        if (p.TryPickup(receive)) {
+                        if (p.TryPickup(receive, 1)) {
                             log.AddMessage(new ColoredString("You get " + receive.Name.ToLower() + " from the " + Name + ".", Color.Green, Color.Black));
                         } else {
                             log.AddMessage(new ColoredString("Your inventory is full so the " + receive.Name.ToLower() + " falls to the ground.", Color.Goldenrod, Color.Black));
@@ -76,12 +107,11 @@ namespace ZeroPlayersOnline.DataTypes {
 
                     int deplete = GameLoop.rand.Next(100) + 1;
 
-                    if (deplete <= DepleteChance) {
-
+                    if (deplete <= DepleteChance - (mod / 2)) { 
                         if (p.PrayerActive("Enduring Nature")) {
                             deplete = GameLoop.rand.Next(100) + 1;
 
-                            if (deplete <= DepleteChance) { 
+                            if (deplete <= DepleteChance - (mod / 2)) { 
                                 LastGathered = Helper.Time();
                             }
                         } else {
@@ -95,17 +125,40 @@ namespace ZeroPlayersOnline.DataTypes {
                         p.TryGrantExp(Skill, ExpOnFail, log, Recents);
                     }
                 }
+            } else {
+                    log.AddMessage(new ColoredString("You need " + CanGather(p) + " to do that.", Color.Crimson, Color.Black));
             }
         } 
 
-        public bool CanGather(Player p) { 
+        public string CanGather(Player p) { 
             if (p.Skills.ContainsKey(Skill) && p.Skills[Skill].Level < Level)
-                return false;
+                return Level + " " + Skill;
             if (LastGathered + (RestockTime * 1000) > Helper.Time() && LastGathered != 0)
-                return false;
+                return "to wait for it to replenish";
             if (!p.Skills.ContainsKey(Skill) && Level > 0)
-                return false;
-            return true;
+                return Level + " " + Skill;
+            if (NeedToolCat != "") {
+                bool foundTool = false;
+                foreach (var kv in p.Equipment) {
+                    if (kv.Value.MiscString == NeedToolCat) {
+                        if (kv.Value.EquipLevel <= p.GetEffectiveSkillLevel(Skill)) {
+                            foundTool = true;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < p.Inventory.Count; i++) {
+                    if (p.Inventory[i].MiscString == NeedToolCat) {
+                        if (p.Inventory[i].EquipLevel <= p.GetEffectiveSkillLevel(Skill)) {
+                            foundTool = true;
+                        }
+                    }
+                }
+
+                if (!foundTool)
+                    return "a " + NeedToolCat;
+            }
+            return "";
         }
     }
 }

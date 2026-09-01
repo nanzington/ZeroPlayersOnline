@@ -64,13 +64,15 @@
                 int count = 0;
                 for (int i = 0; i < p.Inventory.Count; i++) { 
                     if (p.Inventory[i].ID == MiscString || p.Inventory[i].MiscString == MiscString) {
-                        count += p.Inventory[i].Quantity;
+                        if (!p.Inventory[i].Noted)
+                            count += p.Inventory[i].Quantity;
                     }
                 }
 
                 foreach (var kv in p.Equipment) {
                     if (kv.Value.ID == MiscString || kv.Value.MiscString == MiscString) {
-                        count += kv.Value.Quantity;
+                        if (!kv.Value.Noted)
+                            count += kv.Value.Quantity;
                     }
                 }
 

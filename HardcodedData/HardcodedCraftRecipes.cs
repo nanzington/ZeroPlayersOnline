@@ -5,37 +5,41 @@ namespace ZeroPlayersOnline.Hardcodes {
         public static void InitCrafts(Dictionary<string, List<CraftRecipe>> CraftLib) {
             List<CraftRecipe> toAdd = new();
 
-            toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "daggerBronze", tool: "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "swordBronze", tool: "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "maceBronze", tool: "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 30, "barBronze", 2, "scimitarBronze", tool: "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 30, "barBronze", 2, "helmBronze", tool: "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 75, "barBronze", 5, "platebodyBronze", tool: "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 45, "barBronze", 3, "platelegsBronze", tool: "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "bootsBronze", tool: "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "gauntletsBronze", tool: "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "arrowheadsBronze", 15, "hammer"));
-            toAdd.Add(new("Anvil", "Smithing", 1, 15, "barBronze", 1, "knivesBronze", 5, "hammer"));
+            List<string> Metals = ["Bronze", "Iron", "Steel" ];
+
+            for (int i = 0; i < Metals.Count; i++) {
+                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "dagger" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "sword" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "mace" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 2], "scimitar" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 2], "helm" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 75, ["bar" + Metals[i] + "," + 5], "platebody" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 45, ["bar" + Metals[i] + "," + 3], "platelegs" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "boots" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "gauntlets" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "arrowheads" + Metals[i], 15, "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "knives" + Metals[i], 5, "hammer"));
+            }
 
 
-            toAdd.Add(new("Needle", "Crafting", 1, 15, "leatherSoft", 1, "leatherCowl", tool: "needle"));
-            toAdd.Add(new("Needle", "Crafting", 1, 75, "leatherSoft", 5, "leatherBody", tool: "needle"));
-            toAdd.Add(new("Needle", "Crafting", 1, 45, "leatherSoft", 3, "leatherChaps", tool: "needle"));
-            toAdd.Add(new("Needle", "Crafting", 1, 15, "leatherSoft", 1, "leatherGloves", tool: "needle"));
-            toAdd.Add(new("Needle", "Crafting", 1, 15, "leatherSoft", 1, "leatherBoots", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 15, ["leatherSoft" + "," + 1], "leatherCowl", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 75, ["leatherSoft" + "," + 5], "leatherBody", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 45, ["leatherSoft" + "," + 3], "leatherChaps", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 15, ["leatherSoft" + "," + 1], "leatherGloves", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 15, ["leatherSoft" + "," + 1], "leatherBoots", tool: "needle"));
 
 
-            toAdd.Add(new("Knife", "Fletching", 1, 5, "logPine", 1, "arrowshaft", 15, "knife"));
-            toAdd.Add(new("Knife", "Fletching", 1, 5, "logPine", 1, "shortbowPineU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 1, 5, ["logPine" + "," + 1], "arrowshaft", 15, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 1, 5, ["logPine" + "," + 1], "shortbowPineU", tool: "knife"));
 
 
 
-            toAdd.Add(new("Pottery Wheel", "Crafting", 1, 7, "claySoft", 1, "unfiredPot"));
-            toAdd.Add(new("Pottery Wheel", "Crafting", 3, 9, "claySoft", 1, "unfiredCup", 4));
-            toAdd.Add(new("Pottery Wheel", "Crafting", 7, 15, "claySoft", 1, "unfiredPieDish"));
-            toAdd.Add(new("Pottery Wheel", "Crafting", 8, 18, "claySoft", 1, "unfiredBowl"));
-            toAdd.Add(new("Pottery Wheel", "Crafting", 19, 20, "claySoft", 1, "unfiredPlantPot"));
-            toAdd.Add(new("Pottery Wheel", "Crafting", 25, 30, "claySoft", 1, "unfiredPotLid"));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 1, 7, ["claySoft" + "," +  1], "unfiredPot"));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 3, 9, ["claySoft" + "," +  1], "unfiredCup", 4));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 7, 15, ["claySoft" + "," +  1], "unfiredPieDish"));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 8, 18, ["claySoft" + "," +  1], "unfiredBowl"));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 19, 20, ["claySoft" + "," +  1], "unfiredPlantPot"));
+            toAdd.Add(new("Pottery Wheel", "Crafting", 25, 30, ["claySoft" + "," +  1], "unfiredPotLid"));
 
 
 

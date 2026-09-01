@@ -83,9 +83,17 @@ namespace ZeroPlayersOnline.Hardcodes {
                 {
                     0,
                     new("Just click tha spot you want to fish at to fish. Now leave me be, there's fishin' ta be done.", new() {
+                        new DialogueChoice("Could I have a net?", 1),
                         new DialogueChoice("[Q] The Haunted Island", 10, new("QuestAt", 30, "TI_HauntedIsland")),
                         byeThen
                     })
+                }, 
+                {
+                    1,
+                    new("(The old man grumbles about kids these days but hands over a small fishing net)", new() { 
+                        byeThen
+                    },
+                    items: ["fishingNetSmall"])
                 }, 
                 {
                     10,
@@ -174,7 +182,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             }));
 
-            toAdd.Add(new("Smithing Tutor", "tutorSmithing", new() {
+            toAdd.Add(new("Mining and Smithing Tutor", "tutorSmithing", new() {
                 {
                     0,
                     new("To begin smithing, first collect the ores you wish to use. Start with some copper and tin.", new() {
@@ -212,7 +220,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 },
                 {
                     50,
-                    new("That's all there is to it! There are all kinds of things you can smith, and you'll unlock more materials as you grow more skilled.", new() { byeThen })
+                    new("That's all there is to it! There are all kinds of things you can smith, and you'll unlock more materials as you grow more skilled.", new() { byeThen },
+                    items: ["pickaxeBronze", "hammer"])
                 }
             }));
 

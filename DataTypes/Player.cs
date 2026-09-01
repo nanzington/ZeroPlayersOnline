@@ -61,6 +61,10 @@
         public string PrayerBook = "Normal";
         public Dictionary<string, Prayer> Prayers = new();
 
+        public string MagicBook = "Standard";
+        public string CastingSpell = ""; 
+        public Dictionary<string, Spell> Spells = new();
+
         public List<PotionStat> ActivePotions = new(); 
         public Dictionary<string, FarmingPatch> FarmingPatches = new();
 
@@ -92,6 +96,7 @@
 
         public string GetDamageDice() {
             int weaponTier = 1;
+            bool maging = IsMaging();
 
             if (Equipment.ContainsKey("Weapon")) {
                 weaponTier = Equipment["Weapon"].EquipTier + 1;
@@ -110,29 +115,60 @@
                     } 
                 }
 
+                if (maging && Equipment["Weapon"].EquipSkill != "Magic") {
+                    weaponTier = 1;
+                }
             }
             int strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10);
+
+            if (maging) { 
+                strength += Spells[CastingSpell].Tier * 2;
+            }
 
             return weaponTier + "d" + strength;
         }
 
         public string GetDamageType() {
+            if (IsMaging()) {
+                return Spells[CastingSpell].MiscString;
+            }
+
             if (Equipment.ContainsKey("Weapon"))
                 return Equipment["Weapon"].EquipDamageType;
             return "Crush";
         }
 
 
-        public bool TryPickup(Item item) { 
+        public bool TryPickup(Item item, int qty, bool noted = false, bool shop = false) { 
             for (int i = 0; i < Inventory.Count; i++) {
-                if (Inventory[i].ID == item.ID && Inventory[i].Stackable) {
-                    Inventory[i].Quantity += item.Quantity;
+                if (Inventory[i].ID == item.ID && (Inventory[i].Stackable || (noted && Inventory[i].Noted))) {
+                    Inventory[i].Quantity += qty; 
+                    if (!shop)
+                        item.Quantity -= qty;
                     return true; 
                 }
             }
              
             if (Inventory.Count < InventoryLimit) {
-                Inventory.Add(item);
+                if (item.Stackable || (item.Noteable && noted)) {
+                    Item clone = Helper.Clone(item);
+                    
+                    if (noted)
+                        clone.Noted = true;
+
+                    clone.Quantity = qty;
+                    if (!shop)
+                        item.Quantity -= qty;
+                    Inventory.Add(clone);
+                } else {
+                    for (int i = 0; i < qty; i++) {
+                        Item clone = Helper.Clone(item);
+                        clone.Quantity = 1;
+                        if (!shop)
+                            item.Quantity--;
+                        Inventory.Add(clone);
+                    }
+                }
                 return true;
             }
 
@@ -153,7 +189,7 @@
                         HeldGold -= PayToWin * amount;
                         log.AddMessage(new ColoredString("Paid " + String.Format($"{PayToWin * amount:n0}") + " for " + (amount * ExpMultiplier) + " " + which + " experience.", Color.Goldenrod, Color.Black));
                     } else {
-                        log.AddMessage(new ColoredString("You need " + String.Format($"{PayToWin * amount:n0}") + " gold for that. Try again when you're a little richer.", Color.Crimson, Color.Black));
+                        log.AddMessage(new ColoredString("Sorry, " + Name + "! I can't give credit. Come back when you're a little... mmmm... richer! (Need " + String.Format($"{PayToWin * amount:n0}") + "gp)", Color.Crimson, Color.Black));
                         return;
                     }
                 }
@@ -311,7 +347,7 @@
             if (craft.ExtraTool != "") {
                 bool hasTool = false;
                 for (int i = 0; i < Inventory.Count; i++) {
-                    if (Inventory[i].ID == craft.ExtraTool) {
+                    if (Inventory[i].ID == craft.ExtraTool && !Inventory[i].Noted) {
                         hasTool = true;
                         break;
                     }
@@ -321,56 +357,200 @@
                     return false;
             }
 
-            int reagentCount = 0;
 
-            for (int i = 0; i < Inventory.Count; i++) {
-                if (Inventory[i].ID == craft.NeededItem) {
-                    reagentCount += Inventory[i].Quantity;
-                }
-            }
-
-            if (reagentCount < craft.NeededQty)
-                return false;
-
-            return true;
+            return HasAllItems(craft.NeededItems, false, true);
         }
 
         public void TryCraft(CraftRecipe craft) {
             if (!CanCraft(craft))
                 return;
 
-            int stillNeeded = craft.NeededQty;
-
-            for (int i = Inventory.Count - 1; i >= 0; i--) {
-                if (Inventory[i].ID == craft.NeededItem) {
-                    if (Inventory[i].Quantity >= stillNeeded) {
-                        Inventory[i].Quantity -= stillNeeded;
-                        stillNeeded = 0;
-                    } else {
-                        stillNeeded -= Inventory[i].Quantity;
-                        Inventory[i].Quantity = 0; 
-                    }
-
-                    if (Inventory[i].Quantity <= 0) {
-                        Inventory.RemoveAt(i);
-                    }
-                }
-
-                if (stillNeeded <= 0)
-                    break;
-            }
+            ConsumeItems(craft.NeededItems); 
 
             Item item = Helper.Clone(GameLoop.ZPO.ItemLibrary[craft.OutputItem]);
             if (item.Stackable) {
                 for (int i = 0; i < craft.OutputQty; i++) {
                     Item clone = Helper.Clone(item);
-                    TryPickup(clone);
+                    TryPickup(clone, 1);
                 }
             } else {
                 item.Quantity = craft.OutputQty; 
-                TryPickup(item);
+                TryPickup(item, item.Quantity);
             }
             TryGrantExp(craft.Skill, craft.ExpGranted, GameLoop.ZPO.Log, GameLoop.ZPO.RecentlyTrainedSkills);
+        }
+
+        public bool HasAllItems(List<string> items, bool notedOkay = false, bool equippedOkay = false) { 
+            foreach (var itemString in items) {
+                string item = itemString;
+                int qty = 1;
+                int countHeld = 0;
+
+                if (itemString.Contains(",")) {
+                    string[] split = itemString.Split(",");
+                    
+                    if (int.TryParse(split[1], out int parseQty)) {
+                        qty = parseQty;
+                    }
+
+                    item = split[0];
+                }
+
+                // Check for items that count as the item but aren't the item (for example, elemental staves)
+                for (int i = 0; i < Inventory.Count; i++) {
+                    if (Inventory[i].MiscString == "CountsAs" && Inventory[i].UseString2 == item && !Inventory[i].MustBeEquipped) {
+                        if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                            if (Inventory[i].UseInt == -1) {
+                                countHeld = qty;
+                            } else { 
+                                countHeld += Inventory[i].UseInt;
+                            } 
+                        }
+                    }
+                }
+
+                if (equippedOkay) {
+                    foreach (var kv in Equipment) {
+                        if (kv.Value.MiscString == "CountsAs" && kv.Value.UseString2 == item) {
+                            if (kv.Value.UseInt == -1) {
+                                countHeld = qty;
+                            } else {
+                                countHeld += kv.Value.UseInt;
+                            }
+                        }
+                    }
+                } 
+
+
+                // Check for actual copies of the item
+                for (int i = 0; i < Inventory.Count; i++) {
+                    if (Inventory[i].ID == item) {
+                        if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                            countHeld += Inventory[i].Quantity;
+                        }
+                    }
+                }
+
+                if (equippedOkay) {
+                    foreach (var kv in Equipment) {
+                        if (kv.Value.ID == item) {
+                            countHeld += kv.Value.Quantity;
+                        }
+                    }
+                }
+
+                if (countHeld < qty)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public void ConsumeItems(List<string> items, bool notedOkay = false, bool equippedOkay = false) {
+            foreach (var itemString in items) {
+                string item = itemString;
+                int qty = 1;
+                int countNeeded = 0;
+
+                if (itemString.Contains(",")) {
+                    string[] split = itemString.Split(",");
+                    
+                    if (int.TryParse(split[1], out int parseQty)) {
+                        qty = parseQty;
+                    }
+
+                    item = split[0];
+                }
+
+                countNeeded = qty;
+
+                // Check for items that count as the item but aren't the item (for example, elemental staves)
+                for (int i = 0; i < Inventory.Count; i++) {
+                    if (Inventory[i].MiscString == "CountsAs" && Inventory[i].UseString2 == item && !Inventory[i].MustBeEquipped) {
+                        if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                            if (Inventory[i].UseInt == -1) {
+                                countNeeded = 0;
+                            } else { 
+                                if (Inventory[i].UseInt > countNeeded) {
+                                    Inventory[i].UseInt -= countNeeded;
+                                    countNeeded = 0; 
+                                } else {
+                                    countNeeded -= Inventory[i].UseInt;
+                                    Inventory[i].UseInt = 0;
+                                }
+                            } 
+                        }
+                    }
+                }
+
+                if (equippedOkay) {
+                    foreach (var kv in Equipment) {
+                        if (kv.Value.MiscString == "CountsAs" && kv.Value.UseString2 == item) {
+                            if (kv.Value.UseInt == -1) {
+                                countNeeded = 0;
+                            } else {
+                                if (kv.Value.UseInt > countNeeded) {
+                                    kv.Value.UseInt -= countNeeded;
+                                    countNeeded = 0; 
+                                } else {
+                                    countNeeded -= kv.Value.UseInt;
+                                    kv.Value.UseInt = 0;
+                                }
+                            }
+                        }
+                    }
+                } 
+
+                if (countNeeded <= 0)
+                    continue;
+
+
+                // Check for the actual item matches
+                for (int i = Inventory.Count - 1; i >= 0; i--) {
+                    if (Inventory[i].ID == item) {
+                        if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                            if (countNeeded > Inventory[i].Quantity) {
+                                countNeeded -= Inventory[i].Quantity;
+                                Inventory.RemoveAt(i); 
+                            } else { 
+                                Inventory[i].Quantity -= countNeeded;
+                                countNeeded = 0;
+
+                                if (Inventory[i].Quantity <= 0) {
+                                    Inventory.RemoveAt(i); 
+                                }
+                            } 
+
+                            if (countNeeded == 0)
+                                break;
+                        }
+                    }
+                }
+
+                List<string> EquipClear = new();
+
+                if (equippedOkay && countNeeded > 0) {
+                    foreach (var kv in Equipment) {
+                        if (kv.Value.ID == item) {
+                            if (countNeeded > kv.Value.Quantity) {
+                                countNeeded -= kv.Value.Quantity;
+                                EquipClear.Add(kv.Key);
+                            } else {
+                                kv.Value.Quantity -= countNeeded;
+                                countNeeded = 0;
+
+                                if (kv.Value.Quantity <= 0) {
+                                    EquipClear.Add(kv.Key);
+                                }
+                            } 
+                        }
+                    }
+                }
+
+                foreach (var kv in EquipClear) {
+                    Equipment.Remove(kv);
+                }
+            }
         }
 
 
@@ -414,6 +594,67 @@
             count /= 5.0;
 
             return (int) Math.Ceiling(count);
+        }
+
+
+        public bool IsMaging() {
+            if (CastingSpell == "")
+                return false;
+            if (!Spells.ContainsKey(CastingSpell))
+                return false;
+            if (!Skills.ContainsKey("Magic"))
+                return false;
+            
+            Spell spell = Spells[CastingSpell];
+
+            if (spell.Book != MagicBook)
+                return false;
+
+            if (spell.Level > Skills["Magic"].Level)
+                return false;
+
+            if (!HasAllItems(spell.Runes, false, true))
+                return false;
+
+            return true;
+        }
+
+        public string CanCast(Spell spell) {
+            if (!Skills.ContainsKey("Magic"))
+                return "Malformed skill list, Magic entry not found.";
+            if (spell.Book != MagicBook)
+                return "Incorrect spellbook active.";
+            if (spell.Level > Skills["Magic"].Level)
+                return "Need " + spell.Level + " Magic to cast that spell, only have " + Skills["Magic"].Level + ".";
+            if (!HasAllItems(spell.Runes, false, true)) {
+                string items = "";
+
+                for (int i = 0; i < spell.Runes.Count; i++) {
+                    string[] rune = spell.Runes[i].Split(",");
+                    int qty = 0;
+
+                    if (int.TryParse(rune[1], out qty)) {
+                        if (i != 0)
+                            items += ", ";
+                        items += qty + "x " + GameLoop.ZPO.ResolveItemName(rune[0]); 
+                    } 
+                }
+
+                return "Missing runes, need " + items + ".";
+            }
+
+            if (spell.TimeLastCast != 0 && spell.TimeLastCast + spell.CooldownInMS > Helper.Time()) {
+                int timeLeft = (int) (((spell.TimeLastCast + spell.CooldownInMS) - Helper.Time()) / 1000);
+                if (timeLeft > 60) {
+                    int minutes = timeLeft / 60;
+                    int seconds = timeLeft % 60;
+                    return "On cooldown, " + minutes + "m " + seconds + "s remaining.";
+                } else {
+                    return "On cooldown, " + timeLeft + " seconds remaining.";
+                }
+            }
+
+            return "";
         }
     }
 }

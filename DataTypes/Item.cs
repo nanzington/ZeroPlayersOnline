@@ -22,9 +22,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public string EquipSlot = "";
         public string MiscString = ""; 
 
-        public int Value;
-        public int HighAlch;
-        public int LowAlch; 
+        public int Value; 
 
         public int EquipTier = 0;
         public string EquipDamageType = "";
@@ -32,6 +30,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public string EquipSkill = "";
         public double AttackSpeed = 1; // Speed in seconds between attacks
         public string EquipAmmo = "";
+        public bool TwoHanded = false;
 
         public List<PotionStat> Potion = new();
 
@@ -43,6 +42,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public int UseInt2 = 0;
         public int UseInt3 = 0;
         public int UseInt4 = 0;
+        public bool MustBeEquipped = false;
         public List<ItemDrop> DropTable = new();
 
         public bool DestroyOnDrop = false;
@@ -50,7 +50,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public Item() { }
 
-        public Item(string n, string ex, string id, int r, int g, int b, int v, int ha, int la, bool stack = false, bool trade = true, string equip = "", string misc = "") {
+        public Item(string n, string ex, string id, int r, int g, int b, int v, bool stack = false, bool trade = true, string misc = "") {
             Name = n;
             ID = id;
             ExamineText = ex;
@@ -59,14 +59,11 @@ namespace ZeroPlayersOnline.DataTypes {
             colG = g;
             colB = b;
 
-            Value = v;
-            HighAlch = ha;
-            LowAlch = la; 
+            Value = v; 
 
             Stackable = stack;
             Tradeable = trade; 
 
-            EquipSlot = equip;
             MiscString = misc; 
         } 
 

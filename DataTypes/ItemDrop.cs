@@ -15,13 +15,17 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public bool EvenAt0x = false;
 
-        public ItemDrop(string id, int x, int y, int min, int max, bool evenIf0 = false) {
+        public bool Noted = false;
+
+        public ItemDrop(string id, int x, int y, int min, int max, bool noted = false, bool evenIf0 = false) {
             ItemID = id;
             DropX = x;
             InY = y;
 
             QuantityMin = min;
             QuantityMax = max;
+
+            Noted = noted;
 
             EvenAt0x = evenIf0;
         }

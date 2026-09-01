@@ -8,6 +8,7 @@
         public bool IsBank = false;
 
         public string DigItem = "";
+        public int DungeoneeringLevel = 0; // If above 0, you have to have at least this level of Dungeoneering to skill or combat here, but gain exp for doing so.
 
         public List<Connection> ConnectedLocations = new();
 

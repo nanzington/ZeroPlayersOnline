@@ -37,7 +37,7 @@
 
                             if (ItemLib.ContainsKey(item)) {
                                 Item spawned = Helper.Clone(ItemLib[item]);
-                                p.TryPickup(spawned);
+                                p.TryPickup(spawned, spawned.Quantity);
                             }
                         } 
                     } else { 

@@ -14,6 +14,10 @@ namespace ZeroPlayersOnline.DataTypes {
             AddMessage(new ColoredString(msg));
         }
 
+        public void AddMessage(string msg, Color col) {
+            AddMessage(new ColoredString(msg, col, Color.Black));
+        }
+
         public void AddMessage(ColoredString msg) {
             if (Log.Count > 0) {
                 if (Log[^1].Message.String == msg.String) {

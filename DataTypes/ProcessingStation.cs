@@ -26,7 +26,7 @@ namespace ZeroPlayersOnline.DataTypes {
             for (int i = 0; i < p.Inventory.Count; i++) {
                 bool changedInv = false;
                 for (int j = 0; j < Recipes.Count; j++) {
-                    if (p.Inventory[i].ID == Recipes[j].InputID) {
+                    if (p.Inventory[i].ID == Recipes[j].InputID && !p.Inventory[i].Noted) {
                         if (Recipes[j].SkillUsed != "") {
                             if (p.Skills.ContainsKey(Recipes[j].SkillUsed) && p.Skills[Recipes[j].SkillUsed].Level < Recipes[j].SkillLevel) {
                                 log.AddMessage(new ColoredString("You get the feeling you should have " + Recipes[j].SkillLevel + " " + Recipes[j].SkillUsed + " to try that.", Color.Crimson, Color.Black));
@@ -51,7 +51,7 @@ namespace ZeroPlayersOnline.DataTypes {
                                 item.Quantity += extra;
                             }
 
-                            p.TryPickup(item);
+                            p.TryPickup(item, item.Quantity);
                         }
 
                         p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills);

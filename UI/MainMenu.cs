@@ -400,6 +400,7 @@ namespace ZeroPlayersOnline.UI {
             GameLoop.ZPO.TryAddSkills();
             GameLoop.ZPO.TryAddPrayers();
             GameLoop.ZPO.TryAddQuests();
+            GameLoop.ZPO.TryAddSpells();
         }
     }
 }

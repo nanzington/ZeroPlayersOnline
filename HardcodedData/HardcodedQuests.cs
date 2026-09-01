@@ -8,7 +8,6 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("TI_HauntedIsland", "The Haunted Island", "Very Short", "Novice", "Strange things keep happening around the island. Noises without a source and resources harvested when nobody is around. Are there actually zero players online? Maybe Father Guy would know more.", 90, new() { "Misthalin" }) {
                 DateFullyImplemented = 20260828,
                 Rewards = { new("Experience", "Prayer", 500) },
-                CompleteStage = 90,
                 QuestPoints = 1,
                 Stages = new() {
                     {
@@ -50,6 +49,18 @@ namespace ZeroPlayersOnline.Hardcodes {
                     {
                         90,
                         new("Father Guy has confirmed that he no longer feels the presence of PlayerOne on the island.", 90)
+                    }
+                }
+            });
+
+            toAdd.Add(new("MI_CooksAssistant", "Cook's Assistant", "Very Short", "Novice", "The Lumbridge Castle cook is in a mess. It is the Duke of Lumbridge's birthday and the cook is making the cake. He needs a lot of ingredients and doesn't have much time.", 90, new() { "Misthalin" }) {
+                DateFullyImplemented = 20260829,
+                Rewards = { new("Experience", "Cooking", 300) },
+                QuestPoints = 1,
+                Stages = new() {
+                    {
+                        0,
+                        new("The Lumbridge Castle cook has asked me to gather the ingredients for a cake to get him out of his bind.", 10, "ExamineItem", "TI_HI_RustedSword")
                     }
                 }
             });

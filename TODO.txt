@@ -1,6 +1,7 @@
 Minimum to finish Tutorial Island
 - Skills to implement: Agility, Hunter, Herblore, Construction, Slayer. Maybe also a proxy combat skill (necro, summoning, taming), divination, dungeoneering
 - Fill out the Tutorial clue casket loot table
+- Boss somewhere, maybe at the end of the Dungeoneering area?
 
 
 Immediately important stuff to get working:
@@ -16,22 +17,24 @@ Immediately important stuff to get working:
 - - Divination might be okay because I can make it not suck as much as in RS3
 
 
+BUGS TO FIX
+- Stay observant for issues regarding pickup and noting code
+
 
 Less immediate but still important: 
 - Skill guides, preferably auto-populated using game data so it doesn't have to be manually updated
-- Ranged: make some kind of breakage chance so you don't get all ammo back
-- Get magic combat working  
-- Allow withdrawing a specific amount of item in banks instead of all or nothing
-- Also make noted items work and add checks anywhere items are used or consumed to make sure they're not noted
+- Make items able to provide infinite of an item without being consumed, implement an optional charges system (mostly for elemental staffs and such)
 - Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
 - Skip Tutorial Island option? (Complete skip, skip with cape, skip with quest)
 - Clue collection log needs to be made and viewable
-- Allow CraftRecipes to have multiple inputs or come up with some other menu type for making teletabs
+- Find a way to show all items needed for a CraftRecipe if there are multiple
 
 
 Difficulty things
 - No trading (once multiplayer is added, maybe just fold it into the no GE thing) 
 - Disable exp gain on skills selectively
+- RNG Item Lock? Can only use items you've unlocked, unlock a configurable random number of items per level gained. Optionally draft items via pick 1 of 3 for each unlock
+- Food Restrictions: Vegan, Vegetarian, Junk, 
 
 Randomizer Options - Basically just provide an option for ID remaps
 - Items, No Logic (DONE), No Logic+ (every minute it re-randomizes the mappings)
@@ -75,6 +78,15 @@ Random Utility Things
 - Spell to locate an NPC? Enter their name and it tells you what map they're (currently?) in
 
 
+
+Archipelago Support?
+- Receive options: Locations, Gathering Spots, CraftRecipes (by main item or craftType perhaps), Processing Stations, Ability to equip each tier armor/weapon, Prayers but probably only up to level 20
+- Checks: Every X levels per skill (default 1 maybe?), completing quests
+- Maybe just location lock mode, complete a location to sends a check, receive loc points and can use them freely
+
+
+
+
 Material Tiers/Levels
 1 - Bronze, Pine, Leather, Cloth
 10 - Iron, Oak, Hard Leather, 
@@ -114,6 +126,17 @@ Next quests to implement and things they need
 - - Mechanics: Probably just use the RS3 changes to make it solo, can have multiplayer stuff if multiplayer is added later
 
 
+Holiday Events, 
+* set to actually appear based on system clock or character setting (eg permanent easter, halloween, christmas, all, etc)
+* maybe do a handful for each holiday like they were actually happening on a yearly basis
+- Christmas
+- Halloween
+- Easter
+- Thanksgiving
+- New Years
+- Think of more spread out across the year, maybe copy the real ones from animal crossing
+
+
 =========================================
 
 How will this even be possible?
@@ -135,19 +158,11 @@ Prayer
 Runecrafting
 - Probably just have the altars as location options in the appropriate place, make it so location nodes can require an item or stat to pass
 
-Treasure Trails
-- Make caskets work
-- Get emote steps working and actually make the items possible to get for the steps made so far
-- Furniture "gathering spots" for clue step possibilities (boxes, crates, drawers, cupboard, chest)
+Treasure Trails   
 - Collection log, list all items and drop rates
 - Consider whether or not it's even worth adding sliding puzzles when they kinda suck, maybe let players force them open with strength score/check
 
-Difficulty modes
-x Ironman kinda pointless but could add it anyways, maybe have a GE despite there being no other players? And iron blocks it
-x Bronzeman, can only use GE for items you've already acquired somehow.
-x x Would need to log everything acquired naturally which could be a pain
-x Hardcore
-x Nightmare mode (1hp hardcore)? This could be difficult due to how combat works, but I guess that's the point
+Difficulty modes 
 - Randomizer (item outputs and drop tables get remapped to other items, this would be a pain in the ASS to make but would be fun)
 - - Needs a way to store your seed or a log of all new drop tables so that it stays consistent on a character
 - Location lock (all things possible at a location to unlock a "location point", spend LP to unlock new screens.)
@@ -156,13 +171,8 @@ x Region lock (can't leave a specific region or regions)
 - - optionally a way to unlock more regions
 - - needs quest autocompletes for quests that unlock things in a region but are not done in the region
 - - make the player start in that region, if they choose one besides misthalin
-- - give them any relevant starting items that are needed in the region but not obtaintable there
-(DONE) - EXP limiter modes, configurable per skill
-(DONE) x x EXP multipliers, 0x, 1x, 2x, 5x, 10x 
-(DONE) x x Goldman: can only gain exp in the skill by purchasing it for exp, configurable rate of gp to xp pre-multiplier
-x Drop rate config (0x, 1x, 2x, 5x, 10x, optionally apply to clue caskets?) 
+- - give them any relevant starting items that are needed in the region but not obtaintable there 
 - Kill controls
-- - Can only get exp/drops from bosses, their adds, and monsters for quests during their quests
-- - Limited kill count per unique monster then no xp/drops
+- - Can only get exp/drops from bosses, their adds, and monsters for quests during their quests 
 - Have to unlock skills/areas/bosses somehow (possibly with exp, gp, or task completion)  
 - Permadeath but with multiple lives before it resets
