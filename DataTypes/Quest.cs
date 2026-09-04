@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline.DataTypes {
     public class Quest {
@@ -65,7 +66,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public void ProcessRewards(Player p) {
             foreach (var kv in Rewards) {
                 if (kv.RewardType == "Experience") {
-                    p.TryGrantExp(kv.MiscString, kv.MiscInt, GameLoop.ZPO.Log, GameLoop.ZPO.RecentlyTrainedSkills);
+                    p.TryGrantExp(kv.MiscString, kv.MiscInt, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
                 }
 
                 if (kv.RewardType == "Item") {

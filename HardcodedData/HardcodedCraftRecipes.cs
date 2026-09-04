@@ -12,6 +12,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "sword" + Metals[i], tool: "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "mace" + Metals[i], tool: "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 2], "scimitar" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 1], "hatchet" + Metals[i], tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 1], "pickaxe" + Metals[i], tool: "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 2], "helm" + Metals[i], tool: "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", 1, 75, ["bar" + Metals[i] + "," + 5], "platebody" + Metals[i], tool: "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", 1, 45, ["bar" + Metals[i] + "," + 3], "platelegs" + Metals[i], tool: "hammer"));

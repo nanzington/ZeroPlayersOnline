@@ -11,6 +11,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public int colR = 255;
         public int colG = 255;
         public int colB = 255;
+        public int colA = 255;
         public int glyph = 1;
 
         public int Quantity = 1;
@@ -48,6 +49,8 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool DestroyOnDrop = false;
         public bool Cosmetic = false;
 
+        public List<string> PetBlurbs = new();
+
         public Item() { }
 
         public Item(string n, string ex, string id, int r, int g, int b, int v, bool stack = false, bool trade = true, string misc = "") {
@@ -72,7 +75,7 @@ namespace ZeroPlayersOnline.DataTypes {
         }
 
         public Color GetColor() {
-            return new Color(colR, colG, colB);
+            return new Color(colR, colG, colB, colA);
         }
     }
 }

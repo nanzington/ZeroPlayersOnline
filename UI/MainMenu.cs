@@ -237,6 +237,9 @@ namespace ZeroPlayersOnline.UI {
                 mini.Con.PrintClickable(28 + 20, printY, new ColoredString("2", GameLoop.ZPO.player.DropMultiplier == 2 ? Color.ForestGreen : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 2; });
                 mini.Con.PrintClickable(28 + 22, printY, new ColoredString("5", GameLoop.ZPO.player.DropMultiplier == 5 ? Color.AnsiGreen : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 5; });
                 mini.Con.PrintClickable(28 + 24, printY, new ColoredString("10", GameLoop.ZPO.player.DropMultiplier == 10 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropMultiplier = 10; });
+                
+                mini.Con.PrintClickable(28 + 27, printY, new ColoredString("Dry Protection", GameLoop.ZPO.player.DropModifier == 1 ? Color.Green : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropModifier = GameLoop.ZPO.player.DropModifier == 1 ? 0 : 1; });
+                mini.Con.PrintClickable(28 + 42, printY, new ColoredString("No RNG Drops", GameLoop.ZPO.player.DropModifier == 2 ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.DropModifier = GameLoop.ZPO.player.DropModifier == 2 ? 0 : 2; });
 
                 printY++;
 
@@ -260,6 +263,7 @@ namespace ZeroPlayersOnline.UI {
                 mini.Con.PrintClickableBool(29, printY, "Can Use Shops: ", ref GameLoop.ZPO.player.CanUseShops);
                 mini.Con.PrintClickable(28 + 16, printY, new ColoredString("Yes", GameLoop.ZPO.player.CanUseShops ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.CanUseShops = true; });
                 mini.Con.PrintClickable(28 + 20, printY, new ColoredString("No", !GameLoop.ZPO.player.CanUseShops ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.CanUseShops = false; });
+                mini.Con.PrintClickable(28 + 23, printY, new ColoredString(GameLoop.ZPO.player.ShopsAlwaysFullPrice ? "Buys @ 100%" : "Buys @ 50%", GameLoop.ZPO.player.ShopsAlwaysFullPrice ? Color.Lime : Color.White, Color.Black), () => { GameLoop.ZPO.player.ShopsAlwaysFullPrice = !GameLoop.ZPO.player.ShopsAlwaysFullPrice; });
 
                 printY++;
 
@@ -344,20 +348,9 @@ namespace ZeroPlayersOnline.UI {
             }
         }
 
-        public void Input(UI_EmbeddedMini mini) {
-            /*
-            if (Helper.HotkeyDown(Key.Escape)) { 
-                GameLoop.UIManager.zpoWrap.Win.IsVisible = true;
-                mini.Win.IsVisible = false;
-            }*/
-        }
-
-        public void Close(UI_EmbeddedMini mini) { 
-        }
-
-        public void Reset() {
-
-        }
+        public void Input(UI_EmbeddedMini mini) { } 
+        public void Close(UI_EmbeddedMini mini) {  } 
+        public void Reset() {  }
 
 
         public void SetupTheBG(UI_EmbeddedMini mini) {
@@ -393,6 +386,8 @@ namespace ZeroPlayersOnline.UI {
             GameLoop.UIManager.zpoWrap.Win.IsVisible = true;
             MenuMode = "Main";
             GameLoop.ZPO.TimeLastTicked = Helper.Time();
+
+            PerformUpdateMaintenance();
         }
 
         public void PerformUpdateMaintenance() {
@@ -401,6 +396,7 @@ namespace ZeroPlayersOnline.UI {
             GameLoop.ZPO.TryAddPrayers();
             GameLoop.ZPO.TryAddQuests();
             GameLoop.ZPO.TryAddSpells();
+            GameLoop.ZPO.TrySetupLogs();
         }
     }
 }

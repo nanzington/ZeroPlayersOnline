@@ -1,7 +1,5 @@
 Minimum to finish Tutorial Island
-- Skills to implement: Agility, Hunter, Herblore, Construction, Slayer. Maybe also a proxy combat skill (necro, summoning, taming), divination, dungeoneering
-- Fill out the Tutorial clue casket loot table
-- Boss somewhere, maybe at the end of the Dungeoneering area?
+- Skills to implement: Hunter, Construction, Slayer. Maybe also a proxy combat skill (necro, summoning, taming), divination, dungeoneering
 
 
 Immediately important stuff to get working:
@@ -10,24 +8,25 @@ Immediately important stuff to get working:
 - Move data from being hardcoded to json files
 - Make all skills accessible somewhere on tutorial island?
 - - Agility, small agility course on island somewhere, going to have to make agility obstacles work for connection nodes (optional alternate fail location or damage plus exp granted)
-- - Hunter, some butterflies or implings or something somewhere, need to work out variable presence (implings) hunter targets and static targets 
-- - Herblore at least using eye of newt and guam to make attack potion
+- - Hunter, some butterflies or implings or something somewhere, need to work out variable presence (implings) hunter targets and static targets
 - - Construction might not be possible? Would have to have just one house instead of a house per area
 - - Summoning / Necromancy / Taming or maybe some kind of combo of the three into one "minion fights for you" combat skill
 - - Divination might be okay because I can make it not suck as much as in RS3
+- - Slayer
+- - Artisan, slayer for gathering/crafting, categories of items that combine multiple other skills at once
 
 
 BUGS TO FIX
 - Stay observant for issues regarding pickup and noting code
 
 
-Less immediate but still important: 
-- Skill guides, preferably auto-populated using game data so it doesn't have to be manually updated
-- Make items able to provide infinite of an item without being consumed, implement an optional charges system (mostly for elemental staffs and such)
+Less immediate but still important:
+- Skill guides, preferably auto-populated using game data so it doesn't have to be manually updated 
 - Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
-- Skip Tutorial Island option? (Complete skip, skip with cape, skip with quest)
-- Clue collection log needs to be made and viewable
+- Skip Tutorial Island option? (Complete skip, skip with cape, skip with quest) 
 - Find a way to show all items needed for a CraftRecipe if there are multiple
+- Dungeoneering areas that are actual random layout dungeons, reset layout somehow (on reload, if player is in a dungeon then reset their loc to the entrance, or if they reach the end crystal tp back to start and give set exp) 
+- Bank preset options somehow
 
 
 Difficulty things
@@ -35,6 +34,8 @@ Difficulty things
 - Disable exp gain on skills selectively
 - RNG Item Lock? Can only use items you've unlocked, unlock a configurable random number of items per level gained. Optionally draft items via pick 1 of 3 for each unlock
 - Food Restrictions: Vegan, Vegetarian, Junk, 
+- Easy Teleports: if on, allows access to lodestones and select teleporter items (portable fairy ring, slayer skull, clue briefcase, etc), also allows access to war's retreat for boss teles
+- Dry Protection - mostly done, some kind of bug where it's not actually guaranteeing the drops at non-1 drop rates for clues? investigate more
 
 Randomizer Options - Basically just provide an option for ID remaps
 - Items, No Logic (DONE), No Logic+ (every minute it re-randomizes the mappings)
@@ -52,6 +53,16 @@ Tutorial Island Completionist Cape
 
 Bossing
 - Maybe a button to spawn the boss at the appropriate location, and a system for "temporary" monsters?
+
+
+Distraction and Diversions / Activities / Minigames
+- Implement Existing Ones
+- - Mahogany Homes (get contract from estate agent, go to correct building, build all hotspots, get exp and contract points)
+- "New" Ideas
+- - A TCG thing with various NPCs that play scattered around the world? Gives more interesting drop potentials
+
+
+
 
 Multiplayer?
 - See eachother walking around in the world, possibly also see players in adjacent locations somehow
@@ -136,30 +147,34 @@ Holiday Events,
 - New Years
 - Think of more spread out across the year, maybe copy the real ones from animal crossing
 
+Achievements
+- Kill any combat boss with Nightmare Mode enabled
+- Get the Tutorial Island Completionist Cape
+- Get 99 in a skill on Exp modifier 1, no P2W
+- Get 99 in a skill on Exp x1, only P2W
+- Get all skills to 99 on Exp modifier 1, no P2W
+- Get all skills to 99 on Exp modifier 1, only P2W
+- Pure: Reach 99 in any skill without gaining any levels in any other skills
+
 
 =========================================
 
-How will this even be possible?
-- Bossing with unique mechanics (maybe make and place a boss on tutorial island to introduce the concept)
-- Summoning/necromancy where they do the combat for you
-- Player owned house? Make it useful to have somehow?
-- Dungeoneering (maybe have "dungeon" type areas in the world be assigned a DG level needed to harvest anything there, and you get a portion of skilling/combat exp in there to DG?)
+How will this even be possible? 
+- Player owned house? Make it useful to have somehow? 
 - Make wilderness dangerous but rewarding?
 - Some of the popular minigames, at least where possible to play singleplayer (though maybe show ways it should be multiplayer)
+- Fully viable poison build?
 
 =========================================
 
 Prayer
 - Prayers to still get working: all stats, good fortune
-- Attack and defense levels don't actually factor into combat at all right now so boosting them is kinda pointless?
 - Prayer potions now raise your level temporarily
-- Prayers to raise at least the combat skills by variable amounts (only for combat calcs, not item unlocks)
 
 Runecrafting
 - Probably just have the altars as location options in the appropriate place, make it so location nodes can require an item or stat to pass
 
 Treasure Trails   
-- Collection log, list all items and drop rates
 - Consider whether or not it's even worth adding sliding puzzles when they kinda suck, maybe let players force them open with strength score/check
 
 Difficulty modes 

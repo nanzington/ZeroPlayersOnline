@@ -16,7 +16,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             itemsToAdd.Add(new Item("Cowhide", "This should be tanned before I can use it.", "cowhide", 255, 255, 255, 10));
             itemsToAdd.Add(new Item("Soft Leather", "Suitable for craftworks now.", "leatherSoft", 165, 42, 42, 10));
-            itemsToAdd.Add(new Item("Hard Leather", "Might offer some real protection if made into armor.", "leatherHard", 139, 69, 19, 10));
+            itemsToAdd.Add(new Item("Hard Leather", "Might offer some real protection if made into armor.", "leatherHard", 139, 69, 19, 20));
              
 
             itemsToAdd.Add(new Item("Arrow shaft", "The most important part of an arrow.", "arrowshaft", 139, 69, 19, 2, true));
@@ -33,10 +33,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
 
-            itemsToAdd.Add(new Item("Shovel", "Could be used to dig for buried treasure.", "shovel", 200, 200, 200, 3) {
-                UseString = "Dig",
-                ConsumedOnUse = false
-            });
+            itemsToAdd.Add(new Item("Shovel", "Could be used to dig for buried treasure.", "shovel", 200, 200, 200, 3) { UseString = "Dig", ConsumedOnUse = false });
 
             itemsToAdd.Add(new Item("Clue scroll (tutorial)", "A treasure hunt taking place entirely on Tutorial Island.", "clueScrollTutorial", 207, 185, 151, 0, false, false) {
                 UseString = "ClueTutorial", 
@@ -70,6 +67,12 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ItemDrop("clueSilkUnderwear", 1, 20, 1, 1),
                     new ItemDrop("clueSilkGloves", 1, 20, 1, 1),
                     new ItemDrop("clueSilkSocks", 1, 20, 1, 1),
+                    new ItemDrop("clueNewtskinCoif", 1, 20, 1, 1),
+                    new ItemDrop("clueNewtskinBody", 1, 20, 1, 1),
+                    new ItemDrop("clueNewtskinChaps", 1, 20, 1, 1),
+                    new ItemDrop("clueNewtskinVambraces", 1, 20, 1, 1),
+                    new ItemDrop("clueNewtskinBoots", 1, 20, 1, 1),
+                    new ItemDrop("clueNewtbow", 1, 20, 1, 1),
                     new ItemDrop("staffAir", 1, 10, 1, 1), 
                     new ItemDrop("staffWater", 1, 10, 1, 1), 
                     new ItemDrop("staffEarth", 1, 10, 1, 1), 
@@ -98,6 +101,12 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Silky gloves", "A pair of silk gloves. Slightly magical, very comfortable.", "clueSilkGloves", 147, 112, 219, 500) { EquipSlot = "Hands", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseMagic" });
             itemsToAdd.Add(new Item("Silky socks", "A pair of silk socks. Slightly magical, very comfortable.", "clueSilkSocks", 147, 112, 219, 500) { EquipSlot = "Feet", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseMagic" });
 
+            itemsToAdd.Add(new Item("Newtskin coif", "A coif made of newtskin, which seems to have been removed from the game at some point.", "clueNewtskinCoif", 255, 165, 0, 500) { EquipSlot = "Head", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseRange" });
+            itemsToAdd.Add(new Item("Newtskin body", "A body made of newtskin, which seems to have been removed from the game at some point.", "clueNewtskinBody", 255, 165, 0, 500) { EquipSlot = "Torso", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseRange" });
+            itemsToAdd.Add(new Item("Newtskin chaps", "Chaps made of newtskin, which seems to have been removed from the game at some point.", "clueNewtskinChaps", 255, 165, 0, 500) { EquipSlot = "Legs", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseRange" });
+            itemsToAdd.Add(new Item("Newtskin vambraces", "Vambraces made of newtskin, which seems to have been removed from the game at some point.", "clueNewtskinVambraces", 255, 165, 0, 500) { EquipSlot = "Hands", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseRange" });
+            itemsToAdd.Add(new Item("Newtskin boots", "Boots made of newtskin, which seems to have been removed from the game at some point.", "clueNewtskinBoots", 255, 165, 0, 500) { EquipSlot = "Feet", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseRange" });
+            itemsToAdd.Add(new Item("Newtbone shortbow", "Did someone hate newts or something? Why is all the ranger gear made of newt bits?", "clueNewtbow", 255, 255, 255, 500) { EquipSlot = "Weapon", EquipTier = 1, EquipDamageType = "Arrow", EquipSkill = "Ranged", EquipAmmo = "Arrow", AttackSpeed = 1, TwoHanded = true });
 
 
 
@@ -117,6 +126,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
 
+            // Crafting - Clay
             itemsToAdd.Add(new Item("Clay dust", "Some hard dry clay.", "clayDust", 207, 185, 151, 1));
             itemsToAdd.Add(new Item("Soft clay", "Clay soft enough to mould.", "claySoft", 205, 127, 50, 2));
             itemsToAdd.Add(new Item("Unfired pot", "I need to put this in a pottery kiln.", "unfiredPot", 205, 127, 50, 1));
@@ -137,45 +147,45 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Flax", "I should use this with a spinning wheel.", "flax", 189, 246, 254, 5));
             itemsToAdd.Add(new Item("Bow string", "I need a bow stave to attach this to.", "bowstring", 207, 185, 151, 10));
               
-            itemsToAdd.Add(new Item("Leather cowl", "Better than no armor!", "leatherCowl", 205, 127, 50, 20) {
-                EquipSlot = "Head",
-                EquipTier = 1,
-                EquipSkill = "Defense",
-                EquipLevel = 1,
-                MiscString = "DefenseRange"
-            });
 
-            itemsToAdd.Add(new Item("Leather body", "Better than no armor!", "leatherBody", 205, 127, 50, 20) {
-                EquipSlot = "Body",
-                EquipTier = 1,
-                EquipSkill = "Defense",
-                EquipLevel = 1,
-                MiscString = "DefenseRange"
-            });
+            // Ranged Armor Factory
+            List<MaterialDef> Leathers = new() {
+                new("Leather", 205, 127, 50, 255, 1, 1, 20, "minimal"), 
+                new("Hardleather", 175, 97, 20, 255, 2, 10, 40, "slight"), 
+                new("Studded", 175, 97, 20, 255, 3, 20, 110, "adequate"), 
+                new("Snakeskin", 105, 97, 18, 255, 4, 30, 200, "decent"), 
+                new("Green dragonhide", 34, 140, 34, 255, 5, 40, 500, "good")
+            };
 
-            itemsToAdd.Add(new Item("Leather chaps", "Better than no armor!", "leatherChaps", 205, 127, 50, 20) {
-                EquipSlot = "Legs",
-                EquipTier = 1,
-                EquipSkill = "Defense",
-                EquipLevel = 1,
-                MiscString = "DefenseRange"
-            });
+             for (int i = 0; i < Leathers.Count; i++) {
+                int fullMult = Leathers[i].CostMultiplier;
 
-            itemsToAdd.Add(new Item("Leather gloves", "Better than no armor!", "leatherGloves", 205, 127, 50, 20) {
-                EquipSlot = "Hands",
-                EquipTier = 1,
-                EquipSkill = "Defense",
-                EquipLevel = 1,
-                MiscString = "DefenseRange"
-            });
+                Item coif = new Item(Leathers[i].Name + " coif", "Provides " + Leathers[i].Descriptor + " ranged protection for the head.", "coif" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 2) {
+                    EquipSlot = "Head",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
+                };
+                itemsToAdd.Add(coif);
 
-            itemsToAdd.Add(new Item("Leather boots", "Better than no armor!", "leatherBoots", 205, 127, 50, 20) {
-                EquipSlot = "Feet",
-                EquipTier = 1,
-                EquipSkill = "Defense",
-                EquipLevel = 1,
-                MiscString = "DefenseRange"
-            });
+                Item body = new Item(Leathers[i].Name + " body", "Provides " + Leathers[i].Descriptor + " ranged protection for the torso.", "body" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 5) {
+                    EquipSlot = "Body",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
+                };
+                itemsToAdd.Add(body);
+
+                Item chaps = new Item(Leathers[i].Name + " chaps", "Provides " + Leathers[i].Descriptor + " ranged protection for the legs.", "chaps" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 3) {
+                    EquipSlot = "Legs",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
+                };
+                itemsToAdd.Add(chaps);
+
+                Item boots = new Item(Leathers[i].Name + " boots", "Provides " + Leathers[i].Descriptor + " ranged protection for the feet.", "boots" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult) {
+                    EquipSlot = "Feet",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
+                };
+                itemsToAdd.Add(boots);
+
+                Item vambraces = new Item(Leathers[i].Name + " vambraces", "Provides " + Leathers[i].Descriptor + " ranged protection for the hands.", "vambraces" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult) {
+                    EquipSlot = "Hands",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
+                };
+                itemsToAdd.Add(vambraces);
+            }
+            ////
 
             itemsToAdd.Add(new Item("Pure essence", "An unimbued rune.", "pureEssence", 200, 200, 200, 4));
             itemsToAdd.Add(new Item("Air rune", "One of the 4 basic elemental runes.", "runeAir", 200, 200, 200, 4, true, true));
@@ -190,28 +200,25 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", MiscString = "CountsAs", UseString2 = "runeAir", UseInt = -1, TwoHanded = true, MustBeEquipped = true
             });
 
-            itemsToAdd.Add(new Item("Staff of water", "A magical staff. Provides unlimited water runes.", "staffWater", 255, 255, 255, 1500) {
+            itemsToAdd.Add(new Item("Staff of water", "A magical staff. Provides unlimited water runes.", "staffWater", 30, 144, 255, 1500) {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", MiscString = "CountsAs", UseString2 = "runeWater", UseInt = -1, TwoHanded = true, MustBeEquipped = true
-            });
+            }); 
 
-            itemsToAdd.Add(new Item("Staff of earth", "A magical staff. Provides unlimited earth runes.", "staffEarth", 255, 255, 255, 1500) {
+            itemsToAdd.Add(new Item("Staff of earth", "A magical staff. Provides unlimited earth runes.", "staffEarth", 165, 42, 42, 1500) {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", MiscString = "CountsAs", UseString2 = "runeEarth", UseInt = -1, TwoHanded = true, MustBeEquipped = true
-            });
+            }); 
 
-            itemsToAdd.Add(new Item("Staff of fire", "A magical staff. Provides unlimited fire runes.", "staffFire", 255, 255, 255, 1500) {
+            itemsToAdd.Add(new Item("Staff of fire", "A magical staff. Provides unlimited fire runes.", "staffFire", 220, 20, 60, 1500) {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", MiscString = "CountsAs", UseString2 = "runeFire", UseInt = -1, TwoHanded = true, MustBeEquipped = true
             });
-             
 
             itemsToAdd.Add(new Item("Small Coin Pouch", "Has a few coins in it.", "coinPouchSmall", 111, 66, 33, 5, true, true) {
                 UseString = "GetGold",
                 UseInt = 5 
             });
 
-            itemsToAdd.Add(new Item("Bones", "The remains of some creature or person.", "bonesRegular", 255, 255, 255, 1, false, true) {
-                UseString = "Bones",
-                UseInt = 5 
-            });
+            itemsToAdd.Add(new Item("Bones", "The remains of some creature or person.", "bonesRegular", 255, 255, 255, 1, false, true) { UseString = "Bones", UseInt = 5 });
+            itemsToAdd.Add(new Item("Big bones", "The remains of some huge creature or person.", "bonesBig", 255, 255, 255, 1, false, true) { UseString = "Bones", UseInt = 15 });
              
             itemsToAdd.Add(new Item("Raw newt meat", "A cut of meat taken from a newt.", "meatRawNewt", 138, 3, 3, 1));
             itemsToAdd.Add(new Item("Cooked newt meat", "A cooked newt steak.", "meatCookedNewt", 150, 100, 50, 4) {
@@ -270,27 +277,27 @@ namespace ZeroPlayersOnline.Hardcodes {
             for (int i = 0; i < Metals.Count; i++) {
                 int fullMult = Metals[i].CostMultiplier;
 
-                Item helm = new Item(Metals[i].Name + " helmet", "Provides " + Metals[i].Descriptor + " head protection.", "helm" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
+                Item helm = new Item(Metals[i].Name + " helmet", "Provides " + Metals[i].Descriptor + " melee protection for the head.", "helm" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
                     EquipSlot = "Head",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(helm);
 
-                Item platebody = new Item(Metals[i].Name + " platebody", "Provides " + Metals[i].Descriptor + " torso protection.", "platebody" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 5) {
+                Item platebody = new Item(Metals[i].Name + " platebody", "Provides " + Metals[i].Descriptor + " melee protection for the torso.", "platebody" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 5) {
                     EquipSlot = "Body",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(platebody);
 
-                Item platelegs = new Item(Metals[i].Name + " platelegs", "Provides " + Metals[i].Descriptor + " leg protection.", "platelegs" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 3) {
+                Item platelegs = new Item(Metals[i].Name + " platelegs", "Provides " + Metals[i].Descriptor + " melee protection for the legs.", "platelegs" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 3) {
                     EquipSlot = "Legs",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(platelegs);
 
-                Item boots = new Item(Metals[i].Name + " boots", "Provides " + Metals[i].Descriptor + " foot protection.", "boots" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
+                Item boots = new Item(Metals[i].Name + " boots", "Provides " + Metals[i].Descriptor + " melee protection for the feet.", "boots" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
                     EquipSlot = "Feet",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(boots);
 
-                Item gauntlets = new Item(Metals[i].Name + " gauntlets", "Provides " + Metals[i].Descriptor + " hand protection.", "gauntlets" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
+                Item gauntlets = new Item(Metals[i].Name + " gauntlets", "Provides " + Metals[i].Descriptor + " melee protection for the hands.", "gauntlets" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
                     EquipSlot = "Hands",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(gauntlets);
@@ -338,9 +345,24 @@ namespace ZeroPlayersOnline.Hardcodes {
                 };
                 itemsToAdd.Add(scimitar);
             }
+             
+            itemsToAdd.Add(new Item("Huge club", "Upon closer inspection this is actually a huge femur.", "clubHuge", 255, 255, 255, 1000) {
+                EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush", AttackSpeed = 1.5
+            });itemsToAdd.Add(new Item("Huger club", "Where did that zombie even get such a large bone? You can barely move this thing.", "clubHuger", 255, 255, 255, 5000) {
+                EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush", AttackSpeed = 3
+            });  
+            itemsToAdd.Add(new Item("Baby zombie plush", "Despite being a zombie, kinda cute? It even has a little chicken that it's riding on.", "petBabyZombie", 34, 140, 34, 1000) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "The baby zombie gurgles a bit.", "The zombie's chicken clucks loudly.", "The baby zombie runs in a small circle quickly.", "CHICKEN JOCKEY!"}
+            }); 
             
-
+            
+            itemsToAdd.Add(new Item("Grimy guam leaf", "It needs cleaning.", "herbGrimyGuam", 34, 139, 34, 13) { UseString = "CleanHerb", UseString2 = "herbCleanGuam", UseInt = 1, UseInt2 = 3 }); 
+            itemsToAdd.Add(new Item("Guam leaf", "A bitter green herb.", "herbCleanGuam", 34, 170, 34, 13)); 
             itemsToAdd.Add(new Item("Eye of newt", "A basic herblore ingredient and only slightly gross.", "eyeNewt", 255, 255, 255, 3));
+            itemsToAdd.Add(new Item("Vial", "A glass vial, currently empty.", "vialEmpty", 200, 200, 200, 2) { colA = 150 });
+            itemsToAdd.Add(new Item("Vial of water", "A glass vial full of water.", "vialWater", 14, 129, 205, 2) { colA = 150 });
+            itemsToAdd.Add(new Item("Guam potion (unf)", "I need another ingredient to finish this Guam potion.", "potionUnfGuam", 0, 128, 128, 3) { colA = 150 });
+            itemsToAdd.Add(new Item("Attack potion", "Temporarily boosts your Attack level by 5.", "potionAttack", 0, 255, 255, 3) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Attack", 5) } });
 
 
             itemsToAdd.Add(new Item("Rusted sword [Q]", "The sword is useless now. You notice someone has scratched something into the handle: 'PlayerOne'.", "TI_HI_RustedSword", 205, 127, 50, 0, trade: false));

@@ -1,4 +1,6 @@
-﻿namespace ZeroPlayersOnline.DataTypes {
+﻿using ZeroPlayersOnline.Managers;
+
+namespace ZeroPlayersOnline.DataTypes {
     public class Player {
         public string Name = "Player"; 
         public string NavLoc = "TI_Main";
@@ -21,6 +23,7 @@
         public bool OnlyPayToWin = false; // If true and PayToWin isn't 0, exp can ONLY be bought, not earned
 
         public int DropMultiplier = 1; // Multiply all drop chance by this, high values may result in an issue
+        public int DropModifier = 0; // 0 = Normal, 1 = Dry Protection, 2 = No RNG Drops
 
         public List<string> PermittedRegions = new(); // If empty all regions allowed, otherwise you can only go to maps in a region in this list
 
@@ -42,6 +45,7 @@
 
         public int InventoryLimit = 20;
         public bool CanUseShops = true;
+        public bool ShopsAlwaysFullPrice = false;
         public bool CanUseBanks = true;
         public int FarmGrowthIncrement = 60;
 
@@ -55,6 +59,7 @@
         public Dictionary<string, Skill> Skills = new(); 
         public Dictionary<string, CollectionLogEntry> CollectionLog = new();
         public Dictionary<string, CollectionLogEntry> CollectionLogClues = new();
+        public Dictionary<string, CollectionLogEntry> CollectionLogBoss = new();
         public List<Item> BankedItems = new(); 
         public List<string> ItemsEverObtained = new();
 
@@ -139,7 +144,7 @@
         }
 
 
-        public bool TryPickup(Item item, int qty, bool noted = false, bool shop = false) { 
+        public bool TryPickup(Item item, int qty, bool noted = false, bool shop = false, bool fromGround = false) { 
             for (int i = 0; i < Inventory.Count; i++) {
                 if (Inventory[i].ID == item.ID && (Inventory[i].Stackable || (noted && Inventory[i].Noted))) {
                     Inventory[i].Quantity += qty; 
@@ -148,11 +153,11 @@
                     return true; 
                 }
             }
+
+            Item clone = Helper.Clone(item);
              
             if (Inventory.Count < InventoryLimit) {
-                if (item.Stackable || (item.Noteable && noted)) {
-                    Item clone = Helper.Clone(item);
-                    
+                if (item.Stackable || (item.Noteable && noted)) { 
                     if (noted)
                         clone.Noted = true;
 
@@ -161,15 +166,140 @@
                         item.Quantity -= qty;
                     Inventory.Add(clone);
                 } else {
-                    for (int i = 0; i < qty; i++) {
-                        Item clone = Helper.Clone(item);
+                    for (int i = 0; i < qty; i++) { 
                         clone.Quantity = 1;
                         if (!shop)
                             item.Quantity--;
-                        Inventory.Add(clone);
+
+                        if (qty != 1)
+                            TryPickup(clone, 1, noted, shop);
+                        else
+                            Inventory.Add(clone);
                     }
                 }
                 return true;
+            } 
+
+            if (fromGround) {
+                GameLoop.ZPO.Log.AddMessage("Your inventory is too full to pick up anything else right now.", Color.Crimson);
+                return false;
+            }
+
+            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
+                if (curr.IsBank && CanUseBanks) {
+                    for (int i = 0; i < BankedItems.Count; i++) {
+                        if (BankedItems[i].ID == item.ID && (BankedItems[i].Stackable || (noted && BankedItems[i].Noted))) {
+                            BankedItems[i].Quantity += qty; 
+                            return true; 
+                        }
+                    }
+
+                    BankedItems.Add(clone);
+                }
+
+                for (int i = 0; i < curr.ItemsHere.Count; i++) {
+                    if (curr.ItemsHere[i].ID == item.ID && (curr.ItemsHere[i].Stackable || (noted && curr.ItemsHere[i].Noted))) {
+                        curr.ItemsHere[i].Quantity += qty; 
+                        return true; 
+                    }
+                }
+
+                curr.ItemsHere.Add(clone);
+            }
+
+            return false;
+        }
+
+        public bool TryDrop(int i) {
+            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr) && curr != null) {
+                int qty = 1;
+                                
+                if (Helper.EitherShift())
+                    qty *= 5;
+                if (Helper.EitherControl())
+                    qty *= 10;
+
+                if (qty > Inventory[i].Quantity || Helper.EitherAlt())
+                    qty = Inventory[i].Quantity;
+
+
+                if (curr.IsBank && CanUseBanks) {
+                    bool found = false;
+
+                    for (int j = 0; j < BankedItems.Count; j++) {
+                        if (BankedItems[j].ID.Equals(Inventory[i].ID)) {
+                            BankedItems[j].Quantity += qty;
+                            Inventory[i].Quantity -= qty;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) { 
+                        Item clone = Helper.Clone(Inventory[i]);
+                        clone.Quantity = qty;
+                        clone.Noted = false;
+                        BankedItems.Add(clone);
+                        Inventory[i].Quantity -= qty;
+                    }  
+                }
+                else {
+                    if (curr.ShopItemsHere.Count == 0 || !CanUseShops) {
+                        if (Inventory[i].DestroyOnDrop) {
+                            if (Inventory[i].ID == "clueScrollTutorial") {
+                                CurrentClueTutorial = "";
+                            } else if (Inventory[i].ID == "clueScrollBeginner") {
+                                CurrentClueBeginner = "";
+                            } else if (Inventory[i].ID == "clueScrollEasy") {
+                                CurrentClueEasy = "";
+                            } else if (Inventory[i].ID == "clueScrollMedium") {
+                                CurrentClueMedium = "";
+                            } else if (Inventory[i].ID == "clueScrollHard") {
+                                CurrentClueHard = "";
+                            } else if (Inventory[i].ID == "clueScrollElite") {
+                                CurrentClueElite = "";
+                            } else if (Inventory[i].ID == "clueScrollMaster") {
+                                CurrentClueMaster = "";
+                            }
+
+                            Inventory.RemoveAt(i);
+                            return true;
+                        } else {
+                            bool found = false;
+                            for (int j = 0; j < curr.ItemsHere.Count; j++) {
+                                if (curr.ItemsHere[j].ID == Inventory[i].ID && curr.ItemsHere[j].Noted == Inventory[i].Noted) {
+                                    curr.ItemsHere[j].Quantity += qty;
+                                    Inventory[i].Quantity -= qty;
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (!found) {
+                                Item clone = Helper.Clone(Inventory[i]);
+                                clone.Quantity = qty;
+
+                                curr.ItemsHere.Add(clone);
+                                Inventory[i].Quantity -= qty;
+                            }
+                        }
+                    }
+                    else {
+                        int sellValue = Inventory[i].Value;
+                                        
+                        if (!ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(Inventory[i].ID)) {
+                            sellValue = (int) (Math.Floor(sellValue / 2.0));
+                        }
+
+                        HeldGold += sellValue * qty;
+                        Inventory[i].Quantity -= qty;
+                    }
+                }
+
+                if (Inventory[i].Quantity <= 0) {
+                    Inventory.RemoveAt(i);
+                    return true;
+                }
             }
 
             return false;
@@ -177,7 +307,7 @@
 
 
         public void TryGrantExp(string which, int amount, MessageLog log, List<Skill> RecentSkills, bool buying = false) {
-            if (Skills.ContainsKey(which)) {
+            if (Skills.ContainsKey(which)) { 
                 int oldLevel = Skills[which].Level; 
 
                 if (OnlyPayToWin && !buying)
@@ -194,11 +324,33 @@
                     }
                 }
 
+                bool grantingExp = false;
 
-                Skills[which].GrantExp(amount * ExpMultiplier, log, RecentSkills);
+                if (buying) {
+                    grantingExp = true;
+                } else {
+                    if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr) && curr != null) {
+                        if (curr.DungeoneeringLevel >= 1) {
+                            if (GetEffectiveSkillLevel("Dungeoneering") >= curr.DungeoneeringLevel) {
+                                grantingExp = true;
+                                Skills["Dungeoneering"].GrantExp(((int) Math.Ceiling(amount / 5.0)) * ExpMultiplier, log, RecentSkills);
+                            } else {
+                                log.AddMessage("You need " + curr.DungeoneeringLevel + " Dungeoneering to gain experience here.", Color.Crimson);
+                            }
+                        } else {
+                            grantingExp = true;
+                        }
+                    } else {
+                        grantingExp = true;
+                    }
+                }
 
-                if (which == "Constitution" && oldLevel != Skills[which].Level) {
-                    CurrentHP += (Skills[which].Level - oldLevel);
+                if (grantingExp) {
+                    Skills[which].GrantExp(amount * ExpMultiplier, log, RecentSkills);
+
+                    if (which == "Constitution" && oldLevel != Skills[which].Level) {
+                        CurrentHP += (Skills[which].Level - oldLevel);
+                    }
                 }
             } 
         } 
@@ -377,7 +529,7 @@
                 item.Quantity = craft.OutputQty; 
                 TryPickup(item, item.Quantity);
             }
-            TryGrantExp(craft.Skill, craft.ExpGranted, GameLoop.ZPO.Log, GameLoop.ZPO.RecentlyTrainedSkills);
+            TryGrantExp(craft.Skill, craft.ExpGranted, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
         }
 
         public bool HasAllItems(List<string> items, bool notedOkay = false, bool equippedOkay = false) { 

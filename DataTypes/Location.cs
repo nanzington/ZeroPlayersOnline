@@ -2,7 +2,7 @@
     public class Location {
         public string DisplayName = "";
         public string ID = "";
-        public string Region = "";
+        public string Region = ""; 
 
         public string Description = "";
         public bool IsBank = false;
@@ -22,10 +22,9 @@
 
         public List<Item> ItemsHere = new();
 
-        public List<MonsterSpawn> MonsterSpawns = new();
-
         public List<string> AreaMonsters = new();
         public List<AreaMonster> MonstersHere = new();
+        public string BossHere = "";
 
         public List<string> NPCsHere = new();
 

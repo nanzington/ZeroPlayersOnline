@@ -92,7 +92,6 @@ namespace ZeroPlayersOnline.DataTypes {
                             log.AddMessage(new ColoredString("You get " + receive.Name.ToLower() + " from the " + Name + ".", Color.Green, Color.Black));
                         } else {
                             log.AddMessage(new ColoredString("Your inventory is full so the " + receive.Name.ToLower() + " falls to the ground.", Color.Goldenrod, Color.Black));
-                            currentLoc.ItemsHere.Add(receive);
                         }
 
                         p.TryGrantExp(Skill, ExpGranted, log, Recents);

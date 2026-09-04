@@ -14,7 +14,7 @@
 
         public string GetSummary() {
             if (RequirementType == "Skill") {
-                return "Lv" + MiscInt + " " + MiscString;
+                return "Need level " + MiscInt + " " + MiscString;
             }
 
             if (RequirementType == "QuestAt") {
@@ -29,6 +29,22 @@
 
             if (RequirementType == "Item") {
                 return "Need " + GameLoop.ZPO.ResolveItemName(MiscString);
+            }
+
+            if (RequirementType == "CollectionLogComplete") {
+                if (MiscString.Contains("clue"))
+                    return "Completed the " + MiscString + " collection log";
+                else {
+                    return "Completed the " + GameLoop.ZPO.ResolveMonsterName(MiscString) + " collection log";
+                }
+            }
+
+            if (RequirementType == "KillCount") {
+                if (MiscString.Contains("clue"))
+                    return "Completed " + MiscInt + "x " + MiscString;
+                else {
+                    return "Killed " + MiscInt + "x " + GameLoop.ZPO.ResolveMonsterName(MiscString);
+                }
             }
 
             return "";
@@ -80,6 +96,54 @@
                     return true;
             }
 
+            if (RequirementType == "CollectionLogComplete") {
+                if (MiscString.Contains("clue")) {
+                    List<string> clueTypes = [ "Tutorial", "Beginner", "Easy", "Medium", "Hard", "Elite", "Master" ];
+
+                    for (int i = 0; i < clueTypes.Count; i++) { 
+                        if (MiscString == clueTypes[i] + " clue") {
+                            if (GameLoop.ZPO.player.CollectionLogClues.TryGetValue("casket" + clueTypes[i], out CollectionLogEntry? log) && log != null) {
+                                if (GameLoop.ZPO.ItemLibrary.TryGetValue("casket" + clueTypes[i], out Item? cask) && cask != null) {
+                                    if (cask.DropTable.Count == log.DropsObtained.Count) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (GameLoop.ZPO.player.CollectionLog.TryGetValue(MiscString, out CollectionLogEntry? log) && log != null) {
+                        if (GameLoop.ZPO.MonsterLibrary.TryGetValue(MiscString, out AreaMonster? mon) && mon != null) {
+                            if (mon.DropTable.Count == log.DropsObtained.Count) {
+                                return true;
+                            }
+                    
+                        }
+                    }
+                }
+            }
+
+            if (RequirementType == "KillCount") {
+                if (MiscString.Contains("clue")) {
+                    List<string> clueTypes = [ "Tutorial", "Beginner", "Easy", "Medium", "Hard", "Elite", "Master" ];
+
+                    for (int i = 0; i < clueTypes.Count; i++) { 
+                        if (MiscString == clueTypes[i] + " clue") {
+                            if (GameLoop.ZPO.player.CollectionLogClues.TryGetValue("casket" + clueTypes[i], out CollectionLogEntry? log) && log != null) {
+                                if (log.KillCount >= MiscInt) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (GameLoop.ZPO.player.CollectionLog.TryGetValue(MiscString, out CollectionLogEntry? log) && log != null) {
+                        if (log.KillCount >= MiscInt) {
+                            return true;
+                        }
+                    }
+                }
+            }
 
             return false;
         }

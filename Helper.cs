@@ -59,6 +59,12 @@ namespace ZeroPlayersOnline {
             return false;
         }
 
+        public static bool EitherAlt() {
+            if (GameHost.Instance.Keyboard.IsKeyDown(Keys.LeftAlt) || GameHost.Instance.Keyboard.IsKeyDown(Keys.RightAlt))
+                return true;
+            return false;
+        }
+
 
         public static bool KeyPressed(Keys key) {
             return GameHost.Instance.Keyboard.IsKeyPressed(key);

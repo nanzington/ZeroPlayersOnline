@@ -51,7 +51,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Sink") {
                 Recipes = new() {
                     new ProcessingRecipe("bucketEmpty", "bucketWater", "", 0, 0), 
-                    new ProcessingRecipe("clayDust", "claySoft", "", 0, 0)
+                    new ProcessingRecipe("clayDust", "claySoft", "", 0, 0), 
+                    new ProcessingRecipe("vialEmpty", "vialWater", "", 0, 0)
                 }
             });
 
