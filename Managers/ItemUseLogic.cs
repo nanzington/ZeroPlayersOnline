@@ -14,6 +14,27 @@ namespace ZeroPlayersOnline.Managers {
             } else if (item.UseString == "Heal") {
                 player.CurrentHP = Math.Clamp(player.CurrentHP + item.UseInt, player.CurrentHP, player.Skills["Constitution"].Level);
                 GameLoop.ZPO.Log.AddMessage(new ColoredString("You eat the " + item.Name.ToLowerInvariant() + " and recover some hitpoints.", Color.Goldenrod, Color.Black));
+
+                if (item.Potion != null) {
+                    for (int i = 0; i < item.Potion.Count; i++) {
+                        bool found = false;
+                        for (int j = 0; j < player.ActivePotions.Count; j++) {
+                            if (player.ActivePotions[j].Stat == item.Potion[i].Stat) {
+                                if (player.ActivePotions[j].Change < 0) {
+                                    player.ActivePotions[j].Change += item.Potion[i].Change;
+                                    found = true;
+                                } else {
+                                    if (player.ActivePotions[j].Change < item.Potion[i].Change) {
+                                        player.ActivePotions[j].Change = item.Potion[i].Change;
+                                        found = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (!found)
+                            player.ActivePotions.Add(Helper.Clone(item.Potion[i]));
+                    } 
+                }
             } else if (item.UseString == "PlantSeed") {
                 if (GameLoop.ZPO.Atlas.ContainsKey(player.NavLoc)) {
                     Location curr = GameLoop.ZPO.Atlas[player.NavLoc];
@@ -233,6 +254,12 @@ namespace ZeroPlayersOnline.Managers {
 
                     if (item.UseInt4 > 0)
                         return false;
+                }
+            } else if (item.UseString == "SlayerGem") {
+                if (player.SlayerTask != "") {
+                    GameLoop.ZPO.Log.AddMessage("You task is to kill " + player.SlayerKillsRemaining + " more " + GameLoop.ZPO.ResolveMonsterName(player.SlayerTask) + (player.SlayerKillsRemaining > 1 ? "s" : "") + ". (" + player.SlayerPoints + " pts, " + player.SlayerTaskStreak + " streak)", Color.MediumPurple);
+                } else {
+                    GameLoop.ZPO.Log.AddMessage("You have no active task. (" + player.SlayerPoints + " pts, " + player.SlayerTaskStreak + " streak)", Color.MediumPurple);
                 }
             }
 

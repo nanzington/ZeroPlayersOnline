@@ -24,6 +24,7 @@ namespace ZeroPlayersOnline {
         public Dictionary<string, List<CraftRecipe>> CraftLib = new();
         public Dictionary<string, Spell> SpellLibrary = new();
         public Dictionary<string, BossFight> BossLibrary = new();
+        public Dictionary<string, HunterCreature> HunterLibrary = new();
 
         public Dictionary<string, ClueStep> ClueStepLibrary = new();
         public Dictionary<string, Quest> QuestLibrary = new();
@@ -172,7 +173,7 @@ namespace ZeroPlayersOnline {
 
             CollectionLog.DrawLine(new Point(25, 1), new Point(25, 28), 179, Color.White);
 
-            if (CollectionID.Contains("casket")) {
+            if (CollectionCat == "Clue") {
                 CollectionLog.PrintClickable(2, 1, new ColoredString("Tutorial Casket", CollectionID == "casketTutorial" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketTutorial"; });
                 CollectionLog.PrintClickable(2, 2, new ColoredString("Beginner Casket", CollectionID == "casketBeginner" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketBeginner"; });
                 CollectionLog.PrintClickable(2, 3, new ColoredString("Easy Casket", CollectionID == "casketEasy" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketEasy"; });
@@ -228,12 +229,12 @@ namespace ZeroPlayersOnline {
                         CollectionLog.PrintVertical(25, 26, new ColoredString("++v", Color.Lime, Color.Black));
                     }
                 }
-            } else if (CollectionID.Contains("boss")) {
+            } else if (CollectionCat == "Boss") {
                 bossList.Clear();
                 bossList = BossLibrary.Values.ToList().OrderBy(f => f.Name).ToList();
 
                 for (int i = 0; i < bossList.Count; i++) {
-                    CollectionLog.PrintClickable(1, 1 + i, new ColoredString(bossList[i].Name, CollectionID == bossList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = bossList[i].ID; });
+                    CollectionLog.PrintClickable(1, 1 + i, new ColoredString(" " + bossList[i].Name, CollectionID == bossList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = bossList[i].ID; });
                 }
 
                 if (BossLibrary.ContainsKey(CollectionID)) {
@@ -292,7 +293,7 @@ namespace ZeroPlayersOnline {
                 monsterList = MonsterLibrary.Values.ToList().OrderBy(f => f.Name).ToList();
 
                 for (int i = 0; i < monsterList.Count; i++) {
-                    CollectionLog.PrintClickable(1, 1 + i, new ColoredString(monsterList[i].Name, CollectionID == monsterList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = monsterList[i].ID; });
+                    CollectionLog.PrintClickable(1, 1 + i, new ColoredString(" " + monsterList[i].Name, CollectionID == monsterList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = monsterList[i].ID; });
                 }
 
                 if (MonsterLibrary.ContainsKey(CollectionID)) {
@@ -348,6 +349,11 @@ namespace ZeroPlayersOnline {
                 }
             }
 
+
+            
+            CollectionLog.PrintClickable(45, 0, new ColoredString("[CLUE]", CollectionCat == "Clue" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Clue"; });
+            CollectionLog.PrintClickable(52, 0, new ColoredString("[BOSS]", CollectionCat == "Boss" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Boss"; }); 
+            CollectionLog.PrintClickable(59, 0, new ColoredString("[MONSTER]", CollectionCat == "Monster" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Monster"; });
 
             CollectionLog.PrintClickable(69, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { CollectionLog.IsVisible = false; });
         }
@@ -636,6 +642,7 @@ namespace ZeroPlayersOnline {
                     mini.Con.PrintClickable(68, printY, "(Log)", () => {
                         CollectionLog.IsVisible = true;
                         CollectionID = boss.ID;
+                        CollectionCat = "Boss";
                         CollectionDropTop = 0;
                     });
 
@@ -927,83 +934,7 @@ namespace ZeroPlayersOnline {
                                         for (int j = 0; j < boss.DropTable.Count; j++) {
                                             ItemDrop drop = boss.DropTable[j];
 
-                                            if (drop.EvenAt0x || !reachedKillLimit) {
-                                                int dropX = drop.DropX;
-
-                                                dropX *= player.DropMultiplier;
-
-                                                if (reachedKillLimit)
-                                                    dropX = 0;
-
-                                                if (drop.EvenAt0x && dropX == 0)
-                                                    dropX = drop.DropX;
-
-
-                                                if (dropX != 0) {
-                                                    if (player.DropModifier != 2) {
-                                                        int dropRoll = GameLoop.rand.Next(drop.InY);
-                                                        int dropRoll2 = GameLoop.rand.Next(drop.InY);
-
-                                                        if (dropRoll < dropX || (player.PrayerActive("Good Fortune") && dropRoll2 < dropX) || (player.DropModifier == 1 && player.CollectionLog[AttackingMonster.ID].DryProtection(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) dropX)))) {
-                                                            if (!player.CollectionLogBoss[boss.ID].DropsObtained.ContainsKey(drop.ItemID))
-                                                                player.CollectionLogBoss[boss.ID].DropsObtained.Add(drop.ItemID, 0);
-                                                            player.CollectionLogBoss[boss.ID].DropsObtained[drop.ItemID] += 1;
-
-                                                            if (ItemLibrary.ContainsKey(drop.ItemID)) {
-                                                                Item spawn = Helper.Clone(ItemLibrary[drop.ItemID]);
-
-                                                                if (drop.QuantityMin == drop.QuantityMax)
-                                                                    spawn.Quantity = drop.QuantityMin;
-                                                                else {
-                                                                    int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
-                                                                    spawn.Quantity = amt;
-                                                                }
-
-                                                                bool found = false;
-                                                                for (int k = 0; k < curr.ItemsHere.Count; k++) {
-                                                                    if (curr.ItemsHere[k].ID == spawn.ID && curr.ItemsHere[k].Noted == spawn.Noted) {
-                                                                        curr.ItemsHere[k].Quantity += spawn.Quantity;
-                                                                        found = true;
-                                                                        break;
-                                                                    }
-                                                                }
-
-                                                                if (!found)
-                                                                    curr.ItemsHere.Add(spawn);
-                                                            }
-                                                        }
-                                                    } else {
-                                                        if (player.CollectionLogBoss[boss.ID].NoRNGDrop(drop.ItemID, drop.InY / (int) Math.Ceiling(drop.InY / (double) dropX))) {
-                                                            if (!player.CollectionLogBoss[boss.ID].DropsObtained.ContainsKey(drop.ItemID))
-                                                                player.CollectionLogBoss[boss.ID].DropsObtained.Add(drop.ItemID, 0);
-                                                            player.CollectionLogBoss[boss.ID].DropsObtained[drop.ItemID] += 1;
-
-                                                            if (ItemLibrary.ContainsKey(drop.ItemID)) {
-                                                                Item spawn = Helper.Clone(ItemLibrary[drop.ItemID]);
-
-                                                                if (drop.QuantityMin == drop.QuantityMax)
-                                                                    spawn.Quantity = drop.QuantityMin;
-                                                                else {
-                                                                    int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
-                                                                    spawn.Quantity = amt;
-                                                                }
-
-                                                                bool found = false;
-                                                                for (int k = 0; k < curr.ItemsHere.Count; k++) {
-                                                                    if (curr.ItemsHere[k].ID == spawn.ID && curr.ItemsHere[k].Noted == spawn.Noted) {
-                                                                        curr.ItemsHere[k].Quantity += spawn.Quantity;
-                                                                        found = true;
-                                                                        break;
-                                                                    }
-                                                                }
-
-                                                                if (!found)
-                                                                    curr.ItemsHere.Add(spawn);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                            drop.RollDrop(player, player.CollectionLogBoss[boss.ID]);
                                         }
                                     }
                                 }
@@ -1271,9 +1202,24 @@ namespace ZeroPlayersOnline {
                                             player.TryGrantExp("Strength", pdmg * (4 - player.OffenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
                                     }
 
+                                    if (AttackingMonster.ID == player.SlayerTask) {
+                                        player.TryGrantExp("Slayer", pdmg * 4, Log, SidebarManager.RecentlyTrainedSkills);
+                                    }
+
                                     if (AttackingMonster.CurrentHP <= 0) {
                                         AttackingMonster.TimeLastKilled = Helper.Time();
                                         AttackingMonster.AttackingPlayer = false;
+
+                                        if (AttackingMonster.ID == player.SlayerTask) {
+                                            player.SlayerKillsRemaining--;
+
+                                            if (player.SlayerKillsRemaining <= 0) {
+                                                Log.AddMessage("You have finished your Slayer task and should go get another.", Color.MediumPurple);
+                                                player.SlayerTask = "";
+                                                player.SlayerKillsRemaining = 0;
+                                                // TODO: Add slayer points if from a real slayer master
+                                            }
+                                        }
 
                                         if (!player.CollectionLog.ContainsKey(AttackingMonster.ID))
                                             player.CollectionLog.Add(AttackingMonster.ID, new(AttackingMonster.ID));
@@ -1288,83 +1234,7 @@ namespace ZeroPlayersOnline {
                                             for (int j = 0; j < AttackingMonster.DropTable.Count; j++) {
                                                 ItemDrop drop = AttackingMonster.DropTable[j];
 
-                                                if (drop.EvenAt0x || !reachedKillLimit) {
-                                                    int dropX = drop.DropX;
-
-                                                    dropX *= player.DropMultiplier;
-
-                                                    if (reachedKillLimit)
-                                                        dropX = 0;
-
-                                                    if (drop.EvenAt0x && dropX == 0)
-                                                        dropX = drop.DropX;
-
-
-                                                    if (dropX != 0) {
-                                                        if (player.DropModifier != 2) {
-                                                            int dropRoll = GameLoop.rand.Next(drop.InY);
-                                                            int dropRoll2 = GameLoop.rand.Next(drop.InY);
-
-                                                            if (dropRoll < dropX || (player.PrayerActive("Good Fortune") && dropRoll2 < dropX) || (player.DropModifier == 1 && player.CollectionLog[AttackingMonster.ID].DryProtection(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) dropX)))) {
-                                                                if (!player.CollectionLog[AttackingMonster.ID].DropsObtained.ContainsKey(drop.ItemID))
-                                                                    player.CollectionLog[AttackingMonster.ID].DropsObtained.Add(drop.ItemID, 0);
-                                                                player.CollectionLog[AttackingMonster.ID].DropsObtained[drop.ItemID] += 1;
-
-                                                                if (ItemLibrary.ContainsKey(drop.ItemID)) {
-                                                                    Item spawn = Helper.Clone(ItemLibrary[drop.ItemID]);
-
-                                                                    if (drop.QuantityMin == drop.QuantityMax)
-                                                                        spawn.Quantity = drop.QuantityMin;
-                                                                    else {
-                                                                        int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
-                                                                        spawn.Quantity = amt;
-                                                                    }
-
-                                                                    bool found = false;
-                                                                    for (int k = 0; k < curr.ItemsHere.Count; k++) {
-                                                                        if (curr.ItemsHere[k].ID == spawn.ID && curr.ItemsHere[k].Noted == spawn.Noted) {
-                                                                            curr.ItemsHere[k].Quantity += spawn.Quantity;
-                                                                            found = true;
-                                                                            break;
-                                                                        }
-                                                                    }
-
-                                                                    if (!found)
-                                                                        curr.ItemsHere.Add(spawn);
-                                                                }
-                                                            }
-                                                        } else {
-                                                            if (player.CollectionLog[AttackingMonster.ID].NoRNGDrop(drop.ItemID, drop.InY / (int) Math.Ceiling(drop.InY / (double) dropX))) {
-                                                                if (!player.CollectionLog[AttackingMonster.ID].DropsObtained.ContainsKey(drop.ItemID))
-                                                                    player.CollectionLog[AttackingMonster.ID].DropsObtained.Add(drop.ItemID, 0);
-                                                                player.CollectionLog[AttackingMonster.ID].DropsObtained[drop.ItemID] += 1;
-
-                                                                if (ItemLibrary.ContainsKey(drop.ItemID)) {
-                                                                    Item spawn = Helper.Clone(ItemLibrary[drop.ItemID]);
-
-                                                                    if (drop.QuantityMin == drop.QuantityMax)
-                                                                        spawn.Quantity = drop.QuantityMin;
-                                                                    else {
-                                                                        int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
-                                                                        spawn.Quantity = amt;
-                                                                    }
-
-                                                                    bool found = false;
-                                                                    for (int k = 0; k < curr.ItemsHere.Count; k++) {
-                                                                        if (curr.ItemsHere[k].ID == spawn.ID && curr.ItemsHere[k].Noted == spawn.Noted) {
-                                                                            curr.ItemsHere[k].Quantity += spawn.Quantity;
-                                                                            found = true;
-                                                                            break;
-                                                                        }
-                                                                    }
-
-                                                                    if (!found)
-                                                                        curr.ItemsHere.Add(spawn);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                                drop.RollDrop(player, player.CollectionLog[AttackingMonster.ID]);
                                             }
                                         }
                                     }
@@ -1389,6 +1259,7 @@ namespace ZeroPlayersOnline {
                             CollectionLog.IsVisible = true;
                             CollectionID = thisOne.ID;
                             CollectionDropTop = 0;
+                            CollectionCat = "Monster";
                         });
 
                         if (usedAmmo) {
@@ -1428,7 +1299,8 @@ namespace ZeroPlayersOnline {
                 mini.Con.PrintClickable(resourceX + 22, resourceY, new ColoredString("S", SelectedMenu == "Shop" ? Color.Yellow : curr.ShopItemsHere.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Shop"; });
                 mini.Con.Print(resourceX + 24, resourceY, "|");
                 mini.Con.PrintClickable(resourceX + 26, resourceY, new ColoredString("F", SelectedMenu == "Farming" ? Color.Yellow : curr.FarmingPatchesHere.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Farming"; });
-
+                mini.Con.Print(resourceX + 28, resourceY, "|");
+                mini.Con.PrintClickable(resourceX + 30, resourceY, new ColoredString("H", SelectedMenu == "Hunter" ? Color.Yellow : (curr.HunterSpots.Count > 0 || player.SpawnedCreatures.Count > 0) ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Hunter"; });
 
                 resourceY++;
                 mini.Con.DrawLine(new Point(resourceX + 1, resourceY), new Point(148, resourceY), 196);
@@ -1675,14 +1547,30 @@ namespace ZeroPlayersOnline {
                                     }
                                 });
 
+                                int extraButtons = 146;
+                                if (thisOne.SlayerTasks.Count > 0) {
+                                    mini.Con.PrintClickable(extraButtons, resourceY, "S", () => {
+                                        if (player.SlayerTask == "") {
+                                            SlayerTask task = thisOne.SlayerTasks[GameLoop.rand.Next(thisOne.SlayerTasks.Count)];
+                                            player.SlayerTask = task.TargetID;
+                                            player.SlayerKillsRemaining = (task.KillMin >= task.KillMax) ? task.KillMin : GameLoop.rand.Next(task.KillMax - task.KillMin) + task.KillMin;
+
+                                            Log.AddMessage("Your new task is to kill " + player.SlayerKillsRemaining + " " + ResolveMonsterName(player.SlayerTask) + "s.", Color.MediumPurple);
+                                        }
+                                    });
+
+                                    extraButtons -=2 ;
+                                }
+
                                 if (thisOne.PickpocketLevel > 0) {
-                                    mini.Con.PrintClickable(146, resourceY++, "P", () => {
+                                    mini.Con.PrintClickable(extraButtons, resourceY, "P", () => {
                                         thisOne.TryPickpocket(player, SidebarManager.RecentlyTrainedSkills, ItemLibrary, Log);
                                     });
+
+                                    extraButtons -= 2;
                                 }
-                                else {
-                                    resourceY++;
-                                }
+                                
+                                resourceY++; 
                             }
                         }
                     }
@@ -1767,8 +1655,11 @@ namespace ZeroPlayersOnline {
                                                 }
                                             }
                                         } else {
-                                            if (choice.ClickReq != null) {
-                                                Log.AddMessage(new ColoredString("Requirement not met: " + choice.ClickReq.GetSummary(), Color.Crimson, Color.Black));
+                                            if (choice.ClickReqs != null) {
+                                                Log.AddMessage(new ColoredString("Requirement(s) not met: ", Color.Crimson, Color.Black));
+                                                for (int i = 0; i < choice.ClickReqs.Count; i++) {
+                                                    Log.AddMessage("| " + choice.ClickReqs[i].GetSummary(), choice.ClickReqs[i].CheckRequirement(player) ? Color.Lime : Color.Crimson);
+                                                }
                                             }
                                         }
                                     });
@@ -1942,6 +1833,146 @@ namespace ZeroPlayersOnline {
                         mini.Con.Print(resourceX + 2, resourceY, "|");
                         mini.Con.Print(resourceX + 4, resourceY++, "(no farming patches here)", Color.DarkSlateGray);
                     }
+                } else if (SelectedMenu == "Hunter") { 
+                    mini.Con.Print(resourceX + 2, resourceY++, "Hunter Creatures Here"); 
+
+                    if (curr.CreaturesHere.Count < curr.HunterSpots.Count) { 
+                        for (int i = 0; i < curr.HunterSpots.Count; i++) {
+                            if (HunterLibrary.TryGetValue(curr.HunterSpots[i], out HunterCreature? hunt) && hunt != null) {
+                                HunterCreature clone = Helper.Clone(hunt);
+                                clone.CurrentLane = GameLoop.rand.Next(10);
+                                clone.TimeSpawned = Helper.Time();
+                                curr.CreaturesHere.Add(clone);
+                            }
+                        }
+                    }
+
+                    int placedTraps = 0;
+
+                    if (curr.CreaturesHere.Count > 0) {
+                        List<HunterCreature> uniques = new();
+
+                        for (int i = 0; i < 10; i++) {
+                            if (!curr.TrapsDown.ContainsKey(i))
+                                curr.TrapsDown.Add(i, "");
+                            
+                            placedTraps++;
+                        }
+
+                        for (int i = 0; i < 10; i++) {
+                            ColoredString line = new ColoredString("| ", Color.White, Color.Black);
+
+                            if (curr.TrapsDown[i] != "") {
+                                if (ItemLibrary.TryGetValue(curr.TrapsDown[i], out Item? trap)) {
+                                    line += new ColoredString(trap.Name + " ", Color.White, Color.Black);
+                                } else {
+                                    line += new ColoredString(curr.TrapsDown[i] + " ", Color.DarkSlateGray, Color.Black);
+                                }
+                            } else {
+                                line += new ColoredString("(no trap) ", Color.DarkSlateGray, Color.Black);
+                            }
+
+                            for (int j = 0; j < curr.CreaturesHere.Count; j++) {
+                                bool added = false;
+                                for (int checkToAdd = 0; checkToAdd < uniques.Count; checkToAdd++) {
+                                    if (uniques[checkToAdd].ID == curr.CreaturesHere[j].ID)
+                                        added = true;
+                                }
+                                if (!added)
+                                    uniques.Add(curr.CreaturesHere[j]);
+
+                                if (curr.CreaturesHere[j].TimeLastCaught != 0 && curr.CreaturesHere[j].TimeLastCaught + (curr.CreaturesHere[j].RespawnTime * 1000) > Helper.Time()) {
+                                    continue;
+                                }
+
+                                if (curr.CreaturesHere[j].TimeLastMoved + 1000 < Helper.Time()) {
+                                    int move = GameLoop.rand.Next(3);
+
+                                    if (move == 0) {
+                                        if (curr.CreaturesHere[j].CurrentLane > 0) {
+                                            curr.CreaturesHere[j].CurrentLane--;
+                                        } else {
+                                            curr.CreaturesHere[j].CurrentLane++;
+                                        }
+                                    } else if (move == 1) {
+                                        if (curr.CreaturesHere[j].CurrentLane < 9) {
+                                            curr.CreaturesHere[j].CurrentLane++;
+                                        } else {
+                                            curr.CreaturesHere[j].CurrentLane--;
+                                        }
+                                    }
+
+                                    curr.CreaturesHere[j].TimeLastMoved = Helper.Time();
+
+
+                                    if (curr.TrapsDown.TryGetValue(curr.CreaturesHere[j].CurrentLane, out string? trapID) && trapID != "") {
+                                        if (curr.CreaturesHere[j].CatchID == trapID) {
+                                            if (player.GetEffectiveSkillLevel("Hunter") >= curr.CreaturesHere[j].CatchLevel) {
+                                                int skillMod = player.GetEffectiveSkillLevel("Hunter") - curr.CreaturesHere[j].CatchLevel;
+
+                                                int roll = GameLoop.rand.Next(100);
+
+                                                if (roll < 50 + skillMod) {
+                                                    player.TryGrantExp("Hunter", curr.CreaturesHere[j].CatchEXP, Log, SidebarManager.RecentlyTrainedSkills);
+                                                    
+                                                    foreach (var kv in curr.CreaturesHere[j].Drops) {
+                                                        kv.RollDrop(player, null);
+                                                    } 
+
+                                                    curr.CreaturesHere[j].TimeLastCaught = Helper.Time();
+                                                }
+
+                                                if (ItemLibrary.TryGetValue(trapID, out Item? trap) && trap != null) {
+                                                    player.TryPickup(Helper.Clone(trap), 1);
+                                                }
+
+                                                curr.TrapsDown[curr.CreaturesHere[j].CurrentLane] = "";
+                                            } else {
+                                                Log.AddMessage("You need " + curr.CreaturesHere[j].CatchLevel + " Hunter to catch these.", Color.Crimson);
+                                            }
+                                        }
+                                    } 
+                                }
+
+
+                                if (curr.CreaturesHere[j].CurrentLane == i) {
+                                    line += new ColoredString("*", curr.CreaturesHere[j].GetColor(), Color.Black);
+                                }
+                            }
+
+                            if (curr.TrapsDown[i] == "") {
+                                mini.Con.PrintClickable(resourceX + 2, resourceY++, line, () => {
+                                    if (ItemUseLogic.UsingSlot != -1) {
+                                        if (player.Inventory.Count > ItemUseLogic.UsingSlot) {
+                                            if (placedTraps < 3) {
+                                                curr.TrapsDown[i] = player.Inventory[ItemUseLogic.UsingSlot].ID;
+                                                player.Inventory.RemoveAt(ItemUseLogic.UsingSlot);
+                                                ItemUseLogic.UsingSlot = -1;
+                                            } else {
+                                                Log.AddMessage("You can only place up to 3 traps in a location.", Color.Crimson);
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                mini.Con.PrintClickable(resourceX + 2, resourceY++, line, () => {
+                                    if (ItemLibrary.TryGetValue(curr.TrapsDown[i], out Item? trap) && trap != null) {
+                                        player.TryPickup(Helper.Clone(trap), 1);
+                                    }
+
+                                    curr.TrapsDown[i] = "";
+                                });
+                            }
+                        }
+
+                        for (int i = 0; i < uniques.Count; i++) {
+                            ColoredString line = new ColoredString("* " + uniques[i].Name + " [" + uniques[i].CatchLevel + ", " + ResolveItemName(uniques[i].CatchID) + "]", uniques[i].GetColor(), Color.Black);
+                            mini.Con.Print(resourceX + 2, 34 - i, line);
+                        }
+                    } else {
+                        mini.Con.Print(resourceX + 2, resourceY, "|");
+                        mini.Con.Print(resourceX + 4, resourceY++, "(no hunter creatures here)", Color.DarkSlateGray);
+                    }
                 }
 
 
@@ -1993,7 +2024,7 @@ namespace ZeroPlayersOnline {
             } 
         }
 
-        List<string> activityTabs = new() { "Items", "NPCs", "Processing", "Resources", "Chat", "Shop", "Farming" };
+        List<string> activityTabs = new() { "Items", "NPCs", "Processing", "Resources", "Chat", "Shop", "Farming", "Hunter" };
 
         public void Input(UI_EmbeddedMini mini) {
             Point mousePos = new MouseScreenObjectState(mini.Con, GameHost.Instance.Mouse).CellPosition;
@@ -2077,12 +2108,8 @@ namespace ZeroPlayersOnline {
             }
 
             if (GameHost.Instance.Mouse.RightClicked) {
-                Log.AddMessage(mousePos.ToString()); 
+                // Leaving this here just in case
                 player.HeldGold += 1000;
-                
-                Item spawn = Helper.Clone(ItemLibrary["casketTutorial"]);
-                spawn.Quantity = 20;
-                player.TryPickup(spawn, spawn.Quantity);
             }
         }
 
@@ -2144,6 +2171,12 @@ namespace ZeroPlayersOnline {
                     if (player.ActivePotions[i].Change == 0) {
                         player.ActivePotions.RemoveAt(i);
                     }
+                }
+            }
+
+            if (player.Equipment.TryGetValue("Pet", out Item? pet) && pet != null) {
+                if (GameLoop.rand.Next(100) == 0 && pet.PetBlurbs != null && pet.PetBlurbs.Count > 0) {
+                    Log.AddMessage(pet.PetBlurbs[GameLoop.rand.Next(pet.PetBlurbs.Count)], pet.GetColor());
                 }
             }
         }
@@ -2243,6 +2276,7 @@ namespace ZeroPlayersOnline {
             QuestLibrary.Clear();
             SpellLibrary.Clear();
             BossLibrary.Clear();
+            HunterLibrary.Clear();
 
             HardcodedItems.InitItems(ItemLibrary);
             HardcodedGathering.InitGathers(GatherSpots);
@@ -2258,6 +2292,7 @@ namespace ZeroPlayersOnline {
             HardcodedQuests.InitQuests(QuestLibrary);
             HardcodedSpells.InitSpells(SpellLibrary);
             HardcodedBosses.InitBosses(BossLibrary);
+            HardcodedHunter.InitHunter(HunterLibrary);
         }
 
         public Item? ResolveItem(string ID) {
@@ -2292,6 +2327,14 @@ namespace ZeroPlayersOnline {
             return ID;
         }
 
+        public string ResolveBossName(string ID) {
+            if (BossLibrary.TryGetValue(ID, out BossFight? mon) && mon != null) {
+                return mon.Name;
+            }
+
+            return ID;
+        }
+
         public void PopulateCraftList() {
             ActiveRecipes.Clear();
 
@@ -2310,7 +2353,7 @@ namespace ZeroPlayersOnline {
                 if (curr != null) {
                     bool found = false;
                     for (int i = 0; i < curr.ItemsHere.Count; i++) {
-                        if (curr.ItemsHere[i].ID == item.ID && item.Stackable) {
+                        if (curr.ItemsHere[i].ID == item.ID && item.Noted == curr.ItemsHere[i].Noted) {
                             curr.ItemsHere[i].Quantity += item.Quantity;
                             found = true;
                             break;
@@ -2345,6 +2388,8 @@ namespace ZeroPlayersOnline {
             player.Skills.TryAdd("Firemaking", new Skill("Firemaking"));
             player.Skills.TryAdd("Fletching", new Skill("Fletching"));
             player.Skills.TryAdd("Dungeoneering", new Skill("Dungeoneering"));
+            player.Skills.TryAdd("Hunter", new Skill("Hunter"));
+            player.Skills.TryAdd("Slayer", new Skill("Slayer"));
 
             player.Skills.TryAdd("Constitution", new Skill("Constitution") { Level = 10 });
             player.Skills.TryAdd("Attack", new Skill("Attack"));

@@ -14,13 +14,16 @@
 
         public string GetSummary() {
             if (RequirementType == "Skill") {
+                if (MiscString == "All") { 
+                    return "Need level " + MiscInt + " in all skills";
+                } 
                 return "Need level " + MiscInt + " " + MiscString;
             }
 
             if (RequirementType == "QuestAt") {
                 if (GameLoop.ZPO.QuestLibrary.TryGetValue(MiscString, out Quest? req)) {
                     if (req != null) {
-                        return "Completed " + req.Name;
+                        return "Completed Quest: " + req.Name;
                     }
                 }
 
@@ -34,6 +37,9 @@
             if (RequirementType == "CollectionLogComplete") {
                 if (MiscString.Contains("clue"))
                     return "Completed the " + MiscString + " collection log";
+                else if (MiscString.Contains("boss")) {
+                    return "Completed the " + GameLoop.ZPO.ResolveBossName(MiscString) + " collection log";
+                }
                 else {
                     return "Completed the " + GameLoop.ZPO.ResolveMonsterName(MiscString) + " collection log";
                 }
@@ -45,7 +51,7 @@
                 else {
                     return "Killed " + MiscInt + "x " + GameLoop.ZPO.ResolveMonsterName(MiscString);
                 }
-            }
+            } 
 
             return "";
         }
@@ -53,9 +59,18 @@
 
         public bool CheckRequirement(Player p) {
             if (RequirementType == "Skill") {
-                if (p.Skills.ContainsKey(MiscString)) {
-                    if (p.Skills[MiscString].Level >= MiscInt) {
-                        return true;
+                if (MiscString == "All") {
+                    foreach (var kv in p.Skills) {
+                        if (kv.Value.Level < MiscInt) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else {
+                    if (p.Skills.ContainsKey(MiscString)) {
+                        if (p.Skills[MiscString].Level >= MiscInt) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -109,6 +124,15 @@
                                     }
                                 }
                             }
+                        }
+                    }
+                } else if (MiscString.Contains("boss")) {
+                    if (GameLoop.ZPO.player.CollectionLogBoss.TryGetValue(MiscString, out CollectionLogEntry? log) && log != null) {
+                        if (GameLoop.ZPO.BossLibrary.TryGetValue(MiscString, out BossFight? mon) && mon != null) {
+                            if (mon.DropTable.Count == log.DropsObtained.Count) {
+                                return true;
+                            }
+                    
                         }
                     }
                 } else {

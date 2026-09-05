@@ -1,4 +1,6 @@
-﻿namespace ZeroPlayersOnline.DataTypes {
+﻿using Newtonsoft.Json;
+
+namespace ZeroPlayersOnline.DataTypes {
     public class Location {
         public string DisplayName = "";
         public string ID = "";
@@ -31,5 +33,11 @@
         public List<string> ShopItemsHere = new();
 
         public List<string> FarmingPatchesHere = new();
+         
+        public List<string> HunterSpots = new();
+        public List<HunterCreature> CreaturesHere = new();
+
+        [JsonIgnore]
+        public Dictionary<int, string> TrapsDown = new();
     }
 }

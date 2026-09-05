@@ -10,6 +10,9 @@
         public Dictionary<int, DialogueStage> Dialogue = new();
         public Requirement? ReqToSee = null;
 
+        public int SlayerLevel = 0;
+        public List<SlayerTask> SlayerTasks = new();
+
         public NPC(string n, string id, Dictionary<int, DialogueStage> dia, int ppL = 0, int ppExp = 0, Requirement req = null) {
             Name = n;
             ID = id;

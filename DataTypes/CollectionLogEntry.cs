@@ -25,5 +25,42 @@
                 return true;
             return false;
         }
+
+
+        public int TryFindTotal() {
+            if (GameLoop.ZPO.MonsterLibrary.TryGetValue(MonsterID, out AreaMonster? mon) && mon != null) {
+                return mon.DropTable.Count;
+            }
+
+            if (GameLoop.ZPO.BossLibrary.TryGetValue(MonsterID, out BossFight? boss) && boss != null) {
+                return boss.DropTable.Count;
+            }
+
+            if (GameLoop.ZPO.ItemLibrary.TryGetValue(MonsterID, out Item? cask) && cask != null) {
+                return cask.DropTable.Count;
+            }
+
+            return -1;
+        }
+
+        public int ActualObtained() {
+            int actualObtained = 0;
+            foreach (var kv in DropsObtained) {
+                if (kv.Value > 0) {
+                    actualObtained++;
+                }
+            }
+            return actualObtained;
+        }
+
+        public bool LogComplete() {
+            int target = TryFindTotal();
+
+            if (target > 0) { 
+                return ActualObtained() == target;
+            }
+
+            return false;
+        }
     }
 }

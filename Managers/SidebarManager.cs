@@ -408,6 +408,18 @@ namespace ZeroPlayersOnline.Managers {
                             player.Equipment.Remove("Ammo");
                         });
                     }
+
+                    printY++;
+
+                    mini.Con.Print(1, printY, "|      Pet: ");
+                    if (player.Equipment.ContainsKey("Pet")) {
+                        string name = player.Equipment["Pet"].Name + (player.Equipment["Pet"].Quantity > 1 ? " x" + player.Equipment["Pet"].Quantity : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, player.Equipment["Pet"].GetColor(), player.Equipment["Pet"].ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            Item item = player.Equipment["Pet"];
+                            player.TryPickup(item, item.Quantity);
+                            player.Equipment.Remove("Pet");
+                        });
+                    }
                 }
             
                 else if (SidebarMenu == "Skills") {
@@ -476,7 +488,7 @@ namespace ZeroPlayersOnline.Managers {
                         if (prayers[i].Book == player.PrayerBook) {
                             if (skipped >= SidebarScrollTop && printLine < 35) {
                                 mini.Con.PrintClickable(1, printLine, new ColoredString(prayers[i].Name, prayers[i].Active ? Color.Lime : prayers[i].Level > prayLv ? Color.DarkSlateGray : Color.White, Color.Black), () => { player.TryTogglePrayer(prayers[i].Name); });
-                                mini.Con.Print(20, printLine, prayers[i].Level.ToString(), prayers[i].Level > prayLv ? Color.DarkSlateGray : Color.White);
+                                mini.Con.Print(20, printLine, prayers[i].Level.ToString(), prayers[i].Level > prayLv ? Color.DarkSlateGray : Color.White); 
                                 mini.Con.Print(23, printLine++, prayers[i].Description, prayers[i].Level > prayLv ? Color.DarkSlateGray : Color.White);
                             } else {
                                 skipped++;
@@ -647,23 +659,13 @@ namespace ZeroPlayersOnline.Managers {
                         mini.Con.PrintClickable(4, 17+i, new ColoredString("?", Color.MediumPurple, Color.Black), () => { GameLoop.ZPO.Log.AddMessage(spells[i].Description); });
                     }
                 } else if (SidebarMenu == "Log") {
-                    mini.Con.Print(1, 15, "Clue Collection Logs"); 
+                    mini.Con.Print(1, 15, "Clue Collection Logs");
 
-                    int tutGot = 0;
-                    int tutMax = 0;
+                    if (player.CollectionLogClues.TryGetValue("casketTutorial", out CollectionLogEntry? tutLog) && tutLog != null)
+                        mini.Con.PrintClickable(1, 16, new ColoredString("| Tutorial: " + tutLog.ActualObtained().ToString().Align(HorizontalAlignment.Right, 3) + " / " + tutLog.TryFindTotal().ToString().Align(HorizontalAlignment.Right, 3), tutLog.LogComplete() ? Color.Lime : Color.White, Color.Black), () => { GameLoop.ZPO.CollectionID = "casketTutorial"; GameLoop.ZPO.CollectionLog.IsVisible = true; GameLoop.ZPO.CollectionDropTop = 0; GameLoop.ZPO.CollectionCat = "Clue"; });
+                    else 
+                        mini.Con.Print(1, 16, "| Tutorial: ");
 
-
-                    if (player.CollectionLogClues.ContainsKey("casketTutorial")) {
-                        tutGot = player.CollectionLogClues["casketTutorial"].DropsObtained.Count;
-
-                        if (GameLoop.ZPO.ItemLibrary.TryGetValue("casketTutorial", out Item? caskTut)) {
-                            if (caskTut != null) { 
-                                tutMax = caskTut.DropTable.Count;
-                            }
-                        }
-                    } 
-
-                    mini.Con.PrintClickable(1, 16, new ColoredString("| Tutorial: " + tutGot.ToString().Align(HorizontalAlignment.Right, 3) + " / " + tutMax.ToString().Align(HorizontalAlignment.Right, 3), tutGot == tutMax ? Color.Lime : Color.White, Color.Black), () => { GameLoop.ZPO.CollectionID = "casketTutorial"; GameLoop.ZPO.CollectionLog.IsVisible = true; GameLoop.ZPO.CollectionDropTop = 0;});
 
                     mini.Con.Print(1, 17, "| Beginner: ");
                     mini.Con.Print(1, 18, "|     Easy: ");

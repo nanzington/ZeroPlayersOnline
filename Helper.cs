@@ -17,6 +17,9 @@ namespace ZeroPlayersOnline {
         public static double CursorTicked = 0;
         public static bool CursorVisible = true; 
 
+        public static int ScrollStartIndex = 0;
+        public static double LastScrolled = 0;
+
         public static double Time() {
             return Game.Instance.GameRunningTotalTime.TotalMilliseconds;
         }

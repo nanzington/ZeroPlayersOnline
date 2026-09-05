@@ -11,7 +11,7 @@ namespace ZeroPlayersOnline.HardcodedData {
             toAdd.Add(new Prayer("Ranged I", "Normal", 1, "Boosts Ranged by 1 level.", "Ranged"));
             toAdd.Add(new Prayer("Magic I", "Normal", 1, "Boosts Magic by 1 level.", "Magic")); 
              
-            toAdd.Add(new Prayer("Improved Critical I", "Normal", 10, "Makes critical hits slightly more likely (stacks).")); 
+            toAdd.Add(new Prayer("Improved Crit I", "Normal", 10, "Critical Chance+ (stacks).")); 
 
             toAdd.Add(new Prayer("Defense II", "Normal", 10, "Boosts Defense by 5 levels.", "Defense"));
             toAdd.Add(new Prayer("Strength II", "Normal", 10, "Boosts Strength by 5 levels.", "Strength"));
@@ -19,7 +19,7 @@ namespace ZeroPlayersOnline.HardcodedData {
             toAdd.Add(new Prayer("Ranged II", "Normal", 10, "Boosts Ranged by 5 levels.", "Ranged"));
             toAdd.Add(new Prayer("Magic II", "Normal", 10, "Boosts Magic by 5 levels.", "Magic"));
              
-            toAdd.Add(new Prayer("Improved Critical II", "Normal", 20, "Makes critical hits more likely (stacks).")); 
+            toAdd.Add(new Prayer("Improved Crit II", "Normal", 20, "Critical Chance++ (stacks).")); 
 
             toAdd.Add(new Prayer("Defense III", "Normal", 20, "Boosts Defense by 10 levels.", "Defense"));
             toAdd.Add(new Prayer("Strength III", "Normal", 20, "Boosts Strength by 10 levels.", "Strength"));
@@ -27,7 +27,7 @@ namespace ZeroPlayersOnline.HardcodedData {
             toAdd.Add(new Prayer("Ranged III", "Normal", 20, "Boosts Ranged by 10 levels.", "Ranged"));
             toAdd.Add(new Prayer("Magic III", "Normal", 20, "Boosts Magic by 10 levels.", "Magic"));
              
-            toAdd.Add(new Prayer("Improved Critical III", "Normal", 30, "Makes critical hits much more likely (stacks).")); 
+            toAdd.Add(new Prayer("Improved Crit III", "Normal", 30, "Critical Chance+++ (stacks).")); 
 
             toAdd.Add(new Prayer("Defense IV", "Normal", 40, "Boosts Defense by 20 levels.", "Defense"));
             toAdd.Add(new Prayer("Strength IV", "Normal", 40, "Boosts Strength by 20 levels.", "Strength"));

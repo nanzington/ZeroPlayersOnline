@@ -7,13 +7,51 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             List<NPC> toAdd = new();
 
+            toAdd.Add(new("Slayer Tutor", "tutorSlayer", new() {
+                {
+                    0,
+                    new("Regular combat not exciting enough for ya? I've got something that might wet your whistle, hero.", new() {
+                        new DialogueChoice("(NEXT)", 1),
+                        byeThen
+                    })
+                },
+                {
+                    1,
+                    new("Slayer as a skill is dead simple. Click the S next to the name of a Slayer Master in the chat list to get a task.", new() {
+                        new DialogueChoice("(NEXT)", 2),
+                        byeThen
+                    })
+                },
+                {
+                    2,
+                    new("Then simply go find the monster they want you to kill, kill as many as they say, then come back for another task.", new() {
+                        new DialogueChoice("(NEXT)", 3),
+                        byeThen
+                    })
+                },
+                {
+                    3,
+                    new("That's all there is to it! Now get out there and kill, kill, kill!", new() {
+                        byeThen
+                    }, items: [ "gemSlayer,1" ])
+                }
+            }) {
+                SlayerLevel = 1,
+                SlayerTasks = new() {
+                    new("cow", 5, 10),
+                    new("chicken", 10, 20),
+                    new("tiZombie", 5, 10),
+                    new("newt", 5, 10)
+                }
+            });
+
             toAdd.Add(new("Father Guy", "tiFatherGuy", new() {
                 {
                     0,
                     new("Welcome, child. Blessings of Saradomin upon you.", new() {
-                        new DialogueChoice("[Q] The Haunted Island", 10, new("QuestAt", -1, "TI_HauntedIsland")),
-                        new DialogueChoice("[Q] The Haunted Island", 13, new("QuestAt", 20, "TI_HauntedIsland")),
-                        new DialogueChoice("[Q] The Haunted Island", 16, new("QuestAt", 80, "TI_HauntedIsland")),
+                        new DialogueChoice("[Q] The Haunted Island", 10, [ new("QuestAt", -1, "TI_HauntedIsland") ]),
+                        new DialogueChoice("[Q] The Haunted Island", 13, [ new("QuestAt", 20, "TI_HauntedIsland") ]),
+                        new DialogueChoice("[Q] The Haunted Island", 16, [ new("QuestAt", 80, "TI_HauntedIsland") ]),
                         byeThen
                     })
                 },
@@ -84,7 +122,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     0,
                     new("Just click tha spot you want to fish at to fish. Now leave me be, there's fishin' ta be done.", new() {
                         new DialogueChoice("Could I have a net?", 1),
-                        new DialogueChoice("[Q] The Haunted Island", 10, new("QuestAt", 30, "TI_HauntedIsland")),
+                        new DialogueChoice("[Q] The Haunted Island", 10, [ new("QuestAt", 30, "TI_HauntedIsland") ]),
                         byeThen
                     })
                 }, 
@@ -143,7 +181,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     0,
                     new("Welcome to the First National Bank of Tutorial Island! How can I help you today?", new() {
                         new DialogueChoice("How do I use the bank?", 1),
-                        new DialogueChoice("[Q] The Haunted Island", 10, new("QuestAt", 40, "TI_HauntedIsland")),
+                        new DialogueChoice("[Q] The Haunted Island", 10, [ new("QuestAt", 40, "TI_HauntedIsland") ]),
                         byeThen
                     })
                 },
@@ -179,6 +217,50 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("The owner never turned up to collect their things, so you might as well take them.", new() {
                         byeThen
                     }, "TI_HauntedIsland", 60, ["TI_HI_BankRecord", "fishCookedShrimp", "bucketEmpty", "TI_HI_StrangeRune"] )
+                }
+            }));
+
+            toAdd.Add(new("Hunter Tutor", "tutorHunter", new() {
+                {
+                    0,
+                    new("Looking to train Hunter? You've come to the right place!", new() {
+                        new DialogueChoice("(NEXT)", 1),
+                        byeThen
+                    })
+                },
+                {
+                    1,
+                    new("First, you'll need to head to the General Store to pick up some bird snares. Go ahead and get three of them.", new() {
+                        new DialogueChoice("(NEXT)", 2),
+                        byeThen
+                    })
+                },
+                {
+                    2,
+                    new("While you're at a location with creatures to trap, switch to the (H) tab and (U) the trap in your inventory on a hunter spot.", new() {
+                        new DialogueChoice("(NEXT)", 3),
+                        byeThen
+                    })
+                },
+                {
+                    3,
+                    new("Hunter creatures will move around the spots periodically. If they move to a trapped spot, there's a chance that you will catch them.", new() {
+                        new DialogueChoice("(NEXT)", 4),
+                        byeThen
+                    })
+                },
+                {
+                    4,
+                    new("The trap will automatically be returned to your inventory, catch or fail, to be placed again. Drops will be left on the ground.", new() {
+                        new DialogueChoice("(NEXT)", 5),
+                        byeThen
+                    })
+                },
+                {
+                    5,
+                    new("That's all there is to it! Happy hunting, adventurer!", new() {
+                        byeThen
+                    })
                 }
             }));
 
@@ -363,7 +445,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     0,
                     new("The arcane art of runecraft is not to be undertaken lightly. Do you wish to continue regardless?", new() {
                         new DialogueChoice("(NEXT)", 1),
-                        new DialogueChoice("[Q] The Haunted Island", 10, new("QuestAt", 60, "TI_HauntedIsland")),
+                        new DialogueChoice("[Q] The Haunted Island", 10, [ new("QuestAt", 60, "TI_HauntedIsland") ]),
                         byeThen
                     })
                 },
@@ -440,8 +522,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                     0,
                     new("My my my... It's been a long time since we've seen any of your kind around here. The name is Terrova, 'hero'.", new() {
                         new DialogueChoice("What do you mean my kind?", 10),
-                        new DialogueChoice("[Q] The Haunted Island", 100, new("QuestAt", 70, "TI_HauntedIsland"), false),
-                        new DialogueChoice("Just teleport me, Wizard.", 1, new("QuestAt", 90, "TI_HauntedIsland"), true),
+                        new DialogueChoice("[Q] The Haunted Island", 100, [ new("QuestAt", 70, "TI_HauntedIsland") ], false),
+                        new DialogueChoice("Just teleport me, Wizard.", 1, [ new("QuestAt", 90, "TI_HauntedIsland") ], true),
+                        new DialogueChoice("I did everything here!", 2, [ 
+                            new("Skill", 10, "All"),
+                            new("CollectionLogComplete", 0, "bossZombie"),
+                            new("CollectionLogComplete", 0, "Tutorial clue"),
+                            new("QuestAt", 90, "TI_HauntedIsland")
+                        ], true),
                         byeThen
                     })
                 },
@@ -451,6 +539,12 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new DialogueChoice("(TELEPORT)", -1, tele: "MIST_LumbridgeCastleBailey", spawn: true),
                         byeThen
                     })
+                },
+                {
+                    2,
+                    new("Have you now? Well it looks like you have! Quite an achievement! Take this cape and my sincere congratulations.", new() {
+                        byeThen
+                    }, items: ["capeCompTI,1"])
                 },
                 {
                     10,
@@ -516,7 +610,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     60,
                     new("I suppose it doesn't matter. Save us or don't, the choice is yours. Regardless, if you are finished here I can teleport you away.", new() {
                         new DialogueChoice("Stay for now", 70),
-                        new DialogueChoice("(TELEPORT)", -1, new("QuestAt", 90, "TI_HauntedIsland"), true, "MIST_LumbridgeCastleBailey", true),
+                        new DialogueChoice("(TELEPORT)", -1, [ new("QuestAt", 90, "TI_HauntedIsland") ], true, "MIST_LumbridgeCastleBailey", true),
                         byeThen
                     })
                 },

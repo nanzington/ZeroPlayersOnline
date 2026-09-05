@@ -1,4 +1,5 @@
-﻿using ZeroPlayersOnline.Managers;
+﻿using Newtonsoft.Json;
+using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline.DataTypes {
     public class Player {
@@ -90,13 +91,29 @@ namespace ZeroPlayersOnline.DataTypes {
         public string CurrentClueMaster = "";
         public int StepsDoneMaster = 0;
 
+        public string SlayerTask = "";
+        public int SlayerKillsRemaining = 0;
+        public int SlayerTaskStreak = 0;
+        public int SlayerPoints = 0;
+         
+        public string ArtisanTask = "";
+        public int ArtisanTaskRemaining = 0;
+        public int ArtisanTaskStreak = 0;
+        public int ArtisanPoints = 0;
+
+        [JsonIgnore]
+        public List<HunterCreature> SpawnedCreatures = new();
+
         public int GetCombatLevel() {
             int atk = Skills["Attack"].Level;
             int str = Skills["Strength"].Level;
             int def = Skills["Defense"].Level;
             int con = Skills["Constitution"].Level;
+            int ran = Skills["Ranged"].Level;
+            int mag = Skills["Magic"].Level;
+            int pra = Skills["Prayer"].Level;
             
-            return Math.Clamp((atk + str + def + con) / 4, 1, 999);
+            return Math.Clamp((atk + str + def + con + ran + mag + (pra / 2)) / 4, 1, 999);
         }
 
         public string GetDamageDice() {
@@ -124,10 +141,16 @@ namespace ZeroPlayersOnline.DataTypes {
                     weaponTier = 1;
                 }
             }
-            int strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10);
+            int strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10); 
 
             if (maging) { 
-                strength += Spells[CastingSpell].Tier * 2;
+                strength = Spells[CastingSpell].Tier * 2;
+            }
+
+            foreach (var kv in Equipment) {
+                if (kv.Value.MiscString == "OmniBoost") {
+                    strength += kv.Value.EquipTier;
+                }
             }
 
             return weaponTier + "d" + strength;
@@ -743,7 +766,15 @@ namespace ZeroPlayersOnline.DataTypes {
                 }
             }
 
+            foreach (var kv in Equipment) {
+                if (kv.Value.MiscString == "OmniBoost") {
+                    count += kv.Value.EquipTier;
+                }
+            }
+
             count /= 5.0;
+
+
 
             return (int) Math.Ceiling(count);
         }

@@ -23,7 +23,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new Connection("TI_WizardHut")
                 },
                 GatheringSpots = new List<string>() { "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "fishNetSmall", "fishNetSmall" },
-                NPCsHere = new List<string>() { "tutorFarming", "tutorFishing", "man", "man", "man", "tiForlornGhost2" },
+                NPCsHere = new List<string>() { "tutorFarming", "tutorFishing", "tutorSlayer", "man", "man", "man", "tiForlornGhost2" },
                 FarmingPatchesHere = new List<string>() { "TI_allotment1", "TI_allotment2", "TI_allotment3" }, 
                 DigItem = "clueScrollTutorial",
                 ItemSpawns = new List<ItemSpot>() {
@@ -88,12 +88,14 @@ namespace ZeroPlayersOnline.Hardcodes {
             locsToAdd.Add(new Location() {
                 DisplayName = "Animal Pen",
                 Region = "Tutorial Island",
-                Description = "Some cows and chickens wander around aimlessly in the pen, staring blankly off to the horizon when they aren't chewing on grass. ",
+                Description = "Some cows and chickens wander around aimlessly in the pen, staring blankly off to the horizon when they aren't chewing on grass. There are some crimson swifts darting about in and around the pen that could be caught fairly easily with a bird snare.",
                 ID = "TI_AnimalPen",
                 ConnectedLocations = new List<Connection>() {
                     new Connection("TI_Main")
                 },
-                AreaMonsters = new() { "cow", "cow", "cow", "chicken", "chicken", "chicken" }
+                AreaMonsters = new() { "cow", "cow", "cow", "chicken", "chicken", "chicken" },
+                HunterSpots = new() { "birdSwift", "birdSwift", "birdSwift", "birdSwift" },
+                NPCsHere = new() { "tutorHunter" }
             });
 
             locsToAdd.Add(new Location() {
@@ -209,7 +211,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ConnectedLocations = new List<Connection>() {
                     new Connection("TI_Main")
                 },
-                ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "needle", "knife", "hatchetBronze", "pickaxeBronze", "fishingNetSmall", "vialEmpty", "runeAir", "runeEarth", "runeFire", "runeWater", "runeMind", "runeBody" },
+                ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "needle", "knife", "hatchetBronze", "pickaxeBronze", "fishingNetSmall", "vialEmpty", "trapBird", "runeAir", "runeEarth", "runeFire", "runeWater", "runeMind", "runeBody" },
                 GatheringSpots = new List<string>() { "clueCrates" },
                 ProcessingStations = new List<string>() { "Tannery", "Pottery Kiln", "Pottery Wheel" },
                 NPCsHere = new() { "tiDrunkPirate" }

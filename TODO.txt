@@ -1,5 +1,5 @@
 Minimum to finish Tutorial Island
-- Skills to implement: Hunter, Construction, Slayer. Maybe also a proxy combat skill (necro, summoning, taming), divination, dungeoneering
+- Run the Cape speedrun a few times to see how long it takes and check for obvious bugs
 
 
 Immediately important stuff to get working:
@@ -7,7 +7,6 @@ Immediately important stuff to get working:
 - An achievement tracking thing where performing an action can check to see if doing it progresses an achievement/task, also have a screen to show all achieves with some sort options
 - Move data from being hardcoded to json files
 - Make all skills accessible somewhere on tutorial island?
-- - Agility, small agility course on island somewhere, going to have to make agility obstacles work for connection nodes (optional alternate fail location or damage plus exp granted)
 - - Hunter, some butterflies or implings or something somewhere, need to work out variable presence (implings) hunter targets and static targets
 - - Construction might not be possible? Would have to have just one house instead of a house per area
 - - Summoning / Necromancy / Taming or maybe some kind of combo of the three into one "minion fights for you" combat skill
@@ -27,6 +26,7 @@ Less immediate but still important:
 - Find a way to show all items needed for a CraftRecipe if there are multiple
 - Dungeoneering areas that are actual random layout dungeons, reset layout somehow (on reload, if player is in a dungeon then reset their loc to the entrance, or if they reach the end crystal tp back to start and give set exp) 
 - Bank preset options somehow
+- Add slayer shop (slayer points and gold), way to skip/block/prefer tasks
 
 
 Difficulty things
@@ -44,15 +44,11 @@ Randomizer Options - Basically just provide an option for ID remaps
 - Locations, No Logic (this will be almost guaranteed to result in areas that are impossible to get to, maybe make spells also go to a random map)
 
 
-Tutorial Island Completionist Cape
-- Level 10 in all skills
-- Finish the quest on the island (maybe this should be mandatory anyways since you can't come back)
-- Finish the completion log for the boss on the island
-- Finish the tutorial clue collection log (probably just like some T10-30ish gear for each style?)
+Future Skills to work on:
+- Artisan (slayer for skilling)
+- Divination (create gathering spots, transmute materials, etc)
+- Proxy combat skill of some kind (ex necromancy, summoning, taming, something like that)
 
-
-Bossing
-- Maybe a button to spawn the boss at the appropriate location, and a system for "temporary" monsters?
 
 
 Distraction and Diversions / Activities / Minigames

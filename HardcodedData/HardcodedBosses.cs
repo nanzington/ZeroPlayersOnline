@@ -11,10 +11,17 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("The huge zombie groans angrily and prepares to swipe to either side.", "1d6+2", "Melee", [ 0, 2 ])
                 },
                 DropTable = new() { 
-                    new("bonesBig", 1, 1, 1, 1),
+                    new("petBabyZombie", 1, 50, 1, 1),
+                    new("clubHuger", 1, 20, 1, 1), 
                     new("clubHuge", 1, 10, 1, 1),
-                    new("clubHuger", 1, 20, 1, 1),
-                    new("petBabyZombie", 1, 50, 1, 1)
+                    new("runeMind", 1, 4, 10, 20),  
+                    new("runeAir", 1, 4, 10, 20), 
+                    new("runeWater", 1, 4, 10, 20), 
+                    new("runeEarth", 1, 4, 10, 20), 
+                    new("runeFire", 1, 4, 10, 20),  
+                    new("arrowsBronze", 1, 4, 10, 20), 
+                    new("fleshRotten", 1, 1, 1, 1),
+                    new("bonesBig", 1, 1, 1, 1) 
                 } 
             });
             
