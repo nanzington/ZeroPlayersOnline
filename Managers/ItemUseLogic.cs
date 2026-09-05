@@ -10,7 +10,7 @@ namespace ZeroPlayersOnline.Managers {
                 GameLoop.ZPO.Log.AddMessage("You open the " + item.Name + " and find " + item.UseInt + " gold pieces.");
             } else if (item.UseString == "Bones") {
                 GameLoop.ZPO.Log.AddMessage("You bury the " + item.Name.ToLowerInvariant() + " and get " + item.UseInt + " prayer experience.");
-                player.TryGrantExp("Prayer", 5, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+                player.TryGrantExp("Prayer", item.UseInt, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
             } else if (item.UseString == "Heal") {
                 player.CurrentHP = Math.Clamp(player.CurrentHP + item.UseInt, player.CurrentHP, player.Skills["Constitution"].Level);
                 GameLoop.ZPO.Log.AddMessage(new ColoredString("You eat the " + item.Name.ToLowerInvariant() + " and recover some hitpoints.", Color.Goldenrod, Color.Black));

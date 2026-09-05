@@ -30,7 +30,7 @@
                 Skill thieving = p.Skills["Thieving"];
 
                 if (thieving.Level >= PickpocketLevel) {
-                    int chance = Math.Clamp(20 + (thieving.Level / 2), 20, 80);
+                    int chance = Math.Clamp(50 + ((thieving.Level - PickpocketLevel) / 2), 40, 80);
 
                     if (GameLoop.rand.Next(100) + 1 <= chance) {
                         p.TryGrantExp("Thieving", PickpocketEXP, log, RecentlyTrained);

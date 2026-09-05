@@ -24,11 +24,11 @@ namespace ZeroPlayersOnline.Hardcodes {
             }
 
 
-            toAdd.Add(new("Needle", "Crafting", 1, 15, ["leatherSoft" + "," + 1], "leatherCowl", tool: "needle"));
-            toAdd.Add(new("Needle", "Crafting", 1, 75, ["leatherSoft" + "," + 5], "leatherBody", tool: "needle"));
-            toAdd.Add(new("Needle", "Crafting", 1, 45, ["leatherSoft" + "," + 3], "leatherChaps", tool: "needle"));
-            toAdd.Add(new("Needle", "Crafting", 1, 15, ["leatherSoft" + "," + 1], "leatherGloves", tool: "needle"));
-            toAdd.Add(new("Needle", "Crafting", 1, 15, ["leatherSoft" + "," + 1], "leatherBoots", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 15, ["leatherSoft" + "," + 1], "coifLeather", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 75, ["leatherSoft" + "," + 5], "bodyLeather", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 45, ["leatherSoft" + "," + 3], "chapsLeather", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 15, ["leatherSoft" + "," + 1], "vambracesLeather", tool: "needle"));
+            toAdd.Add(new("Needle", "Crafting", 1, 15, ["leatherSoft" + "," + 1], "bootsLeather", tool: "needle"));
 
 
             toAdd.Add(new("Knife", "Fletching", 1, 5, ["logPine" + "," + 1], "arrowshaft", 15, "knife"));

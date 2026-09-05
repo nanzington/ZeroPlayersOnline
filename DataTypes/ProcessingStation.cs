@@ -17,16 +17,27 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public string ItemOnExpire = "";
 
+        [JsonIgnore]
+        public string LastWorked = "";
+
         public ProcessingStation(string n, bool ui = false) {
             Name = n;  
             OpensUI = ui;
         }
 
-        public bool TryProcessItem(Player p, MessageLog log, Dictionary<string, Item> ItemLibrary, List<Skill> RecentSkills) {
+        public bool TryProcessItem(Player p, MessageLog log, Dictionary<string, Item> ItemLibrary, List<Skill> RecentSkills) { 
             for (int i = 0; i < p.Inventory.Count; i++) {
                 bool changedInv = false;
                 for (int j = 0; j < Recipes.Count; j++) {
                     if (p.Inventory[i].ID == Recipes[j].InputID && !p.Inventory[i].Noted) {
+                        if (LastWorked == "") {
+                            LastWorked = p.Inventory[i].ID; 
+                        } else {
+                            if (LastWorked != p.Inventory[i].ID)
+                                continue;
+                        }
+
+
                         if (Recipes[j].SkillUsed != "") {
                             if (p.Skills.ContainsKey(Recipes[j].SkillUsed) && p.Skills[Recipes[j].SkillUsed].Level < Recipes[j].SkillLevel) {
                                 log.AddMessage(new ColoredString("You get the feeling you should have " + Recipes[j].SkillLevel + " " + Recipes[j].SkillUsed + " to try that.", Color.Crimson, Color.Black));

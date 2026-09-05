@@ -33,7 +33,11 @@ namespace ZeroPlayersOnline.Managers {
 
             bool magic = player.IsMaging();
 
-            mini.Con.Print(0, 4, "Damage: " + player.GetDamageDice() + " " + player.GetDamageType(), Color.Yellow); 
+            string dmgType = player.GetDamageType();
+            if (dmgType.Length > 7)
+                dmgType = dmgType.Substring(0, 7);
+
+            mini.Con.Print(0, 4, "Damage: " + player.GetDamageDice() + " " + dmgType, Color.Yellow); 
             mini.Con.Print(0, 5, "vMelee: " + player.TotalArmorValue("Melee"), Color.Yellow);
             mini.Con.Print(0, 6, "vMagic: " + player.TotalArmorValue("Magic"), Color.Yellow);
             mini.Con.Print(0, 7, "vRange: " + player.TotalArmorValue("Ranged"), Color.Yellow);
@@ -153,10 +157,16 @@ namespace ZeroPlayersOnline.Managers {
 
                             if (curr.ShopItemsHere.Count > 0 && player.CanUseShops) {
                                 int sellValue = player.Inventory[i].Value;
+
+                                if (player.Inventory[i].UseInt4 != 0) {
+                                    sellValue *= player.Inventory[i].UseInt4;
+                                }
                                         
                                 if (!player.ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(player.Inventory[i].ID)) {
                                     sellValue = (int) (Math.Floor(sellValue / 2.0));
                                 }
+
+                                
 
                                 line += " [" + sellValue + " gp]";
                             }

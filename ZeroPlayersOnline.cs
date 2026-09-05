@@ -767,8 +767,8 @@ namespace ZeroPlayersOnline {
                                     } else {
                                         Log.AddMessage(new ColoredString(boss.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
                                     }
-
-                                    bool died = player.TakeDamage(modified, Log);
+                                    
+                                    bool died = modified > 0 ? player.TakeDamage(modified, Log) : false;
 
                                     if (player.DefenseExpSplit > 0 && !reachedKillLimit)
                                         player.TryGrantExp("Defense", dmg * player.DefenseExpSplit, Log, SidebarManager.RecentlyTrainedSkills);
@@ -1061,7 +1061,7 @@ namespace ZeroPlayersOnline {
                                             Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
                                         }
 
-                                        bool died = player.TakeDamage(modified, Log);
+                                        bool died = modified > 0 ? player.TakeDamage(modified, Log) : false;
 
                                         if (player.DefenseExpSplit > 0 && !reachedKillLimit)
                                             player.TryGrantExp("Defense", dmg * player.DefenseExpSplit, Log, SidebarManager.RecentlyTrainedSkills);
@@ -1353,7 +1353,7 @@ namespace ZeroPlayersOnline {
                         }
 
                         if (player.BankedItems.Count > 0) {
-                            for (int i = ActivityItemTop; i < player.BankedItems.Count && i < ActivityItemTop + 20; i++) { 
+                            for (int i = ActivityItemTop; i < player.BankedItems.Count && i < ActivityItemTop + 22; i++) { 
                                 Item item = player.BankedItems[i];
 
                                 string name = item.Name;
@@ -1364,6 +1364,10 @@ namespace ZeroPlayersOnline {
 
                                 if (item.Noted) {
                                     name += " (n)";
+                                }
+
+                                if (item.Name.Contains("potion") && item.UseInt4 != 0) {
+                                    name += " (" + item.UseInt4 + " doses)";
                                 }
 
                                 bool picked = false;
@@ -1428,6 +1432,10 @@ namespace ZeroPlayersOnline {
                                     name += " (n)";
                                 }
 
+                                if (item.Name.Contains("potion") && item.UseInt4 != 0) {
+                                    name += " (" + item.UseInt4 + " doses)";
+                                }
+
                                 bool picked = false;
 
                                 mini.Con.Print(resourceX + 2, resourceY, "|");
@@ -1442,8 +1450,7 @@ namespace ZeroPlayersOnline {
                                     if (qty >= item.Quantity || Helper.EitherAlt())
                                         qty = item.Quantity;
 
-
-                                    if (player.TryPickup(item, qty, item.Noted, fromGround: true)) { 
+                                    if (player.TryPickup(item, qty, item.Noted, fromGround: true)) {  
                                         if (item.Quantity <= 0) {
                                             curr.ItemsHere.RemoveAt(i); 
                                             picked = true;
@@ -1474,6 +1481,7 @@ namespace ZeroPlayersOnline {
                                 mini.Con.Print(resourceX + 2, resourceY, "|");  
 
                                 mini.Con.PrintClickable(resourceX + 4, resourceY, station.Name, () => { 
+                                    station.LastWorked = "";
                                     station.TryProcessItem(player, Log, ItemLibrary, SidebarManager.RecentlyTrainedSkills); 
 
                                     if (station.OpensUI) {
@@ -1484,6 +1492,8 @@ namespace ZeroPlayersOnline {
 
                                 if (!station.OpensUI) {
                                     mini.Con.PrintClickable(resourceX + 2, resourceY, new ColoredString(236.AsString(), Color.MediumPurple, Color.Black), () => {
+                                        station.LastWorked = "";
+
                                         while (station.TryProcessItem(player, Log, ItemLibrary, SidebarManager.RecentlyTrainedSkills)) {
 
                                         }
@@ -1509,7 +1519,7 @@ namespace ZeroPlayersOnline {
                             if (station.TimeLeft != -1) {
                                 if (station.TimeMade + (station.TimeLeft * 60000) <= Helper.Time()) {
                                     if (ItemLibrary.ContainsKey(station.ItemOnExpire)) {
-                                        curr.ItemsHere.Add(Helper.Clone(ItemLibrary[station.ItemOnExpire]));
+                                        TryPlaceItem(player.NavLoc, Helper.Clone(ItemLibrary[station.ItemOnExpire]));
                                     }
 
                                     curr.TempStations.RemoveAt(i); 
@@ -1802,7 +1812,13 @@ namespace ZeroPlayersOnline {
                                                     } else {
                                                         for (int i = 0; i < qty; i++) {
                                                             player.TryGrantExp("Farming", seed.UseInt2, Log, SidebarManager.RecentlyTrainedSkills);
-                                                            if (!player.TryPickup(output, 1)) {
+
+                                                            Item clone = Helper.Clone(output);
+                                                            clone.Quantity = 1;
+
+                                                            output.Quantity--;
+
+                                                            if (!player.TryPickup(clone, 1)) {
                                                                 Log.AddMessage(new ColoredString("Your inventory is full, so the " + output.Name + " falls to the ground.", Color.Crimson, Color.Black)); 
                                                             }
                                                         }
@@ -1856,7 +1872,8 @@ namespace ZeroPlayersOnline {
                             if (!curr.TrapsDown.ContainsKey(i))
                                 curr.TrapsDown.Add(i, "");
                             
-                            placedTraps++;
+                            if (curr.TrapsDown[i] != "")
+                                placedTraps++;
                         }
 
                         for (int i = 0; i < 10; i++) {
@@ -2107,9 +2124,51 @@ namespace ZeroPlayersOnline {
                 CraftingMenu.IsVisible = false;
             }
 
+
+            if (!Quests.IsVisible && !Guide.IsVisible && !CollectionLog.IsVisible && !CraftingMenu.IsVisible) {
+                if (Atlas.TryGetValue(player.NavLoc, out Location? curr) && curr != null) {
+                    if (Helper.HotkeyDown(Key.NumPad1) && curr.ConnectedLocations.Count > 0 && curr.ConnectedLocations[0].CanTraverse(player)) {
+                        curr.ConnectedLocations[0].Traverse(player);
+                    }
+
+                    if (Helper.HotkeyDown(Key.NumPad2) && curr.ConnectedLocations.Count > 1 && curr.ConnectedLocations[1].CanTraverse(player)) {
+                        curr.ConnectedLocations[1].Traverse(player);
+                    }
+
+                    if (Helper.HotkeyDown(Key.NumPad3) && curr.ConnectedLocations.Count > 2 && curr.ConnectedLocations[2].CanTraverse(player)) {
+                        curr.ConnectedLocations[2].Traverse(player);
+                    }
+
+                    if (Helper.HotkeyDown(Key.NumPad4) && curr.ConnectedLocations.Count > 3 && curr.ConnectedLocations[3].CanTraverse(player)) {
+                        curr.ConnectedLocations[3].Traverse(player);
+                    }
+
+                    if (Helper.HotkeyDown(Key.NumPad5) && curr.ConnectedLocations.Count > 4 && curr.ConnectedLocations[4].CanTraverse(player)) {
+                        curr.ConnectedLocations[4].Traverse(player);
+                    }
+
+                    if (Helper.HotkeyDown(Key.NumPad6) && curr.ConnectedLocations.Count > 5 && curr.ConnectedLocations[5].CanTraverse(player)) {
+                        curr.ConnectedLocations[5].Traverse(player);
+                    }
+
+                    if (Helper.HotkeyDown(Key.NumPad7) && curr.ConnectedLocations.Count > 6 && curr.ConnectedLocations[6].CanTraverse(player)) {
+                        curr.ConnectedLocations[6].Traverse(player);
+                    }
+
+                    if (Helper.HotkeyDown(Key.NumPad8) && curr.ConnectedLocations.Count > 7 && curr.ConnectedLocations[7].CanTraverse(player)) {
+                        curr.ConnectedLocations[7].Traverse(player);
+                    }
+
+                    if (Helper.HotkeyDown(Key.NumPad9) && curr.ConnectedLocations.Count > 8 && curr.ConnectedLocations[8].CanTraverse(player)) {
+                        curr.ConnectedLocations[8].Traverse(player);
+                    } 
+                }
+            }
+
+
             if (GameHost.Instance.Mouse.RightClicked) {
                 // Leaving this here just in case
-                player.HeldGold += 1000;
+                //player.HeldGold += 1000;
             }
         }
 

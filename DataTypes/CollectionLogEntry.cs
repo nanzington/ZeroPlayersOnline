@@ -12,7 +12,7 @@
 
         public bool DryProtection(string itemID, int dropRate) {
             if (KillCount >= dropRate) {
-                if (!DropsObtained.ContainsKey(itemID)) {
+                if (!DropsObtained.ContainsKey(itemID) || DropsObtained[itemID] == 0) {
                     return true;
                 }
             }

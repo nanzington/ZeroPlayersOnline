@@ -117,7 +117,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 DungeoneeringLevel = 1,
                 ConnectedLocations = new List<Connection>() {
                     new Connection("TI_Cavern", exp: 5, skill: "Agility"),
-                    new Connection("TI_Agility1", exp: 5, skill: "Agility", alt: "(Cross Monkey Bars)", check: true, checkFailDest: "TI_AgilityPit"),
+                    new Connection("TI_Agility1", exp: 5, skill: "Agility", alt: "(Cross Monkey Bars)"),
                     new Connection("TI_AgilityPit", alt: "(Jump in Pit)") 
                 }
             });
@@ -142,7 +142,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ID = "TI_Agility1",
                 DungeoneeringLevel = 1,
                 ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Agility2", exp: 5, skill: "Agility", alt: "(Hop Across Poles)", check: true, checkFailDest: "TI_AgilityPit"),
+                    new Connection("TI_Agility2", exp: 5, skill: "Agility", alt: "(Hop Across Poles)"),
                     new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
                 },
                 GatheringSpots = new List<string>() { "plantGuam", "plantGuam", "plantGuam" }
@@ -155,7 +155,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ID = "TI_Agility2",
                 DungeoneeringLevel = 1,
                 ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Agility3", exp: 5, skill: "Agility", alt: "(Cross Balance Beam)", check: true, checkFailDest: "TI_AgilityPit"),
+                    new Connection("TI_Agility3", exp: 5, skill: "Agility", alt: "(Cross Balance Beam)"),
                     new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
                 },
                 GatheringSpots = new List<string>() { "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin" }
@@ -168,7 +168,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ID = "TI_Agility3",
                 DungeoneeringLevel = 1,
                 ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_DungeonEntrance", exp: 20, skill: "Agility", alt: "(Cross Rolling Log)", check: true, checkFailDest: "TI_AgilityPit"),
+                    new Connection("TI_DungeonEntrance", exp: 20, skill: "Agility", alt: "(Cross Rolling Log)"),
                     new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
                 },
                 GatheringSpots = new List<string>() { "rootsPine", "rootsPine", "rootsPine" }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Runtime.InteropServices;
 using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline.DataTypes {
@@ -167,70 +168,88 @@ namespace ZeroPlayersOnline.DataTypes {
         }
 
 
-        public bool TryPickup(Item item, int qty, bool noted = false, bool shop = false, bool fromGround = false) { 
-            for (int i = 0; i < Inventory.Count; i++) {
-                if (Inventory[i].ID == item.ID && (Inventory[i].Stackable || (noted && Inventory[i].Noted))) {
-                    Inventory[i].Quantity += qty; 
-                    if (!shop)
-                        item.Quantity -= qty;
-                    return true; 
-                }
-            }
-
-            Item clone = Helper.Clone(item);
-             
-            if (Inventory.Count < InventoryLimit) {
-                if (item.Stackable || (item.Noteable && noted)) { 
-                    if (noted)
-                        clone.Noted = true;
-
-                    clone.Quantity = qty;
-                    if (!shop)
-                        item.Quantity -= qty;
-                    Inventory.Add(clone);
-                } else {
-                    for (int i = 0; i < qty; i++) { 
-                        clone.Quantity = 1;
+        public bool TryPickup(Item item, int qty, bool noted = false, bool shop = false, bool fromGround = false) {  
+            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
+                for (int i = 0; i < Inventory.Count; i++) {
+                    if (Inventory[i].ID == item.ID && (Inventory[i].Stackable || (noted && Inventory[i].Noted))) {
+                        Inventory[i].Quantity += qty; 
                         if (!shop)
-                            item.Quantity--;
-
-                        if (qty != 1)
-                            TryPickup(clone, 1, noted, shop);
-                        else
-                            Inventory.Add(clone);
+                            item.Quantity -= qty;
+                        return true; 
                     }
                 }
-                return true;
-            } 
 
-            if (fromGround) {
-                GameLoop.ZPO.Log.AddMessage("Your inventory is too full to pick up anything else right now.", Color.Crimson);
-                return false;
-            }
+                Item clone = Helper.Clone(item);
+             
+                if (Inventory.Count < InventoryLimit) {
+                    if (item.Stackable || (item.Noteable && noted)) { 
+                        if (noted)
+                            clone.Noted = true;
 
-            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
-                if (curr.IsBank && CanUseBanks) {
-                    for (int i = 0; i < BankedItems.Count; i++) {
-                        if (BankedItems[i].ID == item.ID && (BankedItems[i].Stackable || (noted && BankedItems[i].Noted))) {
-                            BankedItems[i].Quantity += qty; 
-                            return true; 
+                        clone.Quantity = qty;
+                        if (!shop)
+                            item.Quantity -= qty;
+                        Inventory.Add(clone);
+                    } else {
+                        for (int i = 0; i < qty; i++) { 
+                            Item secondClone = Helper.Clone(clone);
+                            secondClone.Quantity = 1;
+                            clone.Quantity--;
+                            if (!shop)
+                                item.Quantity--;
+
+                            if (Inventory.Count < InventoryLimit)
+                                Inventory.Add(secondClone);
+                            else {
+                                if (curr.IsBank && CanUseBanks) {
+                                    BankItem(secondClone);
+                                    return true;
+                                } else {
+                                    GameLoop.ZPO.TryPlaceItem(NavLoc, secondClone);
+                                    return true;
+                                }
+                            }
                         }
                     }
+                    return true;
+                } 
 
-                    BankedItems.Add(clone);
+                if (fromGround) {
+                    GameLoop.ZPO.Log.AddMessage("Your inventory is too full to pick up anything else right now.", Color.Crimson);
+                    return false;
+                }
+                 
+                if (curr.IsBank && CanUseBanks) {
+                    BankItem(clone); 
+                    return true;
                 }
 
                 for (int i = 0; i < curr.ItemsHere.Count; i++) {
-                    if (curr.ItemsHere[i].ID == item.ID && (curr.ItemsHere[i].Stackable || (noted && curr.ItemsHere[i].Noted))) {
+                    if (curr.ItemsHere[i].ID == item.ID && item.Noted == curr.ItemsHere[i].Noted && curr.ItemsHere[i].UseInt4 == item.UseInt4) {
                         curr.ItemsHere[i].Quantity += qty; 
                         return true; 
                     }
                 }
 
                 curr.ItemsHere.Add(clone);
+                return true;
             }
 
             return false;
+        }
+
+        public void BankItem(Item item) {
+            Item clone = Helper.Clone(item);
+
+            for (int j = 0; j < BankedItems.Count; j++) {
+                if (BankedItems[j].ID == item.ID && BankedItems[j].UseInt4 == item.UseInt4) {
+                    BankedItems[j].Quantity += clone.Quantity; 
+                    return; 
+                }
+            }
+
+            clone.Noted = false;
+            BankedItems.Add(clone);
         }
 
         public bool TryDrop(int i) {
@@ -247,24 +266,12 @@ namespace ZeroPlayersOnline.DataTypes {
 
 
                 if (curr.IsBank && CanUseBanks) {
-                    bool found = false;
+                    Item clone = Helper.Clone(Inventory[i]);
+                    clone.Quantity = qty;
+                    clone.Noted = false;
+                    BankItem(clone);
 
-                    for (int j = 0; j < BankedItems.Count; j++) {
-                        if (BankedItems[j].ID.Equals(Inventory[i].ID)) {
-                            BankedItems[j].Quantity += qty;
-                            Inventory[i].Quantity -= qty;
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) { 
-                        Item clone = Helper.Clone(Inventory[i]);
-                        clone.Quantity = qty;
-                        clone.Noted = false;
-                        BankedItems.Add(clone);
-                        Inventory[i].Quantity -= qty;
-                    }  
+                    Inventory[i].Quantity -= qty; 
                 }
                 else {
                     if (curr.ShopItemsHere.Count == 0 || !CanUseShops) {
@@ -290,7 +297,7 @@ namespace ZeroPlayersOnline.DataTypes {
                         } else {
                             bool found = false;
                             for (int j = 0; j < curr.ItemsHere.Count; j++) {
-                                if (curr.ItemsHere[j].ID == Inventory[i].ID && curr.ItemsHere[j].Noted == Inventory[i].Noted) {
+                                if (curr.ItemsHere[j].ID == Inventory[i].ID && curr.ItemsHere[j].Noted == Inventory[i].Noted && curr.ItemsHere[j].UseInt4 == Inventory[i].UseInt4) {
                                     curr.ItemsHere[j].Quantity += qty;
                                     Inventory[i].Quantity -= qty;
                                     found = true;
@@ -409,6 +416,12 @@ namespace ZeroPlayersOnline.DataTypes {
 
                             Inventory.RemoveAt(i);
                         }
+                        
+                        foreach (var kv in Equipment) {
+                            Item item = kv.Value;
+                            GameLoop.ZPO.TryPlaceItem(NavLoc, item);
+                        } 
+                        Equipment.Clear();
                     }
                 }
             }
