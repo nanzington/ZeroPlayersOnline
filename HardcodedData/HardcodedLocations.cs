@@ -110,7 +110,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             locsToAdd.Add(new Location() {
-                DisplayName = "Abandoned Agility Course - Entrance",
+                DisplayName = "Old Agility Course - Entrance",
                 Region = "Tutorial Island",
                 Description = "The dimly lit cavern contains a rickety old agility course, along with overgrown vegetation and shambling hordes of zombies in the pit below. In the center of the pit is a tunnel that the zombies are coming out of. It seems like failing any of the obstacles will result in falling down to the zombies. The first bit of the course involves swinging across some monkey bars, but you could also simply jump down into the pit if you wanted.",
                 ID = "TI_DungeonEntrance",
@@ -123,7 +123,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             locsToAdd.Add(new Location() {
-                DisplayName = "Abandoned Agility Course - Pit",
+                DisplayName = "Old Agility Course - Pit",
                 Region = "Tutorial Island",
                 Description = "The pit has many zombies in it, any that happen to end up near you taking swipes in your direction. On one side of the pit are some grooves in the wall that you could use to climb back up to the entrance of the course. In the center is a tunnel that gives you an ominous feeling as you stand near it. Something powerful may be waiting inside.",
                 ID = "TI_AgilityPit",
@@ -136,7 +136,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             locsToAdd.Add(new Location() {
-                DisplayName = "Abandoned Agility Course - Past the Monkey Bars",
+                DisplayName = "Old Agility Course - Past the Monkey Bars",
                 Region = "Tutorial Island",
                 Description = "A few small herb bushes cling to the wall, crowding the already thin walkway. The next obstacle is a series of small poles you must jump across the tops of to reach the next ledge.",
                 ID = "TI_Agility1",
@@ -149,7 +149,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             locsToAdd.Add(new Location() {
-                DisplayName = "Abandoned Agility Course - Past the Poles",
+                DisplayName = "Old Agility Course - Past the Poles",
                 Region = "Tutorial Island",
                 Description = "You are most of the way around the agility course now. This walkway is a little wider than the last, and uncrowded by vegetation. There are a few ore veins in the wall that you could mine. The obstacle leading to the next ledge is an old rotting balance beam.",
                 ID = "TI_Agility2",
@@ -162,7 +162,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             locsToAdd.Add(new Location() {
-                DisplayName = "Abandoned Agility Course - Past the Balance Beam",
+                DisplayName = "Old Agility Course - Past the Balance Beam",
                 Region = "Tutorial Island",
                 Description = "The end of the agility course is just up ahead, across a rolling log obstacle. Some roots from the trees above hang down from the ceiling here and could be chopped.",
                 ID = "TI_Agility3",
@@ -175,7 +175,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             locsToAdd.Add(new Location() {
-                DisplayName = "Abandoned Agility Course - Zombie Lair",
+                DisplayName = "Old Agility Course - Zombie Lair",
                 Region = "Tutorial Island",
                 Description = "A short way into the tunnel it widens out into a small cavern. The smell of rotten flesh has grown overwhelming and you can finally see the source, a hulking zombie so large it can barely fit in this small cavern. It definitely could not fit through the tunnel to get out to the Agility Course. The huge zombie seems like it won't attack you until you approach, it's just walking in small circles dragging its huge club along the ground.",
                 ID = "TI_BossCave",

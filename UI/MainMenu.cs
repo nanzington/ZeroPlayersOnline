@@ -274,7 +274,7 @@ namespace ZeroPlayersOnline.UI {
                 mini.Con.PrintClickable(28 + 33, printY, new ColoredString("Instant", GameLoop.ZPO.player.FarmGrowthIncrement == 10000 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.FarmGrowthIncrement = 10000; });
 
                 printY++;
-
+                /*
                 mini.Con.Print(27, printY, "Item Randomizer:");
                 mini.Con.PrintClickable(44, printY, new ColoredString("Off", GameLoop.ZPO.player.RandomItems == 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 0; });
                 mini.Con.PrintClickable(48, printY, new ColoredString("No Logic", GameLoop.ZPO.player.RandomItems == 1 ? Color.Red : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 1; });
@@ -293,6 +293,7 @@ namespace ZeroPlayersOnline.UI {
                 mini.Con.PrintClickable(48, printY, new ColoredString("No Logic", GameLoop.ZPO.player.RandomGathering == 1 ? Color.Red : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomGathering = 1; });
 
                 printY++;
+                */
 
 
                 mini.Con.Print(22, 40, "White options are considered the default method of play.", Color.White);

@@ -4,23 +4,27 @@ namespace ZeroPlayersOnline.Hardcodes {
     public static class HardcodedCraftRecipes {
         public static void InitCrafts(Dictionary<string, List<CraftRecipe>> CraftLib) {
             List<CraftRecipe> toAdd = new();
-
-            List<string> Metals = ["Bronze", "Iron", "Steel" ];
+            
+            List<MaterialDef> Metals = new() { 
+                new("Bronze", 205, 127, 50, 255, 1, 1, 15, "minimal"), 
+                new("Iron", 75, 75, 75, 255, 2, 10, 40, "slight"), 
+                new("Steel", 150, 150, 150, 255, 3, 20, 75, "adequate")
+            };
 
             for (int i = 0; i < Metals.Count; i++) {
-                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "dagger" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "sword" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "mace" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 2], "scimitar" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 1], "hatchet" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 1], "pickaxe" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 30, ["bar" + Metals[i] + "," + 2], "helm" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 75, ["bar" + Metals[i] + "," + 5], "platebody" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 45, ["bar" + Metals[i] + "," + 3], "platelegs" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "boots" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "gauntlets" + Metals[i], tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "arrowheads" + Metals[i], 15, "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", 1, 15, ["bar" + Metals[i] + "," + 1], "knives" + Metals[i], 5, "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "dagger" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "sword" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "mace" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier * 2, ["bar" + Metals[i].Name + "," + 2], "scimitar" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "hatchet" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "pickaxe" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier * 2, ["bar" + Metals[i].Name + "," + 2], "helm" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier * 5, ["bar" + Metals[i].Name + "," + 5], "platebody" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier * 3, ["bar" + Metals[i].Name + "," + 3], "platelegs" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "boots" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "gauntlets" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "arrowheads" + Metals[i].Name, 15, "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "knives" + Metals[i].Name, 5, "hammer"));
             }
 
 

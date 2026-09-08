@@ -6,6 +6,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             List<Quest> toAdd = new();
 
             toAdd.Add(new("TI_HauntedIsland", "The Haunted Island", "Very Short", "Novice", "Strange things keep happening around the island. Noises without a source and resources harvested when nobody is around. Are there actually zero players online? Maybe Father Guy would know more.", 90, new() { "Misthalin" }) {
+                StartNPC = "tiFatherGuy",
                 DateFullyImplemented = 20260828,
                 Rewards = { new("Experience", "Prayer", 500) },
                 QuestPoints = 1,
@@ -20,31 +21,31 @@ namespace ZeroPlayersOnline.Hardcodes {
                     },
                     {
                         20,
-                        new("A crumpled note on the ground at the main hub of the island has some text indicating the ghost might have been a player at some point. I should go speak with Father Guy to ask him about this.", 30)
+                        new("A crumpled note on the ground at the main hub of the island has some text indicating the ghost might have been a player at some point. I should go speak with Father Guy to ask him about this.", 30, "SpeakToNPC", "tiFatherGuy")
                     },
                     {
                         30,
-                        new("Father Guy has confirmed my suspicion that this ghost, PlayerOne, was one of the earliest players of the game. Unfortunately the good Father was only added in an update after the ghost was already here. I'll have to find someone who has been around long enough to have some information.", 40)
+                        new("Father Guy has confirmed my suspicion that this ghost, PlayerOne, was one of the earliest players of the game. Unfortunately the good Father was only added in an update after the ghost was already here. I'll have to find someone who has been around long enough to have some information.", 40, "SpeakToNPC", "tutorFishing")
                     },
                     {
                         40,
-                        new("The Old Fisherman told me that PlayerOne was, as the name might suggest, the very first player to join the game. They seem to have been unable to leave the island and got trapped here somehow. He suggested I go ask the bank for any record they have of PlayerOne.", 50)
+                        new("The Old Fisherman told me that PlayerOne was, as the name might suggest, the very first player to join the game. They seem to have been unable to leave the island and got trapped here somehow. He suggested I go ask the bank for any record they have of PlayerOne.", 50, "SpeakToNPC", "tutorBanking")
                     },
                     {
                         50,
-                        new("PlayerOne's account with the bank was closed out due to an error and I was given their items. I should inspect the items to see what I can find.", 60)
+                        new("PlayerOne's account with the bank was closed out due to an error and I was given their items. I should inspect the items to see what I can find.", 60, "ExamineItem", "TI_HI_StrangeRune")
                     },
                     {
                         60,
-                        new("One of the items from PlayerOne's bank was a rune with a strange symbol on it that I don't recognize. Someone knowledgeable about runes may know more.", 70)
+                        new("One of the items from PlayerOne's bank was a rune with a strange symbol on it that I don't recognize. Someone knowledgeable about runes may know more.", 70, "SpeakToNPC", "tutorRunecrafting")
                     },
                     {
                         70,
-                        new("The Runecrafting Tutor says the strange rune was used for an old magic system before the game was updated, part of a spell to leave the island. Wizard Terrova teleports people on now, so he might know enough for me to finish this quest and let PlayerOne finally leave.", 80)
+                        new("The Runecrafting Tutor says the strange rune was used for an old magic system before the game was updated, part of a spell to leave the island. Wizard Terrova teleports people on now, so he might know enough for me to finish this quest and let PlayerOne finally leave.", 80, "SpeakToNPC", "tiWizardTerrova")
                     },
                     {
                         80,
-                        new("Wizard Terrova cast the spell to teleport a player to Lumbridge on PlayerOne, causing them to fade away. Given the apparent lack of effects that would normally accompany the spell, Terrova speculated that the automated login system of the game might have finally noticed PlayerOne's broken avatar and logged it out properly. All that's left to do is go bring Father Guy up to speed. ", 90)
+                        new("Wizard Terrova cast the spell to teleport a player to Lumbridge on PlayerOne, causing them to fade away. Given the apparent lack of effects that would normally accompany the spell, Terrova speculated that the automated login system of the game might have finally noticed PlayerOne's broken avatar and logged it out properly. All that's left to do is go bring Father Guy up to speed. ", 90, "ExamineItem", "tiFatherGuy")
                     },
                     {
                         90,
@@ -60,7 +61,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 Stages = new() {
                     {
                         0,
-                        new("The Lumbridge Castle cook has asked me to gather the ingredients for a cake to get him out of his bind.", 10, "ExamineItem", "TI_HI_RustedSword")
+                        new("The Lumbridge Castle cook has asked me to gather the ingredients for a cake to get him out of his bind.", 10, "SpeakToNPC", "mi_LumbridgeCastleCook")
                     }
                 }
             });

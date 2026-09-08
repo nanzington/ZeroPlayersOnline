@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Rectangle = SadRogue.Primitives.Rectangle;
 using GoRogue;
+using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline {
     public static class Helper {
@@ -111,6 +112,13 @@ namespace ZeroPlayersOnline {
 
         public static bool ScrolledDown() {
             if (GameHost.Instance.Mouse.ScrollWheelValueChange > 0) {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool RightClicked() {
+            if (GameHost.Instance.Mouse.RightClicked) {
                 return true;
             }
             return false;
@@ -608,10 +616,11 @@ namespace ZeroPlayersOnline {
 
             instance.Print(x, y, mousePos.X >= x && mousePos.X <= x + length && mousePos.Y == y ? str.GetDarker() : str);
 
-            if ((GameLoop.ZPO.Guide.IsVisible && instance != GameLoop.ZPO.Guide) 
-                || (GameLoop.ZPO.CollectionLog.IsVisible && instance != GameLoop.ZPO.CollectionLog)
-                || (GameLoop.ZPO.CraftingMenu.IsVisible && instance != GameLoop.ZPO.CraftingMenu)
-                || (GameLoop.ZPO.Quests.IsVisible && instance != GameLoop.ZPO.Quests)) {
+            if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
+                || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
+                || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
+                || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
+                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)) {
                 return;
             }
 

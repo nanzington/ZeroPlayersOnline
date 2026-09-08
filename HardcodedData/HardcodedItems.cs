@@ -17,8 +17,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Small fishing net", "Useful for catching small fish.", "fishingNetSmall", 50, 50, 50, 5, misc: "Small net"));
 
             itemsToAdd.Add(new Item("Cowhide", "This should be tanned before I can use it.", "cowhide", 255, 255, 255, 10));
-            itemsToAdd.Add(new Item("Soft Leather", "Suitable for craftworks now.", "leatherSoft", 165, 42, 42, 10));
-            itemsToAdd.Add(new Item("Hard Leather", "Might offer some real protection if made into armor.", "leatherHard", 139, 69, 19, 20));
+            itemsToAdd.Add(new Item("Soft leather", "Suitable for craftworks now.", "leatherSoft", 165, 42, 42, 10));
+            itemsToAdd.Add(new Item("Hard leather", "Might offer some real protection if made into armor.", "leatherHard", 139, 69, 19, 20));
              
 
             itemsToAdd.Add(new Item("Arrow shaft", "The most important part of an arrow.", "arrowshaft", 139, 69, 19, 2, true));
@@ -27,6 +27,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Pine shortbow", "A shortbow fletched from pine.", "shortbowPine", 237, 202, 161, 4) {
                 EquipSlot = "Weapon",
                 EquipTier = 1,
+                EquipLevel = 1, 
                 EquipDamageType = "Arrow",
                 EquipSkill = "Ranged",
                 EquipAmmo = "Arrow",
@@ -94,7 +95,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Cat ear headband", "A cute headband that makes you look like you have cat ears.", "clueCatEars", 255, 105, 180, 500) { EquipSlot = "Head", Cosmetic = true });
             itemsToAdd.Add(new Item("Corny apron", "An apron reading 'Kiss the Cook'.", "clueCornyApron", 255, 255, 255, 500) { EquipSlot = "Torso", Cosmetic = true });
             itemsToAdd.Add(new Item("Kilt", "A bit breezy but quite comfortable.", "clueKilt", 34, 139, 34, 500) { EquipSlot = "Legs", Cosmetic = true });
-            itemsToAdd.Add(new Item("Power Glove", "A gauntlet with a bunch of buttons on it. Seems wildly impractical.", "cluePowerGlove", 150, 150, 150, 500) { EquipSlot = "Hands", Cosmetic = true });
+            itemsToAdd.Add(new Item("Power glove", "A gauntlet with a bunch of buttons on it. Seems wildly impractical.", "cluePowerGlove", 150, 150, 150, 500) { EquipSlot = "Hands", Cosmetic = true });
             itemsToAdd.Add(new Item("Programmer socks", "Thigh-high socks with blue stripes.", "clueProgrammerSocks", 135, 206, 235, 500) { EquipSlot = "Feet", Cosmetic = true });
             
             itemsToAdd.Add(new Item("Silky hood", "A silk hood. Slightly magical, very comfortable.", "clueSilkHood", 147, 112, 219, 500) { EquipSlot = "Head", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseMagic" });
@@ -108,9 +109,9 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Newtskin chaps", "Chaps made of newtskin, which seems to have been removed from the game at some point.", "clueNewtskinChaps", 255, 165, 0, 500) { EquipSlot = "Legs", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseRange" });
             itemsToAdd.Add(new Item("Newtskin vambraces", "Vambraces made of newtskin, which seems to have been removed from the game at some point.", "clueNewtskinVambraces", 255, 165, 0, 500) { EquipSlot = "Hands", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseRange" });
             itemsToAdd.Add(new Item("Newtskin boots", "Boots made of newtskin, which seems to have been removed from the game at some point.", "clueNewtskinBoots", 255, 165, 0, 500) { EquipSlot = "Feet", EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseRange" });
-            itemsToAdd.Add(new Item("Newtbone shortbow", "Did someone hate newts or something? Why is all the ranger gear made of newt bits?", "clueNewtbow", 255, 255, 255, 500) { EquipSlot = "Weapon", EquipTier = 1, EquipDamageType = "Arrow", EquipSkill = "Ranged", EquipAmmo = "Arrow", AttackSpeed = 1, TwoHanded = true });
+            itemsToAdd.Add(new Item("Newtbone shortbow", "Did someone hate newts or something? Why is all the ranger gear made of newt bits?", "clueNewtbow", 255, 255, 255, 500) { EquipSlot = "Weapon", EquipTier = 1, EquipDamageType = "Arrow", EquipSkill = "Ranged", EquipLevel = 1, EquipAmmo = "Arrow", AttackSpeed = 1, TwoHanded = true });
             
-            itemsToAdd.Add(new Item("Tutorial Island Cape", "A cape signifying you completed all challenges on Tutorial Island. Congratulations!", "capeCompTI", 135, 206, 235, 0) { EquipSlot = "Cape", EquipTier = 1, MiscString = "OmniBoost" });
+            itemsToAdd.Add(new Item("Tutorial Island cape", "A cape signifying you completed all challenges on Tutorial Island. Congratulations!", "capeCompTI", 135, 206, 235, 0) { EquipSlot = "Cape", EquipTier = 1, MiscString = "OmniBoost" });
 
 
 
@@ -198,6 +199,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Water rune", "One of the 4 basic elemental runes.", "runeWater", 200, 200, 200, 4, true, true));
             itemsToAdd.Add(new Item("Mind rune", "Used for basic level missile spells.", "runeMind", 200, 200, 200, 3, true, true));
             itemsToAdd.Add(new Item("Body rune", "Used for curse spells.", "runeBody", 200, 200, 200, 3, true, true));
+            itemsToAdd.Add(new Item("Chaos rune", "Used for low level missile spells.", "runeChaos", 200, 200, 200, 90, true, true));
+            itemsToAdd.Add(new Item("Law rune", "Used for teleport spells.", "runeLaw", 200, 200, 200, 240, true, true));
 
 
             itemsToAdd.Add(new Item("Staff of air", "A magical staff. Provides unlimited air runes.", "staffAir", 255, 255, 255, 1500) {
@@ -216,7 +219,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", MiscString = "CountsAs", UseString2 = "runeFire", UseInt = -1, TwoHanded = true, MustBeEquipped = true
             });
 
-            itemsToAdd.Add(new Item("Small Coin Pouch", "Has a few coins in it.", "coinPouchSmall", 111, 66, 33, 5, true, true) {
+            itemsToAdd.Add(new Item("Small coin pouch", "Has a few coins in it.", "coinPouchSmall", 111, 66, 33, 5, true, true) {
                 UseString = "GetGold",
                 UseInt = 5 
             });
@@ -256,8 +259,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
 
-            itemsToAdd.Add(new Item("Empty Bucket", "An empty bucket. Could probably hold something.", "bucketEmpty", 111, 66, 33, 2));
-            itemsToAdd.Add(new Item("Bucket of Water", "A bucket filled with water.", "bucketWater", 111, 66, 33, 2));
+            itemsToAdd.Add(new Item("Empty bucket", "An empty bucket. Could probably hold something.", "bucketEmpty", 111, 66, 33, 2));
+            itemsToAdd.Add(new Item("Bucket of water", "A bucket filled with water.", "bucketWater", 111, 66, 33, 2));
 
             
             itemsToAdd.Add(new Item("Copper ore", "A pile of copper ore nuggets.", "oreCopper", 184, 115, 51, 3));

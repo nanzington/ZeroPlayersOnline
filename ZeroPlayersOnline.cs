@@ -43,25 +43,7 @@ namespace ZeroPlayersOnline {
         public double GraceTimeStart = 0;
         public string Targetting = "Single";  
 
-        public Window CollectionLog;
-        public string CollectionID = "";
-        public int CollectionDropTop = 0;
-        public int CollectionSideTop = 0;
-        public string CollectionCat = "";
-
-        public Window CraftingMenu;
-        public string CraftingType = "";
-        public string CraftingSubtype = "";
-        public List<CraftRecipe> ActiveRecipes = new();
-
-        public Window Guide;
-        public string GuideTab = "Introduction";
-         
-        public Window Quests;
-        public string QuestFilter = "All";
-        public string ViewingQuestID = "";
-        public bool QuestOverview = true;
-        public int QuestBlockScrollTop = 0;
+       
 
         public bool WithdrawingNotes = false;
 
@@ -73,27 +55,7 @@ namespace ZeroPlayersOnline {
 
 
         public ZeroPlayersOnline() {
-            CollectionLog = new(70, 30);
-            CollectionLog.CanDrag = true;
-            CollectionLog.Position = new Point(25, 10);
-            CollectionLog.Title = "Collection Log".Align(HorizontalAlignment.Center, 68);
-
-            Guide = new(100, 30);
-            Guide.CanDrag = true;
-            Guide.Position = new Point(25, 10);
-            Guide.Title = "Guidebook".Align(HorizontalAlignment.Center, 98);
-
-
-            CraftingMenu = new(100, 30);
-            CraftingMenu.CanDrag = true;
-            CraftingMenu.Position = new Point(25, 10);
-            CraftingMenu.Title = "Crafting Menu".Align(HorizontalAlignment.Center, 98);
-
-            Quests = new(100, 30);
-            Quests.CanDrag = true;
-            Quests.Position = new Point(25, 10);
-            Quests.Title = "Quest Log".Align(HorizontalAlignment.Center, 98);
-
+            ExtraWindows.SetupWindows();
 
             player = new();
 
@@ -107,465 +69,7 @@ namespace ZeroPlayersOnline {
             player.CurrentHP = 10;
 
 
-            Log.AddMessage(new ColoredString("Press F1 at any time to open/close the guidebook.", Color.Turquoise, Color.Black));
-
-            /*
-            if (Directory.Exists("./data/ZPO/locations/")) {
-                string[] mapFiles = Directory.GetFiles("./data/ZPO/locations/");
-
-                foreach (string fileName in mapFiles) { 
-                    Location loc = JsonConvert.DeserializeObject<Location>(File.ReadAllText(fileName)); 
-                    if (!Atlas.ContainsKey(loc.ID))
-                        Atlas.Add(loc.ID, loc); 
-                }
-            }
-
-            if (Directory.Exists("./data/ZPO/gatherSpots/")) {
-                string[] mapFiles = Directory.GetFiles("./data/ZPO/gatherSpots/");
-
-                foreach (string fileName in mapFiles) {
-                    GatheringTile loc = JsonConvert.DeserializeObject<GatheringTile>(File.ReadAllText(fileName));
-                    if (!GatherSpots.ContainsKey(loc.Name))
-                        GatherSpots.Add(loc.Name, loc);
-                }
-            }
-            */
-        } 
-
-        public void GuideDraw() {
-            Guide.Clear();
-            Helper.DrawBox(Guide, 0, 0, 98, 28);
-            Guide.Print(2, 0, "[Zero Players Online Guidebook]");
-            Guide.DrawLine(new Point(20, 1), new Point(20, 28), 179);
-
-            Guide.PrintClickable(2, 2, new ColoredString("Introduction", GuideTab == "Introduction" ? Color.Yellow : Color.White, Color.Black), () => { GuideTab = "Introduction"; });
-            Guide.PrintClickable(2, 4, new ColoredString("Combat", GuideTab == "Combat" ? Color.Yellow : Color.White, Color.Black), () => { GuideTab = "Combat"; });
-            Guide.PrintClickable(2, 6, new ColoredString("Skilling", GuideTab == "Skilling" ? Color.Yellow : Color.White, Color.Black), () => { GuideTab = "Skilling"; });
-            Guide.PrintClickable(2, 8, new ColoredString("Shops", GuideTab == "Shops" ? Color.Yellow : Color.White, Color.Black), () => { GuideTab = "Shops"; });
-            Guide.PrintClickable(2, 10, new ColoredString("NPC Dialogue", GuideTab == "NPC Dialogue" ? Color.Yellow : Color.White, Color.Black), () => { GuideTab = "NPC Dialogue"; });
-
-            int printY = 2;
-
-            if (GuideTab == "Introduction") {
-
-                printY = Guide.PrintMultiLine(22, printY,
-                    "Welcome to Zero Players Online! The interface can be a little intimidating but this guide will hopefully ease you into the process of playing the game." + " /n /n " +
-                    "The area to the top left contains your important stats readout, including HP and Gold, and skills you've recently gained experience in." + " /n /n " +
-                    "Below this readout is the content area, containing tabs you can switch between at the top to view your inventory, equipment, and more." + " /n /n " +
-                    "Underneath this and the width of the screen is your message log, where important messages are sent by the game." + " /n /n " +
-                    "The top of the right side of the screen is your current location, listing its description and title." + " /n /n " +
-                    "To the left below this are connected locations and monsters at this location. You can click a connected location to move to it." + " /n /n " +
-                    "Finally to the right is the activity box, containing resources you can collect, items on the ground, NPCs, shop items, and processing stations at this location. Pressing TAB will cycle the tab shown here, or you can click on the letters at the top to change to specific tabs." + " /n /n " +
-                    "This is all a lot to take in, but hopefully with some practice it will become more natural to navigate."
-                    , 78);
-            }
-        }
-
-
-        List<AreaMonster> monsterList = new();
-        List<BossFight> bossList = new();
-
-        public void CollectionLogDraw() {
-            CollectionLog.Clear();
-            Helper.DrawBox(CollectionLog, 0, 0, 68, 28);
-            CollectionLog.Print(2, 0, "[Collection Log]");
-
-
-            CollectionLog.DrawLine(new Point(25, 1), new Point(25, 28), 179, Color.White);
-
-            if (CollectionCat == "Clue") {
-                CollectionLog.PrintClickable(2, 1, new ColoredString("Tutorial Casket", CollectionID == "casketTutorial" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketTutorial"; });
-                CollectionLog.PrintClickable(2, 2, new ColoredString("Beginner Casket", CollectionID == "casketBeginner" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketBeginner"; });
-                CollectionLog.PrintClickable(2, 3, new ColoredString("Easy Casket", CollectionID == "casketEasy" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketEasy"; });
-                CollectionLog.PrintClickable(2, 4, new ColoredString("Medium Casket", CollectionID == "casketMedium" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketMedium"; });
-                CollectionLog.PrintClickable(2, 5, new ColoredString("Hard Casket", CollectionID == "casketHard" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketHard"; });
-                CollectionLog.PrintClickable(2, 6, new ColoredString("Elite Casket", CollectionID == "casketElite" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketElite"; });
-                CollectionLog.PrintClickable(2, 7, new ColoredString("Master Casket", CollectionID == "casketMaster" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketMaster"; });
-                
-                if (ItemLibrary.TryGetValue(CollectionID, out Item? cask) && cask != null) { 
-                    if (cask.DropTable.Count > 24) {
-                        if (Helper.ScrolledUp()) { CollectionDropTop = Math.Clamp(CollectionDropTop - 1, 0, cask.DropTable.Count - 24); }
-                        if (Helper.ScrolledDown()) { CollectionDropTop = Math.Clamp(CollectionDropTop + 1, 0, cask.DropTable.Count - 24); }
-                    }
-
-                    int KC = 0;
-
-                    if (player.CollectionLogClues.ContainsKey(CollectionID)) {
-                        KC = player.CollectionLogClues[CollectionID].KillCount;
-                    }
-
-                    CollectionLog.Print(26, 1, (cask.Name + " (" + KC + " Opened)").Align(HorizontalAlignment.Center, 42), Color.White);
-                    CollectionLog.DrawLine(new Point(26, 2), new Point(68, 2), 196, Color.White);
-                    CollectionLog.Print(26, 3, "Item Name", Color.White);
-                    CollectionLog.Print(49, 3, "Chance", Color.White);
-                    CollectionLog.Print(60, 3, "Obtained", Color.White);
-                    CollectionLog.DrawLine(new Point(26, 4), new Point(68, 4), 196, Color.White);
-
-                    int printCount = 0;
-                    for (int i = CollectionDropTop; i < cask.DropTable.Count && i < CollectionDropTop + 24; i++) { 
-                        int timesObtained = 0;
-
-                        if (player.CollectionLogClues[CollectionID].DropsObtained.ContainsKey(cask.DropTable[i].ItemID)) {
-                            timesObtained = player.CollectionLogClues[CollectionID].DropsObtained[cask.DropTable[i].ItemID];
-                        }
-
-                        string name = ResolveItemName(cask.DropTable[i].ItemID); 
-
-                        string dropchance = (cask.DropTable[i].DropX).ToString().PadLeft(5) + " in " + cask.DropTable[i].InY;
-
-                        CollectionLog.Print(26, 5 + printCount, name, timesObtained > 0 ? Color.White : Color.DarkSlateGray);
-                        CollectionLog.Print(58, 5 + printCount, timesObtained.ToString().PadLeft(10), timesObtained > 0 ? Color.White : Color.DarkSlateGray);
-                        CollectionLog.Print(45, 5 + printCount, dropchance, timesObtained > 0 ? Color.White : Color.DarkSlateGray);
-                        printCount++;
-                    } 
-
-                    if (CollectionDropTop != 0) {
-                        CollectionLog.PrintVertical(69, 5, new ColoredString("^++", Color.Lime, Color.Black));
-                        CollectionLog.PrintVertical(25, 5, new ColoredString("^++", Color.Lime, Color.Black));
-                    }
-
-                    if (cask.DropTable.Count > CollectionDropTop + 24) {
-                        CollectionLog.PrintVertical(69, 26, new ColoredString("++v", Color.Lime, Color.Black));
-                        CollectionLog.PrintVertical(25, 26, new ColoredString("++v", Color.Lime, Color.Black));
-                    }
-                }
-            } else if (CollectionCat == "Boss") {
-                bossList.Clear();
-                bossList = BossLibrary.Values.ToList().OrderBy(f => f.Name).ToList();
-
-                for (int i = 0; i < bossList.Count; i++) {
-                    CollectionLog.PrintClickable(1, 1 + i, new ColoredString(" " + bossList[i].Name, CollectionID == bossList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = bossList[i].ID; });
-                }
-
-                if (BossLibrary.ContainsKey(CollectionID)) {
-                    BossFight view = BossLibrary[CollectionID];
-
-                    if (view.DropTable.Count > 24) {
-                        if (Helper.ScrolledUp()) { CollectionDropTop = Math.Clamp(CollectionDropTop - 1, 0, view.DropTable.Count - 24); }
-                        if (Helper.ScrolledDown()) { CollectionDropTop = Math.Clamp(CollectionDropTop + 1, 0, view.DropTable.Count - 24); }
-                    } 
-
-                    int KC = 0;
-
-                    if (player.CollectionLogBoss.ContainsKey(view.ID)) {
-                        KC = player.CollectionLogBoss[view.ID].KillCount;
-                    }
-
-                    CollectionLog.Print(26, 1, (view.Name + " (" + KC + " KC)").Align(HorizontalAlignment.Center, 42), Color.White);
-                    CollectionLog.DrawLine(new Point(26, 2), new Point(68, 2), 196, Color.White);
-                    CollectionLog.Print(26, 3, "Item Name", Color.White);
-                    CollectionLog.Print(49, 3, "Chance", Color.White);
-                    CollectionLog.Print(60, 3, "Obtained", Color.White);
-                    CollectionLog.DrawLine(new Point(26, 4), new Point(68, 4), 196, Color.White);
-
-                    int printCount = 0;
-                    for (int i = CollectionDropTop; i < view.DropTable.Count && i < CollectionDropTop + 24; i++) {
-                        int timesObtained = 0;
-
-                        if (player.CollectionLogBoss.ContainsKey(view.ID)) {
-                            if (player.CollectionLogBoss[view.ID].DropsObtained.ContainsKey(view.DropTable[i].ItemID)) {
-                                timesObtained = player.CollectionLogBoss[view.ID].DropsObtained[view.DropTable[i].ItemID];
-                            }
-                        }
-
-                        string name = ResolveItemName(view.DropTable[i].ItemID);
-
-                        string dropchance = (view.DropTable[i].DropX).ToString().PadLeft(5) + " in " + view.DropTable[i].InY;
-
-                        CollectionLog.Print(26, 5 + printCount, name, timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        CollectionLog.Print(58, 5 + printCount, timesObtained.ToString().PadLeft(10), timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        CollectionLog.Print(45, 5 + printCount, dropchance, timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        printCount++;
-                    }
-
-                    if (CollectionDropTop != 0) {
-                        CollectionLog.PrintVertical(69, 5, new ColoredString("^++", Color.Lime, Color.Black));
-                        CollectionLog.PrintVertical(25, 5, new ColoredString("^++", Color.Lime, Color.Black));
-                    }
-
-                    if (view.DropTable.Count > CollectionDropTop + 24) {
-                        CollectionLog.PrintVertical(69, 26, new ColoredString("++v", Color.Lime, Color.Black));
-                        CollectionLog.PrintVertical(25, 26, new ColoredString("++v", Color.Lime, Color.Black));
-                    }
-                }
-            } else {
-                monsterList.Clear();
-                monsterList = MonsterLibrary.Values.ToList().OrderBy(f => f.Name).ToList();
-
-                for (int i = 0; i < monsterList.Count; i++) {
-                    CollectionLog.PrintClickable(1, 1 + i, new ColoredString(" " + monsterList[i].Name, CollectionID == monsterList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = monsterList[i].ID; });
-                }
-
-                if (MonsterLibrary.ContainsKey(CollectionID)) {
-                    AreaMonster view = MonsterLibrary[CollectionID];
-
-                    if (view.DropTable.Count > 24) {
-                        if (Helper.ScrolledUp()) { CollectionDropTop = Math.Clamp(CollectionDropTop - 1, 0, view.DropTable.Count - 24); }
-                        if (Helper.ScrolledDown()) { CollectionDropTop = Math.Clamp(CollectionDropTop + 1, 0, view.DropTable.Count - 24); }
-                    } 
-
-                    int KC = 0;
-
-                    if (player.CollectionLog.ContainsKey(view.ID)) {
-                        KC = player.CollectionLog[view.ID].KillCount;
-                    }
-
-                    CollectionLog.Print(26, 1, (view.Name + " (" + KC + " KC)").Align(HorizontalAlignment.Center, 42), Color.White);
-                    CollectionLog.DrawLine(new Point(26, 2), new Point(68, 2), 196, Color.White);
-                    CollectionLog.Print(26, 3, "Item Name", Color.White);
-                    CollectionLog.Print(49, 3, "Chance", Color.White);
-                    CollectionLog.Print(60, 3, "Obtained", Color.White);
-                    CollectionLog.DrawLine(new Point(26, 4), new Point(68, 4), 196, Color.White);
-
-                    int printCount = 0;
-                    for (int i = CollectionDropTop; i < view.DropTable.Count && i < CollectionDropTop + 24; i++) {
-                        int timesObtained = 0;
-
-                        if (player.CollectionLog.ContainsKey(view.ID)) {
-                            if (player.CollectionLog[view.ID].DropsObtained.ContainsKey(view.DropTable[i].ItemID)) {
-                                timesObtained = player.CollectionLog[view.ID].DropsObtained[view.DropTable[i].ItemID];
-                            }
-                        }
-
-                        string name = ResolveItemName(view.DropTable[i].ItemID);
-
-                        string dropchance = (view.DropTable[i].DropX).ToString().PadLeft(5) + " in " + view.DropTable[i].InY;
-
-                        CollectionLog.Print(26, 5 + printCount, name, timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        CollectionLog.Print(58, 5 + printCount, timesObtained.ToString().PadLeft(10), timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        CollectionLog.Print(45, 5 + printCount, dropchance, timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        printCount++;
-                    }
-
-                    if (CollectionDropTop != 0) {
-                        CollectionLog.PrintVertical(69, 5, new ColoredString("^++", Color.Lime, Color.Black));
-                        CollectionLog.PrintVertical(25, 5, new ColoredString("^++", Color.Lime, Color.Black));
-                    }
-
-                    if (view.DropTable.Count > CollectionDropTop + 24) {
-                        CollectionLog.PrintVertical(69, 26, new ColoredString("++v", Color.Lime, Color.Black));
-                        CollectionLog.PrintVertical(25, 26, new ColoredString("++v", Color.Lime, Color.Black));
-                    }
-                }
-            }
-
-
-            
-            CollectionLog.PrintClickable(45, 0, new ColoredString("[CLUE]", CollectionCat == "Clue" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Clue"; });
-            CollectionLog.PrintClickable(52, 0, new ColoredString("[BOSS]", CollectionCat == "Boss" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Boss"; }); 
-            CollectionLog.PrintClickable(59, 0, new ColoredString("[MONSTER]", CollectionCat == "Monster" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Monster"; });
-
-            CollectionLog.PrintClickable(69, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { CollectionLog.IsVisible = false; });
-        }
-
-        public void CraftingMenuDraw() {
-            CraftingMenu.Clear(); 
-            Helper.DrawBox(CraftingMenu, 0, 0, 98, 28);
-            CraftingMenu.Print(2, 0, "[Crafting Menu - " + CraftingType + "]");
-            CraftingMenu.DrawLine(new Point(25, 1), new Point(25, 28), 179);  
-
-            List<string> ItemsUsed = new();
-
-            if (CraftLib.ContainsKey(CraftingType)) {
-                foreach (var craft in CraftLib[CraftingType]) {
-                    string item = ResolveItemName(craft.NeededItems[0].Split(",")[0]); // TODO: Remake this to list all items somehow
-                    if (!ItemsUsed.Contains(item)) {
-                        ItemsUsed.Add(item);
-                    }
-                }
-
-                ItemsUsed.Sort();  
-            }
-
-            if (CraftingSubtype == "" || !ItemsUsed.Contains(CraftingSubtype)) {
-                if (ItemsUsed.Count > 0) {
-                    CraftingSubtype = ItemsUsed[0];
-                    PopulateCraftList();
-                }
-            } 
-
-            for (int i = 0; i < ItemsUsed.Count; i++) {
-                CraftingMenu.PrintClickable(1, 1 + i, ItemsUsed[i], () => { CraftingSubtype = ItemsUsed[i]; PopulateCraftList(); });
-            } 
-
-            CraftingMenu.DrawLine(new Point(26, 2), new Point(98, 2), 196, Color.White);
-            CraftingMenu.Print(27, 1, "Crafted Item", Color.White); 
-            CraftingMenu.Print(60, 1, "Lev", Color.White);
-            CraftingMenu.Print(67, 1, "Exp", Color.White);
-            CraftingMenu.Print(74, 1, "Input", Color.White);
-            CraftingMenu.Print(85, 1, "Tool", Color.White);
-
-            for (int i = 0; i < ActiveRecipes.Count; i++) {
-                CraftRecipe rec = ActiveRecipes[i];
-                string name = ResolveItemName(rec.OutputItem) + (rec.OutputQty > 1 ? " x" + rec.OutputQty : "");
-
-                string[] item = rec.NeededItems[0].Split(",");
-                // TODO: Rework this display too, to account for multiple possible reagents
-                string line = name.Align(HorizontalAlignment.Left, 31, ' ') + 179.AsString() + " "
-                    + rec.Level.ToString().Align(HorizontalAlignment.Right, 3) + " " + 179.AsString() + " "
-                    + rec.ExpGranted.ToString().Align(HorizontalAlignment.Right, 5) + " " + 179.AsString() + " "
-                    + item[1].Align(HorizontalAlignment.Right, 5) + " " + 179.AsString() + " "
-                    + ResolveItemName(rec.ExtraTool);
-
-                if (player.CanCraft(rec)) { 
-                    CraftingMenu.PrintClickable(27, 3 + i, new ColoredString(line, Color.White, Color.Black), () => { player.TryCraft(rec); });
-                } else { 
-                    CraftingMenu.Print(27, 3 + i, line, Color.Crimson);
-                }
-            }
-
-
-            CraftingMenu.PrintClickable(99, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { CraftingMenu.IsVisible = false; });
-        }
-
-        public List<string> QuestLengths = [ "Very Short", "Short", "Medium", "Long", "Very Long" ];
-        public List<string> QuestDifficulties = ["Novice", "Intermediate", "Experienced", "Master", "Grandmaster" ];
-        public List<string> QuestRegions = [ "Asgarnia", "Desert", "Fremennik", "Kandarin", "Karamja", "Misthalin", "Morytania", "Wilderness" ];
-
-        public void QuestDraw() {
-            Quests.Clear();
-            Helper.DrawBox(Quests, 0, 0, 98, 28);
-            if (ViewingQuestID == "") {
-                Quests.Print(2, 0, "[Quest Log - " + QuestFilter + " Quests]");
-            } else { 
-                if (player.QuestLog.TryGetValue(ViewingQuestID, out Quest? currQuest)) { 
-                    Quests.Print(2, 0, "[Quest Log - " + currQuest.Name + "]");
-                } 
-            } 
-            Quests.DrawLine(new Point(17, 1), new Point(17, 28), 179);
-
-            Quests.PrintClickable(1, 1, new ColoredString("Show All Quests", QuestFilter == "All" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = "All"; ViewingQuestID = ""; });
-
-
-            int printSide = 3;
-            Quests.Print(1, printSide++, "By Length");
-            for (int i = 0; i < QuestLengths.Count; i++) {
-                Quests.PrintClickable(2, printSide++, new ColoredString(QuestLengths[i], QuestFilter == QuestLengths[i] ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = QuestLengths[i]; ViewingQuestID = ""; });
-            }
-            printSide++;
-
-            Quests.Print(1, printSide++, "By Difficulty");
-            for (int i = 0; i < QuestDifficulties.Count; i++) {
-                Quests.PrintClickable(2, printSide++, new ColoredString(QuestDifficulties[i], QuestFilter == QuestDifficulties[i] ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = QuestDifficulties[i]; ViewingQuestID = ""; });
-            }
-            printSide++;
-
-            Quests.Print(1, printSide, "By Region"); 
-            Quests.PrintClickable(11, printSide++, new ColoredString("(Mine)", QuestFilter == "MyRegions" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = "MyRegions"; ViewingQuestID = ""; });
-
-            for (int i = 0; i < QuestRegions.Count; i++) {
-                Quests.PrintClickable(2, printSide++, new ColoredString(QuestRegions[i], QuestFilter == QuestRegions[i] ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { QuestFilter = QuestRegions[i]; ViewingQuestID = ""; });
-            }
-            printSide++;
-
-            List<Quest> QuestsInFilter = new();
-            QuestsInFilter = QuestsInFilter.OrderBy(o => o.Name).ToList();
-
-            foreach(var kv in player.QuestLog) {
-                if (QuestFilter == "MyRegions") {
-
-                }
-                else {
-                    if (QuestFilter == "All" || kv.Value.Difficulty == QuestFilter || kv.Value.Length == QuestFilter || kv.Value.RegionsNeeded.Contains(QuestFilter)) {
-                        QuestsInFilter.Add(kv.Value);
-                    }
-                }
-            }
-
-            if (ViewingQuestID == "") {
-                for(int i = 0; i < QuestsInFilter.Count; i++) {
-                    Color col = Color.DarkSlateGray;
-
-                    if (QuestsInFilter[i].CanStartQuest(player)) {
-                        col = Color.Crimson;
-                    }
-
-                    if (QuestsInFilter[i].CurrentStage != -1) {
-                        col = Color.Yellow;
-                    }
-
-                    if (QuestsInFilter[i].CurrentStage == QuestsInFilter[i].CompleteStage) {
-                        col = Color.Lime;
-                    }
-
-                    Quests.PrintClickable(19, 1 + i, new ColoredString(QuestsInFilter[i].Name, col, Color.Black), () => {
-                        ViewingQuestID = QuestsInFilter[i].ID;
-
-                        if (player.QuestLog.TryGetValue(ViewingQuestID, out Quest? nowViewing)) {
-                            if (nowViewing != null) {
-                                if (nowViewing.CurrentStage == -1) {
-                                    QuestOverview = true;
-                                } else {
-                                    QuestOverview = false; 
-                                    QuestBlockScrollTop = 0;
-                                }
-                            } else {
-                                QuestOverview = true;
-                            }
-                        } else {
-                            QuestOverview = true;
-                        }
-                    });
-                }
-            } else {
-                if (player.QuestLog.TryGetValue(ViewingQuestID, out Quest? currQuest)) {
-
-                    if (QuestOverview) {
-                        Quests.Print(19, 1, "Quest Name: " + currQuest.Name);
-                        Quests.Print(19, 2, "Difficulty: " + currQuest.Difficulty);
-                        Quests.Print(19, 3, "    Length: " + currQuest.Length);
-                        int afterDesc = Quests.PrintMultiLine(19, 5, currQuest.Description, 80) + 2;
-
-                        if (currQuest.CurrentStage != -1) {
-                            Quests.PrintClickable(19, afterDesc, "[View Quest Log]", () => { QuestOverview = false; QuestBlockScrollTop = 0; });
-
-                            if (currQuest.CurrentStage == currQuest.CompleteStage)
-                                Quests.Print(19, afterDesc + 2, "Quest Complete!", Color.Lime);
-                        }
-                    } else {
-                        int visibleStages = 0;
-                        
-                        foreach (var kv in currQuest.Stages) {
-                            if (kv.Key <= currQuest.CurrentStage) {
-                                visibleStages++;
-                            }
-                        }
-
-                        if (Helper.ScrolledUp()) { QuestBlockScrollTop = Math.Clamp(QuestBlockScrollTop - 1, 0, visibleStages - 1); }
-                        if (Helper.ScrolledDown()) { QuestBlockScrollTop = Math.Clamp(QuestBlockScrollTop + 1, 0, visibleStages - 1); }
-
-
-                        Quests.PrintClickable(19, 1, "[View Quest Overview]", () => { QuestOverview = true; });
-
-                        int printY = 3;
-                        int count = -1; 
-                        foreach (var kv in currQuest.Stages) {
-                            count++;
-                            if (count < QuestBlockScrollTop) { 
-                                continue;
-                            }
-
-                            if (kv.Key <= currQuest.CurrentStage) {
-                                Color col = Color.DarkSlateGray;
-
-                                if (kv.Key == currQuest.CurrentStage)
-                                    col = Color.White;
-
-                                printY = Quests.PrintMultiLine(19, printY, kv.Value.Description, 80, col.R, col.G, col.B);
-
-                                printY += 2;
-                            }
-                        }
-
-                        if (currQuest.CurrentStage == currQuest.CompleteStage)
-                            Quests.Print(19, printY, "Quest Complete!", Color.Lime);
-
-                        Quests.DrawLine(new Point(1, 29), (98, 29), 196, Color.White);
-                    }
-                } 
-            }
-
-            Quests.PrintClickable(99, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Quests.IsVisible = false; });
+            Log.AddMessage(new ColoredString("Press F1 at any time to open the guidebook, or F2 to open the compendium.", Color.Turquoise, Color.Black));
         }
          
         public void LocationDraw(UI_EmbeddedMini mini) { 
@@ -640,10 +144,10 @@ namespace ZeroPlayersOnline {
                     mini.Con.Print(57, printY, "Boss Here: ");
 
                     mini.Con.PrintClickable(68, printY, "(Log)", () => {
-                        CollectionLog.IsVisible = true;
-                        CollectionID = boss.ID;
-                        CollectionCat = "Boss";
-                        CollectionDropTop = 0;
+                        ExtraWindows.CollectionLog.IsVisible = true;
+                        ExtraWindows.CollectionID = boss.ID;
+                        ExtraWindows.CollectionCat = "Boss";
+                        ExtraWindows.CollectionDropTop = 0;
                     });
 
                     mini.Con.PrintClickable(74, printY, new ColoredString("(Attack)", AttackingBoss ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => {
@@ -1256,10 +760,10 @@ namespace ZeroPlayersOnline {
                         mini.Con.Print(80, printY, "(" + thisOne.CurrentHP + "/" + thisOne.MaxHP + " hp)");
 
                         mini.Con.PrintClickable(106, printY++, "Log", () => {
-                            CollectionLog.IsVisible = true;
-                            CollectionID = thisOne.ID;
-                            CollectionDropTop = 0;
-                            CollectionCat = "Monster";
+                            ExtraWindows.CollectionLog.IsVisible = true;
+                            ExtraWindows.CollectionID = thisOne.ID;
+                            ExtraWindows.CollectionDropTop = 0;
+                            ExtraWindows.CollectionCat = "Monster";
                         });
 
                         if (usedAmmo) {
@@ -1419,7 +923,7 @@ namespace ZeroPlayersOnline {
                         }
 
                         if (curr.ItemsHere.Count > 0) {
-                            for (int i = ActivityItemTop; i < curr.ItemsHere.Count && i < ActivityItemTop + 20; i++) { 
+                            for (int i = ActivityItemTop; i < curr.ItemsHere.Count && i < ActivityItemTop + 22; i++) { 
                                 Item item = curr.ItemsHere[i];
 
                                 string name = item.Name;
@@ -1485,8 +989,8 @@ namespace ZeroPlayersOnline {
                                     station.TryProcessItem(player, Log, ItemLibrary, SidebarManager.RecentlyTrainedSkills); 
 
                                     if (station.OpensUI) {
-                                        CraftingMenu.IsVisible = true;
-                                        CraftingType = station.Name;
+                                        ExtraWindows.CraftingMenu.IsVisible = true;
+                                        ExtraWindows.CraftingType = station.Name;
                                     }
                                 });
 
@@ -2024,17 +1528,20 @@ namespace ZeroPlayersOnline {
             LocationDraw(mini); 
             LogDraw(mini); 
 
-            if (CollectionLog.IsVisible)
-                CollectionLogDraw();
+            if (ExtraWindows.CollectionLog.IsVisible)
+                ExtraWindows.CollectionLogDraw();
 
-            if (Guide.IsVisible)
-                GuideDraw();
+            if (ExtraWindows.Guide.IsVisible)
+                ExtraWindows.GuideDraw();
              
-            if (CraftingMenu.IsVisible)
-                CraftingMenuDraw();
+            if (ExtraWindows.CraftingMenu.IsVisible)
+                ExtraWindows.CraftingMenuDraw();
 
-            if (Quests.IsVisible)
-                QuestDraw();
+            if (ExtraWindows.Quests.IsVisible)
+                ExtraWindows.QuestDraw();
+            
+            if (ExtraWindows.Compendium.IsVisible)
+                ExtraWindows.CompendiumDraw();
 
             if (TimeLastTicked + 1000 < Helper.Time()) {
                 TickTime();
@@ -2046,34 +1553,20 @@ namespace ZeroPlayersOnline {
         public void Input(UI_EmbeddedMini mini) {
             Point mousePos = new MouseScreenObjectState(mini.Con, GameHost.Instance.Mouse).CellPosition;
             if (Helper.HotkeyDown(Key.Escape)) {
-                if (CollectionLog.IsVisible) {
-                    CollectionLog.IsVisible = false;
+                if (ExtraWindows.AnyVisible()) {
+                    ExtraWindows.HideAll();
                     return;
                 }
 
-                if (Guide.IsVisible) {
-                    Guide.IsVisible = false;
-                    return;
-                }
-
-                if (CraftingMenu.IsVisible) {
-                    CraftingMenu.IsVisible = false;
-                    return;
-                }
-
-                if (Quests.IsVisible) {
-                    Quests.IsVisible = false;
-                    return;
-                } 
                 Close(mini);
             }
 
-            if (mousePos.Y > 34 && !CollectionLog.IsVisible && !Guide.IsVisible && !CraftingMenu.IsVisible && !Quests.IsVisible) {
+            if (mousePos.Y > 34 && !ExtraWindows.AnyVisible()) {
                 if (Helper.ScrolledUp()) { Log.TopIndex = Math.Clamp(Log.TopIndex - 1, 0, Log.Log.Count); }
                 if (Helper.ScrolledDown()) { Log.TopIndex = Math.Clamp(Log.TopIndex + 1, 0, Log.Log.Count); }
             }
 
-            if (SidebarManager.SidebarRect.Contains(mousePos) && !CollectionLog.IsVisible && !Guide.IsVisible && !CraftingMenu.IsVisible && !Quests.IsVisible) {
+            if (SidebarManager.SidebarRect.Contains(mousePos) && !ExtraWindows.AnyVisible()) {
                 if (SidebarManager.SidebarMenu == "Prayer") {
                     if (Helper.ScrolledUp()) { SidebarManager.SidebarScrollTop = Math.Clamp(SidebarManager.SidebarScrollTop - 1, 0, player.Prayers.Count - 18); }
                     if (Helper.ScrolledDown()) { SidebarManager.SidebarScrollTop = Math.Clamp(SidebarManager.SidebarScrollTop + 1, 0, player.Prayers.Count - 18); }
@@ -2104,28 +1597,43 @@ namespace ZeroPlayersOnline {
             }
 
             if (Helper.HotkeyDown(Key.C)) {
-                CollectionLog.IsVisible = !CollectionLog.IsVisible;
-                Guide.IsVisible = false;
-                CraftingMenu.IsVisible = false;
-                Quests.IsVisible = false;
+                if (ExtraWindows.CollectionLog.IsVisible) { 
+                    ExtraWindows.CollectionLog.IsVisible = false; 
+                } else {
+                    ExtraWindows.HideAll();
+                    ExtraWindows.CollectionLog.IsVisible = true; 
+                }
             }
 
             if (Helper.HotkeyDown(Key.F1)) {
-                Guide.IsVisible = !Guide.IsVisible;
-                CollectionLog.IsVisible = false;
-                CraftingMenu.IsVisible = false;
-                Quests.IsVisible = false;
+                if (ExtraWindows.Guide.IsVisible) { 
+                    ExtraWindows.Guide.IsVisible = false; 
+                } else {
+                    ExtraWindows.HideAll();
+                    ExtraWindows.Guide.IsVisible = true; 
+                }
+            }
+
+            if (Helper.HotkeyDown(Key.F2)) {
+                if (ExtraWindows.Compendium.IsVisible) { 
+                    ExtraWindows.Compendium.IsVisible = false; 
+                } else {
+                    ExtraWindows.HideAll();
+                    ExtraWindows.Compendium.IsVisible = true; 
+                }
             }
 
             if (Helper.HotkeyDown(Key.Q)) {
-                Quests.IsVisible = !Quests.IsVisible;
-                Guide.IsVisible = false;
-                CollectionLog.IsVisible = false;
-                CraftingMenu.IsVisible = false;
+                if (ExtraWindows.Quests.IsVisible) { 
+                    ExtraWindows.Quests.IsVisible = false; 
+                } else {
+                    ExtraWindows.HideAll();
+                    ExtraWindows.Quests.IsVisible = true; 
+                } 
             }
 
 
-            if (!Quests.IsVisible && !Guide.IsVisible && !CollectionLog.IsVisible && !CraftingMenu.IsVisible) {
+            if (!ExtraWindows.AnyVisible()) {
                 if (Atlas.TryGetValue(player.NavLoc, out Location? curr) && curr != null) {
                     if (Helper.HotkeyDown(Key.NumPad1) && curr.ConnectedLocations.Count > 0 && curr.ConnectedLocations[0].CanTraverse(player)) {
                         curr.ConnectedLocations[0].Traverse(player);
@@ -2386,25 +1894,36 @@ namespace ZeroPlayersOnline {
             return ID;
         }
 
+        public string ResolveNPCName(string ID) {
+            if (NPCLibrary.TryGetValue(ID, out NPC? npc) && npc != null) {
+                return npc.Name;
+            }
+
+            return ID;
+        }
+
+        public string ResolveLocationName(string ID) {
+            if (Atlas.TryGetValue(ID, out Location? loc) && loc != null) {
+                return loc.DisplayName;
+            }
+
+            return ID;
+        }
+
+        public string ResolveGatherName(string ID) {
+            if (GatherSpots.TryGetValue(ID, out GatheringTile? gather) && gather != null) {
+                return gather.Name;
+            }
+
+            return ID;
+        }
+
         public string ResolveBossName(string ID) {
             if (BossLibrary.TryGetValue(ID, out BossFight? mon) && mon != null) {
                 return mon.Name;
             }
 
             return ID;
-        }
-
-        public void PopulateCraftList() {
-            ActiveRecipes.Clear();
-
-            if (CraftLib.ContainsKey(CraftingType)) {
-                foreach (var craft in CraftLib[CraftingType]) {
-                    string itemNeeded = ResolveItemName(craft.NeededItems[0].Split(",")[0]); // TODO: Maybe involve multiple ingredients, or just file it under the first/primary permanently?
-                    if (itemNeeded == CraftingSubtype) {
-                        ActiveRecipes.Add(craft);
-                    }
-                }
-            }
         }
 
         public void TryPlaceItem(string loc, Item item) {

@@ -585,14 +585,14 @@ namespace ZeroPlayersOnline.Managers {
                         }
 
                         mini.Con.PrintClickable(0, 17 + printQuest, new ColoredString(kv.Name, col, Color.Black), () => {
-                            GameLoop.ZPO.Quests.IsVisible = true;
-                            GameLoop.ZPO.ViewingQuestID = kv.ID;
+                            ExtraWindows.Quests.IsVisible = true;
+                            ExtraWindows.ViewingQuestID = kv.ID;
                              
                             if (kv.CurrentStage == -1) {
-                                GameLoop.ZPO.QuestOverview = true;
+                                ExtraWindows.QuestOverview = true;
                             } else {
-                                GameLoop.ZPO.QuestOverview = false;
-                                GameLoop.ZPO.QuestBlockScrollTop = 0;
+                                ExtraWindows.QuestOverview = false;
+                                ExtraWindows.QuestBlockScrollTop = 0;
                             } 
                         });
 
@@ -672,7 +672,7 @@ namespace ZeroPlayersOnline.Managers {
                     mini.Con.Print(1, 15, "Clue Collection Logs");
 
                     if (player.CollectionLogClues.TryGetValue("casketTutorial", out CollectionLogEntry? tutLog) && tutLog != null)
-                        mini.Con.PrintClickable(1, 16, new ColoredString("| Tutorial: " + tutLog.ActualObtained().ToString().Align(HorizontalAlignment.Right, 3) + " / " + tutLog.TryFindTotal().ToString().Align(HorizontalAlignment.Right, 3), tutLog.LogComplete() ? Color.Lime : Color.White, Color.Black), () => { GameLoop.ZPO.CollectionID = "casketTutorial"; GameLoop.ZPO.CollectionLog.IsVisible = true; GameLoop.ZPO.CollectionDropTop = 0; GameLoop.ZPO.CollectionCat = "Clue"; });
+                        mini.Con.PrintClickable(1, 16, new ColoredString("| Tutorial: " + tutLog.ActualObtained().ToString().Align(HorizontalAlignment.Right, 3) + " / " + tutLog.TryFindTotal().ToString().Align(HorizontalAlignment.Right, 3), tutLog.LogComplete() ? Color.Lime : Color.White, Color.Black), () => { ExtraWindows.CollectionID = "casketTutorial"; ExtraWindows.CollectionLog.IsVisible = true; ExtraWindows.CollectionDropTop = 0; ExtraWindows.CollectionCat = "Clue"; });
                     else 
                         mini.Con.Print(1, 16, "| Tutorial: ");
 

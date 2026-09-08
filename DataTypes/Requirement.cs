@@ -23,7 +23,10 @@
             if (RequirementType == "QuestAt") {
                 if (GameLoop.ZPO.QuestLibrary.TryGetValue(MiscString, out Quest? req)) {
                     if (req != null) {
-                        return "Completed Quest: " + req.Name;
+                        if (req.CompleteStage == MiscInt)
+                            return "Completed Quest: " + req.Name;
+                        else
+                            return "Quest: " + req.Name + " [" + MiscInt + "]";
                     }
                 }
 

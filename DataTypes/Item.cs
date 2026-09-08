@@ -11,8 +11,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public int colR = 255;
         public int colG = 255;
         public int colB = 255;
-        public int colA = 255;
-        public int glyph = 1;
+        public int colA = 255; 
 
         public int Quantity = 1;
         public bool Stackable = false;
@@ -76,6 +75,14 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public Color GetColor() {
             return new Color(colR, colG, colB, colA);
+        }
+
+        public int HighAlchVal() {
+            return (int) Math.Ceiling(Value * 0.66);
+        }
+
+        public int LowAlchVal() {
+            return (int) Math.Ceiling(Value * 0.33);
         }
     }
 }

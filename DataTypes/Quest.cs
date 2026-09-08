@@ -12,6 +12,8 @@ namespace ZeroPlayersOnline.DataTypes {
         public string Description = "";
         public List<string> RegionsNeeded = new();
 
+        public string StartNPC = "";
+
         public int QuestPoints = 0;
 
         public int DateFullyImplemented = 0; // YYYYMMDD, ex 20260828 for August 28, 2026

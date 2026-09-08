@@ -198,11 +198,11 @@ namespace ZeroPlayersOnline.Managers {
                     player.TryPickup(guaranteedItems[i], guaranteedItems[i].Quantity);
                 } 
             } else if (item.UseString == "Needle") {
-                GameLoop.ZPO.CraftingMenu.IsVisible = true;
-                GameLoop.ZPO.CraftingType = "Needle";
+                ExtraWindows.CraftingMenu.IsVisible = true;
+                ExtraWindows.CraftingType = "Needle";
             } else if (item.UseString == "Knife") {
-                GameLoop.ZPO.CraftingMenu.IsVisible = true;
-                GameLoop.ZPO.CraftingType = "Knife";
+                ExtraWindows.CraftingMenu.IsVisible = true;
+                ExtraWindows.CraftingType = "Knife";
             } else if (item.UseString == "SecondExamine") {
                 GameLoop.ZPO.Log.AddMessage(new ColoredString(item.MiscString, Color.SandyBrown, Color.Black));
 
