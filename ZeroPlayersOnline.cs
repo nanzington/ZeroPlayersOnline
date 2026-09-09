@@ -1630,7 +1630,7 @@ namespace ZeroPlayersOnline {
                     ExtraWindows.HideAll();
                     ExtraWindows.Quests.IsVisible = true; 
                 } 
-            }
+            } 
 
 
             if (!ExtraWindows.AnyVisible()) {

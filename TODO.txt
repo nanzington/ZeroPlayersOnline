@@ -1,5 +1,33 @@
-Minimum to finish Tutorial Island
-- Run the Cape speedrun a few times to see how long it takes and check for obvious bugs
+Misthalin Mania
+- Lumbridge locations filled out
+- Draynor Village locations filled out
+- HAM Hideout locations filled out
+- Wizard Tower locations filled out
+- Varrock locations filled out
+- Barbarian Village locations filled out
+- Edgeville locations filled out
+- Zanaris locations filled out
+- Lumbridge underground (possibly all the way to Dorgesh-kaan? maybe not necessary until the cave goblin quests can be added) locations filled out 
+- Quest: Cook's Assistant
+- Quest: Demon Slayer
+- Quest: The Restless Ghost
+- Quest: Romeo & Juliet
+- Quest: Sheep Shearer
+- Quest: Shield of Arrav
+- Quest: Ernest the Chicken
+- Quest: Vampire Slayer
+- Quest: Imp Catcher
+- Quest: Rune Mysteries
+- Quest: Misthalin Mystery
+- Quest: The Ides of Milk
+- Quest: The Blood Pact
+- Quest: Gertrude's Cat
+- Quest: Priest in Peril
+- Quest: A Soul's Bane
+- Quest: All Fired Up
+- Quest: Lost City
+
+
 
 
 Immediately important stuff to get working:
@@ -35,7 +63,6 @@ Difficulty things
 - RNG Item Lock? Can only use items you've unlocked, unlock a configurable random number of items per level gained. Optionally draft items via pick 1 of 3 for each unlock
 - Food Restrictions: Vegan, Vegetarian, Junk, 
 - Easy Teleports: if on, allows access to lodestones and select teleporter items (portable fairy ring, slayer skull, clue briefcase, etc), also allows access to war's retreat for boss teles
-- Dry Protection - mostly done, some kind of bug where it's not actually guaranteeing the drops at non-1 drop rates for clues? investigate more
 
 Randomizer Options - Basically just provide an option for ID remaps
 - Items, No Logic (DONE), No Logic+ (every minute it re-randomizes the mappings)

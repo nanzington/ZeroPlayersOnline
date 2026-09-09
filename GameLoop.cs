@@ -21,9 +21,10 @@ namespace ZeroPlayersOnline {
         public static ZeroPlayersOnline ZPO;
 #pragma warning restore CS8618  
 
-        static void Main(string[] args) {
-            Game.Create(GameWidth, GameHeight, "./fonts/ThinExtended.font", Init); 
-            Game.Instance.FrameUpdate += GlobalUpdate;
+        static void Main(string[] args) { 
+            SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
+            Game.Create(GameWidth, GameHeight, "./fonts/ThinExtended.font", Init);  
+            Game.Instance.FrameUpdate += GlobalUpdate; 
 
             Game.Instance.Run();
             Game.Instance.Dispose();
