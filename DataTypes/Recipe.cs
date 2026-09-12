@@ -8,6 +8,8 @@
         public string OutputItem = "";
         public int OutputQty = 1;
 
+        public List<string> ReturnIDs = new();
+
         public string SkillUsed = "";
         public int SkillLevelReq = 1;
         public int ExpGranted = 0;
@@ -15,7 +17,7 @@
         public string SoundPlayed = "";
         public string MiscString = "";
 
-        public Recipe(string fI, string sI, string oI, int fQ = 1, int sQ = 1, int oQ = 1, string s = "", int lv = 1, int exp = 0, string sound = "", string miscStr = "") {
+        public Recipe(string fI, string sI, string oI, int fQ = 1, int sQ = 1, int oQ = 1, string s = "", int lv = 1, int exp = 0, string sound = "", string miscStr = "", List<string>? returns = null) {
             FirstItem = fI;
             SecondItem = sI;
             OutputItem = oI;
@@ -30,6 +32,9 @@
 
             SoundPlayed = sound;
             MiscString = miscStr;
+
+            if (returns != null)
+                ReturnIDs = returns;
         }
     }
 }

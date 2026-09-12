@@ -126,7 +126,7 @@ namespace ZeroPlayersOnline {
                                         Log.AddMessage("Missing some requirements to go there: " + (curr.ConnectedLocations[i].OnlyNeedOneReq ? "(only need one)" : ""), Color.Crimson);
 
                                         for (int j = 0; j < req.Count; j++) {
-                                            Log.AddMessage("| " + req[j].GetSummary(), req[j].CheckRequirement(player) ? Color.Lime : Color.Crimson); 
+                                            Log.AddMessage("| " + req[j].GetSummary(), req[j].CheckRequirement(player, false) ? Color.Lime : Color.Crimson); 
                                         }
                                     }
                                 }
@@ -1044,7 +1044,7 @@ namespace ZeroPlayersOnline {
                             if (NPCLibrary.ContainsKey(curr.NPCsHere[i])) {
                                 NPC thisOne = NPCLibrary[curr.NPCsHere[i]];
 
-                                if (thisOne.ReqToSee != null && !thisOne.ReqToSee.CheckRequirement(player)) {
+                                if (thisOne.ReqToSee != null && !thisOne.ReqToSee.CheckRequirement(player, true)) {
                                     continue;
                                 }
 
@@ -1124,6 +1124,8 @@ namespace ZeroPlayersOnline {
                                                 }
                                             }
 
+                                            choice.ConsumeItemsIfNeeded(player);
+
                                             if (ConversationPartner.Dialogue.ContainsKey(CurrDialogueStage)) {
                                                 DialogueStage newDia = ConversationPartner.Dialogue[CurrDialogueStage];
 
@@ -1172,7 +1174,7 @@ namespace ZeroPlayersOnline {
                                             if (choice.ClickReqs != null) {
                                                 Log.AddMessage(new ColoredString("Requirement(s) not met: ", Color.Crimson, Color.Black));
                                                 for (int i = 0; i < choice.ClickReqs.Count; i++) {
-                                                    Log.AddMessage("| " + choice.ClickReqs[i].GetSummary(), choice.ClickReqs[i].CheckRequirement(player) ? Color.Lime : Color.Crimson);
+                                                    Log.AddMessage("| " + choice.ClickReqs[i].GetSummary(), choice.ClickReqs[i].CheckRequirement(player, true) ? Color.Lime : Color.Crimson);
                                                 }
                                             }
                                         }
@@ -1298,48 +1300,111 @@ namespace ZeroPlayersOnline {
                                 if (patch.SeedPlanted == "") { 
                                     mini.Con.Print(resourceX + 4, resourceY, "(Empty " + patch.PatchType + " Patch)");
                                 } else {
-                                    if (patch.TimeLeft <= 0) {
-                                        patch.TimeLeft = 0;
-                                        mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(ResolveItemName(patch.SeedPlanted) + " [" + patch.TimeLeft + "]", Color.Lime, Color.Black), () => {
-                                            Item? seed = ResolveItem(patch.SeedPlanted);
-                                            if (seed != null) {
-                                                Item? output = Helper.Clone(ResolveItem(seed.UseString3));
-                                                if (output != null) {
-                                                    int qty = 5 + (int) Math.Floor((player.Skills["Farming"].Level - seed.UseInt) / 5.0) + patch.Compost;
+                                    if (patch.Regrowing) {
+                                        if (patch.Regrown > 0) {
+                                            mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(ResolveItemName(patch.SeedPlanted) + " [" + patch.RegrowTimeLeft / player.FarmGrowthIncrement + "]", Color.Lime, Color.Black), () => {
+                                                Item? seed = ResolveItem(patch.SeedPlanted);
+                                                if (seed != null) {
+                                                    Item? output = Helper.Clone(ResolveItem(seed.UseString3));
+                                                    if (output != null) {
+                                                        int qty = 1 + patch.Compost;
+                                                        patch.Regrown--;
 
-                                                    if (output.Stackable) {
-                                                        output.Quantity = qty; 
-                                                        player.TryGrantExp("Farming", seed.UseInt2 * qty, Log, SidebarManager.RecentlyTrainedSkills);
-                                                        if (!player.TryPickup(output, output.Quantity)) {
-                                                            Log.AddMessage(new ColoredString("Your inventory is full, so the " + output.Name + "s fall to the ground." , Color.Crimson, Color.Black));
-                                                        }
-                                                    } else {
-                                                        for (int i = 0; i < qty; i++) {
-                                                            player.TryGrantExp("Farming", seed.UseInt2, Log, SidebarManager.RecentlyTrainedSkills);
+                                                        if (output.Stackable) {
+                                                            output.Quantity = qty; 
+                                                            player.TryGrantExp("Farming", (seed.UseInt2 / 10) * qty, Log, SidebarManager.RecentlyTrainedSkills);
+                                                            if (patch.PatchType == "Tree") { 
+                                                                player.TryGrantExp("Woodcutting", (seed.UseInt2 / 4) * qty, Log, SidebarManager.RecentlyTrainedSkills); 
+                                                            }
+                                                            if (!player.TryPickup(output, output.Quantity)) {
+                                                                Log.AddMessage(new ColoredString("Your inventory is full, so the " + output.Name + "s fall to the ground." , Color.Crimson, Color.Black));
+                                                            }
+                                                        } else {
+                                                            for (int i = 0; i < qty; i++) {
+                                                                player.TryGrantExp("Farming", seed.UseInt2 / 10, Log, SidebarManager.RecentlyTrainedSkills);
+                                                                if (patch.PatchType == "Tree") { 
+                                                                    player.TryGrantExp("Woodcutting", (seed.UseInt2 / 4), Log, SidebarManager.RecentlyTrainedSkills); 
+                                                                }
 
-                                                            Item clone = Helper.Clone(output);
-                                                            clone.Quantity = 1;
+                                                                Item clone = Helper.Clone(output);
+                                                                clone.Quantity = 1;
 
-                                                            output.Quantity--;
+                                                                output.Quantity--;
 
-                                                            if (!player.TryPickup(clone, 1)) {
-                                                                Log.AddMessage(new ColoredString("Your inventory is full, so the " + output.Name + " falls to the ground.", Color.Crimson, Color.Black)); 
+                                                                if (!player.TryPickup(clone, 1)) {
+                                                                    Log.AddMessage(new ColoredString("Your inventory is full, so the " + output.Name + " falls to the ground.", Color.Crimson, Color.Black)); 
+                                                                }
                                                             }
                                                         }
+                                                    } else {
+                                                        Log.AddMessage(new ColoredString("The harvested item crumbles away in your hands, this should be reported as a bug.", Color.Crimson, Color.Black));
                                                     }
-                                                } else {
-                                                    Log.AddMessage(new ColoredString("The harvested item crumbles away in your hands, this should be reported as a bug.", Color.Crimson, Color.Black));
+                                                } else { 
+                                                    Log.AddMessage(new ColoredString("The harvested seed crumbles away in your hands, this should be reported as a bug.", Color.Crimson, Color.Black));
                                                 }
-                                            } else { 
-                                                Log.AddMessage(new ColoredString("The harvested seed crumbles away in your hands, this should be reported as a bug.", Color.Crimson, Color.Black));
-                                            } 
-
-                                            patch.ClearPatch();
-                                        });
+                                            });
+                                        } else {
+                                            mini.Con.Print(resourceX + 4, resourceY, ResolveItemName(patch.SeedPlanted) + " [" + (patch.RegrowTimeLeft / player.FarmGrowthIncrement) + "]");
+                                        }
                                     } else {
-                                        mini.Con.Print(resourceX + 4, resourceY, ResolveItemName(patch.SeedPlanted) + " [" + (patch.TimeLeft / player.FarmGrowthIncrement) + "]");
+                                        if (patch.TimeLeft <= 0) {
+                                            patch.TimeLeft = 0;
+                                            mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(ResolveItemName(patch.SeedPlanted) + " [" + patch.TimeLeft + "]", Color.Lime, Color.Black), () => {
+                                                Item? seed = ResolveItem(patch.SeedPlanted);
+                                                if (seed != null) {
+                                                    Item? output = Helper.Clone(ResolveItem(seed.UseString3));
+                                                    if (output != null) {
+                                                        int qty = 5 + (int) Math.Floor((player.Skills["Farming"].Level - seed.UseInt) / 5.0) + patch.Compost;
+
+                                                        if (output.Stackable) {
+                                                            output.Quantity = qty; 
+                                                            player.TryGrantExp("Farming", seed.UseInt2 * qty, Log, SidebarManager.RecentlyTrainedSkills);
+
+                                                            if (patch.PatchType == "Tree") { 
+                                                                player.TryGrantExp("Woodcutting", (seed.UseInt2 / 4) * qty, Log, SidebarManager.RecentlyTrainedSkills); 
+                                                            }
+
+                                                            if (!player.TryPickup(output, output.Quantity)) {
+                                                                Log.AddMessage(new ColoredString("Your inventory is full, so the " + output.Name + "s fall to the ground." , Color.Crimson, Color.Black));
+                                                            }
+                                                        } else {
+                                                            for (int i = 0; i < qty; i++) {
+                                                                player.TryGrantExp("Farming", seed.UseInt2, Log, SidebarManager.RecentlyTrainedSkills);
+
+                                                                if (patch.PatchType == "Tree") { 
+                                                                    player.TryGrantExp("Woodcutting", seed.UseInt2 / 4, Log, SidebarManager.RecentlyTrainedSkills); 
+                                                                }
+
+                                                                Item clone = Helper.Clone(output);
+                                                                clone.Quantity = 1;
+
+                                                                output.Quantity--;
+
+                                                                if (!player.TryPickup(clone, 1)) {
+                                                                    Log.AddMessage(new ColoredString("Your inventory is full, so the " + output.Name + " falls to the ground.", Color.Crimson, Color.Black)); 
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        Log.AddMessage(new ColoredString("The harvested item crumbles away in your hands, this should be reported as a bug.", Color.Crimson, Color.Black));
+                                                    }
+                                                } else { 
+                                                    Log.AddMessage(new ColoredString("The harvested seed crumbles away in your hands, this should be reported as a bug.", Color.Crimson, Color.Black));
+                                                } 
+                                                 
+                                                if (patch.RegrowTime > 0) {
+                                                    patch.Regrowing = true;
+                                                    patch.RegrowTimeLeft = patch.RegrowTime;
+                                                } else { 
+                                                    patch.ClearPatch();
+                                                }
+                                            });
+                                        } else {
+                                            mini.Con.Print(resourceX + 4, resourceY, ResolveItemName(patch.SeedPlanted) + " [" + (patch.TimeLeft / player.FarmGrowthIncrement) + "]");
+                                        }
                                     }
                                     mini.Con.PrintClickable(resourceX + 2, resourceY, new ColoredString("X", Color.Crimson, Color.Black), () => { patch.ClearPatch(); });
+
                                 } 
                                  
 
@@ -1596,7 +1661,7 @@ namespace ZeroPlayersOnline {
                 }
             }
 
-            if (Helper.HotkeyDown(Key.C)) {
+            if (Helper.HotkeyDown(Key.C) && !ExtraWindows.AnyVisible("Collection")) {
                 if (ExtraWindows.CollectionLog.IsVisible) { 
                     ExtraWindows.CollectionLog.IsVisible = false; 
                 } else {
@@ -1605,7 +1670,7 @@ namespace ZeroPlayersOnline {
                 }
             }
 
-            if (Helper.HotkeyDown(Key.F1)) {
+            if (Helper.HotkeyDown(Key.F1) && !ExtraWindows.AnyVisible("Guidebook")) {
                 if (ExtraWindows.Guide.IsVisible) { 
                     ExtraWindows.Guide.IsVisible = false; 
                 } else {
@@ -1614,7 +1679,7 @@ namespace ZeroPlayersOnline {
                 }
             }
 
-            if (Helper.HotkeyDown(Key.F2)) {
+            if (Helper.HotkeyDown(Key.F2) && !ExtraWindows.AnyVisible("Compendium")) {
                 if (ExtraWindows.Compendium.IsVisible) { 
                     ExtraWindows.Compendium.IsVisible = false; 
                 } else {
@@ -1623,7 +1688,7 @@ namespace ZeroPlayersOnline {
                 }
             }
 
-            if (Helper.HotkeyDown(Key.Q)) {
+            if (Helper.HotkeyDown(Key.Q) && !ExtraWindows.AnyVisible("Quests")) {
                 if (ExtraWindows.Quests.IsVisible) { 
                     ExtraWindows.Quests.IsVisible = false; 
                 } else {
@@ -1677,6 +1742,13 @@ namespace ZeroPlayersOnline {
             if (GameHost.Instance.Mouse.RightClicked) {
                 // Leaving this here just in case
                 //player.HeldGold += 1000;
+                player.TryGrantExp("Farming", player.Skills["Farming"].EXPNeeded(), Log, SidebarManager.RecentlyTrainedSkills); 
+                player.TryGrantExp("Attack", player.Skills["Attack"].EXPNeeded(), Log, SidebarManager.RecentlyTrainedSkills); 
+                player.TryGrantExp("Strength", player.Skills["Strength"].EXPNeeded(), Log, SidebarManager.RecentlyTrainedSkills);
+                player.TryGrantExp("Defense", player.Skills["Defense"].EXPNeeded(), Log, SidebarManager.RecentlyTrainedSkills);  
+
+                Item seed = Helper.Clone(ItemLibrary["seedTreePine"]);
+                player.TryPickup(seed, 1);
             }
         }
 
@@ -1717,8 +1789,19 @@ namespace ZeroPlayersOnline {
             }
 
             foreach (var kv in player.FarmingPatches) {
-                if (kv.Value.SeedPlanted != "" && kv.Value.TimeLeft > 0) {
-                    kv.Value.TimeLeft -= player.FarmGrowthIncrement;
+                if (kv.Value.SeedPlanted != "") { 
+                    if (kv.Value.TimeLeft > 0) {
+                        kv.Value.TimeLeft -= player.FarmGrowthIncrement;
+                    }
+
+                    if (kv.Value.RegrowTimeLeft > 0 && kv.Value.Regrown < 5) {
+                        kv.Value.RegrowTimeLeft -= player.FarmGrowthIncrement;
+
+                        if (kv.Value.RegrowTimeLeft <= 0) {
+                            kv.Value.Regrown++;
+                            kv.Value.RegrowTimeLeft = kv.Value.RegrowTime;
+                        }
+                    }
                 }
             }
 

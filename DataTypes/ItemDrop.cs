@@ -16,8 +16,10 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool EvenAt0x = false;
 
         public bool Noted = false;
+         
+        public Requirement? Requirement = null;
 
-        public ItemDrop(string id, int x, int y, int min, int max, bool noted = false, bool evenIf0 = false) {
+        public ItemDrop(string id, int x, int y, int min, int max, bool noted = false, bool evenIf0 = false, Requirement? req = null) {
             ItemID = id;
             DropX = x;
             InY = y;
@@ -28,6 +30,8 @@ namespace ZeroPlayersOnline.DataTypes {
             Noted = noted;
 
             EvenAt0x = evenIf0;
+
+            Requirement = req;
         }
 
         // Rolls 0 to InY, if less than DropX, success
@@ -35,6 +39,10 @@ namespace ZeroPlayersOnline.DataTypes {
 
 
         public void RollDrop(Player player, CollectionLogEntry? log) {
+            if (Requirement != null && !Requirement.CheckRequirement(player, true))
+                return;
+
+
             if (log == null)
                 log = new CollectionLogEntry("");
 

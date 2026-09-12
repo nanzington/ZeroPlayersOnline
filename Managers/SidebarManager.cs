@@ -80,7 +80,7 @@ namespace ZeroPlayersOnline.Managers {
                     for (int i = 0; i < curr.ItemSpawns.Count; i++) {  
                         if (curr.ItemSpawns[i].LastPickedUp + (curr.ItemSpawns[i].RespawnTimer * 1000) < Helper.Time() || curr.ItemSpawns[i].LastPickedUp == 0) {
                             bool itemSpawnedAlready = false;
-                            if (curr.ItemSpawns[i].ReqToSpawn != null && !curr.ItemSpawns[i].ReqToSpawn.CheckRequirement(player)) {
+                            if (curr.ItemSpawns[i].ReqToSpawn != null && !curr.ItemSpawns[i].ReqToSpawn.CheckRequirement(player, true)) {
                                 itemSpawnedAlready = true;
                             } 
 
@@ -158,7 +158,7 @@ namespace ZeroPlayersOnline.Managers {
                             if (curr.ShopItemsHere.Count > 0 && player.CanUseShops) {
                                 int sellValue = player.Inventory[i].Value;
 
-                                if (player.Inventory[i].UseInt4 != 0) {
+                                if (player.Inventory[i].UseInt4 != 0 && player.Inventory[i].UseString == "Potion") {
                                     sellValue *= player.Inventory[i].UseInt4;
                                 }
                                         

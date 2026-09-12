@@ -24,13 +24,29 @@
         public bool CanClick() {
             if (ClickReqs != null && ClickReqs.Count > 0) {
                 for (int i = 0; i < ClickReqs.Count; i++) {
-                    if (!ClickReqs[i].CheckRequirement(GameLoop.ZPO.player)) {
+                    if (!ClickReqs[i].CheckRequirement(GameLoop.ZPO.player, true)) {
                         return false;
                     }
                 } 
             }
 
             return true;
+        }
+
+        public void ConsumeItemsIfNeeded(Player p) {
+            if (ClickReqs != null && ClickReqs.Count > 0) {
+                for (int i = 0; i < ClickReqs.Count; i++) {
+                    if (ClickReqs[i].RequirementType == "Item") {
+                        if (ClickReqs[i].MiscString == "Gold" && ClickReqs[i].ConsumeItem) {
+                            p.HeldGold -= ClickReqs[i].MiscInt;
+                        } else {
+                            if (ClickReqs[i].ConsumeItem){
+                                p.ConsumeItems(new() { ClickReqs[i].MiscString + "," + ClickReqs[i].MiscInt}, true, true);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

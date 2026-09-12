@@ -40,7 +40,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
             if (Requirements != null) {
                 for (int i = 0; i < Requirements.Count; i++) {
-                    if (!Requirements[i].CheckRequirement(p)) {
+                    if (!Requirements[i].CheckRequirement(p, false)) {
                         allPassed = false;
                     } else {
                         anyPassed = true;
@@ -58,7 +58,7 @@ namespace ZeroPlayersOnline.DataTypes {
                 for (int i = 0; i < Requirements.Count; i++) {
                     bool passed = false;
 
-                    if (Requirements[i].CheckRequirement(p)) {
+                    if (Requirements[i].CheckRequirement(p, false)) {
                         if (Requirements[i].RequirementType == "Item" && Requirements[i].ConsumeItem) {
                             p.ConsumeItems([Requirements[i].MiscString + "," + Requirements[i].MiscInt], false, true);
                         }

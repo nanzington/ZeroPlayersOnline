@@ -1,4 +1,5 @@
-﻿using ZeroPlayersOnline.DataTypes;
+﻿using GoRogue;
+using GoRogue.DiceNotation.Terms;
 using Newtonsoft.Json;
 using SadConsole;
 using SadConsole.Input;
@@ -8,9 +9,9 @@ using System.Globalization;
 using System.IO.Compression;
 using System.Text; 
 using System.Text.RegularExpressions;
-using Rectangle = SadRogue.Primitives.Rectangle;
-using GoRogue;
+using ZeroPlayersOnline.DataTypes;
 using ZeroPlayersOnline.Managers;
+using Rectangle = SadRogue.Primitives.Rectangle;
 
 namespace ZeroPlayersOnline {
     public static class Helper {
@@ -794,20 +795,29 @@ namespace ZeroPlayersOnline {
         } 
          
 
-        public static T ChooseWeighted<T>(List<T> list) where T : IWeighted {
-            int totalWeight = list.Sum(c => c.Weight);
+        public static WeightedItem? ChooseWeighted(List<WeightedItem> list, string misc = "", int misc1 = 0) {
+            int totalWeight = list.Sum(c => misc == "" ? c.Weight : ((misc == c.MiscString || c.MiscString == "") && (misc1 >= c.MiscInt || c.MiscInt == 0) ? c.Weight : 0));
             int currentCount = 0;
             int targetWeight = GameLoop.rand.Next(0, totalWeight);
 
-            foreach (T item in list) {
-                currentCount += item.Weight;
+            foreach (WeightedItem item in list) { 
+                if (item.MiscString != "") {
+                    if (item.MiscString == misc && misc1 >= item.MiscInt) {
+                        currentCount += item.Weight;
+                        if (currentCount > targetWeight) {
+                            return item;
+                        }
+                    }
+                } else {
+                    currentCount += item.Weight;
 
-                if (currentCount > targetWeight) {
-                    return item;
+                    if (currentCount > targetWeight) {
+                        return item;
+                    }
                 }
             }
 
-            return default(T);
+            return null;
         }
 
         public static ColoredString GoldString(int geltValue, bool shop) {

@@ -22,6 +22,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool LevelBasedSuccess = false;
 
         public string NeedToolCat = "";
+        public string NeededBait = "";
 
 
         public List<WeightedItem>? PossibleItems = null;
@@ -29,7 +30,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double LastGathered = 0;
 
-        public GatheringTile(string id, string name, string verb, int succ, int deplete, int restock, string skill = "", int skLevel = 0, int exp = 0, int expFail = 0, int damageOnFail = 0, bool levelBasedSucc = false, string neededTool = "", List<WeightedItem>? items = null ) {
+        public GatheringTile(string id, string name, string verb, int succ, int deplete, int restock, string skill = "", int skLevel = 0, int exp = 0, int expFail = 0, int damageOnFail = 0, bool levelBasedSucc = false, string neededTool = "", string neededBait = "", List<WeightedItem>? items = null ) {
             ID = id;
             Name = name;
             InteractVerb = verb;
@@ -46,13 +47,14 @@ namespace ZeroPlayersOnline.DataTypes {
             DamageOnFail = damageOnFail;
             LevelBasedSuccess = levelBasedSucc;
             NeedToolCat = neededTool;
+            NeededBait = neededBait;
         }
 
 
-        public string PickItem() {
+        public WeightedItem? PickItem(int level) {
             if (PossibleItems != null && PossibleItems.Count > 0)
-                return Helper.ChooseWeighted<WeightedItem>(PossibleItems).Item;
-            return "";
+                return Helper.ChooseWeighted(PossibleItems, Skill, level);
+            return null;
         }
 
         public void Gather(Player p, MessageLog log, Dictionary<string, Item> itemLibrary, Location currentLoc, List<Skill> Recents) {
@@ -82,26 +84,49 @@ namespace ZeroPlayersOnline.DataTypes {
                             }
                         }
                     }
+
+                    if (Skill == "Fishing") { // TODO: Make tiered fishing tools??
+                        mod = 0;
+                    }
+                }
+
+                if (NeededBait != "") {
+                    p.ConsumeItems([NeededBait + ",1"]); 
                 }
 
                 if (success <= SuccessChance + mod) {
-                    string output = PickItem(); 
-                    if (itemLibrary.ContainsKey(output)) {
-                        Item receive = Helper.Clone(itemLibrary[output]);
-                        if (p.TryPickup(receive, 1)) {
-                            log.AddMessage(new ColoredString("You get " + receive.Name.ToLower() + " from the " + Name + ".", Color.Green, Color.Black));
-                        } else {
-                            log.AddMessage(new ColoredString("Your inventory is full so the " + receive.Name.ToLower() + " falls to the ground.", Color.Goldenrod, Color.Black));
-                        }
+                    int level = 0;
+                    if (p.Skills.ContainsKey(Skill))
+                        level = p.Skills[Skill].Level;
+                    WeightedItem? output = PickItem(level);
 
-                        p.TryGrantExp(Skill, ExpGranted, log, Recents);
-                    } else {
-                        if (output != "") {
-                            log.AddMessage(new ColoredString("You " + InteractVerb.ToLower() + " the " + Name.ToLower() + ", but output item doesn't exist.", Color.Firebrick, Color.Black));
+                    if (output != null) {
+                        if (itemLibrary.ContainsKey(output.Item)) {
+                            Item receive = Helper.Clone(itemLibrary[output.Item]);
+                            if (p.TryPickup(receive, 1)) {
+                                log.AddMessage(new ColoredString("You get " + receive.Name.ToLower() + " from the " + Name + ".", Color.Green, Color.Black));
+                            } else {
+                                log.AddMessage(new ColoredString("Your inventory is full so the " + receive.Name.ToLower() + " falls to the ground.", Color.Goldenrod, Color.Black));
+                            }
+
+                            if (output.MiscInt2 != 0) {
+                                p.TryGrantExp(Skill, output.MiscInt2, log, Recents);
+                            } else {
+                                p.TryGrantExp(Skill, ExpGranted, log, Recents);
+                            }
                         } else {
-                            log.AddMessage(new ColoredString("You " + InteractVerb.ToLower() + " the " + Name.ToLower() + ", but get nothing.", Color.Firebrick, Color.Black));
+                            if (output.Item != "") {
+                                log.AddMessage(new ColoredString("You " + InteractVerb.ToLower() + " the " + Name.ToLower() + ", but output item doesn't exist.", Color.Firebrick, Color.Black));
+                            } else {
+                                log.AddMessage(new ColoredString("You " + InteractVerb.ToLower() + " the " + Name.ToLower() + ", but get nothing.", Color.Firebrick, Color.Black));
+                            }
+
+                            if (output.MiscInt2 != 0) {
+                                p.TryGrantExp(Skill, output.MiscInt2, log, Recents);
+                            } else {
+                                p.TryGrantExp(Skill, ExpGranted, log, Recents);
+                            }
                         }
-                        p.TryGrantExp(Skill, ExpGranted, log, Recents);
                     }
 
                     int deplete = GameLoop.rand.Next(100) + 1;
@@ -156,6 +181,11 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 if (!foundTool)
                     return "a " + NeedToolCat;
+            }
+
+            if (NeededBait != "") {
+                if (!p.HasAllItems([NeededBait + ",1"]))
+                    return "a " + GameLoop.ZPO.ResolveItemName(NeededBait).ToLower();
             }
             return "";
         }

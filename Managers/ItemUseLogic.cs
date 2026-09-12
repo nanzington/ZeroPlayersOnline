@@ -11,6 +11,9 @@ namespace ZeroPlayersOnline.Managers {
             } else if (item.UseString == "Bones") {
                 GameLoop.ZPO.Log.AddMessage("You bury the " + item.Name.ToLowerInvariant() + " and get " + item.UseInt + " prayer experience.");
                 player.TryGrantExp("Prayer", item.UseInt, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+            } else if (item.UseString == "Ashes") {
+                GameLoop.ZPO.Log.AddMessage("You scatter the " + item.Name.ToLowerInvariant() + " and get " + item.UseInt + " prayer experience.");
+                player.TryGrantExp("Prayer", item.UseInt, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
             } else if (item.UseString == "Heal") {
                 player.CurrentHP = Math.Clamp(player.CurrentHP + item.UseInt, player.CurrentHP, player.Skills["Constitution"].Level);
                 GameLoop.ZPO.Log.AddMessage(new ColoredString("You eat the " + item.Name.ToLowerInvariant() + " and recover some hitpoints.", Color.Goldenrod, Color.Black));
@@ -35,6 +38,12 @@ namespace ZeroPlayersOnline.Managers {
                             player.ActivePotions.Add(Helper.Clone(item.Potion[i]));
                     } 
                 }
+            } else if (item.UseString == "FillPot") {
+                if (GameLoop.ZPO.ItemLibrary.TryGetValue("plantPot", out Item? filledPot) && filledPot != null) {
+                    player.TryPickup(filledPot, 1);
+                } else {
+                    return false;
+                }
             } else if (item.UseString == "PlantSeed") {
                 if (GameLoop.ZPO.Atlas.ContainsKey(player.NavLoc)) {
                     Location curr = GameLoop.ZPO.Atlas[player.NavLoc];
@@ -49,8 +58,15 @@ namespace ZeroPlayersOnline.Managers {
                                 if (player.Skills["Farming"].Level >= item.UseInt) {
                                     patch.SeedPlanted = item.ID;
                                     patch.TimeLeft = item.UseInt3;
+                                    patch.RegrowTime = item.UseInt4;
                                     foundPlantSpot = true;
                                     GameLoop.ZPO.Log.AddMessage(new ColoredString("You plant the " + item.Name.ToLowerInvariant() + ".", Color.Goldenrod, Color.Black));
+
+                                    if (item.Name.Contains("Plant pot")) {
+                                        if (GameLoop.ZPO.ItemLibrary.TryGetValue("plantPotEmpty", out Item? newPot) && newPot != null) {
+                                            player.TryPickup(newPot, 1);
+                                        }
+                                    }
                                 } else {
                                     GameLoop.ZPO.Log.AddMessage(new ColoredString("You need " + item.UseInt + " Farming to plant that.", Color.Crimson, Color.Black));
                                     return false;
@@ -83,6 +99,18 @@ namespace ZeroPlayersOnline.Managers {
                 }
             } else if (item.UseString == "ClueTutorial") {
                 ClueLogic.SetOrShowStep("Tutorial", player, GameLoop.ZPO.Log);
+            } else if (item.UseString == "ClueBeginner") {
+                ClueLogic.SetOrShowStep("Beginner", player, GameLoop.ZPO.Log);
+            } else if (item.UseString == "ClueEasy") {
+                ClueLogic.SetOrShowStep("Easy", player, GameLoop.ZPO.Log);
+            } else if (item.UseString == "ClueMedium") {
+                ClueLogic.SetOrShowStep("Medium", player, GameLoop.ZPO.Log);
+            } else if (item.UseString == "ClueHard") {
+                ClueLogic.SetOrShowStep("Hard", player, GameLoop.ZPO.Log);
+            } else if (item.UseString == "ClueElite") {
+                ClueLogic.SetOrShowStep("Elite", player, GameLoop.ZPO.Log);
+            } else if (item.UseString == "ClueMaster") {
+                ClueLogic.SetOrShowStep("Master", player, GameLoop.ZPO.Log);
             } else if (item.UseString == "Casket") {
                 List<Item> rolledItems = new();
                 List<Item> guaranteedItems = new();
@@ -232,22 +260,26 @@ namespace ZeroPlayersOnline.Managers {
                     for (int i = 0; i < item.Potion.Count; i++) {
                         bool found = false;
                         for (int j = 0; j < player.ActivePotions.Count; j++) {
-                            if (player.ActivePotions[j].Stat == item.Potion[i].Stat) {
-                                if (player.ActivePotions[j].Change < 0) {
-                                    player.ActivePotions[j].Change += item.Potion[i].Change;
-                                    found = true;
-                                } else {
-                                    if (player.ActivePotions[j].Change < item.Potion[i].Change) {
-                                        player.ActivePotions[j].Change = item.Potion[i].Change;
+                            if (item.Potion[i].Stat == "Heal") { 
+                                player.CurrentHP = Math.Clamp(player.CurrentHP + item.Potion[i].Change, player.CurrentHP, player.Skills["Constitution"].Level);
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString("The " + item.Name.ToLowerInvariant() + " restores some hitpoints.", Color.Goldenrod, Color.Black));
+                            } else {
+                                if (player.ActivePotions[j].Stat == item.Potion[i].Stat) {
+                                    if (player.ActivePotions[j].Change < 0) {
+                                        player.ActivePotions[j].Change += item.Potion[i].Change;
                                         found = true;
                                     } else {
-                                        return false;
+                                        if (player.ActivePotions[j].Change < item.Potion[i].Change) {
+                                            player.ActivePotions[j].Change = item.Potion[i].Change;
+                                            found = true;
+                                        }
                                     }
                                 }
                             }
                         }
-                        if (!found)
-                            player.ActivePotions.Add(Helper.Clone(item.Potion[i]));
+
+                        if (!found && item.Potion[i].Stat != "Heal")
+                            player.ActivePotions.Add(Helper.Clone(item.Potion[i])); 
                     }
 
                     item.UseInt4--;
@@ -333,6 +365,19 @@ namespace ZeroPlayersOnline.Managers {
                                 }
                                                 
                                 GameLoop.ZPO.Log.AddMessage(new ColoredString("You start a fire with the " + secondItem.Name + ".", Color.OrangeRed, Color.Black));
+                            }
+                        }
+
+                        if (rec.ReturnIDs.Count > 0) {
+                            for (int ret = 0; ret < rec.ReturnIDs.Count; ret++) {
+                                if (GameLoop.ZPO.ItemLibrary.ContainsKey(rec.ReturnIDs[ret])) {
+                                    Item made = Helper.Clone(GameLoop.ZPO.ItemLibrary[rec.ReturnIDs[ret]]);
+                                    made.Quantity = 1;
+
+                                    player.TryPickup(made, made.Quantity);
+                                } else {
+                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("You get the feeling that should've resulted in " + GameLoop.ZPO.ResolveItemName(rec.ReturnIDs[ret]) + ", but that item doesn't exist.", Color.Crimson, Color.Black));
+                                }
                             }
                         }
 

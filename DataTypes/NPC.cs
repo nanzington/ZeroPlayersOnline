@@ -36,7 +36,7 @@
                         p.TryGrantExp("Thieving", PickpocketEXP, log, RecentlyTrained);
 
                         if (PickpocketLoot != null && PickpocketLoot.Count > 0) {
-                            string item = Helper.ChooseWeighted<WeightedItem>(PickpocketLoot).Item;
+                            string item = Helper.ChooseWeighted(PickpocketLoot).Item;
 
                             if (ItemLib.ContainsKey(item)) {
                                 Item spawned = Helper.Clone(ItemLib[item]);

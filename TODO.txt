@@ -7,7 +7,7 @@ Misthalin Mania
 - Barbarian Village locations filled out
 - Edgeville locations filled out
 - Zanaris locations filled out
-- Lumbridge underground (possibly all the way to Dorgesh-kaan? maybe not necessary until the cave goblin quests can be added) locations filled out 
+- Lumbridge underground (swamp caves, castle possibly all the way to Dorgesh-kaan? not necessary until the cave goblin quests can be added) locations filled out 
 - Quest: Cook's Assistant
 - Quest: Demon Slayer
 - Quest: The Restless Ghost
@@ -48,13 +48,23 @@ BUGS TO FIX
 
 Less immediate but still important:
 - Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
-- Skip Tutorial Island option? (Complete skip, skip with cape, skip with quest) 
 - Find a way to show all items needed for a CraftRecipe if there are multiple
 - Dungeoneering areas that are actual random layout dungeons, reset layout somehow (on reload, if player is in a dungeon then reset their loc to the entrance, or if they reach the end crystal tp back to start and give set exp) 
 - Bank preset options somehow
 - Add slayer shop (slayer points and gold), way to skip/block/prefer tasks
 - Implement bronze logic when the grand exchange is actually available
 - Achievement Diaries / tasks for areas, split into difficulties, reward item for completing it, reward item only if it doesn't exist anywhere in the world, your bank, inventory, or equipment
+- Random Events
+- Skill pets, tiny chance when gaining exp in the skill if pet is not already owned
+
+
+Things Monsters Can Drop Instead of Gathering outputs
+- Logs: wood spirits, if you're chopping a tree and the have corresponding wood spirit, consume one spirit and get one extra log
+- Ores: ore spirits, if you're mining an ore and have the corresponding ore spirit, consume one spirit and get one extra ore
+- Herbs: potion filler, when you make a potion, if you have any potion filler then the potion will have 4 doses instead of 3
+
+
+
 
 
 Difficulty things
@@ -63,6 +73,16 @@ Difficulty things
 - RNG Item Lock? Can only use items you've unlocked, unlock a configurable random number of items per level gained. Optionally draft items via pick 1 of 3 for each unlock
 - Food Restrictions: Vegan, Vegetarian, Junk, 
 - Easy Teleports: if on, allows access to lodestones and select teleporter items (portable fairy ring, slayer skull, clue briefcase, etc), also allows access to war's retreat for boss teles
+- CARD LOCKED
+- - Optionally also include ability to spend gold as a card?
+- - Can't use items unless they're unlocked
+- - Can't kill/pickpocket/slayerTask/etc from NPCs you haven't unlocked, maybe also include NPCs that start or progress quests
+- - Choose how many unlocks per pack (default 5)
+- - Choose how many levels you have to get to receive a pack (default 1)
+- - Choose how many packs you can choose between. View all cards in each, but only allowed to *choose* one set (default 1)
+- - Foil cards that unlock specific related items? Cooked food foils unlock the raw ingredients, smithed gear unlocks lower tiers (ex steel plate also unlocks tutorial, bronze, and iron platebody)
+
+
 
 Randomizer Options - Basically just provide an option for ID remaps
 - Items, No Logic (DONE), No Logic+ (every minute it re-randomizes the mappings)
@@ -77,8 +97,6 @@ Future Skills to work on:
 - Proxy combat skill of some kind (ex necromancy, summoning, taming, something like that)
 - Some kind of skill to enchant weapons/armor somehow maybe?
 
-
-
 Distraction and Diversions / Activities / Minigames
 - Implement Existing Ones
 - - Mahogany Homes (get contract from estate agent, go to correct building, build all hotspots, get exp and contract points)
@@ -92,12 +110,6 @@ Multiplayer?
 - See eachother walking around in the world, possibly also see players in adjacent locations somehow
 - Friends list to message eachother from afar?
 - Type in chat and display to players in the same location
-
-
-Farming Notes
-- When fruit trees and bushes get added, don't clear them from the patch on harvest, let them regrow after a bit to keep harvesting. maybe do the same with regular trees
-
-
 
 Meta Story
 - Switches scattered across obscure parts of the map that all have to be flipped to begin the end sequence?
@@ -144,8 +156,6 @@ Clue Step Notes
 
 Next quests to implement and things they need
 - Cooks Assistant
-- - Locations: Lumbridge Castle interior, Lumbridge farms
-- - Mechanics: Quests/dialogue consuming items
 - Demon Slayer
 - - Locations: Path from Lumbridge to Varrock, a decent portion of Varrock, Wizard tower so also path to Draynor
 - - Mechanics: Boss fight vs Delrith (or temporary monsters), partial item delivery for quest steps?
@@ -155,7 +165,6 @@ Next quests to implement and things they need
 - Romeo and Juliet
 - - Locations: Basically all of varrock and the surrounding area / the southeast mine
 - Sheep Shearer
-- - Locations: Nothing new by this point (Fred's Farm north of Lumbridge and the spinning wheel upstairs in the castle)
 - Shield of Arrav
 - - Locations: Seedy parts of Varrock, Varrock Castle
 - - Mechanics: Probably just use the RS3 changes to make it solo, can have multiplayer stuff if multiplayer is added later

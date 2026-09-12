@@ -37,6 +37,10 @@ namespace ZeroPlayersOnline.DataTypes {
                                 continue;
                         }
 
+                        if (Recipes[j].SecondaryIn != "" && !p.HasAllItems([Recipes[j].SecondaryIn + ",1" ])) {
+                            continue;
+                        }
+
 
                         if (Recipes[j].SkillUsed != "") {
                             if (p.Skills.ContainsKey(Recipes[j].SkillUsed) && p.Skills[Recipes[j].SkillUsed].Level < Recipes[j].SkillLevel) {
@@ -48,6 +52,14 @@ namespace ZeroPlayersOnline.DataTypes {
                         p.Inventory[i].Quantity -= 1;
                         if (p.Inventory[i].Quantity <= 0) {
                             p.Inventory.RemoveAt(i);
+                            changedInv = true;
+                        }
+
+                        int invCount = p.Inventory.Count;
+                        if (Recipes[j].SecondaryIn != "") {
+                            p.ConsumeItems([Recipes[j].SecondaryIn+",1"]);
+                        }
+                        if (invCount != p.Inventory.Count) {
                             changedInv = true;
                         }
 
@@ -65,9 +77,17 @@ namespace ZeroPlayersOnline.DataTypes {
                             p.TryPickup(item, item.Quantity);
                         }
 
+                        if (Recipes[j].SecondaryOut != "") {
+                            if (ItemLibrary.ContainsKey(Recipes[j].SecondaryOut)) {
+                                Item item = Helper.Clone(ItemLibrary[Recipes[j].SecondaryOut]); 
+
+                                p.TryPickup(item, item.Quantity);
+                            }
+                        }
+
                         p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills);
                         return true;
-                    }
+                    } 
                     if (changedInv)
                         break;
                 }

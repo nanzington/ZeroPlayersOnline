@@ -517,6 +517,48 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             }));
 
+            toAdd.Add(new("Prayer Tutor", "tutorPrayer", new() {
+                {
+                    0,
+                    new("Greetings, fellow child of Saradomin! Would you like to learn how to harness the power of the Orderly One?", new() {
+                        new DialogueChoice("(NEXT)", 10),
+                        byeThen
+                    })
+                },
+                {
+                    10,
+                    new("The easiest way to gain prayer experience is to honor the dead by burying their bones. Offering them at some altars may grant more.", new() {
+                        new DialogueChoice("(NEXT)", 20),
+                        byeThen
+                    })
+                },
+                {
+                    20,
+                    new("If you navigate to the 'PRA'yer menu on the left, you can view all prayers in your currently selected prayer book.", new() {
+                        new DialogueChoice("(NEXT)", 30),
+                        byeThen
+                    })
+                },
+                {
+                    30,
+                    new("Each prayer can be turned on or off at will, taking up points equal to the level needed to use it and granting their effects while on.", new() {
+                        new DialogueChoice("(NEXT)", 40),
+                        byeThen
+                    })
+                },
+                {
+                    40,
+                    new("The maximum number of points you can use at once is equal to your Prayer level. But you can boost that by 5 by praying at an altar!", new() {
+                        new DialogueChoice("(NEXT)", 50),
+                        byeThen
+                    })
+                },
+                {
+                    50,
+                    new("That's all there is to it! Good luck, and may Saradomin be with you.", new() { byeThen })
+                }
+            }));
+
             toAdd.Add(new("Wizard Terrova", "tiWizardTerrova", new() {
                 {
                     0,
@@ -677,7 +719,24 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Forlorn ghost", "tiForlornGhost3", new() { { 0, new("(The ghost says nothing, just stares hopefully at Wizard Terrova)", new() { byeThen }) } }, req: new("QuestAt", 70, "TI_HauntedIsland")));
 
             toAdd.Add(new("Man", "man", new() { { 0, new("Lovely day for it!", new() { byeThen }) } }, 1, 10) { PickpocketLoot = new() { new("coinPouchSmall", 1) } });
+            toAdd.Add(new("Woman", "woman", new() { { 0, new("Lovely day for it!", new() { byeThen }) } }, 1, 10) { PickpocketLoot = new() { new("coinPouchSmall", 1) } });
+            toAdd.Add(new("Farmer", "farmer", new() { { 0, new("Have you seen m'chickens?", new() { byeThen }) } }, 10, 15) { PickpocketLoot = new() { new("coinPouchMedium", 1), new("seedPouchFarmer", 1) } });
 
+            toAdd.Add(new("Bartender", "mistLumBartender", new() { 
+                { 0, new("Welcome to the Sheared Ram. What can I do for you?", new() {  new DialogueChoice("I'll have a beer please?", 1, new() { new("Item", 2, "Gold", true)}, true), new DialogueChoice("Heard any rumors?", 2), byeThen }) },
+                { 1, new("That'll be two coins, please.", new() { new DialogueChoice("Another round, barkeep!", 1, new() { new("Item", 2, "Gold", true)}, true), byeThen }, items: new() { "beer,1" }) },
+                { 2, new("One of the patrons here is looking for treasure, apparently. A chap by the name of Veos.", new() { byeThen }) }
+            }));
+
+            toAdd.Add(new("Captain Harlan", "mistLumHarlan", new() { 
+                { 0, new("Greetings adventurer, I am the Melee combat tutor. Is there anything I can do for you?", new() {  new DialogueChoice("Tell me about skillcapes", 1), byeThen }) },
+                { 1, new("Skillcapes are a symbol of achievement. Only people who have reached level 99 can use them.", new() { new DialogueChoice("(NEXT)", 2), byeThen }) },
+                { 2, new("I am the Defense Skill Master, and if you have reached 99 Defense you can buy a cape from me for just 99,000 coins.", new() { new DialogueChoice("That's a bit expensive.", 3), new DialogueChoice("(BUY CAPE)", 4, new() { new("Item", 99000, "Gold", true), new("Skill", 99, "Defense")}, true), byeThen }) },
+                { 3, new("Is it, to demonstrate your mastery of the field of Defense? Perhaps you are not dedicated enough to deserve the cape.", new() { new DialogueChoice("(BUY CAPE)", 4, new() { new("Item", 99000, "Gold", true), new("Skill", 99, "Defense")}, true), byeThen }) },
+                { 4, new("Excellent choice, my friend. Wear it with pride.", new() { byeThen }, items: new() { "capeSkillDefense,1" }) },
+            }));
+            toAdd.Add(new("Victoria", "mistLumVictoria", new() { { 0, new("...Do you mind? I'm busy. Please leave.", new() { byeThen }) } }));
+            
 
             for (int i = 0; i < toAdd.Count; i++) { 
                 NPCLib.Add(toAdd[i].ID, toAdd[i]);

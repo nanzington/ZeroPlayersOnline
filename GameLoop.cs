@@ -10,6 +10,7 @@ namespace ZeroPlayersOnline {
     class GameLoop {
         public const int GameWidth = 150;
         public const int GameHeight = 50;
+        public const bool DemoMode = false;
 
 #pragma warning disable CS8618
         public static SadFont SquareFont;

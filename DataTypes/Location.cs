@@ -39,5 +39,11 @@ namespace ZeroPlayersOnline.DataTypes {
 
         [JsonIgnore]
         public Dictionary<int, string> TrapsDown = new();
+
+        public Location(string id, string name, string region) {
+            ID = id;
+            DisplayName = name;
+            Region = region;
+        }
     }
 }

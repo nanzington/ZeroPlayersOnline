@@ -12,6 +12,8 @@
         public int CostMultiplier = 1;
         public string Descriptor = "";
 
+        public MaterialDef(string name, Color c, int tier, int lv, int cost, string desc) : this(name, c.R, c.G, c.B, c.A, tier, lv, cost, desc) { }
+
         public MaterialDef(string name, int r, int g, int b, int a, int tier, int lv, int cost, string desc) {
             Name = name;
             R = r;

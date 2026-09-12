@@ -42,7 +42,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool CanStartQuest(Player p) {
             bool allPassed = true;
             for (int i = 0; i < RequirementsToStart.Count; i++) {
-                if (!RequirementsToStart[i].CheckRequirement(p)) {
+                if (!RequirementsToStart[i].CheckRequirement(p, true)) {
                     allPassed = false;
                 }
             }

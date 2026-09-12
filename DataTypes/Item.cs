@@ -52,6 +52,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public Item() { }
 
+        public Item(string n, string ex, string id, Color c, int v, bool stack = false, bool trade = true, string misc = "") : this(n, ex, id, c.R, c.G, c.B, v, stack, trade, misc) { } 
+
         public Item(string n, string ex, string id, int r, int g, int b, int v, bool stack = false, bool trade = true, string misc = "") {
             Name = n;
             ID = id;

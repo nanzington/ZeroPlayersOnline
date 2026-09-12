@@ -34,6 +34,9 @@
             }
 
             if (RequirementType == "Item") {
+                if (MiscString == "Gold") {
+                    return "Need " + MiscInt + " gold";
+                }
                 return "Need " + GameLoop.ZPO.ResolveItemName(MiscString);
             }
 
@@ -60,7 +63,7 @@
         }
 
 
-        public bool CheckRequirement(Player p) {
+        public bool CheckRequirement(Player p, bool itemsNotedOkay) {
             if (RequirementType == "Skill") {
                 if (MiscString == "All") {
                     foreach (var kv in p.Skills) {
@@ -95,23 +98,29 @@
             }
 
             if (RequirementType == "Item") {
-                int count = 0;
-                for (int i = 0; i < p.Inventory.Count; i++) { 
-                    if (p.Inventory[i].ID == MiscString || p.Inventory[i].MiscString == MiscString) {
-                        if (!p.Inventory[i].Noted)
-                            count += p.Inventory[i].Quantity;
+                if (MiscString == "Gold") {
+                    if (p.HeldGold >= MiscInt) {
+                        return true;
                     }
-                }
-
-                foreach (var kv in p.Equipment) {
-                    if (kv.Value.ID == MiscString || kv.Value.MiscString == MiscString) {
-                        if (!kv.Value.Noted)
-                            count += kv.Value.Quantity;
+                } else {
+                    int count = 0;
+                    for (int i = 0; i < p.Inventory.Count; i++) { 
+                        if (p.Inventory[i].ID == MiscString || p.Inventory[i].MiscString == MiscString) {
+                            if (!p.Inventory[i].Noted || itemsNotedOkay)
+                                count += p.Inventory[i].Quantity;
+                        }
                     }
-                }
 
-                if (count >= MiscInt)
-                    return true;
+                    foreach (var kv in p.Equipment) {
+                        if (kv.Value.ID == MiscString || kv.Value.MiscString == MiscString) {
+                            if (!kv.Value.Noted)
+                                count += kv.Value.Quantity;
+                        }
+                    }
+
+                    if (count >= MiscInt)
+                        return true;
+                }
             }
 
             if (RequirementType == "CollectionLogComplete") {

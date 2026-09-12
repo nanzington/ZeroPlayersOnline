@@ -12,7 +12,7 @@ namespace ZeroPlayersOnline.UI {
 
         public string MenuMode = "Main";
         public string TypingBox = "";
-
+        public int SkippingTutorialIsland = 0;
 
         public List<Particle> LeftParticles = new();
         public List<Particle> RightParticles = new(); 
@@ -183,6 +183,12 @@ namespace ZeroPlayersOnline.UI {
 
                 mini.Con.PrintStringField(38, 11, "Name: ", ref GameLoop.ZPO.player.Name, ref TypingBox, "playerName");
 
+                mini.Con.Print(92, 11, "Skip Tutorial Island: ");
+                mini.Con.PrintClickable(98 + 16, 11, new ColoredString("No", SkippingTutorialIsland == 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SkippingTutorialIsland = 0; });
+                mini.Con.PrintClickable(98 + 19, 11, new ColoredString("Yes", SkippingTutorialIsland == 1 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SkippingTutorialIsland = 1; });
+                mini.Con.PrintClickable(98 + 23, 11, new ColoredString("Cape", SkippingTutorialIsland == 2 ? Color.AnsiGreen : Color.DarkSlateGray, Color.Black), () => { SkippingTutorialIsland = 2; }); 
+
+
                 int printY = 13;
 
                 mini.Con.Print(28, printY, "Grand Exchange:");
@@ -267,13 +273,15 @@ namespace ZeroPlayersOnline.UI {
 
                 printY++;
 
-                mini.Con.PrintClickableBool(26, printY, "Farm Growth Time: ", ref GameLoop.ZPO.player.CanUseShops);
+                mini.Con.Print(26, printY, "Farm Growth Time: ");
                 mini.Con.PrintClickable(28 + 16, printY, new ColoredString("Slow", GameLoop.ZPO.player.FarmGrowthIncrement == 1 ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.FarmGrowthIncrement = 1; });
                 mini.Con.PrintClickable(28 + 21, printY, new ColoredString("Normal", GameLoop.ZPO.player.FarmGrowthIncrement == 60 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.FarmGrowthIncrement = 60; });
                 mini.Con.PrintClickable(28 + 28, printY, new ColoredString("Fast", GameLoop.ZPO.player.FarmGrowthIncrement == 1000 ? Color.AnsiGreen : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.FarmGrowthIncrement = 1000; });
                 mini.Con.PrintClickable(28 + 33, printY, new ColoredString("Instant", GameLoop.ZPO.player.FarmGrowthIncrement == 10000 ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.FarmGrowthIncrement = 10000; });
 
-                printY++;
+                printY++; 
+                 
+
                 /*
                 mini.Con.Print(27, printY, "Item Randomizer:");
                 mini.Con.PrintClickable(44, printY, new ColoredString("Off", GameLoop.ZPO.player.RandomItems == 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.RandomItems = 0; });
@@ -381,6 +389,22 @@ namespace ZeroPlayersOnline.UI {
         public void SwapToGame(bool loading) { 
             if (GameLoop.ZPO.player.RandomItems != 0) {
                 GameLoop.ZPO.RemapItems(loading);
+            }
+
+            if (!loading && SkippingTutorialIsland > 0) {
+                GameLoop.ZPO.player.NavLoc = "MIST_LumbridgeCastleBailey";
+                
+                if (GameLoop.ZPO.player.QuestLog.TryGetValue("TI_HauntedIsland", out Quest? haunted)) {
+                    if (haunted != null) {
+                        haunted.CurrentStage = haunted.CompleteStage;
+                    }
+                }
+
+                if (SkippingTutorialIsland == 2) {
+                    if (GameLoop.ZPO.ItemLibrary.TryGetValue("capeCompTI", out Item? cape)) {
+                        GameLoop.ZPO.player.TryPickup(cape, 1);
+                    }
+                }
             }
 
             GameLoop.UIManager.mainMenu.Win.IsVisible = false;

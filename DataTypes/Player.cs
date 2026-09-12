@@ -316,6 +316,10 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                     else {
                         int sellValue = Inventory[i].Value;
+
+                        if (Inventory[i].UseInt4 != 0 && Inventory[i].UseString == "Potion") {
+                            sellValue *= Inventory[i].UseInt4;
+                        } 
                                         
                         if (!ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(Inventory[i].ID)) {
                             sellValue = (int) (Math.Floor(sellValue / 2.0));

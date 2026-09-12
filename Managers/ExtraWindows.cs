@@ -1,5 +1,7 @@
-﻿using GoRogue.DiceNotation.Terms;
+﻿using GoRogue;
+using GoRogue.DiceNotation.Terms;
 using SadConsole.EasingFunctions;
+using SadConsole.Input;
 using SadConsole.UI;
 using ZeroPlayersOnline.DataTypes;
 using Key = SadConsole.Input.Keys;
@@ -41,16 +43,16 @@ namespace ZeroPlayersOnline.Managers {
         public static string SelectedField = "";
 
 
-        public static bool AnyVisible() {
-            if (CollectionLog.IsVisible)
+        public static bool AnyVisible(string except = "") {
+            if (CollectionLog.IsVisible && except != "Collection")
                 return true;
-            if (CraftingMenu.IsVisible)
+            if (CraftingMenu.IsVisible && except != "Crafting")
                 return true;
-            if (Guide.IsVisible)
+            if (Guide.IsVisible && except != "Guidebook")
                 return true;
-            if (Quests.IsVisible)
+            if (Quests.IsVisible && except != "Quests")
                 return true;
-            if (Compendium.IsVisible)
+            if (Compendium.IsVisible && except != "Compendium")
                 return true;
             
             return false;
@@ -122,7 +124,9 @@ namespace ZeroPlayersOnline.Managers {
          
 
         static List<CompendiumResult> Sources = new();
-        public static void CompendiumDraw() {
+        public static void CompendiumDraw() { 
+            Point mousePos = new MouseScreenObjectState(Compendium, GameHost.Instance.Mouse).CellPosition;
+
             Compendium.Clear();
             Helper.DrawBox(Compendium, 0, 0, 98, 28);
             Compendium.Print(2, 0, "[Zero Players Online Compendium]");
@@ -162,20 +166,7 @@ namespace ZeroPlayersOnline.Managers {
                     , 97);
             } 
             else if (CompendiumCat == "Items") { 
-                Compendium.DrawLine(new Point(30, 3), new Point(30, 28), 179);
-                int qty = 1;
-                if (Helper.EitherShift())
-                    qty *= 5;
-                if (Helper.EitherControl())
-                    qty *= 10;
-
-
-                if (GameLoop.ZPO.ItemLibrary.Count > 24) {
-                    if (Helper.ScrolledUp()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop - qty, 0, GameLoop.ZPO.ItemLibrary.Count - 24); }
-                    if (Helper.ScrolledDown()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop + qty, 0, GameLoop.ZPO.ItemLibrary.Count - 24); }
-                } else {
-                    CompendiumSidebarTop = 0;
-                }
+                Compendium.DrawLine(new Point(30, 3), new Point(30, 28), 179); 
 
                 int sidebarY = 3; 
 
@@ -184,6 +175,20 @@ namespace ZeroPlayersOnline.Managers {
                 Compendium.DrawLine(new Point(1, sidebarY), new Point(29, sidebarY++), 196);
 
                 List<Item> items = GameLoop.ZPO.ItemLibrary.Values.Where(u => u.Name != null && u.Name.ToLower().Contains(Filter.ToLower())).OrderBy(o => o.Name).ToList();
+
+                int qty = 1;
+                if (Helper.EitherShift())
+                    qty *= 5;
+                if (Helper.EitherControl())
+                    qty *= 10;
+
+
+                if (items.Count > 24 && mousePos.X < 30) {
+                    if (Helper.ScrolledUp()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop - qty, 0, items.Count - 24); }
+                    if (Helper.ScrolledDown()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop + qty, 0, items.Count - 24); }
+                } else {
+                    CompendiumSidebarTop = 0;
+                }
 
                 for(int i = CompendiumSidebarTop; i < items.Count && i < CompendiumSidebarTop + 24; i++) {
                     Compendium.PrintClickable(1, sidebarY++, new ColoredString(items[i].Name, items[i].GetColor(), Color.Black), () => { CompendiumViewingID = items[i].ID; CompendiumShowSources = false; });
@@ -228,14 +233,37 @@ namespace ZeroPlayersOnline.Managers {
                         Compendium.Print(70, itemY++, "UseInt4: " + item.UseInt4, Color.White); 
                         Compendium.Print(32, itemY, "DestroyOnDrop: " + Helper.Checkmark(item.DestroyOnDrop)); 
                         Compendium.Print(70, itemY, "Cosmetic: " + Helper.Checkmark(item.Cosmetic)); 
-
-                        itemY += 2;
-                        
+                          
                         if (item.Potion.Count > 0) {
+                            itemY += 2;
                             Compendium.Print(32, itemY, "Potion Effects: ", Color.White); 
                             for (int pot = 0; pot < item.Potion.Count; pot++) {
                                 Compendium.Print(48, itemY++, item.Potion[pot].Stat + " " + (item.Potion[pot].Change > 0 ? "+" : "") + item.Potion[pot].Change, Color.White); 
                             }
+                        }
+
+                        if (item.DropTable.Count > 0) {
+                            itemY += 2;
+
+                            int drop = 1;
+                            if (Helper.EitherShift())
+                                drop *= 5;
+                            if (Helper.EitherControl())
+                                drop *= 10;
+
+
+                            if (item.DropTable.Count > 9 && mousePos.X > 30) {
+                                if (Helper.ScrolledUp()) { CompendiumDropTop = Math.Clamp(CompendiumDropTop - drop, 0, item.DropTable.Count - 9); }
+                                if (Helper.ScrolledDown()) { CompendiumDropTop = Math.Clamp(CompendiumDropTop + drop, 0, item.DropTable.Count - 9); }
+                            } else {
+                                CompendiumDropTop = 0;
+                            }
+                            
+                            Compendium.Print(32, itemY++, "Drop Table: ", Color.White); 
+                            for (int pot = CompendiumDropTop; pot < item.DropTable.Count && pot < CompendiumDropTop + 9; pot++) {
+                                Compendium.PrintClickable(32, itemY++, "| " + GameLoop.ZPO.ResolveItemName(item.DropTable[pot].ItemID) + " (" + item.DropTable[pot].DropX + "/" + item.DropTable[pot].InY + ")", () => { ResetAllCompendiumValues(); CompendiumCat = "Items"; CompendiumViewingID = item.DropTable[pot].ItemID; }); 
+                            }
+
                         }
                     } else {
                         if (Sources.Count > 20) {
@@ -1230,7 +1258,7 @@ namespace ZeroPlayersOnline.Managers {
                             } 
 
                             for (int i = CompendiumDropTop; i < quest.RequirementsToStart.Count && i < CompendiumDropTop + 10 && questY < 29; i++) { 
-                                Compendium.Print(32, questY++, "| " + quest.RequirementsToStart[i].GetSummary(), quest.RequirementsToStart[i].CheckRequirement(GameLoop.ZPO.player) ? Color.Lime : Color.Crimson);
+                                Compendium.Print(32, questY++, "| " + quest.RequirementsToStart[i].GetSummary(), quest.CanStartQuest(GameLoop.ZPO.player) ? Color.Lime : Color.Crimson);
                             }
                         } else {
                             Compendium.Print(32, questY++, "| (no requirements)", Color.DarkSlateGray);  
@@ -1683,8 +1711,7 @@ namespace ZeroPlayersOnline.Managers {
                     CompendiumSidebarTop = 0;
                 }
 
-                int sidebarY = 3; 
-
+                int sidebarY = 3;  
                 
                 Compendium.PrintStringField(2, sidebarY++, "Filter: ", ref Filter, ref SelectedField, "skillFilter");
                 Compendium.DrawLine(new Point(1, sidebarY), new Point(29, sidebarY++), 196);
@@ -1700,7 +1727,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     Compendium.Print(32, skillY, "Name: " + skill.Name, Color.White);
                     Compendium.Print(57, skillY, "Level: " + skill.Level, Color.White); 
-                    Compendium.Print(72, skillY, "Exp: " + skill.Exp + "/" + skill.ExpToLevel(), Color.White); 
+                    Compendium.Print(72, skillY, "Exp: " + skill.Exp + "/" + skill.ExpToLevel(), Color.White);  
 
                     skillY += 2;
 
@@ -1720,7 +1747,8 @@ namespace ZeroPlayersOnline.Managers {
                         }
 
                         for (int i = CompendiumSourceTop; i < Sources.Count && i < CompendiumSourceTop + 24; i++) {
-                            Compendium.PrintClickable(32, skillY++, Helper.Truncate(Sources[i].Display, 67), () => { SetAllCompendiumValues(Sources[i]); });
+                            int.TryParse(Sources[i].Display[1..4], out int level);
+                            Compendium.PrintClickable(32, skillY++, new ColoredString(Helper.Truncate(Sources[i].Display, 67), level <= skill.Level ? Color.White : Color.DarkSlateGray, Color.Black), () => { SetAllCompendiumValues(Sources[i]); });
                         }
                     } else {
                         Compendium.Print(32, skillY++, "(skill doesn't gate any content)", Color.DarkSlateGray);
@@ -1842,6 +1870,8 @@ namespace ZeroPlayersOnline.Managers {
             CompendiumViewingID2 = res.ViewID2;
             CompendiumViewingIndex = res.ViewIndex;
             CompendiumViewingIndex2 = res.ViewIndex2;
+            CompendiumSourceTop = 0;
+            CompendiumDropTop = 0;
         }
 
         public static List<CompendiumResult> StationLocations(string id) {
@@ -2004,7 +2034,17 @@ namespace ZeroPlayersOnline.Managers {
 
             foreach (var kv in GameLoop.ZPO.GatherSpots) {
                 if (kv.Value.Skill == id) {
-                    sources.Add(new("[" + kv.Value.Level.ToString().Align(HorizontalAlignment.Right, 3) + "] " + kv.Value.InteractVerb + " " + kv.Value.Name, "Gathering", "", kv.Value.ID, "", 0));
+                    if (kv.Value.PossibleItems != null && kv.Value.PossibleItems.Count > 1) {
+                        for (int i = 0; i < kv.Value.PossibleItems.Count; i++) {
+                            int level = kv.Value.Level;
+                            if (kv.Value.PossibleItems[i].MiscInt != 0)
+                                level = kv.Value.PossibleItems[i].MiscInt;
+
+                            sources.Add(new("[" + level.ToString().Align(HorizontalAlignment.Right, 3) + "] " + kv.Value.InteractVerb + " " + kv.Value.Name + " - " + GameLoop.ZPO.ResolveItemName(kv.Value.PossibleItems[i].Item), "Gathering", "", kv.Value.ID, "", 0));
+                        }
+                    } else {
+                        sources.Add(new("[" + kv.Value.Level.ToString().Align(HorizontalAlignment.Right, 3) + "] " + kv.Value.InteractVerb + " " + kv.Value.Name, "Gathering", "", kv.Value.ID, "", 0));
+                    }
                 } 
             }
 

@@ -1,4 +1,5 @@
 ﻿using ZeroPlayersOnline.DataTypes;
+using ZeroPlayersOnline.HardcodedData;
 
 namespace ZeroPlayersOnline.Hardcodes {
     public static class HardcodedCraftRecipes {
@@ -6,9 +7,11 @@ namespace ZeroPlayersOnline.Hardcodes {
             List<CraftRecipe> toAdd = new();
             
             List<MaterialDef> Metals = new() { 
-                new("Bronze", 205, 127, 50, 255, 1, 1, 15, "minimal"), 
-                new("Iron", 75, 75, 75, 255, 2, 10, 40, "slight"), 
-                new("Steel", 150, 150, 150, 255, 3, 20, 75, "adequate")
+                new("Bronze", ColorLib.Bronze, 1, 1, 15, "minimal"), 
+                new("Iron", ColorLib.Iron, 2, 10, 40, "slight"), 
+                new("Steel", ColorLib.Steel, 3, 20, 75, "adequate"), 
+                new("Mithril", ColorLib.Mithril, 4, 30, 120, "good"), 
+                new("Adamant", ColorLib.Adamant, 3, 40, 170, "great")
             };
 
             for (int i = 0; i < Metals.Count; i++) {
@@ -24,6 +27,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "boots" + Metals[i].Name, tool: "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "gauntlets" + Metals[i].Name, tool: "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "arrowheads" + Metals[i].Name, 15, "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "boltsUnf" + Metals[i].Name, 15, "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "knives" + Metals[i].Name, 5, "hammer"));
             }
 
@@ -37,6 +41,24 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Knife", "Fletching", 1, 5, ["logPine" + "," + 1], "arrowshaft", 15, "knife"));
             toAdd.Add(new("Knife", "Fletching", 1, 5, ["logPine" + "," + 1], "shortbowPineU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 10, 10, ["logOak" + "," + 1], "arrowshaft", 30, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 10, 10, ["logOak" + "," + 1], "shortbowOakU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 20, 15, ["logWillow" + "," + 1], "arrowshaft", 45, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 20, 15, ["logWillow" + "," + 1], "shortbowWillowU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 30, 20, ["logTeak" + "," + 1], "arrowshaft", 60, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 30, 30, ["logTeak" + "," + 1], "shortbowTeakU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 40, 25, ["logMaple" + "," + 1], "arrowshaft", 75, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 40, 45, ["logMaple" + "," + 1], "shortbowMapleU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 50, 30, ["logAcadia" + "," + 1], "arrowshaft", 90, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 50, 60, ["logAcadia" + "," + 1], "shortbowAcadiaU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 60, 35, ["logMahogany" + "," + 1], "arrowshaft", 105, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 60, 75, ["logMahogany" + "," + 1], "shortbowMahoganyU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 70, 40, ["logYew" + "," + 1], "arrowshaft", 120, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 70, 90, ["logYew" + "," + 1], "shortbowYewU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 80, 45, ["logMagic" + "," + 1], "arrowshaft", 135, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 80, 105, ["logMagic" + "," + 1], "shortbowMagicU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 90, 50, ["logElder" + "," + 1], "arrowshaft", 150, "knife"));
+            toAdd.Add(new("Knife", "Fletching", 90, 120, ["logElder" + "," + 1], "shortbowElderU", tool: "knife"));
 
 
 
