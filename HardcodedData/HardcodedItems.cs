@@ -1,4 +1,5 @@
-﻿using ZeroPlayersOnline.DataTypes;
+﻿using GoRogue.GameFramework;
+using ZeroPlayersOnline.DataTypes;
 using ZeroPlayersOnline.HardcodedData;
 
 namespace ZeroPlayersOnline.Hardcodes {
@@ -53,12 +54,44 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Key mould", "A key mould, made from a ragged book.", "mouldKey", Color.White, 1));
             itemsToAdd.Add(new Item("Lens mould", "An unusual mould in the shape of a disc.", "mouldLens", Color.Gray, 1));
             itemsToAdd.Add(new Item("Monkeyspeak amulet mould", "It's an amulet mould shaped like a monkey head.", "mouldAmuletMonkeyspeak", Color.White, 10));
-            itemsToAdd.Add(new Item("Necklace mould", "Used to make necklaces.", "mouldNecklacec", Color.White, 5));
+            itemsToAdd.Add(new Item("Necklace mould", "Used to make necklaces.", "mouldNecklace", Color.White, 5));
             itemsToAdd.Add(new Item("Ring mould", "Used to make rings.", "mouldRing", Color.White, 5));
             itemsToAdd.Add(new Item("Rod clay mould", "Rod of Ivandis mould.", "mouldRodClay", Color.SandyBrown, 5));
             itemsToAdd.Add(new Item("Sickle mould", "Used to make sickles.", "mouldSickle", Color.White, 10));
             itemsToAdd.Add(new Item("Tiara mould", "A mould for tiaras.", "mouldTiara", Color.SaddleBrown, 100));
             itemsToAdd.Add(new Item("Unholy mould", "Used to make unholy symbols.", "mouldUnholy", Color.White, 200));
+
+            // Jewellery Factory
+            List<MaterialDef> Jewels = new() {
+                new("Gold", Color.Goldenrod, 0, 5, 400, "gold"),
+                new("Opal", Color.AntiqueWhite, 1, 7, 350, "opal"),
+                new("Jade", Color.PaleGreen, 1, 27, 400, "jade"),
+                new("Red topaz", Color.Magenta, 1, 49, 450, "red topaz"),
+                new("Sapphire", Color.DeepSkyBlue, 2, 7, 1000, "sapphire"),
+                new("Emerald", Color.Lime, 3, 27, 1500, "emerald"),
+                new("Ruby", Color.Crimson, 4, 49, 2200, "ruby"),
+                new("Diamond", Color.White, 5, 57, 3500, "diamond"),
+                new("Dragonstone", Color.Purple, 6, 68, 18000, "dragonstone"),
+                new("Onyx", Color.DimGray, 7, 87, 1000000, "onyx"),
+                new("Zenyte", Color.Orange, 8, 93, 15000000, "zenyte")
+            };
+
+            foreach (var mat in Jewels) {
+                if (mat.Name != "Gold") {
+                    itemsToAdd.Add(new Item("Uncut " + mat.Name.ToLower(), "An uncut " + mat.Name.ToLower() + ". Used in Crafting (" + mat.Level + ").", "uncut" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier - 300));
+                    itemsToAdd.Add(new Item(mat.Name, "This looks valuable.", "cut" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier));
+                }
+                itemsToAdd.Add(new Item(mat.Name + " ring", "A ring made from " + mat.Descriptor + ".", "ring" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Ring" });
+                itemsToAdd.Add(new Item(mat.Name + " amulet", "An amulet made from " + mat.Descriptor + ".", "amulet" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Amulet" });
+                itemsToAdd.Add(new Item(mat.Name + " amulet (u)", "An unstrung amulet made from " + mat.Descriptor + ". Can be strung with wool.", "amulet" + mat.Name + "U", mat.R, mat.G, mat.B, mat.CostMultiplier));
+                itemsToAdd.Add(new Item(mat.Name + " necklace", "A necklace made from " + mat.Descriptor + ".", "necklace" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Amulet" });
+                itemsToAdd.Add(new Item(mat.Name + " bracelet", "A bracelet made from " + mat.Descriptor + ".", "bracelet" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Hands" });
+            }
+
+            itemsToAdd.Add(new Item("Brass necklace", "I'd prefer a gold one.", "necklaceBrass", ColorLib.Bronze.GetBright(), 30) { EquipSlot = "Amulet" });
+                
+
+
 
             itemsToAdd.Add(new Item("Cowhide", "This should be tanned before I can use it.", "cowhide", 255, 255, 255, 10));
             itemsToAdd.Add(new Item("Soft leather", "Suitable for craftworks now.", "leatherSoft", 165, 42, 42, 10));
@@ -98,6 +131,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             }  
 
             itemsToAdd.Add(new Item("Shovel", "Could be used to dig for buried treasure.", "shovel", 200, 200, 200, 3) { UseString = "Dig", ConsumedOnUse = false });
+            itemsToAdd.Add(new Item("Map (Lumbridge Swamp)", "Useful for navigating a confusing swamp.", "mapLumbridgeSwamp", Color.Khaki, 3) { EquipSlot = "Pocket", UseString = "Map", UseString2 = "Lumbridge Swamp", UseInt = 6, UseInt2 = 4, ConsumedOnUse = false });
 
 
             // Clue scroll stuff
@@ -201,7 +235,8 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             itemsToAdd.Add(new Item("Blue wizard hat", "A silly pointed hat.", "wizardBlueHat", 0, 157, 196, 2) { EquipSlot = "Head", EquipTier = 1, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseMagic" });
             itemsToAdd.Add(new Item("Chef's hat", "What a silly hat.", "chefHat", 255, 255, 255, 2) { EquipSlot = "Head", Cosmetic = true });
-
+            itemsToAdd.Add(new Item("Goblin mail", "Some brown armor designed to fit goblins.", "goblinMail", Color.SaddleBrown, 40));
+            itemsToAdd.Add(new Item("Goblin book", "A tattered goblin holy book.", "goblinBook", Color.SaddleBrown, 1) { UseString = "Book", UseString2 = "Goblin", ConsumedOnUse = false });
 
 
             // Farming - Seeds, Products, Direct Cooked Product
@@ -258,7 +293,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     });
                     itemsToAdd.Add(new Item("Watermelon", "A juicy watermelon.", "watermelon", 34, 139, 34, 20) { UseString = "Heal", UseInt = 10 });
 
-                    itemsToAdd.Add(new Item("Snape grass seed", "A snape grass seed - plant in an allotment. (38)", "seedSnapeGrass", 0, 255, 0, 20, true) {
+                    itemsToAdd.Add(new Item("Snape grass seed", "A snape grass seed - plant in an allotment. (38)", "seedSnapegrass", 0, 255, 0, 20, true) {
                         UseString = "PlantSeed", UseString2 = "Allotment", UseString3 = "snapegrass",
                         UseInt = 38 /* Level */,  UseInt2 = 80 /* Exp On Harvest */, UseInt3 = 12000 /* Growth time in seconds */ 
 
@@ -1008,6 +1043,14 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Adamant ore", "A pile of adamant ore nuggets.", "oreAdamant", ColorLib.Adamant, 120)); 
             itemsToAdd.Add(new Item("Adamant ore mix", "A mix of adamant ore nuggets and luminite.", "oreMixAdamant", ColorLib.Adamant, 180)); 
             itemsToAdd.Add(new Item("Adamant bar", "It's a bar of adamant.", "barAdamant", ColorLib.Adamant, 240));
+            
+            itemsToAdd.Add(new Item("Silver ore", "A pile of silver ore nuggets.", "oreSilver", ColorLib.Steel, 50)); 
+            itemsToAdd.Add(new Item("Silver ore mix", "A mix silver ore nuggets with the impurities sifted out.", "oreMixSilver", ColorLib.Steel, 100)); 
+            itemsToAdd.Add(new Item("Silver bar", "It's a bar of silver.", "barSilver", ColorLib.Steel, 150));
+
+            itemsToAdd.Add(new Item("Gold ore", "A pile of gold ore nuggets.", "oreGold", Color.Goldenrod, 100)); 
+            itemsToAdd.Add(new Item("Gold ore mix", "A mix gold ore nuggets with the impurities sifted out.", "oreMixGold", Color.Goldenrod, 200)); 
+            itemsToAdd.Add(new Item("Gold bar", "It's a bar of gold.", "barGold", Color.Goldenrod, 300));
 
             // Smithing Factory
             List<MaterialDef> Metals = new() {
@@ -1116,11 +1159,14 @@ namespace ZeroPlayersOnline.Hardcodes {
             
             
             
+            itemsToAdd.Add(new Item("Swamp tar", "A foul smelling thick tar-like substance.", "swampTar", 50, 50, 50, 1, true));
+
             itemsToAdd.Add(new Item("Eye of newt", "A basic herblore ingredient and only slightly gross.", "eyeNewt", 255, 255, 255, 3));
             itemsToAdd.Add(new Item("Vial", "A glass vial, currently empty.", "vialEmpty", 200, 200, 200, 2) { colA = 150 });
             itemsToAdd.Add(new Item("Vial of water", "A glass vial full of water.", "vialWater", 14, 129, 205, 2) { colA = 150 });
             itemsToAdd.Add(new Item("Guam potion (unf)", "I need another ingredient to finish this Guam potion.", "potionUnfGuam", 0, 128, 128, 3) { colA = 150 });
             itemsToAdd.Add(new Item("Attack potion", "Temporarily boosts your Attack level by 5.", "potionAttack", 0, 255, 255, 15) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Attack", 5) } });
+            //itemsToAdd.Add(new Item("Energy potion", "Temporarily boosts your Attack level by 5.", "potionEnergy", 0, 255, 255, 15) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Attack", 5) } });
 
 
             itemsToAdd.Add(new Item("Rusted sword [Q]", "The sword is useless now. You notice someone has scratched something into the handle: 'PlayerOne'.", "TI_HI_RustedSword", 205, 127, 50, 0, trade: false));

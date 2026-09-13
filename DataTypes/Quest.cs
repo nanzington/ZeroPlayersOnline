@@ -17,8 +17,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public int QuestPoints = 0;
 
         public int DateFullyImplemented = 0; // YYYYMMDD, ex 20260828 for August 28, 2026
-
-        public int CurrentStage = -1;
+         
         public int CompleteStage = 0;
 
         public List<Requirement> RequirementsToStart = new();
@@ -52,13 +51,15 @@ namespace ZeroPlayersOnline.DataTypes {
 
 
         public void CheckProgress(Player p, string type, string misc, int num) {
-            if (CurrentStage == CompleteStage)
-                return;
+            if (p.QuestLog.TryGetValue(ID, out QuestStatus? status)) {
+                if (status.CurrentStage == CompleteStage)
+                    return;
 
-            if (Stages.TryGetValue(CurrentStage, out QuestStage? stage)) {
-                if (stage != null) {
-                    if (stage.ProgressType == type && stage.MiscString == misc && stage.MiscInt <= num) {
-                        CurrentStage = stage.LeadsToStage;
+                if (Stages.TryGetValue(status.CurrentStage, out QuestStage? stage)) {
+                    if (stage != null) {
+                        if (stage.ProgressType == type && stage.MiscString == misc && stage.MiscInt <= num) {
+                            status.CurrentStage = stage.LeadsToStage;
+                        }
                     }
                 }
             }
@@ -78,6 +79,14 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                 }
             }
+        }
+
+        public int CurrentStage() {
+            if (GameLoop.ZPO.player.QuestLog.TryGetValue(ID, out QuestStatus? status)) {
+                return status.CurrentStage;
+            }
+
+            return -1;
         }
     }
 }

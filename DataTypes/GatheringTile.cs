@@ -70,17 +70,17 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (NeedToolCat != "") { 
                     mod = -100;
                     foreach (var kv in p.Equipment) {
-                        if (kv.Value.MiscString == NeedToolCat) {
-                            if (kv.Value.EquipLevel <= p.GetEffectiveSkillLevel(Skill)) { 
-                                mod = Math.Max(mod, kv.Value.EquipLevel - Level);
+                        if (kv.Value.GetRef() is Item eqp && eqp.MiscString == NeedToolCat) {
+                            if (eqp.EquipLevel <= p.GetEffectiveSkillLevel(Skill)) { 
+                                mod = Math.Max(mod, eqp.EquipLevel - Level);
                             }
                         }
                     }
 
                     for (int i = 0; i < p.Inventory.Count; i++) {
-                        if (p.Inventory[i].MiscString == NeedToolCat) {
-                            if (p.Inventory[i].EquipLevel <= p.GetEffectiveSkillLevel(Skill)) {
-                                mod = Math.Max(mod, p.Inventory[i].EquipLevel - Level);
+                        if (p.Inventory[i].GetRef() is Item inv && inv.MiscString == NeedToolCat) {
+                            if (inv.EquipLevel <= p.GetEffectiveSkillLevel(Skill)) {
+                                mod = Math.Max(mod, inv.EquipLevel - Level);
                             }
                         }
                     }
@@ -164,16 +164,16 @@ namespace ZeroPlayersOnline.DataTypes {
             if (NeedToolCat != "") {
                 bool foundTool = false;
                 foreach (var kv in p.Equipment) {
-                    if (kv.Value.MiscString == NeedToolCat) {
-                        if (kv.Value.EquipLevel <= p.GetEffectiveSkillLevel(Skill)) {
+                    if (kv.Value.GetRef() is Item eqp && eqp.MiscString == NeedToolCat) {
+                        if (eqp.EquipLevel <= p.GetEffectiveSkillLevel(Skill)) {
                             foundTool = true;
                         }
                     }
                 }
 
                 for (int i = 0; i < p.Inventory.Count; i++) {
-                    if (p.Inventory[i].MiscString == NeedToolCat) {
-                        if (p.Inventory[i].EquipLevel <= p.GetEffectiveSkillLevel(Skill)) {
+                    if (p.Inventory[i].GetRef() is Item inv && inv.MiscString == NeedToolCat) {
+                        if (inv.EquipLevel <= p.GetEffectiveSkillLevel(Skill)) {
                             foundTool = true;
                         }
                     }

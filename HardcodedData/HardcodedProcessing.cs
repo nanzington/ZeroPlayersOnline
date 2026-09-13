@@ -15,6 +15,10 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
+            toAdd.Add(new("Casting") {
+                OpensUI = true
+            });
+
             toAdd.Add(new("Tannery") {
                 Recipes = new() {
                     new ProcessingRecipe("cowhide", "leatherSoft", "Crafting", 1, 5),
@@ -84,9 +88,16 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
+            toAdd.Add(new("Water Altar") {
+                Recipes = new() {
+                    new ProcessingRecipe("pureEssence", "runeWater", "Runecrafting", 5, 6, extra: true)
+                }
+            });
+
             toAdd.Add(new("Spinning Wheel") {
                 Recipes = new() {
-                    new ProcessingRecipe("flax", "bowstring", "Crafting", 1, 5)
+                    new ProcessingRecipe("flax", "bowstring", "Crafting", 1, 5),
+                    new ProcessingRecipe("woolRaw", "woolBall", "Crafting", 1, 3)
                 }
             });
 

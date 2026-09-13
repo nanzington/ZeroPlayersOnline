@@ -9,6 +9,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public int RespawnTimer = 1; // in game-minutes, aka real seconds
 
+        public int SpawnCount = 1;
+
         public Requirement? ReqToSpawn = null;
 
 
@@ -17,7 +19,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         // Probably should add a way to control when it spawns like by season or year 
 
-        public ItemSpot(string id, int respawn, Requirement? req = null) {
+        public ItemSpot(string id, int respawn, Requirement? req = null, int count = 1) {
             ItemID = id;
             RespawnTimer = respawn;
 

@@ -8,9 +8,11 @@
         public List<DialogueChoice> Choices = new();
 
         public List<string> ItemsGiven;
+
+        public string ActionWhenChosen = "";
         
 
-        public DialogueStage(string t, List<DialogueChoice> choices, string quest = "", int questStage = 0, List<string> items = null) {
+        public DialogueStage(string t, List<DialogueChoice> choices, string quest = "", int questStage = 0, List<string> items = null, string action = "") {
             Text = t;
             Choices = choices;
 
@@ -18,6 +20,7 @@
             SetsQuestStageTo = questStage;
 
             ItemsGiven = items;
+            ActionWhenChosen = action;
         } 
     }
 }

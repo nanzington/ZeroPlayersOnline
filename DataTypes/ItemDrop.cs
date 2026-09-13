@@ -83,7 +83,7 @@ namespace ZeroPlayersOnline.DataTypes {
                                     spawn.Quantity = amt;
                                 }
 
-                                GameLoop.ZPO.TryPlaceItem(player.NavLoc, spawn); 
+                                GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn)); 
                             }
                         }
                     } else {
@@ -102,7 +102,7 @@ namespace ZeroPlayersOnline.DataTypes {
                                     spawn.Quantity = amt;
                                 }
 
-                                GameLoop.ZPO.TryPlaceItem(player.NavLoc, spawn);
+                                GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn));
                             }
                         }
                     }

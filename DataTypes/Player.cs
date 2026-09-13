@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GoRogue.DiceNotation.Terms;
+using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 using ZeroPlayersOnline.Managers;
 
@@ -56,26 +57,25 @@ namespace ZeroPlayersOnline.DataTypes {
 
 
         
-        public List<Item> Inventory = new();
-        public Dictionary<string, Item> Equipment = new(); 
+        public List<ItemWrapper> Inventory = new();
+        public Dictionary<string, ItemWrapper> Equipment = new(); 
         public Dictionary<string, Skill> Skills = new(); 
         public Dictionary<string, CollectionLogEntry> CollectionLog = new();
         public Dictionary<string, CollectionLogEntry> CollectionLogClues = new();
         public Dictionary<string, CollectionLogEntry> CollectionLogBoss = new();
-        public List<Item> BankedItems = new(); 
+        public List<ItemWrapper> BankedItems = new(); 
         public List<string> ItemsEverObtained = new();
 
         public string PrayerBook = "Normal";
         public Dictionary<string, Prayer> Prayers = new();
 
         public string MagicBook = "Standard";
-        public string CastingSpell = ""; 
-        public Dictionary<string, Spell> Spells = new();
+        public string CastingSpell = "";
 
         public List<PotionStat> ActivePotions = new(); 
         public Dictionary<string, FarmingPatch> FarmingPatches = new();
 
-        public Dictionary<string, Quest> QuestLog = new();
+        public Dictionary<string, QuestStatus> QuestLog = new();
 
         public string CurrentClueTutorial = "";
         public int StepsDoneTutorial = 0;
@@ -102,6 +102,8 @@ namespace ZeroPlayersOnline.DataTypes {
         public int ArtisanTaskStreak = 0;
         public int ArtisanPoints = 0;
 
+        public int SecondsPlayed = 0;
+
         [JsonIgnore]
         public List<HunterCreature> SpawnedCreatures = new();
 
@@ -121,16 +123,16 @@ namespace ZeroPlayersOnline.DataTypes {
             int weaponTier = 1;
             bool maging = IsMaging();
 
-            if (Equipment.ContainsKey("Weapon")) {
-                weaponTier = Equipment["Weapon"].EquipTier + 1;
+            if (Equipment.TryGetValue("Weapon", out ItemWrapper? eqpWrap) && eqpWrap.GetRef() is Item eqp) {
+                weaponTier = eqp.EquipTier + 1;
 
-                if (Equipment["Weapon"].EquipSkill == "Ranged") {
-                    if (Equipment["Weapon"].EquipAmmo == "Arrow" || Equipment["Weapon"].EquipAmmo == "Bolt") { // Only other option currently is Self, where we don't need to change weaponTier
-                        if (Equipment.ContainsKey("Ammo")) {
-                            if (Equipment["Ammo"].EquipLevel <= Equipment["Weapon"].EquipLevel) {
-                                weaponTier = Equipment["Ammo"].EquipTier + 1;
+                if (eqp.EquipSkill == "Ranged") {
+                    if (eqp.EquipAmmo == "Arrow" || eqp.EquipAmmo == "Bolt") { // Only other option currently is Self, where we don't need to change weaponTier
+                        if (Equipment.TryGetValue("Ammo", out ItemWrapper? ammoWrap) && ammoWrap.GetRef() is Item ammo) {
+                            if (ammo.EquipLevel <= eqp.EquipLevel) {
+                                weaponTier = ammo.EquipTier + 1;
                             } else {
-                                weaponTier = Equipment["Weapon"].EquipTier + 1;
+                                weaponTier = eqp.EquipTier + 1;
                             }
                         } else {
                             weaponTier = 0;
@@ -138,19 +140,19 @@ namespace ZeroPlayersOnline.DataTypes {
                     } 
                 }
 
-                if (maging && Equipment["Weapon"].EquipSkill != "Magic") {
+                if (maging && eqp.EquipSkill != "Magic") {
                     weaponTier = 1;
                 }
             }
             int strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10); 
 
             if (maging) { 
-                strength = Spells[CastingSpell].Tier * 2;
+                strength = GameLoop.ZPO.SpellLibrary[CastingSpell].Tier * 2;
             }
 
             foreach (var kv in Equipment) {
-                if (kv.Value.MiscString == "OmniBoost") {
-                    strength += kv.Value.EquipTier;
+                if (kv.Value.GetRef() is Item item && item.MiscString == "OmniBoost") {
+                    strength += item.EquipTier;
                 }
             }
 
@@ -159,44 +161,43 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public string GetDamageType() {
             if (IsMaging()) {
-                return Spells[CastingSpell].MiscString;
+                return GameLoop.ZPO.SpellLibrary[CastingSpell].MiscString;
             }
 
-            if (Equipment.ContainsKey("Weapon"))
-                return Equipment["Weapon"].EquipDamageType;
+            if (Equipment.TryGetValue("Weapon", out ItemWrapper? wepWrapper) && wepWrapper.GetRef() is Item wep)
+                return wep.EquipDamageType;
             return "Crush";
         }
 
-
-        public bool TryPickup(Item item, int qty, bool noted = false, bool shop = false, bool fromGround = false) {  
+        public bool TryPickup(ItemWrapper wrap, int qty, bool noted = false, bool shop = false, bool fromGround = false) {
             if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
-                for (int i = 0; i < Inventory.Count; i++) {
-                    if (Inventory[i].ID == item.ID && (Inventory[i].Stackable || (noted && Inventory[i].Noted))) {
+                for (int i = 0; i < Inventory.Count; i++) { 
+                    if (Inventory[i].ID == wrap.ID && (Inventory[i].GetRef() is Item inv && (inv.Stackable || (noted && Inventory[i].Noted)))) {
                         Inventory[i].Quantity += qty; 
                         if (!shop)
-                            item.Quantity -= qty;
+                            wrap.Quantity -= qty;
                         return true; 
                     }
                 }
 
-                Item clone = Helper.Clone(item);
+                ItemWrapper clone = Helper.Clone(wrap);
              
                 if (Inventory.Count < InventoryLimit) {
-                    if (item.Stackable || (item.Noteable && noted)) { 
+                    if (wrap.GetRef() is Item pickup && (pickup.Stackable || (pickup.Noteable && noted))) { 
                         if (noted)
                             clone.Noted = true;
 
                         clone.Quantity = qty;
                         if (!shop)
-                            item.Quantity -= qty;
+                            wrap.Quantity -= qty;
                         Inventory.Add(clone);
                     } else {
                         for (int i = 0; i < qty; i++) { 
-                            Item secondClone = Helper.Clone(clone);
+                            ItemWrapper secondClone = Helper.Clone(clone);
                             secondClone.Quantity = 1;
                             clone.Quantity--;
                             if (!shop)
-                                item.Quantity--;
+                                wrap.Quantity--;
 
                             if (Inventory.Count < InventoryLimit)
                                 Inventory.Add(secondClone);
@@ -225,6 +226,78 @@ namespace ZeroPlayersOnline.DataTypes {
                 }
 
                 for (int i = 0; i < curr.ItemsHere.Count; i++) {
+                    if (curr.ItemsHere[i].ID == wrap.ID && wrap.Noted == curr.ItemsHere[i].Noted && curr.ItemsHere[i].UseInt4 == wrap.Charges) {
+                        curr.ItemsHere[i].Quantity += qty; 
+                        return true; 
+                    }
+                }
+
+                if (clone.GetRef() is Item drop)
+                    curr.ItemsHere.Add(drop);
+                return true;
+            }
+
+            return false;
+        }
+
+
+        public bool TryPickup(Item item, int qty, bool noted = false, bool shop = false, bool fromGround = false) {  
+            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
+                for (int i = 0; i < Inventory.Count; i++) { 
+                    if (Inventory[i].GetRef() is Item wrap && wrap.ID == item.ID && (wrap.Stackable || (noted && Inventory[i].Noted))) {
+                        Inventory[i].Quantity += qty; 
+                        if (!shop)
+                            item.Quantity -= qty;
+                        return true; 
+                    }
+                }
+
+                Item clone = Helper.Clone(item);
+             
+                if (Inventory.Count < InventoryLimit) {
+                    if (item.Stackable || (item.Noteable && noted)) { 
+                        if (noted)
+                            clone.Noted = true;
+
+                        clone.Quantity = qty;
+                        if (!shop)
+                            item.Quantity -= qty;
+                        Inventory.Add(new(clone));
+                    } else {
+                        for (int i = 0; i < qty; i++) { 
+                            Item secondClone = Helper.Clone(clone);
+                            secondClone.Quantity = 1;
+                            clone.Quantity--;
+                            if (!shop)
+                                item.Quantity--;
+
+                            if (Inventory.Count < InventoryLimit)
+                                Inventory.Add(new(secondClone));
+                            else {
+                                if (curr.IsBank && CanUseBanks) {
+                                    BankItem(new(secondClone));
+                                    return true;
+                                } else {
+                                    GameLoop.ZPO.TryPlaceItem(NavLoc, new(secondClone));
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    return true;
+                } 
+
+                if (fromGround) {
+                    GameLoop.ZPO.Log.AddMessage("Your inventory is too full to pick up anything else right now.", Color.Crimson);
+                    return false;
+                }
+                 
+                if (curr.IsBank && CanUseBanks) {
+                    BankItem(new(clone)); 
+                    return true;
+                }
+
+                for (int i = 0; i < curr.ItemsHere.Count; i++) {
                     if (curr.ItemsHere[i].ID == item.ID && item.Noted == curr.ItemsHere[i].Noted && curr.ItemsHere[i].UseInt4 == item.UseInt4) {
                         curr.ItemsHere[i].Quantity += qty; 
                         return true; 
@@ -238,18 +311,16 @@ namespace ZeroPlayersOnline.DataTypes {
             return false;
         }
 
-        public void BankItem(Item item) {
-            Item clone = Helper.Clone(item);
-
+        public void BankItem(ItemWrapper item) {  
             for (int j = 0; j < BankedItems.Count; j++) {
-                if (BankedItems[j].ID == item.ID && BankedItems[j].UseInt4 == item.UseInt4) {
-                    BankedItems[j].Quantity += clone.Quantity; 
+                if (BankedItems[j].ID == item.ID && BankedItems[j].Charges == item.Charges) {
+                    BankedItems[j].Quantity += item.Quantity; 
                     return; 
                 }
             }
 
-            clone.Noted = false;
-            BankedItems.Add(clone);
+            item.Noted = false;
+            BankedItems.Add(item);
         }
 
         public bool TryDrop(int i) {
@@ -265,68 +336,69 @@ namespace ZeroPlayersOnline.DataTypes {
                     qty = Inventory[i].Quantity;
 
 
-                if (curr.IsBank && CanUseBanks) {
-                    Item clone = Helper.Clone(Inventory[i]);
-                    clone.Quantity = qty;
-                    clone.Noted = false;
-                    BankItem(clone);
+                if (Inventory[i].GetRef() is Item toDrop) {
+                    if (curr.IsBank && CanUseBanks) {
+                        ItemWrapper clone = Helper.Clone(Inventory[i]);
+                        clone.Quantity = qty; 
+                        BankItem(clone);
 
-                    Inventory[i].Quantity -= qty; 
-                }
-                else {
-                    if (curr.ShopItemsHere.Count == 0 || !CanUseShops) {
-                        if (Inventory[i].DestroyOnDrop) {
-                            if (Inventory[i].ID == "clueScrollTutorial") {
-                                CurrentClueTutorial = "";
-                            } else if (Inventory[i].ID == "clueScrollBeginner") {
-                                CurrentClueBeginner = "";
-                            } else if (Inventory[i].ID == "clueScrollEasy") {
-                                CurrentClueEasy = "";
-                            } else if (Inventory[i].ID == "clueScrollMedium") {
-                                CurrentClueMedium = "";
-                            } else if (Inventory[i].ID == "clueScrollHard") {
-                                CurrentClueHard = "";
-                            } else if (Inventory[i].ID == "clueScrollElite") {
-                                CurrentClueElite = "";
-                            } else if (Inventory[i].ID == "clueScrollMaster") {
-                                CurrentClueMaster = "";
-                            }
-
-                            Inventory.RemoveAt(i);
-                            return true;
-                        } else {
-                            bool found = false;
-                            for (int j = 0; j < curr.ItemsHere.Count; j++) {
-                                if (curr.ItemsHere[j].ID == Inventory[i].ID && curr.ItemsHere[j].Noted == Inventory[i].Noted && curr.ItemsHere[j].UseInt4 == Inventory[i].UseInt4) {
-                                    curr.ItemsHere[j].Quantity += qty;
-                                    Inventory[i].Quantity -= qty;
-                                    found = true;
-                                    break;
-                                }
-                            }
-
-                            if (!found) {
-                                Item clone = Helper.Clone(Inventory[i]);
-                                clone.Quantity = qty;
-
-                                curr.ItemsHere.Add(clone);
-                                Inventory[i].Quantity -= qty;
-                            }
-                        }
+                        Inventory[i].Quantity -= qty; 
                     }
                     else {
-                        int sellValue = Inventory[i].Value;
+                        if (curr.ShopItemsHere.Count == 0 || !CanUseShops) {
+                            if (toDrop.DestroyOnDrop) {
+                                if (Inventory[i].ID == "clueScrollTutorial") {
+                                    CurrentClueTutorial = "";
+                                } else if (Inventory[i].ID == "clueScrollBeginner") {
+                                    CurrentClueBeginner = "";
+                                } else if (Inventory[i].ID == "clueScrollEasy") {
+                                    CurrentClueEasy = "";
+                                } else if (Inventory[i].ID == "clueScrollMedium") {
+                                    CurrentClueMedium = "";
+                                } else if (Inventory[i].ID == "clueScrollHard") {
+                                    CurrentClueHard = "";
+                                } else if (Inventory[i].ID == "clueScrollElite") {
+                                    CurrentClueElite = "";
+                                } else if (Inventory[i].ID == "clueScrollMaster") {
+                                    CurrentClueMaster = "";
+                                }
 
-                        if (Inventory[i].UseInt4 != 0 && Inventory[i].UseString == "Potion") {
-                            sellValue *= Inventory[i].UseInt4;
-                        } 
-                                        
-                        if (!ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(Inventory[i].ID)) {
-                            sellValue = (int) (Math.Floor(sellValue / 2.0));
+                                Inventory.RemoveAt(i);
+                                return true;
+                            } else {
+                                bool found = false;
+                                for (int j = 0; j < curr.ItemsHere.Count; j++) {
+                                    if (curr.ItemsHere[j].ID == Inventory[i].ID && curr.ItemsHere[j].Noted == Inventory[i].Noted && curr.ItemsHere[j].UseInt4 == Inventory[i].Charges) {
+                                        curr.ItemsHere[j].Quantity += qty;
+                                        Inventory[i].Quantity -= qty;
+                                        found = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!found) {
+                                    Item clone = Helper.Clone(toDrop);
+                                    clone.Quantity = qty;
+
+                                    curr.ItemsHere.Add(clone);
+                                    Inventory[i].Quantity -= qty;
+                                }
+                            }
                         }
+                        else {
+                            int sellValue = toDrop.Value;
 
-                        HeldGold += sellValue * qty;
-                        Inventory[i].Quantity -= qty;
+                            if (Inventory[i].Charges != 0 && toDrop.UseString == "Potion") {
+                                sellValue *= Inventory[i].Charges;
+                            } 
+                                        
+                            if (!ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(Inventory[i].ID)) {
+                                sellValue = (int) (Math.Floor(sellValue / 2.0));
+                            }
+
+                            HeldGold += sellValue * qty;
+                            Inventory[i].Quantity -= qty;
+                        }
                     }
                 }
 
@@ -405,25 +477,26 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? deathSpot)) {
                     if (deathSpot != null) {
                         for (int i = Inventory.Count - 1; i >= 0; i--) {
-                            bool found = false;
-                            for (int j = 0; j < deathSpot.ItemsHere.Count; j++) {
-                                if (deathSpot.ItemsHere[j].ID == Inventory[i].ID && Inventory[i].Stackable) {
-                                    deathSpot.ItemsHere[j].Quantity += Inventory[i].Quantity;
-                                    found = true;
-                                    break;
+                            if (Inventory[i].GetRef() is Item drop) {
+                                bool found = false;
+                                for (int j = 0; j < deathSpot.ItemsHere.Count; j++) {
+                                    if (deathSpot.ItemsHere[j].ID == Inventory[i].ID && drop.Stackable) {
+                                        deathSpot.ItemsHere[j].Quantity += Inventory[i].Quantity;
+                                        found = true;
+                                        break;
+                                    }
                                 }
-                            }
 
-                            if (!found) {
-                                deathSpot.ItemsHere.Add(Inventory[i]);
-                            }
+                                if (!found) {
+                                    deathSpot.ItemsHere.Add(drop);
+                                }
 
-                            Inventory.RemoveAt(i);
+                                Inventory.RemoveAt(i);
+                            }
                         }
                         
-                        foreach (var kv in Equipment) {
-                            Item item = kv.Value;
-                            GameLoop.ZPO.TryPlaceItem(NavLoc, item);
+                        foreach (var kv in Equipment) { 
+                            GameLoop.ZPO.TryPlaceItem(NavLoc, kv.Value); 
                         } 
                         Equipment.Clear();
                     }
@@ -590,12 +663,12 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 // Check for items that count as the item but aren't the item (for example, elemental staves)
                 for (int i = 0; i < Inventory.Count; i++) {
-                    if (Inventory[i].MiscString == "CountsAs" && Inventory[i].UseString2 == item && !Inventory[i].MustBeEquipped) {
+                    if (Inventory[i].GetRef() is Item comp && comp.MiscString == "CountsAs" && comp.UseString2 == item && !comp.MustBeEquipped) {
                         if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
-                            if (Inventory[i].UseInt == -1) {
+                            if (Inventory[i].Charges == -1) {
                                 countHeld = qty;
                             } else { 
-                                countHeld += Inventory[i].UseInt;
+                                countHeld += comp.UseInt;
                             } 
                         }
                     }
@@ -603,11 +676,11 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 if (equippedOkay) {
                     foreach (var kv in Equipment) {
-                        if (kv.Value.MiscString == "CountsAs" && kv.Value.UseString2 == item) {
-                            if (kv.Value.UseInt == -1) {
+                        if (kv.Value.GetRef() is Item eqp && eqp.MiscString == "CountsAs" && eqp.UseString2 == item) {
+                            if (kv.Value.Charges == -1) {
                                 countHeld = qty;
                             } else {
-                                countHeld += kv.Value.UseInt;
+                                countHeld += kv.Value.Charges;
                             }
                         }
                     }
@@ -658,17 +731,17 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 // Check for items that count as the item but aren't the item (for example, elemental staves)
                 for (int i = 0; i < Inventory.Count; i++) {
-                    if (Inventory[i].MiscString == "CountsAs" && Inventory[i].UseString2 == item && !Inventory[i].MustBeEquipped) {
+                    if (Inventory[i].GetRef() is Item comp && comp.MiscString == "CountsAs" && comp.UseString2 == item && !comp.MustBeEquipped) {
                         if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
-                            if (Inventory[i].UseInt == -1) {
+                            if (Inventory[i].Charges == -1) {
                                 countNeeded = 0;
                             } else { 
-                                if (Inventory[i].UseInt > countNeeded) {
-                                    Inventory[i].UseInt -= countNeeded;
+                                if (Inventory[i].Charges > countNeeded) {
+                                    Inventory[i].Charges -= countNeeded;
                                     countNeeded = 0; 
                                 } else {
-                                    countNeeded -= Inventory[i].UseInt;
-                                    Inventory[i].UseInt = 0;
+                                    countNeeded -= Inventory[i].Charges;
+                                    Inventory[i].Charges = 0;
                                 }
                             } 
                         }
@@ -677,16 +750,16 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 if (equippedOkay) {
                     foreach (var kv in Equipment) {
-                        if (kv.Value.MiscString == "CountsAs" && kv.Value.UseString2 == item) {
-                            if (kv.Value.UseInt == -1) {
+                        if (kv.Value.GetRef() is Item eqp && eqp.MiscString == "CountsAs" && eqp.UseString2 == item) {
+                            if (kv.Value.Charges == -1) {
                                 countNeeded = 0;
                             } else {
-                                if (kv.Value.UseInt > countNeeded) {
-                                    kv.Value.UseInt -= countNeeded;
+                                if (kv.Value.Charges > countNeeded) {
+                                    kv.Value.Charges -= countNeeded;
                                     countNeeded = 0; 
                                 } else {
-                                    countNeeded -= kv.Value.UseInt;
-                                    kv.Value.UseInt = 0;
+                                    countNeeded -= kv.Value.Charges;
+                                    kv.Value.Charges = 0;
                                 }
                             }
                         }
@@ -750,42 +823,44 @@ namespace ZeroPlayersOnline.DataTypes {
             double count = 0;
 
             foreach (var kv in Equipment) {
-                double num = kv.Value.EquipTier;
-                if (kv.Value.EquipSkill == "Defense") {
-                    if (kv.Value.MiscString == "DefenseMelee") {
-                        if (against == "Ranged") {
-                            num *= 2;
+                if (kv.Value.GetRef() is Item eqp) {
+                    double num = eqp.EquipTier;
+                    if (eqp.EquipSkill == "Defense") {
+                        if (eqp.MiscString == "DefenseMelee") {
+                            if (against == "Ranged") {
+                                num *= 2;
+                            }
+                            if (against == "Magic") {
+                                num = (int)Math.Floor(num / 2.0);
+                            }
                         }
-                        if (against == "Magic") {
-                            num = (int)Math.Floor(num / 2.0);
-                        }
-                    }
 
-                    if (kv.Value.MiscString == "DefenseMagic") {
-                        if (against == "Melee") {
-                            num *= 2;
+                        if (eqp.MiscString == "DefenseMagic") {
+                            if (against == "Melee") {
+                                num *= 2;
+                            }
+                            if (against == "Ranged") {
+                                num = Math.Floor(num / 2.0);
+                            }
                         }
-                        if (against == "Ranged") {
-                            num = Math.Floor(num / 2.0);
-                        }
-                    }
 
-                    if (kv.Value.MiscString == "DefenseRange") {
-                        if (against == "Magic") {
-                            num *= 2;
+                        if (eqp.MiscString == "DefenseRange") {
+                            if (against == "Magic") {
+                                num *= 2;
+                            }
+                            if (against == "Melee") {
+                                num = Math.Floor(num / 2.0);
+                            }
                         }
-                        if (against == "Melee") {
-                            num = Math.Floor(num / 2.0);
-                        }
-                    }
 
-                    count += num;
+                        count += num;
+                    }
                 }
             }
 
             foreach (var kv in Equipment) {
-                if (kv.Value.MiscString == "OmniBoost") {
-                    count += kv.Value.EquipTier;
+                if (kv.Value.GetRef() is Item eqp && eqp.MiscString == "OmniBoost") {
+                    count += eqp.EquipTier;
                 }
             }
 
@@ -800,12 +875,12 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool IsMaging() {
             if (CastingSpell == "")
                 return false;
-            if (!Spells.ContainsKey(CastingSpell))
+            if (!GameLoop.ZPO.SpellLibrary.ContainsKey(CastingSpell))
                 return false;
             if (!Skills.ContainsKey("Magic"))
                 return false;
             
-            Spell spell = Spells[CastingSpell];
+            Spell spell = GameLoop.ZPO.SpellLibrary[CastingSpell];
 
             if (spell.Book != MagicBook)
                 return false;

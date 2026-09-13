@@ -621,7 +621,9 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
                 || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
                 || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
-                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)) {
+                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
+                || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
+                || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return;
             }
 
@@ -827,7 +829,27 @@ namespace ZeroPlayersOnline {
             } else {
                 return new ColoredString("FREE", Color.Lime, Color.Black);
             }
-        } 
+        }
+        
+        public static int MapSpot(int idx, int dx, int dy, int mapW, int mapH) {
+            int tx = (idx%mapW) + dx;
+            int ty = (idx/mapW) + dy;
+
+            if (tx >= mapW) { tx -= mapW; } 
+            if (tx < 0) { tx += mapW; }
+            if (ty >= mapH) { ty -= mapH; }
+            if (ty < 0) { ty += mapH; }
+
+            int[] numbers = new int[mapW * mapH];
+
+            for (int i = 0; i < numbers.Length; i++) {
+                numbers[i] = i;
+            }
+
+            Point where = new(tx, ty);
+
+            return numbers[where.ToIndex(mapW)];
+        }
     }
 
       

@@ -5,13 +5,13 @@ namespace ZeroPlayersOnline.Hardcodes {
         public static void InitMonsters(Dictionary<string, AreaMonster> MonsterLib) {
             List<AreaMonster> toAdd = new();
 
-            toAdd.Add(new("Giant Newt", "newt", 1, 3, 0, 0, false, "1d3", "Slash", 5, "Melee") { DropTable = new() { new("eyeNewt", 1, 2, 1, 1), new("bonesRegular", 1, 1, 1, 1), new("meatRawNewt", 1, 1, 1, 1) } });
+            toAdd.Add(new("Giant newt", "newt", 1, 3, 0, 0, false, "1d3", "Slash", 5, "Melee") { DropTable = new() { new("eyeNewt", 1, 2, 1, 1), new("bonesRegular", 1, 1, 1, 1), new("meatRawNewt", 1, 1, 1, 1) } });
             toAdd.Add(new("Cow", "cow", 1, 5, 0, 0, false, "1d2", "Stab", 5, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("meatRawBeef", 1, 1, 1, 1), new("cowhide", 1, 1, 1, 1) } });
             toAdd.Add(new("Chicken", "chicken", 1, 2, 0, 0, false, "1d2-1", "Stab", 5, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("meatRawChicken", 1, 1, 1, 1), new("feather", 1, 2, 5, 15) } });
             toAdd.Add(new("Zombie", "tiZombie", 5, 8, 0, 0, false, "1d3+1", "Slash", 10, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1) } });
 
             toAdd.Add(new("Rat", "rat", 1, 2, 0, 0, false, "1d3-2", "Slash", 1, "Melee"));
-            toAdd.Add(new("Giant Rat", "ratGiant", 3, 5, 0, 5, false, "1d3-1", "Slash", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("meatRawRat", 1, 1, 1, 1), new("clueScrollBeginner", 1, 128, 1, 1) } });
+            toAdd.Add(new("Giant rat", "ratGiant", 3, 5, 0, 5, false, "1d3-1", "Slash", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("meatRawRat", 1, 1, 1, 1), new("clueScrollBeginner", 1, 128, 1, 1) } });
             toAdd.Add(new("Imp", "imp", 1, 8, 0, 0, false, "1d3-1", "Slash", 1, "Melee") { DropTable = new() { 
                 new("ashesFiendish", 1, 1, 1, 1),  
                 new("MIST_IC_White", 1, 25, 1, 1), new("MIST_IC_Red", 1, 25, 1, 1), new("MIST_IC_Black", 1, 25, 1, 1), new("MIST_IC_Yellow", 1, 25, 1, 1),
@@ -29,7 +29,19 @@ namespace ZeroPlayersOnline.Hardcodes {
                 new("coinPouchSmall", 1, 3, 1, 1), new("coinPouchMedium", 1, 128, 1, 1),
                 new("talismanEarth", 1, 64, 1, 1), new("clueScrollBeginner", 1, 90, 1, 1), new("clueScrollEasy", 1, 128, 1, 1)
             } });
+
+            toAdd.Add(new("Frog", "frog", 5, 8, 0, 0, false, "1d3-2", "Earth", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("clueScrollBeginner", 1, 90, 1, 1) } });
+            toAdd.Add(new("Big frog", "frogBig", 10, 18, 0, 0, false, "1d3-1", "Earth", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("clueScrollBeginner", 1, 70, 1, 1) } });
+            toAdd.Add(new("Giant frog", "frogGiant", 13, 23, 0, 0, false, "1d3-1", "Earth", 1, "Melee") { DropTable = new() { new("bonesBig", 1, 1, 1, 1), new("clueScrollBeginner", 1, 64, 1, 1) } });
             
+            toAdd.Add(new("Goblin", "goblin", 2, 5, 0, 0, false, "1d3-2", "Stab", 1, "Melee") { DropTable = new() { 
+                new("bonesRegular", 1, 1, 1, 1),  
+                new("daggerBronze", 1, 32, 1, 1), new("bronzeSqShield", 1, 43, 1, 1), 
+                new("runeWater", 1, 21, 6, 6), new("runeBody", 1, 26, 7, 7), new("runeEarth", 1, 43, 4, 4), new("boltsBronze", 1, 43, 8, 8),
+                new("coinPouchSmall", 1, 5, 1, 1), new("coinPouchMedium", 1, 50, 1, 1),
+                new("hammer", 1, 9, 1, 1), new("potionEnergy", 1, 20, 1, 1), new("goblinMail", 1, 26, 1, 1), new("chefHat", 1, 26, 1, 1), new("goblinBook", 1, 64, 1, 1), new("beer", 1, 64, 1, 1), new("talismanAir", 1, 128, 1, 1), new("necklaceBrass", 1, 128, 1, 1),
+                new("clueScrollBeginner", 1, 64, 1, 1), new("clueScrollEasy", 1, 128, 1, 1)
+            } });
 
             for (int i = 0; i < toAdd.Count; i++) { 
                 MonsterLib.Add(toAdd[i].ID, toAdd[i]);

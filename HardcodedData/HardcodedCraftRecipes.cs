@@ -70,6 +70,41 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Pottery Wheel", "Crafting", 25, 30, ["claySoft" + "," +  1], "unfiredPotLid"));
 
 
+            // Jewellery
+            List<MaterialDef> Jewels = new() {
+                new("Gold", Color.Goldenrod, 0, 5, 34, "gold"),
+                new("Opal", Color.AntiqueWhite, 1, 7, 19, "opal"),
+                new("Jade", Color.PaleGreen, 1, 27, 24, "jade"),
+                new("Red topaz", Color.Magenta, 1, 49, 34, "red topaz"),
+                new("Sapphire", Color.DeepSkyBlue, 2, 7, 69, "sapphire"),
+                new("Emerald", Color.Lime, 3, 27, 74, "emerald"),
+                new("Ruby", Color.Crimson, 4, 49, 89, "ruby"),
+                new("Diamond", Color.White, 5, 57, 104, "diamond"),
+                new("Dragonstone", Color.Purple, 6, 68, 154, "dragonstone"),
+                new("Onyx", Color.DimGray, 7, 87, 169, "onyx"),
+                new("Zenyte", Color.Orange, 8, 93, 200, "zenyte")
+            };
+
+            foreach (var mat in Jewels) {
+                List<string> mats = new(); 
+                if (mat.Name == "Opal" || mat.Name == "Jade" || mat.Name == "Red topaz") {
+                    mats.Add("barSilver,1");
+                } else {
+                    mats.Add("barGold,1");
+                }
+
+                if (mat.Name != "Gold") {
+                    mats.Add("cut" + mat.Name + ",1");
+                }
+
+                
+                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "amulet" + mat.Name + "U", 1, "mouldAmulet")); 
+                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "ring" + mat.Name, 1, "mouldRing")); 
+                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "bracelet" + mat.Name, 1, "mouldBracelet")); 
+                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "necklace" + mat.Name, 1, "mouldNecklace")); 
+            }
+
+
 
             for (int i = 0; i < toAdd.Count; i++) {
                 if (!CraftLib.ContainsKey(toAdd[i].Station))

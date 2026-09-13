@@ -14,6 +14,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("oreIron", "oreCoal", "oreMixSteel", 1, 1, 1, "Smithing", 20, 8));
             toAdd.Add(new("oreMithril", "oreCoal", "oreMixMithril", 1, 1, 1, "Smithing", 30, 16));
             toAdd.Add(new("oreAdamant", "oreLuminite", "oreMixAdamant", 1, 1, 1, "Smithing", 40, 32));
+            toAdd.Add(new("oreSilver", "oreSilver", "oreMixSilver", 1, 1, 1, "Smithing", 20, 8));
+            toAdd.Add(new("oreGold", "oreGold", "oreMixGold", 1, 1, 1, "Smithing", 40, 32));
 
             // Fletching
             toAdd.Add(new("bowstring", "shortbowPineU", "shortbowPine", 1, 1, 1, "Fletching", 1, 5));
@@ -71,6 +73,31 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("plantPot", "seedTreePineapple", "plantPotPineapple", 1, 1, 1, "Farming", 1, 51)); 
             toAdd.Add(new("plantPot", "seedTreePapaya", "plantPotPapaya", 1, 1, 1, "Farming", 1, 57)); 
             toAdd.Add(new("plantPot", "seedTreePalm", "plantPotPalm", 1, 1, 1, "Farming", 1, 68)); 
+
+            // Crafting
+            List<MaterialDef> Jewels = new() {
+                new("Gold", Color.Goldenrod, 0, 5, 400, "gold"),
+                new("Opal", Color.AntiqueWhite, 1, 7, 15, "opal"),
+                new("Jade", Color.PaleGreen, 1, 27, 20, "jade"),
+                new("Red topaz", Color.Magenta, 1, 49, 25, "red topaz"),
+                new("Sapphire", Color.DeepSkyBlue, 2, 7, 50, "sapphire"),
+                new("Emerald", Color.Lime, 3, 27, 68, "emerald"),
+                new("Ruby", Color.Crimson, 4, 49, 85, "ruby"),
+                new("Diamond", Color.White, 5, 57, 108, "diamond"),
+                new("Dragonstone", Color.Purple, 6, 68, 138, "dragonstone"),
+                new("Onyx", Color.DimGray, 7, 87, 180, "onyx"),
+                new("Zenyte", Color.Orange, 8, 93, 200, "zenyte")
+            };
+
+            foreach (var mat in Jewels) { 
+                toAdd.Add(new("amulet" + mat.Name + "U", "woolBall", "amulet" + mat.Name, 1, 1, 1, "Crafting", mat.Level, 4)); 
+                if (mat.Name != "Gold") {
+                    toAdd.Add(new("uncut" + mat.Name, "chisel", "cut" + mat.Name, 1, 0, 1, "Crafting", mat.Level, mat.CostMultiplier)); 
+                }
+            }
+
+
+
 
             for (int i = 0; i < toAdd.Count; i++) {
                 TwoWayString ID = new(toAdd[i].FirstItem, toAdd[i].SecondItem);

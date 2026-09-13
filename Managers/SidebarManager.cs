@@ -78,30 +78,31 @@ namespace ZeroPlayersOnline.Managers {
 
                 if (curr.ItemSpawns.Count > 0) {  
                     for (int i = 0; i < curr.ItemSpawns.Count; i++) {  
-                        if (curr.ItemSpawns[i].LastPickedUp + (curr.ItemSpawns[i].RespawnTimer * 1000) < Helper.Time() || curr.ItemSpawns[i].LastPickedUp == 0) {
-                            bool itemSpawnedAlready = false;
-                            if (curr.ItemSpawns[i].ReqToSpawn != null && !curr.ItemSpawns[i].ReqToSpawn.CheckRequirement(player, true)) {
-                                itemSpawnedAlready = true;
-                            } 
+                        if (curr.ItemSpawns[i].LastPickedUp + (curr.ItemSpawns[i].RespawnTimer * 1000) < Helper.Time() || curr.ItemSpawns[i].LastPickedUp == 0) { 
+                            int spawnedCount = 0;
 
+                            if (curr.ItemSpawns[i].ReqToSpawn != null && !curr.ItemSpawns[i].ReqToSpawn.CheckRequirement(player, true)) {
+                                continue;
+                            } 
+                             
                             for (int j = 0; j < curr.ItemsHere.Count; j++) {
                                 if (player.RandomItems == 0) {
                                     if (curr.ItemsHere[j].ID == curr.ItemSpawns[i].ItemID) {
-                                        itemSpawnedAlready = true;
+                                        spawnedCount += curr.ItemsHere[j].Quantity;
                                     }
                                 } else {
                                     if (GameLoop.ZPO.ItemLibrary.ContainsKey(curr.ItemSpawns[i].ItemID)) {
-                                        if (curr.ItemsHere[j].ID == GameLoop.ZPO.ItemLibrary[curr.ItemSpawns[i].ItemID].ID) {
-                                            itemSpawnedAlready = true;
+                                        if (curr.ItemsHere[j].ID == GameLoop.ZPO.ItemLibrary[curr.ItemSpawns[i].ItemID].ID) { 
+                                            spawnedCount += curr.ItemsHere[j].Quantity;
                                         }
                                     }
                                 }
                             }
 
-                            if (!itemSpawnedAlready) {
+                            if (spawnedCount < curr.ItemSpawns[i].SpawnCount) {
                                 if (GameLoop.ZPO.ItemLibrary.ContainsKey(curr.ItemSpawns[i].ItemID)) {
                                     Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[curr.ItemSpawns[i].ItemID]);
-                                    curr.ItemsHere.Add(spawn);
+                                    GameLoop.ZPO.TryPlaceItem(curr.ID, new(spawn));
                                     curr.ItemSpawns[i].LastPickedUp = Helper.Time();
                                 }
                             }
@@ -138,15 +139,15 @@ namespace ZeroPlayersOnline.Managers {
                     for (int i = 0; i < player.InventoryLimit; i++) {
                         mini.Con.DrawLine(new Point(0, 15 + i), new Point(54, 15 + i), '-', Color.DarkSlateGray);
 
-                        if (i < player.Inventory.Count) {
-                            string line = player.Inventory[i].Name;
+                        if (i < player.Inventory.Count && player.Inventory[i].GetRef() is Item inv) {
+                            string line = inv.Name;
 
                             if (player.Inventory[i].Quantity > 1) {
                                 line += " x" + player.Inventory[i].Quantity;
                             }
 
-                            if (player.Inventory[i].Name.Contains("potion") && player.Inventory[i].UseInt4 != 0) {
-                                line += " (" + player.Inventory[i].UseInt4 + " doses)";
+                            if (inv.Name.Contains("potion") && player.Inventory[i].Charges != 0) {
+                                line += " (" + player.Inventory[i].Charges + " doses)";
                             }
 
                             if (player.Inventory[i].Noted) {
@@ -156,10 +157,10 @@ namespace ZeroPlayersOnline.Managers {
                             
 
                             if (curr.ShopItemsHere.Count > 0 && player.CanUseShops) {
-                                int sellValue = player.Inventory[i].Value;
+                                int sellValue = inv.Value;
 
-                                if (player.Inventory[i].UseInt4 != 0 && player.Inventory[i].UseString == "Potion") {
-                                    sellValue *= player.Inventory[i].UseInt4;
+                                if (player.Inventory[i].Charges != 0 && inv.UseString == "Potion") {
+                                    sellValue *= player.Inventory[i].Charges;
                                 }
                                         
                                 if (!player.ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(player.Inventory[i].ID)) {
@@ -171,45 +172,48 @@ namespace ZeroPlayersOnline.Managers {
                                 line += " [" + sellValue + " gp]";
                             }
 
-                            int colorSum = player.Inventory[i].colR + player.Inventory[i].colG + player.Inventory[i].colB;
+                            int colorSum = inv.ColorSum();
 
-                            Color itemName = new Color(player.Inventory[i].colR, player.Inventory[i].colG, player.Inventory[i].colB);
+                            Color itemName = inv.GetColor();
 
                             mini.Con.Print(0, 15 + i, line, (mousePos.X < 55 && mousePos.Y == 15 + i) ? itemName.GetDarker() : itemName, colorSum < 60 ? Color.White : Color.Black);
 
                             bool dropped = false; 
 
-                            if (player.Inventory[i].UseString != "") {
-                                if (!player.Inventory[i].Noted) {
-                                    mini.Con.PrintClickable(46, 15 + i, new ColoredString("* ", Color.Yellow, Color.Black), () => {
-                                        Item item = player.Inventory[i];
-                                        bool success = ItemUseLogic.UseItem(item, player);
+                            int px = 46;
 
-                                        if (item.ConsumedOnUse && success) {
+                            if (inv.UseString != "") {
+                                if (!player.Inventory[i].Noted) { 
+                                    mini.Con.PrintClickable(px, 15 + i, new ColoredString("* ", Color.Yellow, Color.Black), () => { 
+                                        bool success = ItemUseLogic.UseItem(inv, player);
+
+                                        if (inv.ConsumedOnUse && success) {
                                             if (player.PrayerActive("Cornucopia")) {
                                                 if (GameLoop.rand.Next(5) != 0) { 
-                                                    item.Quantity -= 1;
+                                                    player.Inventory[i].Quantity -= 1;
                                                 } else { 
                                                     GameLoop.ZPO.Log.AddMessage(new ColoredString("The blessing of the cornucopia preserves your item.", Color.Goldenrod, Color.Black));
                                                 }
                                             } else {
-                                                item.Quantity -= 1;
+                                                player.Inventory[i].Quantity -= 1;
                                             }
                                         }
 
-                                        if (item.Quantity <= 0) {
+                                        if (player.Inventory[i].Quantity <= 0) {
                                             player.Inventory.RemoveAt(i);
                                             dropped = true;
                                         }
                                     });
+                                    px -= 2;
                                 }
                             }
 
                             if (dropped)
                                 break;
 
-                            if (player.Inventory[i].EquipSlot != "" && !player.Inventory[i].Noted) {
-                                mini.Con.PrintClickable(46, 15 + i, new ColoredString("E ", Color.Yellow, Color.Black), () => { dropped = ItemUseLogic.TryEquipItem(player, i); });
+                            if (inv.EquipSlot != "" && !player.Inventory[i].Noted) {
+                                mini.Con.PrintClickable(px, 15 + i, new ColoredString("E ", Color.Yellow, Color.Black), () => { dropped = ItemUseLogic.TryEquipItem(player, i); });
+                                px -= 2;
                             } 
 
                             if (dropped)
@@ -219,8 +223,8 @@ namespace ZeroPlayersOnline.Managers {
                                 if (SwapSlot == -1) {
                                     SwapSlot = i;
                                 }
-                                else {
-                                    Item first = Helper.Clone(player.Inventory[SwapSlot]);
+                                else { 
+                                    ItemWrapper first = Helper.Clone(player.Inventory[SwapSlot]);
                                     player.Inventory[SwapSlot] = Helper.Clone(player.Inventory[i]);
                                     player.Inventory[i] = first;
                                     SwapSlot = -1;
@@ -234,9 +238,9 @@ namespace ZeroPlayersOnline.Managers {
                                 break;
 
                             mini.Con.PrintClickable(52, 15 + i, new ColoredString("? ", Color.MediumPurple, Color.Black), () => { 
-                                GameLoop.ZPO.Log.AddMessage(new ColoredString(player.Inventory[i].ExamineText, Color.SandyBrown, Color.Black)); 
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString(inv.ExamineText, Color.SandyBrown, Color.Black)); 
 
-                                foreach (var kv in player.QuestLog) {
+                                foreach (var kv in GameLoop.ZPO.QuestLibrary) {
                                     kv.Value.CheckProgress(player, "ExamineItem", player.Inventory[i].ID, 0);
                                 }
                             });
@@ -270,7 +274,7 @@ namespace ZeroPlayersOnline.Managers {
                         player.OffenseExpSplit = Math.Clamp(player.OffenseExpSplit - 1, 0, 4);
                     });
 
-
+                    
 
                     mini.Con.PrintClickable(39, 34, "DEF " + player.DefenseExpSplit, () => {
                         player.DefenseExpSplit = Math.Clamp(player.DefenseExpSplit + 1, 0, 4);
@@ -287,148 +291,330 @@ namespace ZeroPlayersOnline.Managers {
                     int printY = 16;
 
                     mini.Con.Print(1, printY, "|   Weapon: "); 
-                    if (player.Equipment.ContainsKey("Weapon")) {
-                        string name = player.Equipment["Weapon"].Name + (player.Equipment["Weapon"].Quantity > 1 ? " x" + player.Equipment["Weapon"].Quantity : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, player.Equipment["Weapon"].GetColor(), player.Equipment["Weapon"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Weapon"];
+                    if (player.Equipment.TryGetValue("Weapon", out ItemWrapper? wepWrap) && wepWrap.GetRef() is Item wep) {
+                        string name = wep.Name + (player.Equipment["Weapon"].Quantity > 1 ? " x" + player.Equipment["Weapon"].Quantity : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, wep.GetColor(), wep.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Weapon"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Weapon");
                         });
+
+                        if (wep.UseString != "") {  
+                            mini.Con.PrintClickable(13 + wep.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(wep, player);
+
+                                if (wep.ConsumedOnUse && success) {
+                                    wepWrap.TryConsume();
+                                }
+
+                                if (wepWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Weapon"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "| Off-hand: ");
-                    if (player.Equipment.ContainsKey("Offhand")) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Offhand"].Name, player.Equipment["Offhand"].GetColor(), player.Equipment["Offhand"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Offhand"];
+                    if (player.Equipment.TryGetValue("Offhand", out ItemWrapper? offWrap) && offWrap.GetRef() is Item off) {
+                        mini.Con.PrintClickable(13, printY, new ColoredString(off.Name, off.GetColor(), off.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Offhand"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Offhand");
                         });
+
+                        if (off.UseString != "") {  
+                            mini.Con.PrintClickable(13 + off.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(off, player);
+
+                                if (off.ConsumedOnUse && success) {
+                                    offWrap.TryConsume();
+                                }
+
+                                if (offWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Offhand"); 
+                                }
+                            });  
+                        }
                     }
                      
                     printY++;
 
                     mini.Con.Print(1, printY, "|     Head: "); 
-                    if (player.Equipment.ContainsKey("Head")) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Head"].Name, player.Equipment["Head"].GetColor(), player.Equipment["Head"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Head"];
+                    if (player.Equipment.TryGetValue("Head", out ItemWrapper? headWrap) && headWrap.GetRef() is Item head) {
+                        mini.Con.PrintClickable(13, printY, new ColoredString(head.Name, head.GetColor(), head.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Head"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Head");
                         });
+
+                        if (head.UseString != "") {  
+                            mini.Con.PrintClickable(13 + head.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(head, player);
+
+                                if (head.ConsumedOnUse && success) {
+                                    headWrap.TryConsume();
+                                }
+
+                                if (headWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Head"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|     Body: "); 
-                    if (player.Equipment.ContainsKey("Body")) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Body"].Name, player.Equipment["Body"].GetColor(), player.Equipment["Body"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Body"];
+                    if (player.Equipment.TryGetValue("Body", out ItemWrapper? bodyWrap) && bodyWrap.GetRef() is Item body) {
+                        mini.Con.PrintClickable(13, printY, new ColoredString(body.Name, body.GetColor(), body.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Body"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Body");
                         });
+
+                        if (body.UseString != "") {  
+                            mini.Con.PrintClickable(13 + body.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(body, player);
+
+                                if (body.ConsumedOnUse && success) {
+                                    bodyWrap.TryConsume();
+                                }
+
+                                if (bodyWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Body"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|     Legs: "); 
-                    if (player.Equipment.ContainsKey("Legs")) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Legs"].Name, player.Equipment["Legs"].GetColor(), player.Equipment["Legs"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Legs"];
+                    if (player.Equipment.TryGetValue("Legs", out ItemWrapper? legWrap) && legWrap.GetRef() is Item legs) {
+                        mini.Con.PrintClickable(13, printY, new ColoredString(legs.Name, legs.GetColor(), legs.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Legs"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Legs");
                         });
+
+                        if (legs.UseString != "") {  
+                            mini.Con.PrintClickable(13 + legs.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(legs, player);
+
+                                if (legs.ConsumedOnUse && success) {
+                                    legWrap.TryConsume();
+                                }
+
+                                if (legWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Legs"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|    Hands: ");
-                    if (player.Equipment.ContainsKey("Hands")) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Hands"].Name, player.Equipment["Hands"].GetColor(), player.Equipment["Hands"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Hands"];
+                    if (player.Equipment.TryGetValue("Hands", out ItemWrapper? handWrap) && handWrap.GetRef() is Item hands) {
+                        mini.Con.PrintClickable(13, printY, new ColoredString(hands.Name, hands.GetColor(), hands.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Hands"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Hands");
                         });
+
+                        if (hands.UseString != "") {  
+                            mini.Con.PrintClickable(13 + hands.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(hands, player);
+
+                                if (hands.ConsumedOnUse && success) {
+                                    handWrap.TryConsume();
+                                }
+
+                                if (handWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Hands"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|     Feet: ");
-                    if (player.Equipment.ContainsKey("Feet")) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Feet"].Name, player.Equipment["Feet"].GetColor(), player.Equipment["Feet"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Feet"];
+                    if (player.Equipment.TryGetValue("Feet", out ItemWrapper? feetWrap) && feetWrap.GetRef() is Item feet) {
+                        mini.Con.PrintClickable(13, printY, new ColoredString(feet.Name, feet.GetColor(), feet.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Feet"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Feet");
                         });
+
+                        if (feet.UseString != "") {  
+                            mini.Con.PrintClickable(13 + feet.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(feet, player);
+
+                                if (feet.ConsumedOnUse && success) {
+                                    feetWrap.TryConsume();
+                                }
+
+                                if (feetWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Feet"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|     Cape: ");
-                    if (player.Equipment.ContainsKey("Cape")) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Cape"].Name, player.Equipment["Cape"].GetColor(), player.Equipment["Cape"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Cape"];
+                    if (player.Equipment.TryGetValue("Cape", out ItemWrapper? capeWrap) && capeWrap.GetRef() is Item cape) {
+                        mini.Con.PrintClickable(13, printY, new ColoredString(cape.Name, cape.GetColor(), cape.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Cape"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Cape");
                         });
+
+                        if (cape.UseString != "") {  
+                            mini.Con.PrintClickable(13 + cape.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(cape, player);
+
+                                if (cape.ConsumedOnUse && success) {
+                                    capeWrap.TryConsume();
+                                }
+
+                                if (capeWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Cape"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|     Ring: ");
-                    if (player.Equipment.ContainsKey("Ring")) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Ring"].Name, player.Equipment["Ring"].GetColor(), player.Equipment["Ring"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Ring"];
+                    if (player.Equipment.TryGetValue("Ring", out ItemWrapper? ringWrap) && ringWrap.GetRef() is Item ring) {
+                        mini.Con.PrintClickable(13, printY, new ColoredString(ring.Name, ring.GetColor(), ring.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Ring"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Ring");
                         });
+
+                        if (ring.UseString != "") {  
+                            mini.Con.PrintClickable(13 + ring.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(ring, player);
+
+                                if (ring.ConsumedOnUse && success) {
+                                    ringWrap.TryConsume();
+                                }
+
+                                if (ringWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Ring"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|   Amulet: ");
-                    if (player.Equipment.ContainsKey("Amulet")) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(player.Equipment["Amulet"].Name, player.Equipment["Amulet"].GetColor(), player.Equipment["Amulet"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Amulet"];
+                    if (player.Equipment.TryGetValue("Amulet", out ItemWrapper? amuletWrap) && amuletWrap.GetRef() is Item amulet) {
+                        mini.Con.PrintClickable(13, printY, new ColoredString(amulet.Name, amulet.GetColor(), amulet.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Amulet"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Amulet");
                         });
+
+                        if (amulet.UseString != "") {  
+                            mini.Con.PrintClickable(13 + amulet.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(amulet, player);
+
+                                if (amulet.ConsumedOnUse && success) {
+                                    amuletWrap.TryConsume();
+                                }
+
+                                if (amuletWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Amulet"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|   Pocket: ");
-                    if (player.Equipment.ContainsKey("Pocket")) {
-                        string name = player.Equipment["Pocket"].Name + (player.Equipment["Pocket"].Quantity > 1 ? " x" + player.Equipment["Pocket"].Quantity : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, player.Equipment["Pocket"].GetColor(), player.Equipment["Pocket"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Pocket"];
+                    if (player.Equipment.TryGetValue("Pocket", out ItemWrapper? pocketWrap) && pocketWrap.GetRef() is Item pocket) {
+                        string name = pocket.Name + (player.Equipment["Pocket"].Quantity > 1 ? " x" + player.Equipment["Pocket"].Quantity : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, pocket.GetColor(), pocket.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Pocket"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Pocket");
                         });
+
+                        if (pocket.UseString != "") {  
+                            mini.Con.PrintClickable(13 + pocket.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(pocket, player);
+
+                                if (pocket.ConsumedOnUse && success) {
+                                    pocketWrap.TryConsume();
+                                }
+
+                                if (pocketWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Pocket"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|     Ammo: ");
-                    if (player.Equipment.ContainsKey("Ammo")) {
-                        string name = player.Equipment["Ammo"].Name + (player.Equipment["Ammo"].Quantity > 1 ? " x" + player.Equipment["Ammo"].Quantity : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, player.Equipment["Ammo"].GetColor(), player.Equipment["Ammo"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Ammo"];
+                    if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? ammoWrap) && ammoWrap.GetRef() is Item ammo) {
+                        string name = ammo.Name + (player.Equipment["Ammo"].Quantity > 1 ? " x" + player.Equipment["Ammo"].Quantity : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, ammo.GetColor(), ammo.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Ammo"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Ammo");
                         });
+
+                        if (ammo.UseString != "") {  
+                            mini.Con.PrintClickable(13 + ammo.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(ammo, player);
+
+                                if (ammo.ConsumedOnUse && success) {
+                                    ammoWrap.TryConsume();
+                                }
+
+                                if (ammoWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Ammo"); 
+                                }
+                            });  
+                        }
                     }
 
                     printY++;
 
                     mini.Con.Print(1, printY, "|      Pet: ");
-                    if (player.Equipment.ContainsKey("Pet")) {
-                        string name = player.Equipment["Pet"].Name + (player.Equipment["Pet"].Quantity > 1 ? " x" + player.Equipment["Pet"].Quantity : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, player.Equipment["Pet"].GetColor(), player.Equipment["Pet"].ColorSum() < 60 ? Color.White : Color.Black), () => {
-                            Item item = player.Equipment["Pet"];
+                    if (player.Equipment.TryGetValue("Pet", out ItemWrapper? petWrap) && petWrap.GetRef() is Item pet) {
+                        string name = pet.Name + (player.Equipment["Pet"].Quantity > 1 ? " x" + player.Equipment["Pet"].Quantity : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, pet.GetColor(), pet.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                            ItemWrapper item = player.Equipment["Pet"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Pet");
                         });
+
+                        if (pet.UseString != "") {  
+                            mini.Con.PrintClickable(13 + pet.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                                bool success = ItemUseLogic.UseItem(pet, player);
+
+                                if (pet.ConsumedOnUse && success) {
+                                    petWrap.TryConsume();
+                                }
+
+                                if (petWrap.Quantity <= 0) {
+                                    player.Equipment.Remove("Pet"); 
+                                }
+                            });  
+                        }
                     }
                 }
             
@@ -547,7 +733,7 @@ namespace ZeroPlayersOnline.Managers {
                     int questPoints = 0;
                     int totalPossibleQP = 0;
 
-                    List<Quest> sortedList = player.QuestLog.Values.ToList();
+                    List<Quest> sortedList = GameLoop.ZPO.QuestLibrary.Values.ToList();
 
                     if (QuestSort == "A->Z") {
                         sortedList = sortedList.OrderBy(o => o.Name).ToList();
@@ -561,7 +747,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     foreach (var kv in sortedList) {
                         totalPossibleQP += kv.QuestPoints;
-                        if (kv.CurrentStage == kv.CompleteStage)
+                        if (kv.CurrentStage() == kv.CompleteStage)
                             questPoints += kv.QuestPoints;
 
 
@@ -576,11 +762,11 @@ namespace ZeroPlayersOnline.Managers {
                             col = Color.Crimson;
                         }
 
-                        if (kv.CurrentStage != -1) {
+                        if (kv.CurrentStage() != -1) {
                             col = Color.Yellow;
                         }
 
-                        if (kv.CurrentStage == kv.CompleteStage) {
+                        if (kv.CurrentStage() == kv.CompleteStage) {
                             col = Color.Lime;
                         }
 
@@ -588,7 +774,7 @@ namespace ZeroPlayersOnline.Managers {
                             ExtraWindows.Quests.IsVisible = true;
                             ExtraWindows.ViewingQuestID = kv.ID;
                              
-                            if (kv.CurrentStage == -1) {
+                            if (kv.CurrentStage() == -1) {
                                 ExtraWindows.QuestOverview = true;
                             } else {
                                 ExtraWindows.QuestOverview = false;
@@ -628,7 +814,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     List<Spell> spells = new();
 
-                    foreach (var kv in player.Spells) {
+                    foreach (var kv in GameLoop.ZPO.SpellLibrary) {
                         if (kv.Value.Book == player.MagicBook && kv.Value.Category == MagicTab) {
                             spells.Add(kv.Value);
                         }

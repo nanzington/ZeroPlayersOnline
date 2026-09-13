@@ -28,6 +28,10 @@ Misthalin Mania
 - Quest: Lost City
 
 
+Make shields work and worth using
+Weapon poison, maybe a poison equipment slot that applies to any melee or ranged attack?
+Lumbridge Swamp Caves, make it so maps can require a light source, add some light sources, then fill out the cave
+Optionally hide connections if requirements not met? Maybe default to visible regardless since it'd mostly be for sneaky map copies
 
 
 Immediately important stuff to get working:
@@ -59,9 +63,11 @@ Less immediate but still important:
 
 
 Things Monsters Can Drop Instead of Gathering outputs
-- Logs: wood spirits, if you're chopping a tree and the have corresponding wood spirit, consume one spirit and get one extra log
-- Ores: ore spirits, if you're mining an ore and have the corresponding ore spirit, consume one spirit and get one extra ore
+- Logs: wood sppurehearts, if you're chopping a tree and the have corresponding wood sppureheart, consume one sppureheart and get one extra log
+- Ores: ore sppurehearts, if you're mining an ore and have the corresponding ore sppureheart, consume one sppureheart and get one extra ore
+- Fish: enticing bait? generic fish duplicator, if you gather from a fish spot and have these it'll consume one and give you a duplicate of the fish you caught
 - Herbs: potion filler, when you make a potion, if you have any potion filler then the potion will have 4 doses instead of 3
+
 
 
 

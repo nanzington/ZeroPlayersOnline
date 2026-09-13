@@ -737,6 +737,17 @@ namespace ZeroPlayersOnline.Hardcodes {
             }));
             toAdd.Add(new("Victoria", "mistLumVictoria", new() { { 0, new("...Do you mind? I'm busy. Please leave.", new() { byeThen }) } }));
             
+            toAdd.Add(new("Arthur the Clue Hunter", "clueArthur", new() { 
+                 { 0, new("How can I help you?", new() { new DialogueChoice("Ask about tutorial clues", 10), new DialogueChoice("Ask about beginner clues", 20), new DialogueChoice("Ask about easy clues", 30), new DialogueChoice("Ask about medium clues", 40), new DialogueChoice("Ask about hard clues", 50), new DialogueChoice("Ask about elite clues", 60), new DialogueChoice("Ask about master clues", 70), new DialogueChoice("Ask for help with your clues", 100), byeThen }) }, 
+                 { 10, new("Tutorial clues? I can't say I'm very familiar with them, but they can only be found and solved on Tutorial Island.", new() { new DialogueChoice("More help?", 0), byeThen }) },
+                 { 20, new("Beginner clues are generally simple, requiring only up to level 10 in skills but no quests.", new() { new DialogueChoice("More help?", 0), byeThen }) },
+                 { 30, new("Easy clues are generally, well, easy, requiring up to level 20 in skills and novice quests.", new() { new DialogueChoice("More help?", 0), byeThen }) },
+                 { 40, new("Medium clues are where it begins to get tricky, requiring up to level 40 in skills and 'Intermediate' quests.", new() { new DialogueChoice("More help?", 0), byeThen }) },
+                 { 50, new("Hard clues are difficult, and may require up to level 60 in skills and 'Experienced' quests.", new() { new DialogueChoice("More help?", 0), byeThen }) },
+                 { 60, new("Elite clues are very difficult, and may require up to level 80 in skills and 'Master' quests.", new() { new DialogueChoice("More help?", 0), byeThen }) },
+                 { 70, new("Master clues are as hard as it gets. They may require up to level 99 in skills and 'Grandmaster' quests.", new() { new DialogueChoice("More help?", 0), byeThen }) },
+                 { 100, new("Righto, let me take a look here...", new() { new DialogueChoice("More help?", 0), byeThen }, action: "clueHelp") }
+             }));
 
             for (int i = 0; i < toAdd.Count; i++) { 
                 NPCLib.Add(toAdd[i].ID, toAdd[i]);

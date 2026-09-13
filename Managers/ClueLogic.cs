@@ -388,5 +388,45 @@ namespace ZeroPlayersOnline.Managers {
                 }
             }
         }
+
+        public static string HelpLog(string which, Player p) {
+            string location = "";
+            string interact = "";
+            string target = ""; 
+
+            string clueID = "";
+
+            if (which == "Tutorial") { clueID = p.CurrentClueTutorial; } 
+            else if (which == "Beginner") { clueID = p.CurrentClueBeginner; } 
+            else if (which == "Easy") { clueID = p.CurrentClueEasy; } 
+            else if (which == "Medium") { clueID = p.CurrentClueMedium; } 
+            else if (which == "Hard") { clueID = p.CurrentClueHard; } 
+            else if (which == "Elite") { clueID = p.CurrentClueElite; } 
+            else if (which == "Master") { clueID = p.CurrentClueMaster; } 
+
+            if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(clueID, out ClueStep? clue) && clue != null) {
+                location = GameLoop.ZPO.ResolveLocationName(clue.SolveLoc);
+                    
+                if (clue.ClueType == "Speak" || clue.ClueType == "Anagram") {
+                    interact = "speak to ";
+                    target = GameLoop.ZPO.ResolveNPCName(clue.EmoteOrNpc);
+                }
+
+                if (clue.ClueType == "Dig") {
+                    interact = "dig with a spade";
+                }
+
+                if (clue.ClueType == "Emote") {
+                    interact = clue.EmoteOrNpc + " with specific items equipped";
+                }
+
+                if (clue.ClueType == "Gather") {
+                    interact = "interact with a ";
+                    target = GameLoop.ZPO.ResolveGatherName(clue.EmoteOrNpc);
+                }
+            }
+
+            return "Go to " + location + " and " + interact + target + ".";
+        }
     }
 }

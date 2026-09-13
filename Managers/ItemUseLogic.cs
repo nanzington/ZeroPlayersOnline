@@ -231,10 +231,15 @@ namespace ZeroPlayersOnline.Managers {
             } else if (item.UseString == "Knife") {
                 ExtraWindows.CraftingMenu.IsVisible = true;
                 ExtraWindows.CraftingType = "Knife";
+            } else if (item.UseString == "Map") {
+                ExtraWindows.Map.IsVisible = true;
+                ExtraWindows.MapViewing = item.UseString2;
+                ExtraWindows.MapW = item.UseInt;
+                ExtraWindows.MapH = item.UseInt2;
             } else if (item.UseString == "SecondExamine") {
                 GameLoop.ZPO.Log.AddMessage(new ColoredString(item.MiscString, Color.SandyBrown, Color.Black));
 
-                foreach (var kv in player.QuestLog) {
+                foreach (var kv in GameLoop.ZPO.QuestLibrary) {
                     kv.Value.CheckProgress(player, "ExamineItem", item.ID, 0);
                 }
             } else if (item.UseString == "CleanHerb") {
@@ -317,29 +322,35 @@ namespace ZeroPlayersOnline.Managers {
                         secondSlot = UsingSlot;
                     }
 
-                    Item firstItem = player.Inventory[firstSlot];
-                    Item secondItem = player.Inventory[secondSlot];
+                    ItemWrapper firstWrap = player.Inventory[firstSlot];
+                    ItemWrapper secondWrap = player.Inventory[secondSlot];
+
+                    Item? firstItem = firstWrap.GetRef();
+                    Item? secondItem = secondWrap.GetRef();
+
+                    if (firstItem == null || secondItem == null)
+                        return false;
                      
                     UsingSlot = -1; 
 
                     if (!firstItem.Noted && !secondItem.Noted) { 
-                        if (firstItem.Quantity < rec.FirstQty) {
+                        if (firstWrap.Quantity < rec.FirstQty) {
                             GameLoop.ZPO.Log.AddMessage(new ColoredString("You need " + rec.FirstQty + " " + firstItem.Name + " to do that.", Color.Crimson, Color.Black));
                             return false;
                         }
 
-                        if (secondItem.Quantity < rec.SecondQty) {
+                        if (secondWrap.Quantity < rec.SecondQty) {
                             GameLoop.ZPO.Log.AddMessage(new ColoredString("You need " + rec.SecondQty + " " + secondItem.Name + " to do that.", Color.Crimson, Color.Black));
                             return false;
                         }
 
-                        firstItem.Quantity -= rec.FirstQty;
-                        if (firstItem.Quantity <= 0)
-                            player.Inventory.Remove(firstItem);
+                        firstWrap.Quantity -= rec.FirstQty;
+                        if (firstWrap.Quantity <= 0)
+                            player.Inventory.Remove(firstWrap);
 
-                        secondItem.Quantity -= rec.SecondQty;
-                        if (secondItem.Quantity <= 0)
-                            player.Inventory.Remove(secondItem);
+                        secondWrap.Quantity -= rec.SecondQty;
+                        if (secondWrap.Quantity <= 0)
+                            player.Inventory.Remove(secondWrap);
 
                         if (rec.OutputItem[0] != '_') {
                             if (GameLoop.ZPO.ItemLibrary.ContainsKey(rec.OutputItem)) {
@@ -396,44 +407,43 @@ namespace ZeroPlayersOnline.Managers {
         }
 
         public static bool TryEquipItem(Player player, int i) {
-            Item item = player.Inventory[i];
+            if (player.Inventory[i].GetRef() is Item eqp) {
+                bool canEquip = true;
 
-            bool canEquip = true;
-
-            if (item.EquipSkill != "") {
-                if (player.Skills.ContainsKey(item.EquipSkill)) {
-                    if (player.Skills[item.EquipSkill].Level < item.EquipLevel) {
-                        canEquip = false;
-                    }
-                }
-            }
-
-            if (canEquip) {
-                player.Inventory.RemoveAt(i);
-
-                                        
-                if (player.Equipment.ContainsKey(item.EquipSlot)) {
-                    if (player.Equipment[item.EquipSlot].ID == item.ID && item.Stackable) {
-                        player.Equipment[item.EquipSlot].Quantity += item.Quantity; 
-                        return true;
-                    } else {
-                        Item unequip = player.Equipment[item.EquipSlot];
-                        player.TryPickup(unequip, unequip.Quantity);
-                        player.Equipment.Remove(item.EquipSlot);
-
-                        if (item.EquipSlot == "Weapon" && item.TwoHanded && player.Equipment.ContainsKey("Offhand")) {
-                            Item offhand = player.Equipment["Offhand"];
-                            player.TryPickup(offhand, offhand.Quantity);
-                            player.Equipment.Remove("Offhand");
+                if (eqp.EquipSkill != "") {
+                    if (player.Skills.ContainsKey(eqp.EquipSkill)) {
+                        if (player.Skills[eqp.EquipSkill].Level < eqp.EquipLevel) {
+                            canEquip = false;
                         }
                     }
                 }
 
-                player.Equipment.Add(item.EquipSlot, item);
+                if (canEquip) {     
+                    if (player.Equipment.ContainsKey(eqp.EquipSlot)) {
+                        if (player.Equipment[eqp.EquipSlot].ID == player.Inventory[i].ID && eqp.Stackable) {
+                            player.Equipment[eqp.EquipSlot].Quantity += player.Inventory[i].Quantity; 
+                            return true;
+                        } else {
+                            ItemWrapper unequip = player.Equipment[eqp.EquipSlot];
+                            player.TryPickup(unequip, unequip.Quantity);
+                            player.Equipment.Remove(eqp.EquipSlot);
 
-                return true;
+                            if (eqp.EquipSlot == "Weapon" && eqp.TwoHanded && player.Equipment.ContainsKey("Offhand")) {
+                                ItemWrapper offhand = player.Equipment["Offhand"];
+                                player.TryPickup(offhand, offhand.Quantity);
+                                player.Equipment.Remove("Offhand");
+                            }
+                        }
+                    }
+                    
+                    player.Inventory.RemoveAt(i);
+                    player.Equipment.Add(eqp.EquipSlot, new(eqp));
+
+                    return true;
+                }
+
+                return false;
             }
-
             return false;
         } 
     }

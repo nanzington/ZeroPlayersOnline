@@ -4,7 +4,7 @@
         public static Color Bronze = new Color(205, 127, 50, 255);
         public static Color Iron = new Color(75, 75, 75, 255);
         public static Color Steel = new Color(150, 150, 150, 255);
-        public static Color Mithril = new Color(0, 0, 128, 255);
+        public static Color Mithril = Color.SteelBlue;
         public static Color Adamant = new Color(34, 139, 34, 255);
 
         // Logs 

@@ -30,24 +30,23 @@ namespace ZeroPlayersOnline.DataTypes {
                 bool changedInv = false;
                 for (int j = 0; j < Recipes.Count; j++) {
                     if (p.Inventory[i].ID == Recipes[j].InputID && !p.Inventory[i].Noted) {
+                        if (Recipes[j].SkillUsed != "") {
+                            if (p.Skills.ContainsKey(Recipes[j].SkillUsed) && p.Skills[Recipes[j].SkillUsed].Level < Recipes[j].SkillLevel) {
+                                log.AddMessage(new ColoredString("You get the feeling you should have " + Recipes[j].SkillLevel + " " + Recipes[j].SkillUsed + " to make " + GameLoop.ZPO.ResolveItemName(Recipes[j].OutputID) + ".", Color.Crimson, Color.Black));
+                                continue;
+                            } 
+                        } 
+
+                        if (Recipes[j].SecondaryIn != "" && !p.HasAllItems([Recipes[j].SecondaryIn + ",1" ])) {
+                            continue;
+                        } 
+
                         if (LastWorked == "") {
                             LastWorked = p.Inventory[i].ID; 
                         } else {
                             if (LastWorked != p.Inventory[i].ID)
                                 continue;
                         }
-
-                        if (Recipes[j].SecondaryIn != "" && !p.HasAllItems([Recipes[j].SecondaryIn + ",1" ])) {
-                            continue;
-                        }
-
-
-                        if (Recipes[j].SkillUsed != "") {
-                            if (p.Skills.ContainsKey(Recipes[j].SkillUsed) && p.Skills[Recipes[j].SkillUsed].Level < Recipes[j].SkillLevel) {
-                                log.AddMessage(new ColoredString("You get the feeling you should have " + Recipes[j].SkillLevel + " " + Recipes[j].SkillUsed + " to try that.", Color.Crimson, Color.Black));
-                                return false;
-                            } 
-                        } 
 
                         p.Inventory[i].Quantity -= 1;
                         if (p.Inventory[i].Quantity <= 0) {

@@ -38,6 +38,10 @@ namespace ZeroPlayersOnline.DataTypes {
             bool allPassed = true;
             bool anyPassed = false;
 
+            if (!GameLoop.ZPO.Atlas.ContainsKey(Destination)) {
+                return false;
+            }
+
             if (Requirements != null) {
                 for (int i = 0; i < Requirements.Count; i++) {
                     if (!Requirements[i].CheckRequirement(p, false)) {

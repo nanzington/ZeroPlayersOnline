@@ -82,7 +82,7 @@
             }
 
             if (RequirementType == "QuestAt") {
-                if (p.QuestLog.TryGetValue(MiscString, out Quest? quest)) {
+                if (p.QuestLog.TryGetValue(MiscString, out QuestStatus? quest)) {
                     if (quest.CurrentStage == MiscInt) {
                         return true;
                     }
@@ -90,7 +90,7 @@
             }
 
             if (RequirementType == "QuestPast") {
-                if (p.QuestLog.TryGetValue(MiscString, out Quest? quest)) {
+                if (p.QuestLog.TryGetValue(MiscString, out QuestStatus? quest)) {
                     if (quest.CurrentStage >= MiscInt) {
                         return true;
                     }
@@ -105,14 +105,14 @@
                 } else {
                     int count = 0;
                     for (int i = 0; i < p.Inventory.Count; i++) { 
-                        if (p.Inventory[i].ID == MiscString || p.Inventory[i].MiscString == MiscString) {
+                        if (p.Inventory[i].ID == MiscString || (p.Inventory[i].GetRef() is Item item && item.MiscString == MiscString)) {
                             if (!p.Inventory[i].Noted || itemsNotedOkay)
                                 count += p.Inventory[i].Quantity;
                         }
                     }
 
                     foreach (var kv in p.Equipment) {
-                        if (kv.Value.ID == MiscString || kv.Value.MiscString == MiscString) {
+                        if (kv.Value.ID == MiscString || (kv.Value.GetRef() is Item eqp && eqp.MiscString == MiscString)) {
                             if (!kv.Value.Noted)
                                 count += kv.Value.Quantity;
                         }

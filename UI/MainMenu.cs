@@ -394,10 +394,8 @@ namespace ZeroPlayersOnline.UI {
             if (!loading && SkippingTutorialIsland > 0) {
                 GameLoop.ZPO.player.NavLoc = "MIST_LumbridgeCastleBailey";
                 
-                if (GameLoop.ZPO.player.QuestLog.TryGetValue("TI_HauntedIsland", out Quest? haunted)) {
-                    if (haunted != null) {
-                        haunted.CurrentStage = haunted.CompleteStage;
-                    }
+                if (GameLoop.ZPO.player.QuestLog.TryGetValue("TI_HauntedIsland", out QuestStatus? haunted)) { 
+                    haunted.CurrentStage = 90; 
                 }
 
                 if (SkippingTutorialIsland == 2) {
@@ -419,8 +417,7 @@ namespace ZeroPlayersOnline.UI {
             HardcodedFarmPatches.InitPatches(GameLoop.ZPO.player.FarmingPatches);
             GameLoop.ZPO.TryAddSkills();
             GameLoop.ZPO.TryAddPrayers();
-            GameLoop.ZPO.TryAddQuests();
-            GameLoop.ZPO.TryAddSpells();
+            GameLoop.ZPO.TryAddQuests(); 
             GameLoop.ZPO.TrySetupLogs();
         }
     }

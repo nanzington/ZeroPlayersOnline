@@ -62,8 +62,7 @@ namespace ZeroPlayersOnline {
             RebuildLibraries();
 
             TryAddSkills();
-            TryAddPrayers();
-            TryAddSpells();
+            TryAddPrayers(); 
             TryAddQuests();
 
             player.CurrentHP = 10;
@@ -77,8 +76,28 @@ namespace ZeroPlayersOnline {
 
             if (Atlas.ContainsKey(player.NavLoc)) {
                 Location curr = Atlas[player.NavLoc];
+
+                string dispName = curr.DisplayName;
+
+                if (curr.MazeMap != "") {
+                    foreach (var kv in player.Inventory) {
+                        if (kv.GetRef() is Item item) {
+                            if (item.UseString == "Map" && item.UseString2 == curr.MazeMap) {
+                                dispName = curr.DisplayName + " (" + curr.MazeTile + ")";
+                            }
+                        }
+                    }
+
+                    foreach (var kv in player.Equipment) {
+                        if (kv.Value.GetRef() is Item item) {
+                            if (item.UseString == "Map" && item.UseString2 == curr.MazeMap) {
+                                dispName = curr.DisplayName + " (" + curr.MazeTile + ")";
+                            }
+                        }
+                    }
+                }
                  
-                mini.Con.Print(57, 0, curr.DisplayName.Align(HorizontalAlignment.Center, 91));
+                mini.Con.Print(57, 0, dispName.Align(HorizontalAlignment.Center, 91));
                 mini.Con.DrawLine(new Point(56, 1), new Point(148, 1), 196); 
 
                 int descY = mini.Con.PrintMultiLine(57, 3, curr.Description, 92);
@@ -109,6 +128,25 @@ namespace ZeroPlayersOnline {
 
                             if (dest.Region != curr.Region)
                                 name += " [" + dest.Region + "]";
+
+                            
+                            if (dest.MazeMap != "") {
+                                foreach (var kv in player.Inventory) {
+                                    if (kv.GetRef() is Item item) {
+                                        if (item.UseString == "Map" && item.UseString2 == dest.MazeMap) {
+                                            name += " (" + dest.MazeTile + ")";
+                                        }
+                                    }
+                                }
+
+                                foreach (var kv in player.Equipment) {
+                                    if (kv.Value.GetRef() is Item item) {
+                                        if (item.UseString == "Map" && item.UseString2 == dest.MazeMap) {
+                                            name += " (" + dest.MazeTile + ")";
+                                        }
+                                    }
+                                }
+                            }
 
                             mini.Con.PrintClickable(57, printY++, new ColoredString("| " + name, curr.ConnectedLocations[i].CanTraverse(player) ? Color.White : Color.Crimson, Color.Black), () => {
                                 if (curr.ConnectedLocations[i].CanTraverse(player)) {
@@ -235,8 +273,8 @@ namespace ZeroPlayersOnline {
 
                             bool safespotting = false;
 
-                            if (player.Equipment.ContainsKey("Weapon")) {
-                                if (player.Equipment["Weapon"].EquipSkill == "Ranged" || player.Equipment["Weapon"].EquipSkill == "Magic") {
+                            if (player.Equipment.TryGetValue("Weapon", out ItemWrapper? weaponWrap) && weaponWrap.GetRef() is Item weapon) {
+                                if (weapon.EquipSkill == "Ranged" || weapon.EquipSkill == "Magic") {
                                     if (bossType == "Melee") {
                                         safespotting = true;
                                     }
@@ -301,14 +339,9 @@ namespace ZeroPlayersOnline {
                     }
 
                     double attackSpeed = 1.0;
-
-                    if (player.Equipment.TryGetValue("Weapon", out Item? wep)) {
-                        if (wep != null)
-                            attackSpeed = wep.AttackSpeed;
-                    }
-
-                    if (player.Equipment.TryGetValue("Ammo", out Item? ammo)) {
-
+                     
+                    if (player.Equipment.TryGetValue("Weapon", out ItemWrapper? wepWrap) && wepWrap.GetRef() is Item wep) { 
+                        attackSpeed = wep.AttackSpeed;
                     }
 
                     bool hasAmmo = true;
@@ -321,32 +354,32 @@ namespace ZeroPlayersOnline {
                         int hitChance = GameLoop.rand.Next(100); 
                              
                         // Remove a unit of ammo if this is a ranged weapon
-                        if (wep != null) {
-                            if (wep.EquipAmmo == "Self") {
-                                wep.Quantity -= 1;
-                                Item droppedAmmo = Helper.Clone(wep);
+                        if (wepWrap != null && wepWrap.GetRef() is Item weapon) {
+                            if (weapon.EquipAmmo == "Self") {
+                                wepWrap.Quantity -= 1;
+                                Item droppedAmmo = Helper.Clone(weapon);
                                 droppedAmmo.Quantity = 1;
                                 if (GameLoop.rand.Next(4) != 0)
-                                    TryPlaceItem(player.NavLoc, droppedAmmo);
+                                    TryPlaceItem(player.NavLoc, new(droppedAmmo));
                                 usedAmmo = true;
-                            } else if (wep.EquipAmmo == "Arrow") {
-                                if (ammo != null && ammo.EquipDamageType == "Arrow") {
-                                    ammo.Quantity -= 1;
-                                    Item droppedAmmo = Helper.Clone(ammo);
+                            } else if (weapon.EquipAmmo == "Arrow") {
+                                if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? arrowWrap) && arrowWrap.GetRef() is Item arrow && arrow.EquipDamageType == "Arrow") {
+                                    arrowWrap.Quantity -= 1;
+                                    Item droppedAmmo = Helper.Clone(arrow);
                                     droppedAmmo.Quantity = 1;
                                     if (GameLoop.rand.Next(4) != 0)
-                                        TryPlaceItem(player.NavLoc, droppedAmmo);
+                                        TryPlaceItem(player.NavLoc, new(droppedAmmo));
                                     usedAmmo = true;
                                 } else {
                                     hasAmmo = false;
                                 }
-                            } else if (wep.EquipAmmo == "Bolt") {
-                                if (ammo != null && ammo.EquipDamageType == "Bolt") {
-                                    ammo.Quantity -= 1;
-                                    Item droppedAmmo = Helper.Clone(ammo);
+                            } else if (weapon.EquipAmmo == "Bolt") {
+                                if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? boltWrap) && boltWrap.GetRef() is Item bolt && bolt.EquipDamageType == "Bolt") {
+                                    boltWrap.Quantity -= 1;
+                                    Item droppedAmmo = Helper.Clone(bolt);
                                     droppedAmmo.Quantity = 1;
                                     if (GameLoop.rand.Next(4) != 0)
-                                        TryPlaceItem(player.NavLoc, droppedAmmo);
+                                        TryPlaceItem(player.NavLoc, new(droppedAmmo));
                                     usedAmmo = true;
                                 } else {
                                     hasAmmo = false;
@@ -358,9 +391,9 @@ namespace ZeroPlayersOnline {
                             string whichSkill = player.IsMaging() ? "Magic" : usedAmmo ? "Ranged" : "Attack";
 
                             if (player.IsMaging()) {
-                                player.ConsumeItems(player.Spells[player.CastingSpell].Runes, false, true);
+                                player.ConsumeItems(SpellLibrary[player.CastingSpell].Runes, false, true);
                                     
-                                int spellExp = player.Spells[player.CastingSpell].ExpOnCast;
+                                int spellExp = SpellLibrary[player.CastingSpell].ExpOnCast;
                                 player.TryGrantExp("Magic", spellExp, Log, SidebarManager.RecentlyTrainedSkills);
                             }
 
@@ -406,7 +439,7 @@ namespace ZeroPlayersOnline {
                                 if (player.IsMaging()) {  
                                     player.TryGrantExp("Magic", (pdmg * 4), Log, SidebarManager.RecentlyTrainedSkills);
 
-                                    string cast = player.CanCast(player.Spells[player.CastingSpell]);
+                                    string cast = player.CanCast(SpellLibrary[player.CastingSpell]);
                                     if (cast != "") { 
                                         Log.AddMessage(new ColoredString("Cannot cast spell anymore: " + cast, Color.Crimson, Color.Black)); 
                                         player.CastingSpell = "";
@@ -533,8 +566,8 @@ namespace ZeroPlayersOnline {
 
                                 bool safespotting = false;
 
-                                if (player.Equipment.ContainsKey("Weapon")) {
-                                    if (player.Equipment["Weapon"].EquipSkill == "Ranged" || player.Equipment["Weapon"].EquipSkill == "Magic") {
+                                if (player.Equipment.TryGetValue("Weapon", out ItemWrapper? weaponWrap) && weaponWrap.GetRef() is Item wep2) {
+                                    if (wep2.EquipSkill == "Ranged" || wep2.EquipSkill == "Magic") {
                                         if (thisOne.DamageType == "Melee") {
                                             safespotting = true;
                                         }
@@ -582,14 +615,9 @@ namespace ZeroPlayersOnline {
 
                         double attackSpeed = 1.0;
 
-                        if (player.Equipment.TryGetValue("Weapon", out Item? wep)) {
-                            if (wep != null)
-                                attackSpeed = wep.AttackSpeed;
-                        }
-
-                        if (player.Equipment.TryGetValue("Ammo", out Item? ammo)) {
-
-                        }
+                        if (player.Equipment.TryGetValue("Weapon", out ItemWrapper? wepWrap) && wepWrap.GetRef() is Item wep) { 
+                            attackSpeed = wep.AttackSpeed;
+                        } 
 
                         bool hasAmmo = true;
                         bool usedAmmo = false;
@@ -606,32 +634,32 @@ namespace ZeroPlayersOnline {
                             int hitChance = GameLoop.rand.Next(100); 
                              
                             // Remove a unit of ammo if this is a ranged weapon
-                            if (wep != null) {
-                                if (wep.EquipAmmo == "Self") {
-                                    wep.Quantity -= 1;
-                                    Item droppedAmmo = Helper.Clone(wep);
+                            if (wepWrap != null && wepWrap.GetRef() is Item weapon) {
+                                if (weapon.EquipAmmo == "Self") {
+                                    wepWrap.Quantity -= 1;
+                                    Item droppedAmmo = Helper.Clone(weapon);
                                     droppedAmmo.Quantity = 1;
                                     if (GameLoop.rand.Next(4) != 0)
-                                        TryPlaceItem(player.NavLoc, droppedAmmo);
+                                        TryPlaceItem(player.NavLoc, new(droppedAmmo));
                                     usedAmmo = true;
-                                } else if (wep.EquipAmmo == "Arrow") {
-                                    if (ammo != null && ammo.EquipDamageType == "Arrow") {
-                                        ammo.Quantity -= 1;
-                                        Item droppedAmmo = Helper.Clone(ammo);
+                                } else if (weapon.EquipAmmo == "Arrow") {
+                                    if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? arrowWrap) && arrowWrap.GetRef() is Item arrow && arrow.EquipDamageType == "Arrow") {
+                                        arrowWrap.Quantity -= 1;
+                                        Item droppedAmmo = Helper.Clone(arrow);
                                         droppedAmmo.Quantity = 1;
                                         if (GameLoop.rand.Next(4) != 0)
-                                            TryPlaceItem(player.NavLoc, droppedAmmo);
+                                            TryPlaceItem(player.NavLoc, new(droppedAmmo));
                                         usedAmmo = true;
                                     } else {
                                         hasAmmo = false;
                                     }
-                                } else if (wep.EquipAmmo == "Bolt") {
-                                    if (ammo != null && ammo.EquipDamageType == "Bolt") {
-                                        ammo.Quantity -= 1;
-                                        Item droppedAmmo = Helper.Clone(ammo);
+                                } else if (weapon.EquipAmmo == "Bolt") {
+                                    if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? boltWrap) && boltWrap.GetRef() is Item bolt && bolt.EquipDamageType == "Bolt") {
+                                        boltWrap.Quantity -= 1;
+                                        Item droppedAmmo = Helper.Clone(bolt);
                                         droppedAmmo.Quantity = 1;
                                         if (GameLoop.rand.Next(4) != 0)
-                                            TryPlaceItem(player.NavLoc, droppedAmmo);
+                                            TryPlaceItem(player.NavLoc, new(droppedAmmo));
                                         usedAmmo = true;
                                     } else {
                                         hasAmmo = false;
@@ -643,9 +671,9 @@ namespace ZeroPlayersOnline {
                                 string whichSkill = player.IsMaging() ? "Magic" : usedAmmo ? "Ranged" : "Attack";
 
                                 if (player.IsMaging()) {
-                                    player.ConsumeItems(player.Spells[player.CastingSpell].Runes, false, true);
+                                    player.ConsumeItems(SpellLibrary[player.CastingSpell].Runes, false, true);
                                     
-                                    int spellExp = player.Spells[player.CastingSpell].ExpOnCast;
+                                    int spellExp = SpellLibrary[player.CastingSpell].ExpOnCast;
                                     player.TryGrantExp("Magic", spellExp, Log, SidebarManager.RecentlyTrainedSkills);
                                 }
 
@@ -691,7 +719,7 @@ namespace ZeroPlayersOnline {
                                     if (player.IsMaging()) {  
                                         player.TryGrantExp("Magic", (pdmg * 4), Log, SidebarManager.RecentlyTrainedSkills);
 
-                                        string cast = player.CanCast(player.Spells[player.CastingSpell]);
+                                        string cast = player.CanCast(SpellLibrary[player.CastingSpell]);
                                         if (cast != "") { 
                                             Log.AddMessage(new ColoredString("Cannot cast spell anymore: " + cast, Color.Crimson, Color.Black)); 
                                             player.CastingSpell = "";
@@ -845,7 +873,7 @@ namespace ZeroPlayersOnline {
                     if (curr.IsBank && player.CanUseBanks) {
                         mini.Con.Print(resourceX + 2, resourceY, "Items in Bank"); 
 
-                        mini.Con.PrintClickable(resourceX + 23, resourceY, "(sort)", () => { player.BankedItems = player.BankedItems.OrderBy(o => o.Name).ToList(); });
+                        mini.Con.PrintClickable(resourceX + 23, resourceY, "(sort)", () => { player.BankedItems = player.BankedItems.OrderBy(o => ResolveItemName(o.ID)).ToList(); });
                          
                         mini.Con.PrintClickable(resourceX + 30, resourceY++, new ColoredString("(noted)", WithdrawingNotes ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { WithdrawingNotes = !WithdrawingNotes; }); 
 
@@ -858,54 +886,54 @@ namespace ZeroPlayersOnline {
 
                         if (player.BankedItems.Count > 0) {
                             for (int i = ActivityItemTop; i < player.BankedItems.Count && i < ActivityItemTop + 22; i++) { 
-                                Item item = player.BankedItems[i];
+                                if (player.BankedItems[i].GetRef() is Item item) { 
+                                    string name = item.Name;
+                                    if (name.Length > 25)
+                                        name = name[..25];
 
-                                string name = item.Name;
-                                if (name.Length > 25)
-                                    name = name[..25];
+                                    name += item.Quantity > 1 ? " x" + item.Quantity : "";
 
-                                name += item.Quantity > 1 ? " x" + item.Quantity : "";
-
-                                if (item.Noted) {
-                                    name += " (n)";
-                                }
-
-                                if (item.Name.Contains("potion") && item.UseInt4 != 0) {
-                                    name += " (" + item.UseInt4 + " doses)";
-                                }
-
-                                bool picked = false;
-
-                                mini.Con.Print(resourceX + 2, resourceY, "|");
-                                mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(name, item.GetColor(), item.ColorSum() < 50 ? Color.White : Color.Black), () => { 
-                                    int qty = 1;
-
-                                    if (Helper.EitherShift())
-                                        qty *= 5;
-                                    if (Helper.EitherControl())
-                                        qty *= 10;
-
-                                    if (qty >= item.Quantity || Helper.EitherAlt())
-                                        qty = item.Quantity;
-
-
-                                    if (player.TryPickup(item, qty, item.Noteable ? WithdrawingNotes : false, fromGround: true)) { 
-                                        if (item.Quantity <= 0) {
-                                            player.BankedItems.RemoveAt(i); 
-                                            picked = true;
-                                        }
+                                    if (item.Noted) {
+                                        name += " (n)";
                                     }
-                                }); 
 
-                                if (picked)
-                                    break;
+                                    if (item.Name.Contains("potion") && item.UseInt4 != 0) {
+                                        name += " (" + item.UseInt4 + " doses)";
+                                    }
 
-                                mini.Con.PrintClickable(147, resourceY, new ColoredString("X", Color.Crimson, Color.Black), () => { player.BankedItems.RemoveAt(i); picked = true; });
+                                    bool picked = false;
 
-                                resourceY++;
+                                    mini.Con.Print(resourceX + 2, resourceY, "|");
+                                    mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(name, item.GetColor(), item.ColorSum() < 50 ? Color.White : Color.Black), () => { 
+                                        int qty = 1;
 
-                                if (picked)
-                                    break;
+                                        if (Helper.EitherShift())
+                                            qty *= 5;
+                                        if (Helper.EitherControl())
+                                            qty *= 10;
+
+                                        if (qty >= item.Quantity || Helper.EitherAlt())
+                                            qty = item.Quantity;
+
+
+                                        if (player.TryPickup(player.BankedItems[i], qty, item.Noteable ? WithdrawingNotes : false, fromGround: true)) { 
+                                            if (player.BankedItems[i].Quantity <= 0) {
+                                                player.BankedItems.RemoveAt(i); 
+                                                picked = true;
+                                            }
+                                        }
+                                    }); 
+
+                                    if (picked)
+                                        break;
+
+                                    mini.Con.PrintClickable(147, resourceY, new ColoredString("X", Color.Crimson, Color.Black), () => { player.BankedItems.RemoveAt(i); picked = true; });
+
+                                    resourceY++;
+
+                                    if (picked)
+                                        break;
+                                }
                             }
                         }
                         else {
@@ -958,6 +986,12 @@ namespace ZeroPlayersOnline {
                                         if (item.Quantity <= 0) {
                                             curr.ItemsHere.RemoveAt(i); 
                                             picked = true;
+
+                                            for (int ground = 0; ground < curr.ItemSpawns.Count; ground++) {
+                                                if (curr.ItemSpawns[ground].ItemID == item.ID) {
+                                                    curr.ItemSpawns[ground].LastPickedUp = Helper.Time();
+                                                }
+                                            }
                                         }
                                     } 
                                 });
@@ -1023,7 +1057,7 @@ namespace ZeroPlayersOnline {
                             if (station.TimeLeft != -1) {
                                 if (station.TimeMade + (station.TimeLeft * 60000) <= Helper.Time()) {
                                     if (ItemLibrary.ContainsKey(station.ItemOnExpire)) {
-                                        TryPlaceItem(player.NavLoc, Helper.Clone(ItemLibrary[station.ItemOnExpire]));
+                                        TryPlaceItem(player.NavLoc, new(Helper.Clone(ItemLibrary[station.ItemOnExpire])));
                                     }
 
                                     curr.TempStations.RemoveAt(i); 
@@ -1130,13 +1164,13 @@ namespace ZeroPlayersOnline {
                                                 DialogueStage newDia = ConversationPartner.Dialogue[CurrDialogueStage];
 
                                                 if (newDia.SetsQuest != "") {
-                                                    if (player.QuestLog.TryGetValue(newDia.SetsQuest, out Quest? quest)) {
+                                                    if (player.QuestLog.TryGetValue(newDia.SetsQuest, out QuestStatus? status) && QuestLibrary.TryGetValue(newDia.SetsQuest, out Quest? quest)) {
                                                         if (quest != null) {
-                                                            if (quest.CurrentStage < newDia.SetsQuestStageTo) {
-                                                                quest.CurrentStage = newDia.SetsQuestStageTo;
+                                                            if (status.CurrentStage < newDia.SetsQuestStageTo) {
+                                                                status.CurrentStage = newDia.SetsQuestStageTo;
                                                             }
 
-                                                            if (quest.CurrentStage == quest.CompleteStage) {
+                                                            if (status.CurrentStage == quest.CompleteStage) {
                                                                 Log.AddMessage(new ColoredString("You have completed " + quest.Name + "!", Color.Lime, Color.Black));
                                                                 quest.ProcessRewards(player);
                                                             }
@@ -1166,6 +1200,22 @@ namespace ZeroPlayersOnline {
                                                                     player.TryPickup(Helper.Clone(give), give.Quantity);
                                                                 }
                                                             }
+                                                        }
+                                                    }
+                                                }
+
+                                                if (newDia.ActionWhenChosen != "") {
+                                                    if (newDia.ActionWhenChosen == "clueHelp") {
+                                                        bool printedAny = false;
+                                                        if (player.CurrentClueBeginner != "") { Log.AddMessage("Beginner: " + ClueLogic.HelpLog("Beginner", player), ColorLib.Mithril); printedAny = true; }
+                                                        if (player.CurrentClueEasy != "") {     Log.AddMessage("    Easy: " + ClueLogic.HelpLog("Easy", player), ColorLib.Mithril); printedAny = true; }
+                                                        if (player.CurrentClueMedium != "") {   Log.AddMessage("  Medium: " + ClueLogic.HelpLog("Medium", player), ColorLib.Mithril); printedAny = true; }
+                                                        if (player.CurrentClueHard != "") {     Log.AddMessage("    Hard: " + ClueLogic.HelpLog("Hard", player), ColorLib.Mithril); printedAny = true; }
+                                                        if (player.CurrentClueElite != "") {    Log.AddMessage("   Elite: " + ClueLogic.HelpLog("Elite", player), ColorLib.Mithril); printedAny = true; }
+                                                        if (player.CurrentClueMaster != "") {   Log.AddMessage("  Master: " + ClueLogic.HelpLog("Master", player), ColorLib.Mithril); printedAny = true; }
+                                                        
+                                                        if (!printedAny) {
+                                                            Log.AddMessage("Looks like you haven't got any clue steps active right now!", ColorLib.Mithril);
                                                         }
                                                     }
                                                 }
@@ -1608,6 +1658,12 @@ namespace ZeroPlayersOnline {
             if (ExtraWindows.Compendium.IsVisible)
                 ExtraWindows.CompendiumDraw();
 
+            if (ExtraWindows.Map.IsVisible)
+                ExtraWindows.MapDraw();
+
+            if (ExtraWindows.Debug.IsVisible)
+                ExtraWindows.DebugDraw();
+
             if (TimeLastTicked + 1000 < Helper.Time()) {
                 TickTime();
             } 
@@ -1688,6 +1744,15 @@ namespace ZeroPlayersOnline {
                 }
             }
 
+            if (Helper.HotkeyDown(Key.F12) && !ExtraWindows.AnyVisible("Debug")) {
+                if (ExtraWindows.Debug.IsVisible) { 
+                    ExtraWindows.Debug.IsVisible = false; 
+                } else {
+                    ExtraWindows.HideAll();
+                    ExtraWindows.Debug.IsVisible = true; 
+                }
+            }
+
             if (Helper.HotkeyDown(Key.Q) && !ExtraWindows.AnyVisible("Quests")) {
                 if (ExtraWindows.Quests.IsVisible) { 
                     ExtraWindows.Quests.IsVisible = false; 
@@ -1742,13 +1807,6 @@ namespace ZeroPlayersOnline {
             if (GameHost.Instance.Mouse.RightClicked) {
                 // Leaving this here just in case
                 //player.HeldGold += 1000;
-                player.TryGrantExp("Farming", player.Skills["Farming"].EXPNeeded(), Log, SidebarManager.RecentlyTrainedSkills); 
-                player.TryGrantExp("Attack", player.Skills["Attack"].EXPNeeded(), Log, SidebarManager.RecentlyTrainedSkills); 
-                player.TryGrantExp("Strength", player.Skills["Strength"].EXPNeeded(), Log, SidebarManager.RecentlyTrainedSkills);
-                player.TryGrantExp("Defense", player.Skills["Defense"].EXPNeeded(), Log, SidebarManager.RecentlyTrainedSkills);  
-
-                Item seed = Helper.Clone(ItemLibrary["seedTreePine"]);
-                player.TryPickup(seed, 1);
             }
         }
 
@@ -1779,6 +1837,8 @@ namespace ZeroPlayersOnline {
             TimeLastTicked = Helper.Time();
 
             SecondsSinceAutosave++;
+
+            player.SecondsPlayed++;
 
             if (SecondsSinceAutosave >= 600) { 
                 ManualSave();
@@ -1824,7 +1884,7 @@ namespace ZeroPlayersOnline {
                 }
             }
 
-            if (player.Equipment.TryGetValue("Pet", out Item? pet) && pet != null) {
+            if (player.Equipment.TryGetValue("Pet", out ItemWrapper? petWrap) && petWrap.GetRef() is Item pet) {
                 if (GameLoop.rand.Next(100) == 0 && pet.PetBlurbs != null && pet.PetBlurbs.Count > 0) {
                     Log.AddMessage(pet.PetBlurbs[GameLoop.rand.Next(pet.PetBlurbs.Count)], pet.GetColor());
                 }
@@ -1844,8 +1904,7 @@ namespace ZeroPlayersOnline {
         public void HardResetPlayer() {
             player = new();
             TryAddSkills();
-            TryAddPrayers();
-            TryAddSpells();
+            TryAddPrayers(); 
             player.CurrentHP = 10;
 
             TrySetupLogs();
@@ -1863,9 +1922,7 @@ namespace ZeroPlayersOnline {
             player.Skills.Clear();
             TryAddSkills();
             player.Prayers.Clear();
-            TryAddPrayers();
-            player.Spells.Clear();
-            TryAddSpells();
+            TryAddPrayers(); 
             player.CurrentHP = 10;
 
 
@@ -2009,9 +2066,9 @@ namespace ZeroPlayersOnline {
             return ID;
         }
 
-        public void TryPlaceItem(string loc, Item item) {
+        public void TryPlaceItem(string loc, ItemWrapper wrap) {
             if (Atlas.TryGetValue(loc, out Location? curr)) {
-                if (curr != null) {
+                if (wrap.GetRef() is Item item) {
                     bool found = false;
                     for (int i = 0; i < curr.ItemsHere.Count; i++) {
                         if (curr.ItemsHere[i].ID == item.ID && item.Noted == curr.ItemsHere[i].Noted) {
@@ -2030,7 +2087,7 @@ namespace ZeroPlayersOnline {
 
         public void TryAddQuests() {
             foreach (var kv in QuestLibrary) {
-                player.QuestLog.TryAdd(kv.Key, kv.Value);
+                player.QuestLog.TryAdd(kv.Key, new(kv.Key, -1));
             }
         }
 
@@ -2065,13 +2122,7 @@ namespace ZeroPlayersOnline {
             foreach (var kv in PrayerLibrary) {
                 player.Prayers.TryAdd(kv.Key, kv.Value);
             }
-        }
-
-        public void TryAddSpells() {
-            foreach (var kv in SpellLibrary) {
-                player.Spells.TryAdd(kv.Key, kv.Value);
-            }
-        }
+        } 
 
         public void TrySetupLogs() { 
             player.CollectionLogClues.TryAdd("casketTutorial", new("casketTutorial"));

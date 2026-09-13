@@ -18,6 +18,7 @@ namespace ZeroPlayersOnline.Managers {
         public static string CraftingType = "";
         public static string CraftingSubtype = "";
         public static List<CraftRecipe> ActiveRecipes = new();
+        public static int CraftingListTop = 0;
 
         public static Window Guide;
         public static string GuideTab = "Introduction";
@@ -43,6 +44,17 @@ namespace ZeroPlayersOnline.Managers {
         public static string SelectedField = "";
 
 
+        public static Window Map;
+        public static int MapW;
+        public static int MapH;
+        public static string MapViewing = "";
+        public static Color MapLandmark = Color.Turquoise;
+        public static Color MapPlayerLoc = Color.Lime;
+         
+        
+        public static Window Debug;
+        public static string DebugMenu = "Unfound";
+
         public static bool AnyVisible(string except = "") {
             if (CollectionLog.IsVisible && except != "Collection")
                 return true;
@@ -54,6 +66,10 @@ namespace ZeroPlayersOnline.Managers {
                 return true;
             if (Compendium.IsVisible && except != "Compendium")
                 return true;
+            if (Map.IsVisible && except != "Map")
+                return true;
+            if (Debug.IsVisible && except != "Debug")
+                return true;
             
             return false;
         }
@@ -64,6 +80,8 @@ namespace ZeroPlayersOnline.Managers {
             Guide.IsVisible = false;
             Quests.IsVisible = false;
             Compendium.IsVisible = false;
+            Map.IsVisible = false;
+            Debug.IsVisible = false;
         }
 
         public static void SetupWindows() {
@@ -82,6 +100,11 @@ namespace ZeroPlayersOnline.Managers {
             CraftingMenu.Position = new Point(25, 10);
             CraftingMenu.Title = "Crafting Menu".Align(HorizontalAlignment.Center, 98);
 
+            Map = new(50, 30);
+            Map.CanDrag = true;
+            Map.Position = new Point(25, 10);
+            Map.Title = "Map".Align(HorizontalAlignment.Center, 48);
+
             Quests = new(100, 30);
             Quests.CanDrag = true;
             Quests.Position = new Point(25, 10);
@@ -91,6 +114,11 @@ namespace ZeroPlayersOnline.Managers {
             Compendium.CanDrag = true;
             Compendium.Position = new Point(25, 10);
             Compendium.Title = "Compendium".Align(HorizontalAlignment.Center, 98);
+
+            Debug = new(100, 30);
+            Debug.CanDrag = true;
+            Debug.Position = new Point(25, 10);
+            Debug.Title = "Debug Menu".Align(HorizontalAlignment.Center, 98);
         }
 
         public static void GuideDraw() {
@@ -123,7 +151,306 @@ namespace ZeroPlayersOnline.Managers {
         }
          
 
+        public static void MapDraw() {
+            Map.Clear();
+            Helper.DrawBox(Map, 0, 0, 48, 28);
+            Map.Print(2, 0, "[Map - " + MapViewing + "]");
+
+            string mapIDPrefix = "";
+
+            if (MapViewing == "Lumbridge Swamp") {
+                mapIDPrefix = "MIST_LumbridgeSwamp";
+            }
+
+            int pX = (49 - MapW * 3) / 2;
+            int pY = (28 - MapH * 2) / 2;
+            
+            bool playerInArea = GameLoop.ZPO.player.NavLoc.Contains(mapIDPrefix); 
+             
+
+            for (int i = 0; i < MapW * MapH; i++) {
+                bool playerAtNumber = GameLoop.ZPO.player.NavLoc == mapIDPrefix + i;
+                bool landmark = false;
+
+                if (GameLoop.ZPO.Atlas.TryGetValue(mapIDPrefix + i, out Location? loc)) {
+                    landmark = loc.MazeLandmark;
+                }
+
+                int x = i % MapW;
+                int y = i / MapW;
+                Map.DrawLine(new Point(pX, pY + (y * 2)), new Point(pX + (MapW * 3), pY + (y * 2)), 196, Color.Khaki);
+                Map.DrawLine(new Point(pX + (x * 3), pY), new Point(pX + (x * 3), pY + (MapH * 2)), 179, Color.Khaki);
+                 
+                Map.Print(pX + (x * 3) + 1, pY + (y * 2) + 1, i.ToString(), playerAtNumber ? MapPlayerLoc : landmark ? MapLandmark : Color.Khaki);
+            }
+            Map.DrawLine(new Point(pX + (MapW * 3), pY), new Point(pX + (MapW * 3), pY + (MapH * 2)), 179, Color.Khaki);
+            Map.DrawLine(new Point(pX, pY + (MapH * 2)), new Point(pX + (MapW * 3), pY + (MapH * 2)), 196, Color.Khaki);
+
+            for (int i = 0; i < (MapW + 1) * (MapH + 1); i++) {
+                int x = i % (MapW + 1);
+                int y = i / (MapW + 1);
+                Map.Print(pX + (x * 3), pY + (y * 2), "*", Color.Khaki);
+            }
+             
+
+            
+            Map.Print(1, 26, "Click the following lines to change their color.", Color.White);
+            Map.PrintClickable(1, 27, new ColoredString("Maps in this color are areas of interest.", MapLandmark, Color.Black), () => { MapLandmark = new Color(GameLoop.rand.Next(256), GameLoop.rand.Next(256), GameLoop.rand.Next(256)); });
+            Map.PrintClickable(1, 28, new ColoredString("You are at the map marked in this color.", MapPlayerLoc, Color.Black), () => { MapPlayerLoc = new Color(GameLoop.rand.Next(256), GameLoop.rand.Next(256), GameLoop.rand.Next(256)); });
+
+            Map.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Map.IsVisible = false; });
+        }
+
         static List<CompendiumResult> Sources = new();
+        
+        public static void DebugDraw() {
+            Debug.Clear();
+            Helper.DrawBox(Debug, 0, 0, 98, 28);
+            Debug.Print(2, 0, "[Debug Menu]");
+            Debug.DrawLine(new Point(20, 1), new Point(20, 28), 179);
+
+            Debug.PrintClickable(2, 2, new ColoredString("Broken Links", DebugMenu == "Unfound" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; });
+            
+            int qty = 1;
+            if (Helper.EitherShift())
+                qty *= 5;
+            if (Helper.EitherControl())
+                qty *= 10;
+
+            if (Sources.Count > 27) {
+                if (Helper.ScrolledUp()) { CompendiumSourceTop = Math.Clamp(CompendiumSourceTop - qty, 0, Sources.Count - 27); }
+                if (Helper.ScrolledDown()) { CompendiumSourceTop = Math.Clamp(CompendiumSourceTop + qty, 0, Sources.Count - 27); }
+            } else {
+                CompendiumSourceTop = 0;
+            }
+
+            int sourceY = 1;
+                        
+            Debug.Print(22, sourceY++, "Things found where the ID may be wrong or refer to a nonexistent item: ", Color.Crimson);
+
+            for (int source = CompendiumSourceTop; source < Sources.Count && source < CompendiumSourceTop + 27; source++) {
+                Debug.Print(22, sourceY++, Sources[source].Display, Color.White);
+            }
+        }
+
+        public static List<CompendiumResult> DebugSources() {
+            List<CompendiumResult> findings = new();
+
+            foreach (var kv in GameLoop.ZPO.Atlas) {
+                if (kv.Value.DigItem != "" && GameLoop.ZPO.ResolveItem(kv.Value.DigItem) == null) {
+                    findings.Add(new("Loc: " + kv.Value.ID + ": Dig Item (" + kv.Value.DigItem + ")", "", "", "", "", 0));
+                }
+
+                foreach (var conn in kv.Value.ConnectedLocations) {
+                    if (!GameLoop.ZPO.Atlas.ContainsKey(conn.Destination)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": Conn Dest (" + conn.Destination + ")", "", "", "", "", 0));
+                    }
+
+                    if (conn.CheckFailDest != "" && !GameLoop.ZPO.Atlas.ContainsKey(conn.CheckFailDest)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": Conn Fail (" + conn.CheckFailDest + ")", "", "", "", "", 0));
+                    }
+                }
+
+                foreach (var gather in kv.Value.GatheringSpots) {
+                    if (!GameLoop.ZPO.GatherSpots.ContainsKey(gather)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": Gather (" + gather + ")", "", "", "", "", 0));
+                    }
+                }
+
+                foreach (var station in kv.Value.ProcessingStations) {
+                    if (!GameLoop.ZPO.ProcessingStations.ContainsKey(station)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": Station (" + station + ")", "", "", "", "", 0));
+                    }
+                }
+
+                foreach (var item in kv.Value.ItemSpawns) {
+                    if (!GameLoop.ZPO.ItemLibrary.ContainsKey(item.ItemID)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": Item Spawn (" + item.ItemID + ")", "", "", "", "", 0));
+                    }
+                }
+
+                foreach (var mon in kv.Value.AreaMonsters) {
+                    if (!GameLoop.ZPO.MonsterLibrary.ContainsKey(mon)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": Monster (" + mon + ")", "", "", "", "", 0));
+                    }
+                }
+
+                if (kv.Value.BossHere != "" && !GameLoop.ZPO.BossLibrary.ContainsKey(kv.Value.BossHere)) {
+                    findings.Add(new("Loc: " + kv.Value.ID + ": Boss (" + kv.Value.BossHere + ")", "", "", "", "", 0));
+                }
+
+                foreach (var npc in kv.Value.NPCsHere) {
+                    if (!GameLoop.ZPO.NPCLibrary.ContainsKey(npc)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": NPC (" + npc + ")", "", "", "", "", 0));
+                    }
+                }
+
+                foreach (var item in kv.Value.ShopItemsHere) {
+                    if (!GameLoop.ZPO.ItemLibrary.ContainsKey(item)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": Shop Item (" + item + ")", "", "", "", "", 0));
+                    }
+                }
+
+                foreach (var patch in kv.Value.FarmingPatchesHere) {
+                    if (!GameLoop.ZPO.player.FarmingPatches.ContainsKey(patch)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": Farm Patch (" + patch + ")", "", "", "", "", 0));
+                    }
+                }
+
+                foreach (var hunt in kv.Value.HunterSpots) {
+                    if (!GameLoop.ZPO.HunterLibrary.ContainsKey(hunt)) {
+                        findings.Add(new("Loc: " + kv.Value.ID + ": Hunter Creature (" + hunt + ")", "", "", "", "", 0));
+                    }
+                }
+            }
+
+            foreach (var kv in GameLoop.ZPO.GatherSpots) {
+                if (kv.Value.NeededBait != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(kv.Value.NeededBait)) {
+                    findings.Add(new("Gather: " + kv.Value.ID + ": Bait (" + kv.Value.NeededBait + ")", "", "", "", "", 0));
+                }
+
+                if (kv.Value.PossibleItems != null) {
+                    foreach (var loot in kv.Value.PossibleItems) {
+                        if (loot.Item != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.Item)) {
+                            findings.Add(new("Gather: " + kv.Value.ID + ": Loot (" + loot.Item + ")", "", "", "", "", 0));
+                        }
+                    }
+                }
+            }
+
+            foreach (var kv in GameLoop.ZPO.ItemLibrary) { 
+                if (kv.Value.DropTable != null) {
+                    foreach (var loot in kv.Value.DropTable) {
+                        if (loot.ItemID != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.ItemID)) {
+                            findings.Add(new("Item: " + kv.Value.ID + ": Drop Table (" + loot.ItemID + ")", "", "", "", "", 0));
+                        }
+                    }
+                }
+            }
+
+            foreach (var kv in GameLoop.ZPO.ProcessingStations) { 
+                if (kv.Value.Recipes != null) {
+                    foreach (var loot in kv.Value.Recipes) {
+                        if (loot.InputID != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.InputID)) {
+                            findings.Add(new("Process: " + kv.Value.Name + ": Recipe In (" + loot.InputID + ")", "", "", "", "", 0));
+                        }
+
+                        if (loot.SecondaryIn != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.SecondaryIn)) {
+                            findings.Add(new("Process: " + kv.Value.Name + ": Second In (" + loot.SecondaryIn + ")", "", "", "", "", 0));
+                        }
+
+                        if (loot.OutputID != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.OutputID)) {
+                            findings.Add(new("Process: " + kv.Value.Name + ": Recipe Out (" + loot.OutputID + ")", "", "", "", "", 0));
+                        }
+
+                        if (loot.SecondaryOut != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.SecondaryOut)) {
+                            findings.Add(new("Process: " + kv.Value.Name + ": Second Out (" + loot.SecondaryOut + ")", "", "", "", "", 0));
+                        }
+                    }
+                }
+            }
+
+            foreach (var kv in GameLoop.ZPO.UseRecipes) {  
+                if (kv.Value.FirstItem != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(kv.Value.FirstItem)) {
+                    findings.Add(new("UseRecipe: First Item (" + kv.Value.FirstItem + ")", "", "", "", "", 0));
+                }
+                
+                if (kv.Value.SecondItem != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(kv.Value.SecondItem)) {
+                    findings.Add(new("UseRecipe: Second Item (" + kv.Value.SecondItem + ")", "", "", "", "", 0));
+                } 
+
+                if (kv.Value.OutputItem != "" && kv.Value.OutputItem[0] != '_' && !GameLoop.ZPO.ItemLibrary.ContainsKey(kv.Value.OutputItem)) {
+                    findings.Add(new("UseRecipe: Output Item (" + kv.Value.OutputItem + ")", "", "", "", "", 0));
+                } 
+            }
+
+            foreach (var kv in GameLoop.ZPO.NPCLibrary) {  
+                foreach (var pick in kv.Value.PickpocketLoot) {
+                    if (!GameLoop.ZPO.ItemLibrary.ContainsKey(pick.Item)) {
+                        findings.Add(new("NPC: " + kv.Value.Name + " Pickpocket (" + pick.Item + ")", "", "", "", "", 0));
+                    }
+                }
+
+                foreach (var dia in kv.Value.Dialogue) {
+                    if (dia.Value.ItemsGiven != null) {
+                        foreach (var item in dia.Value.ItemsGiven) {
+                            string[] split = item.Split(",");
+                            if (!GameLoop.ZPO.ItemLibrary.ContainsKey(split[0])) {
+                                findings.Add(new("NPC: " + kv.Value.Name + " Dialogue (" + split[0] + ")", "", "", "", "", 0));
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var kv in GameLoop.ZPO.MonsterLibrary) {  
+                foreach (var drop in kv.Value.DropTable) {
+                    if (!GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
+                        findings.Add(new("Monster: " + kv.Value.Name + " Drop (" + drop.ItemID + ")", "", "", "", "", 0));
+                    }
+                } 
+            }
+
+            foreach (var kv in GameLoop.ZPO.CraftLib) {  
+                foreach (var rec in kv.Value) {
+                    if (rec.ExtraTool != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(rec.ExtraTool)) {
+                        findings.Add(new("Craft Rec: " + kv.Key + " Tool (" + rec.ExtraTool + ")", "", "", "", "", 0));
+                    }
+
+                    foreach (var need in rec.NeededItems) {
+                        string[] split = need.Split(",");
+                        if (!GameLoop.ZPO.ItemLibrary.ContainsKey(split[0])) {
+                            findings.Add(new("Craft Rec: " + kv.Key + " Material (" + split[0] + ")", "", "", "", "", 0));
+                        }
+                    }
+
+                    if (!GameLoop.ZPO.ItemLibrary.ContainsKey(rec.OutputItem)) {
+                        findings.Add(new("Craft Rec: " + kv.Key + " Output (" + rec.OutputItem + ")", "", "", "", "", 0));
+                    }
+                } 
+            }
+
+            foreach (var kv in GameLoop.ZPO.BossLibrary) {  
+                foreach (var drop in kv.Value.DropTable) {
+                    if (!GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
+                        findings.Add(new("Boss: " + kv.Value.Name + " Drop (" + drop.ItemID + ")", "", "", "", "", 0));
+                    }
+                } 
+            }
+
+            foreach (var kv in GameLoop.ZPO.HunterLibrary) {  
+                foreach (var drop in kv.Value.Drops) {
+                    if (!GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
+                        findings.Add(new("Hunter Creature: " + kv.Value.Name + " Drop (" + drop.ItemID + ")", "", "", "", "", 0));
+                    }
+                } 
+            }
+
+            foreach (var kv in GameLoop.ZPO.ClueStepLibrary) {   
+                if (kv.Value.Equip1 != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(kv.Value.Equip1)) {
+                    findings.Add(new("Clue: " + kv.Value.ID + " Equip1 (" + kv.Value.Equip1 + ")", "", "", "", "", 0));
+                } 
+
+                if (kv.Value.Equip2 != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(kv.Value.Equip2)) {
+                    findings.Add(new("Clue: " + kv.Value.ID + " Equip2 (" + kv.Value.Equip2 + ")", "", "", "", "", 0));
+                }
+
+                if (kv.Value.Equip3 != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(kv.Value.Equip3)) {
+                    findings.Add(new("Clue: " + kv.Value.ID + " Equip3 (" + kv.Value.Equip3 + ")", "", "", "", "", 0));
+                }
+            }
+
+            foreach (var kv in GameLoop.ZPO.QuestLibrary) {   
+                foreach (var reward in kv.Value.Rewards) {
+                    if (reward.RewardType == "Item" && reward.MiscString != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(reward.MiscString)) {
+                        findings.Add(new("Quest: " + kv.Value.ID + " Reward (" + reward.MiscString + ")", "", "", "", "", 0));
+                    }  
+                }
+            }
+
+            return findings;
+        }
+        
         public static void CompendiumDraw() { 
             Point mousePos = new MouseScreenObjectState(Compendium, GameHost.Instance.Mouse).CellPosition;
 
@@ -1201,9 +1528,9 @@ namespace ZeroPlayersOnline.Managers {
                 for(int i = CompendiumSidebarTop; i < quests.Count && i < CompendiumSidebarTop + 24; i++) {
                     Color col = Color.White;
 
-                    if (GameLoop.ZPO.player.QuestLog.TryGetValue(quests[i].ID, out Quest? questProg) && questProg != null) {
+                    if (GameLoop.ZPO.player.QuestLog.TryGetValue(quests[i].ID, out QuestStatus? questProg) && questProg != null) {
                         if (questProg.CurrentStage != -1) { col = Color.Yellow; } 
-                        if (questProg.CurrentStage == questProg.CompleteStage) { col = Color.Lime; }
+                        if (questProg.CurrentStage == quests[i].CompleteStage) { col = Color.Lime; }
                     } 
 
                     Compendium.PrintClickable(2, sidebarY++, new ColoredString(quests[i].Name, (CompendiumViewingID == quests[i].ID ? Color.Turquoise : col), Color.Black), () => { ResetAllCompendiumValues(); CompendiumCat = "Quests"; CompendiumViewingID = quests[i].ID; });
@@ -2437,7 +2764,9 @@ namespace ZeroPlayersOnline.Managers {
             CollectionLog.PrintClickable(69, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { CollectionLog.IsVisible = false; });
         }
 
-        public static void CraftingMenuDraw() {
+        public static void CraftingMenuDraw() { 
+            Point mousePos = new MouseScreenObjectState(CraftingMenu, GameHost.Instance.Mouse).CellPosition;
+
             CraftingMenu.Clear(); 
             Helper.DrawBox(CraftingMenu, 0, 0, 98, 28);
             CraftingMenu.Print(2, 0, "[Crafting Menu - " + CraftingType + "]");
@@ -2474,7 +2803,22 @@ namespace ZeroPlayersOnline.Managers {
             CraftingMenu.Print(74, 1, "Input", Color.White);
             CraftingMenu.Print(85, 1, "Tool", Color.White);
 
-            for (int i = 0; i < ActiveRecipes.Count; i++) {
+            int idx = 1;
+            if (Helper.EitherShift())
+                idx *= 5;
+            if (Helper.EitherControl())
+                idx *= 10;
+
+
+            if (ActiveRecipes.Count > 26 && mousePos.X > 25) {
+                if (Helper.ScrolledUp()) { CraftingListTop = Math.Clamp(CraftingListTop - idx, 0, ActiveRecipes.Count - 26); }
+                if (Helper.ScrolledDown()) { CraftingListTop = Math.Clamp(CraftingListTop + idx, 0, ActiveRecipes.Count - 26); }
+            } else {
+                CraftingListTop = 0;
+            }
+
+            int printY = 0;
+            for (int i = CraftingListTop; i < ActiveRecipes.Count && i < CraftingListTop + 26; i++) {
                 CraftRecipe rec = ActiveRecipes[i];
                 string name = GameLoop.ZPO.ResolveItemName(rec.OutputItem) + (rec.OutputQty > 1 ? " x" + rec.OutputQty : "");
 
@@ -2487,9 +2831,23 @@ namespace ZeroPlayersOnline.Managers {
                     + GameLoop.ZPO.ResolveItemName(rec.ExtraTool);
 
                 if (GameLoop.ZPO.player.CanCraft(rec)) { 
-                    CraftingMenu.PrintClickable(27, 3 + i, new ColoredString(line, Color.White, Color.Black), () => { GameLoop.ZPO.player.TryCraft(rec); });
+                    CraftingMenu.PrintClickable(27, 3 + printY++, new ColoredString(line, Color.White, Color.Black), () => { GameLoop.ZPO.player.TryCraft(rec); });
                 } else { 
-                    CraftingMenu.Print(27, 3 + i, line, Color.Crimson);
+                    CraftingMenu.PrintClickable(27, 3 + printY++, new ColoredString(line, Color.Crimson, Color.Black), () => {
+                        string mats = "To make " + GameLoop.ZPO.ResolveItemName(rec.OutputItem).ToLower() + ": " + rec.Level + " " + rec.Skill + ", ";
+
+                        for (int mat = 0; mat < rec.NeededItems.Count; mat++) {
+                            string[] split = rec.NeededItems[mat].Split(",");
+                            mats += (mat == 0 ? "" : ", ") + (split.Length > 1 ? split[1] + "x " : "") + GameLoop.ZPO.ResolveItemName(split[0]).ToLower();
+                        } 
+
+                        if (rec.ExtraTool != "") {
+                            string name = GameLoop.ZPO.ResolveItemName(rec.ExtraTool).ToLower();
+                            mats += " and a" + (Helper.VowelStart(name) ? "n ": " ") + name + ".";
+                        }
+
+                        GameLoop.ZPO.Log.AddMessage(mats, Color.Crimson);
+                    });
                 }
             }
 
@@ -2520,7 +2878,7 @@ namespace ZeroPlayersOnline.Managers {
             if (ViewingQuestID == "") {
                 Quests.Print(2, 0, "[Quest Log - " + QuestFilter + " Quests]");
             } else { 
-                if (GameLoop.ZPO.player.QuestLog.TryGetValue(ViewingQuestID, out Quest? currQuest)) { 
+                if (GameLoop.ZPO.QuestLibrary.TryGetValue(ViewingQuestID, out Quest? currQuest)) { 
                     Quests.Print(2, 0, "[Quest Log - " + currQuest.Name + "]");
                 } 
             } 
@@ -2553,7 +2911,7 @@ namespace ZeroPlayersOnline.Managers {
             List<Quest> QuestsInFilter = new();
             QuestsInFilter = QuestsInFilter.OrderBy(o => o.Name).ToList();
 
-            foreach(var kv in GameLoop.ZPO.player.QuestLog) {
+            foreach(var kv in GameLoop.ZPO.QuestLibrary) {
                 if (QuestFilter == "MyRegions") {
 
                 }
@@ -2565,27 +2923,27 @@ namespace ZeroPlayersOnline.Managers {
             }
 
             if (ViewingQuestID == "") {
-                for(int i = 0; i < QuestsInFilter.Count; i++) {
+                for(int i = 0; i < QuestsInFilter.Count; i++) { 
                     Color col = Color.DarkSlateGray;
 
                     if (QuestsInFilter[i].CanStartQuest(GameLoop.ZPO.player)) {
                         col = Color.Crimson;
                     }
 
-                    if (QuestsInFilter[i].CurrentStage != -1) {
+                    if (QuestsInFilter[i].CurrentStage() != -1) {
                         col = Color.Yellow;
                     }
 
-                    if (QuestsInFilter[i].CurrentStage == QuestsInFilter[i].CompleteStage) {
+                    if (QuestsInFilter[i].CurrentStage() == QuestsInFilter[i].CompleteStage) {
                         col = Color.Lime;
                     }
 
                     Quests.PrintClickable(19, 1 + i, new ColoredString(QuestsInFilter[i].Name, col, Color.Black), () => {
                         ViewingQuestID = QuestsInFilter[i].ID;
 
-                        if (GameLoop.ZPO.player.QuestLog.TryGetValue(ViewingQuestID, out Quest? nowViewing)) {
+                        if (GameLoop.ZPO.QuestLibrary.TryGetValue(ViewingQuestID, out Quest? nowViewing)) {
                             if (nowViewing != null) {
-                                if (nowViewing.CurrentStage == -1) {
+                                if (nowViewing.CurrentStage() == -1) {
                                     QuestOverview = true;
                                 } else {
                                     QuestOverview = false; 
@@ -2600,7 +2958,7 @@ namespace ZeroPlayersOnline.Managers {
                     });
                 }
             } else {
-                if (GameLoop.ZPO.player.QuestLog.TryGetValue(ViewingQuestID, out Quest? currQuest)) {
+                if (GameLoop.ZPO.QuestLibrary.TryGetValue(ViewingQuestID, out Quest? currQuest)) {
 
                     if (QuestOverview) {
                         Quests.Print(19, 1, "Quest Name: " + currQuest.Name);
@@ -2608,17 +2966,17 @@ namespace ZeroPlayersOnline.Managers {
                         Quests.Print(19, 3, "    Length: " + currQuest.Length);
                         int afterDesc = Quests.PrintMultiLine(19, 5, currQuest.Description, 80) + 2;
 
-                        if (currQuest.CurrentStage != -1) {
+                        if (currQuest.CurrentStage() != -1) {
                             Quests.PrintClickable(19, afterDesc, "[View Quest Log]", () => { QuestOverview = false; QuestBlockScrollTop = 0; });
 
-                            if (currQuest.CurrentStage == currQuest.CompleteStage)
+                            if (currQuest.CurrentStage() == currQuest.CompleteStage)
                                 Quests.Print(19, afterDesc + 2, "Quest Complete!", Color.Lime);
                         }
                     } else {
                         int visibleStages = 0;
                         
                         foreach (var kv in currQuest.Stages) {
-                            if (kv.Key <= currQuest.CurrentStage) {
+                            if (kv.Key <= currQuest.CurrentStage()) {
                                 visibleStages++;
                             }
                         }
@@ -2637,10 +2995,10 @@ namespace ZeroPlayersOnline.Managers {
                                 continue;
                             }
 
-                            if (kv.Key <= currQuest.CurrentStage) {
+                            if (kv.Key <= currQuest.CurrentStage()) {
                                 Color col = Color.DarkSlateGray;
 
-                                if (kv.Key == currQuest.CurrentStage)
+                                if (kv.Key == currQuest.CurrentStage())
                                     col = Color.White;
 
                                 printY = Quests.PrintMultiLine(19, printY, kv.Value.Description, 80, col.R, col.G, col.B);
@@ -2649,7 +3007,7 @@ namespace ZeroPlayersOnline.Managers {
                             }
                         }
 
-                        if (currQuest.CurrentStage == currQuest.CompleteStage)
+                        if (currQuest.CurrentStage() == currQuest.CompleteStage)
                             Quests.Print(19, printY, "Quest Complete!", Color.Lime);
 
                         Quests.DrawLine(new Point(1, 29), (98, 29), 196, Color.White);
