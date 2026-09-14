@@ -442,7 +442,7 @@ namespace ZeroPlayersOnline.Managers {
 
             foreach (var kv in GameLoop.ZPO.QuestLibrary) {   
                 foreach (var reward in kv.Value.Rewards) {
-                    if (reward.RewardType == "Item" && reward.MiscString != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(reward.MiscString)) {
+                    if (reward.RewardType == "Item" && reward.MiscString != "" && reward.MiscString != "Gold" && !GameLoop.ZPO.ItemLibrary.ContainsKey(reward.MiscString)) {
                         findings.Add(new("Quest: " + kv.Value.ID + " Reward (" + reward.MiscString + ")", "", "", "", "", 0));
                     }  
                 }

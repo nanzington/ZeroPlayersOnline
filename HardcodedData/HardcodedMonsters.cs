@@ -36,7 +36,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             
             toAdd.Add(new("Goblin", "goblin", 2, 5, 0, 0, false, "1d3-2", "Stab", 1, "Melee") { DropTable = new() { 
                 new("bonesRegular", 1, 1, 1, 1),  
-                new("daggerBronze", 1, 32, 1, 1), new("bronzeSqShield", 1, 43, 1, 1), 
+                new("daggerBronze", 1, 32, 1, 1), new("sqShieldBronze", 1, 43, 1, 1), 
                 new("runeWater", 1, 21, 6, 6), new("runeBody", 1, 26, 7, 7), new("runeEarth", 1, 43, 4, 4), new("boltsBronze", 1, 43, 8, 8),
                 new("coinPouchSmall", 1, 5, 1, 1), new("coinPouchMedium", 1, 50, 1, 1),
                 new("hammer", 1, 9, 1, 1), new("potionEnergy", 1, 20, 1, 1), new("goblinMail", 1, 26, 1, 1), new("chefHat", 1, 26, 1, 1), new("goblinBook", 1, 64, 1, 1), new("beer", 1, 64, 1, 1), new("talismanAir", 1, 128, 1, 1), new("necklaceBrass", 1, 128, 1, 1),

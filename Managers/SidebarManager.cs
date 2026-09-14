@@ -114,22 +114,40 @@ namespace ZeroPlayersOnline.Managers {
 
 
                 mini.Con.DrawLine(new Point(0, 12), new Point(54, 12), 196);
-
-                mini.Con.PrintClickable(1, 13, new ColoredString("INV", SidebarMenu == "Inventory" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Inventory"; });
-                mini.Con.Print(5, 13, "|"); 
-                mini.Con.PrintClickable(7, 13, new ColoredString("EQP", SidebarMenu == "Equipment" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Equipment"; });
-                mini.Con.Print(11, 13, "|");
-                mini.Con.PrintClickable(13, 13, new ColoredString("SKL", SidebarMenu == "Skills" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Skills"; });
-                mini.Con.Print(17, 13, "|");
-                mini.Con.PrintClickable(19, 13, new ColoredString("MAG", SidebarMenu == "Magic" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Magic"; });
-                mini.Con.Print(23, 13, "|");
-                mini.Con.PrintClickable(25, 13, new ColoredString("PRA", SidebarMenu == "Prayer" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Prayer"; });
-                mini.Con.Print(29, 13, "|");
-                mini.Con.PrintClickable(31, 13, new ColoredString("EMO", SidebarMenu == "Emote" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Emote"; });
-                mini.Con.Print(35, 13, "|");
-                mini.Con.PrintClickable(37, 13, new ColoredString("QST", SidebarMenu == "Quest" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Quest"; });
-                mini.Con.Print(41, 13, "|");
-                mini.Con.PrintClickable(43, 13, new ColoredString("LOG", SidebarMenu == "Log" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Log"; });
+                int hx = 2;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("INV", SidebarMenu == "Inventory" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Inventory"; });
+                hx = hx + 4;
+                mini.Con.Print(hx, 13, "|"); 
+                hx = hx + 2;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("EQP", SidebarMenu == "Equipment" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Equipment"; });
+                hx = hx + 4;
+                mini.Con.Print(hx, 13, "|");
+                hx = hx + 2;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("SKL", SidebarMenu == "Skills" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Skills"; });
+                hx = hx + 4;
+                mini.Con.Print(hx, 13, "|");
+                hx = hx + 2;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("MAG", SidebarMenu == "Magic" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Magic"; });
+                hx = hx + 4;
+                mini.Con.Print(hx, 13, "|");
+                hx = hx + 2;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("PRA", SidebarMenu == "Prayer" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Prayer"; });
+                hx = hx + 4;
+                mini.Con.Print(hx, 13, "|");
+                hx = hx + 2;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("EMO", SidebarMenu == "Emote" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Emote"; });
+                hx = hx + 4;
+                mini.Con.Print(hx, 13, "|");
+                hx = hx + 2;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("QST", SidebarMenu == "Quest" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Quest"; });
+                hx = hx + 4;
+                mini.Con.Print(hx, 13, "|");
+                hx = hx + 2;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("LOG", SidebarMenu == "Log" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Log"; });
+                hx = hx + 4;
+                mini.Con.Print(hx, 13, "|");
+                hx = hx + 2;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("POT", SidebarMenu == "Potions" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Potions"; });
 
 
                 mini.Con.DrawLine(new Point(0, 14), new Point(54, 14), 196);
@@ -185,7 +203,7 @@ namespace ZeroPlayersOnline.Managers {
                             if (inv.UseString != "") {
                                 if (!player.Inventory[i].Noted) { 
                                     mini.Con.PrintClickable(px, 15 + i, new ColoredString("* ", Color.Yellow, Color.Black), () => { 
-                                        bool success = ItemUseLogic.UseItem(inv, player);
+                                        bool success = ItemUseLogic.UseItem(player.Inventory[i], player);
 
                                         if (inv.ConsumedOnUse && success) {
                                             if (player.PrayerActive("Cornucopia")) {
@@ -301,7 +319,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (wep.UseString != "") {  
                             mini.Con.PrintClickable(13 + wep.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(wep, player);
+                                bool success = ItemUseLogic.UseItem(wepWrap, player);
 
                                 if (wep.ConsumedOnUse && success) {
                                     wepWrap.TryConsume();
@@ -326,7 +344,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (off.UseString != "") {  
                             mini.Con.PrintClickable(13 + off.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(off, player);
+                                bool success = ItemUseLogic.UseItem(offWrap, player);
 
                                 if (off.ConsumedOnUse && success) {
                                     offWrap.TryConsume();
@@ -351,7 +369,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (head.UseString != "") {  
                             mini.Con.PrintClickable(13 + head.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(head, player);
+                                bool success = ItemUseLogic.UseItem(headWrap, player);
 
                                 if (head.ConsumedOnUse && success) {
                                     headWrap.TryConsume();
@@ -376,7 +394,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (body.UseString != "") {  
                             mini.Con.PrintClickable(13 + body.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(body, player);
+                                bool success = ItemUseLogic.UseItem(bodyWrap, player);
 
                                 if (body.ConsumedOnUse && success) {
                                     bodyWrap.TryConsume();
@@ -401,7 +419,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (legs.UseString != "") {  
                             mini.Con.PrintClickable(13 + legs.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(legs, player);
+                                bool success = ItemUseLogic.UseItem(legWrap, player);
 
                                 if (legs.ConsumedOnUse && success) {
                                     legWrap.TryConsume();
@@ -426,7 +444,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (hands.UseString != "") {  
                             mini.Con.PrintClickable(13 + hands.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(hands, player);
+                                bool success = ItemUseLogic.UseItem(handWrap, player);
 
                                 if (hands.ConsumedOnUse && success) {
                                     handWrap.TryConsume();
@@ -451,7 +469,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (feet.UseString != "") {  
                             mini.Con.PrintClickable(13 + feet.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(feet, player);
+                                bool success = ItemUseLogic.UseItem(feetWrap, player);
 
                                 if (feet.ConsumedOnUse && success) {
                                     feetWrap.TryConsume();
@@ -476,7 +494,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (cape.UseString != "") {  
                             mini.Con.PrintClickable(13 + cape.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(cape, player);
+                                bool success = ItemUseLogic.UseItem(capeWrap, player);
 
                                 if (cape.ConsumedOnUse && success) {
                                     capeWrap.TryConsume();
@@ -501,7 +519,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (ring.UseString != "") {  
                             mini.Con.PrintClickable(13 + ring.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(ring, player);
+                                bool success = ItemUseLogic.UseItem(ringWrap, player);
 
                                 if (ring.ConsumedOnUse && success) {
                                     ringWrap.TryConsume();
@@ -526,7 +544,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (amulet.UseString != "") {  
                             mini.Con.PrintClickable(13 + amulet.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(amulet, player);
+                                bool success = ItemUseLogic.UseItem(amuletWrap, player);
 
                                 if (amulet.ConsumedOnUse && success) {
                                     amuletWrap.TryConsume();
@@ -552,7 +570,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (pocket.UseString != "") {  
                             mini.Con.PrintClickable(13 + pocket.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(pocket, player);
+                                bool success = ItemUseLogic.UseItem(pocketWrap, player);
 
                                 if (pocket.ConsumedOnUse && success) {
                                     pocketWrap.TryConsume();
@@ -578,7 +596,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (ammo.UseString != "") {  
                             mini.Con.PrintClickable(13 + ammo.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(ammo, player);
+                                bool success = ItemUseLogic.UseItem(ammoWrap, player);
 
                                 if (ammo.ConsumedOnUse && success) {
                                     ammoWrap.TryConsume();
@@ -604,7 +622,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (pet.UseString != "") {  
                             mini.Con.PrintClickable(13 + pet.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
-                                bool success = ItemUseLogic.UseItem(pet, player);
+                                bool success = ItemUseLogic.UseItem(petWrap, player);
 
                                 if (pet.ConsumedOnUse && success) {
                                     petWrap.TryConsume();
@@ -869,6 +887,36 @@ namespace ZeroPlayersOnline.Managers {
                     mini.Con.Print(1, 20, "|     Hard: ");
                     mini.Con.Print(1, 21, "|    Elite: ");
                     mini.Con.Print(1, 22, "|   Master: ");
+                } else if (SidebarMenu == "Potions") {
+                    mini.Con.Print(1, 15, "Active Potion Effects", Color.White);
+                    mini.Con.DrawLine(new Point(0, 16), new Point(54, 16), 196);
+
+                    int qty = 1;
+                    if (Helper.EitherShift())
+                        qty *= 5;
+                    if (Helper.EitherControl())
+                        qty *= 10;
+
+                    if (player.ActivePotions.Count > 18) {
+                        if (Helper.ScrolledUp()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop - qty, 0, player.ActivePotions.Count - 18); }
+                        if (Helper.ScrolledDown()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop + qty, 0, player.ActivePotions.Count - 18); }
+                    } else {
+                        SidebarScrollTop = 0;
+                    }
+                    
+                    int printY = 17;
+                    if (player.ActivePotions.Count > 0) { 
+                        for (int pot = SidebarScrollTop; pot < player.ActivePotions.Count && pot < SidebarScrollTop + 18; pot++) {
+                            Color col = player.ActivePotions[pot].Change > 0 ? Color.Green : Color.Crimson;
+                            if (mousePos.Y == printY && mousePos.X < 55) {
+                                col = col.GetDark();
+                            }
+
+                            mini.Con.Print(1, printY++, new ColoredString("| ") + new ColoredString(player.ActivePotions[pot].Stat.Align(HorizontalAlignment.Left, 45) + " (" + ((player.ActivePotions[pot].Change > 0 ? "+" : "") + player.ActivePotions[pot].Change).ToString().Align(HorizontalAlignment.Right, 3) + ")", col, Color.Black));
+                        }
+                    } else {
+                        mini.Con.Print(1, printY++, "(no active potion effects)", Color.DarkSlateGray);
+                    }
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using ZeroPlayersOnline.DataTypes;
+using ZeroPlayersOnline.HardcodedData;
 
 namespace ZeroPlayersOnline.Hardcodes {
     public static class HardcodedUseRecipes {
@@ -41,7 +42,27 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("boltsUnfAdamant", "feather", "boltsAdamant", 10, 10, 10, "Fletching", 40, 70));  
 
             // Herblore
-            toAdd.Add(new("vialWater", "herbCleanGuam", "potionUnfGuam", 1, 1, 1, "Herblore", 1, 0)); 
+            // // Unfinished Potions
+            toAdd.Add(new("vialWater", "herbCleanGuam", "potionUnfGuam", 1, 1, 1, "Herblore", 1, 0));  
+            toAdd.Add(new("vialWater", "herbCleanTarromin", "potionUnfTarromin", 1, 1, 1, "Herblore", 5, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanMarrentill", "potionUnfMarrentill", 1, 1, 1, "Herblore", 9, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanHarralander", "potionUnfHarralander", 1, 1, 1, "Herblore", 18, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanRanarr", "potionUnfRanarr", 1, 1, 1, "Herblore", 25, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanToadflax", "potionUnfToadflax", 1, 1, 1, "Herblore", 30, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanSpiritweed", "potionUnfSpiritweed", 1, 1, 1, "Herblore", 35, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanIrit", "potionUnfIrit", 1, 1, 1, "Herblore", 40, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanWergali", "potionUnfWergali", 1, 1, 1, "Herblore", 41, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanAvantoe", "potionUnfAvantoe", 1, 1, 1, "Herblore", 48, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanKwuarm", "potionUnfKwuarm", 1, 1, 1, "Herblore", 54, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanBloodweed", "potionUnfBloodweed", 1, 1, 1, "Herblore", 57, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanSnapdragon", "potionUnfSnapdragon", 1, 1, 1, "Herblore", 63, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanCadantine", "potionUnfCadantine", 1, 1, 1, "Herblore", 65, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanLantadyme", "potionUnfLantadyme", 1, 1, 1, "Herblore", 67, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanDwarfweed", "potionUnfDwarfweed", 1, 1, 1, "Herblore", 70, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanTorstol", "potionUnfTorstol", 1, 1, 1, "Herblore", 75, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanArbuck", "potionUnfArbuck", 1, 1, 1, "Herblore", 77, 0)); 
+            toAdd.Add(new("vialWater", "herbCleanFellstalk", "potionUnfFellstalk", 1, 1, 1, "Herblore", 91, 0));  
+            
             toAdd.Add(new("potionUnfGuam", "eyeNewt", "potionAttack", 1, 1, 1, "Herblore", 1, 25)); 
 
 

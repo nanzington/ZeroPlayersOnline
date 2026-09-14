@@ -7,12 +7,10 @@ Misthalin Mania
 - Barbarian Village locations filled out
 - Edgeville locations filled out
 - Zanaris locations filled out
-- Lumbridge underground (swamp caves, castle possibly all the way to Dorgesh-kaan? not necessary until the cave goblin quests can be added) locations filled out 
-- Quest: Cook's Assistant
+- Lumbridge underground (swamp caves, castle possibly all the way to Dorgesh-kaan? not necessary until the cave goblin quests can be added) locations filled out
 - Quest: Demon Slayer
 - Quest: The Restless Ghost
 - Quest: Romeo & Juliet
-- Quest: Sheep Shearer
 - Quest: Shield of Arrav
 - Quest: Ernest the Chicken
 - Quest: Vampire Slayer
@@ -28,7 +26,6 @@ Misthalin Mania
 - Quest: Lost City
 
 
-Make shields work and worth using
 Weapon poison, maybe a poison equipment slot that applies to any melee or ranged attack?
 Lumbridge Swamp Caves, make it so maps can require a light source, add some light sources, then fill out the cave
 Optionally hide connections if requirements not met? Maybe default to visible regardless since it'd mostly be for sneaky map copies

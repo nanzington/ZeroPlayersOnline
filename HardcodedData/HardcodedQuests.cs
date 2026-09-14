@@ -54,14 +54,34 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
-            toAdd.Add(new("MI_CooksAssistant", "Cook's Assistant", "Very Short", "Novice", "The Lumbridge Castle cook is in a mess. It is the Duke of Lumbridge's birthday and the cook is making the cake. He needs a lot of ingredients and doesn't have much time.", 90, new() { "Misthalin" }) {
+            toAdd.Add(new("MI_SheepShearer", "Sheep Shearer", "Very Short", "Novice", "Farmer Fred's sheep are getting mighty woolly. He will pay you to shear them.", 10, new() { "Misthalin" }) {
+                DateFullyImplemented = 20260913,
+                Rewards = { new("Experience", "Crafting", 300), new("Item", "Gold", 2000) },
+                QuestPoints = 1,
+                Stages = new() {
+                    {
+                        0,
+                        new("Fred the Farmer has tasked me with shearing his overly wooly sheep. I need to get 15 wool from his sheep, then spin it into balls at any spinning wheel. There's one nearby in Lumbridge Castle.", 10)
+                    },
+                    {
+                        10,
+                        new("I sheared the sheep and handed in the wool. Didn't really feel like much of a 'quest', but job done I suppose.", 10)
+                    }
+                }
+            });
+
+            toAdd.Add(new("MI_CooksAssistant", "Cook's Assistant", "Very Short", "Novice", "The Lumbridge Castle cook is in a mess. It is the Duke of Lumbridge's birthday and the cook is making the cake. He needs a lot of ingredients and doesn't have much time.", 10, new() { "Misthalin" }) {
                 DateFullyImplemented = 20260829,
                 Rewards = { new("Experience", "Cooking", 300) },
                 QuestPoints = 1,
                 Stages = new() {
                     {
                         0,
-                        new("The Lumbridge Castle cook has asked me to gather the ingredients for a cake to get him out of his bind.", 10, "SpeakToNPC", "mi_LumbridgeCastleCook")
+                        new("After so long without any players around, the cook appears to have forgotten what he needed the ingredients for. He wasn't much help when asking where the ingredients could be found either, suggesting I find a 'milk bucket tree'. There are probably some farms nearby to find everything.", 10)
+                    },
+                    {
+                        10,
+                        new("Ingredients delivered to the cook, and the Duke's birthday saved. Assuming the cook remembers how to make a cake. And that it's the Duke's birthday. Maybe I should've told him what the quest log said it was for?", 10)
                     }
                 }
             });

@@ -28,6 +28,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public List<ItemDrop> DropTable = new();
 
+        public List<Requirement> Requirements = new();
+        public bool SeeWithoutRequirements = true;
 
         [JsonIgnore]
         public double TimeLastKilled = 0;
@@ -36,7 +38,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double TimeLastAttacked = 0;
 
-        public AreaMonster(string n, string id, int lv, int hp, int dr, int aggroLv, bool aggro, string ddice, string weakness, int respawn, string dtype) {
+        public AreaMonster(string n, string id, int lv, int hp, int dr, int aggroLv, bool aggro, string ddice, string weakness, int respawn, string dtype, List<Requirement>? reqs = null, bool seeAnyways = true) {
             Name = n;
             ID = id;
             Level = lv;
@@ -52,6 +54,10 @@ namespace ZeroPlayersOnline.DataTypes {
             DamageType = dtype;
 
             RespawnTime = respawn;
+
+            if (reqs != null)
+                Requirements = reqs;
+            SeeWithoutRequirements = seeAnyways;
         } 
     }
 }

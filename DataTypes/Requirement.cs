@@ -37,7 +37,7 @@
                 if (MiscString == "Gold") {
                     return "Need " + MiscInt + " gold";
                 }
-                return "Need " + GameLoop.ZPO.ResolveItemName(MiscString);
+                return "Need " + MiscInt + "x " + GameLoop.ZPO.ResolveItemName(MiscString);
             }
 
             if (RequirementType == "CollectionLogComplete") {

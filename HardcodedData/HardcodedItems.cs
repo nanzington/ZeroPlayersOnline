@@ -131,7 +131,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             }  
 
             itemsToAdd.Add(new Item("Shovel", "Could be used to dig for buried treasure.", "shovel", 200, 200, 200, 3) { UseString = "Dig", ConsumedOnUse = false });
-            itemsToAdd.Add(new Item("Map (Lumbridge Swamp)", "Useful for navigating a confusing swamp.", "mapLumbridgeSwamp", Color.Khaki, 3) { EquipSlot = "Pocket", UseString = "Map", UseString2 = "Lumbridge Swamp", UseInt = 6, UseInt2 = 4, ConsumedOnUse = false });
+            itemsToAdd.Add(new Item("Map (Lumbridge Swamp)", "Useful for navigating a confusing swamp.", "mapLumbridgeSwamp", Color.Khaki, 3) { Noteable = false, EquipSlot = "Pocket", UseString = "Map", UseString2 = "Lumbridge Swamp", UseInt = 6, UseInt2 = 4, ConsumedOnUse = false });
 
 
             // Clue scroll stuff
@@ -353,152 +353,152 @@ namespace ZeroPlayersOnline.Hardcodes {
                         UseInt = 1 /* Level */,  UseInt2 = 20 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
 
                     });
-                    itemsToAdd.Add(new Item("Grimy guam leaf", "It needs cleaning.", "herbGrimyGuam", Color.ForestGreen, 13) { UseString = "CleanHerb", UseString2 = "herbCleanGuam", UseInt = 1, UseInt2 = 3 }); 
-                    itemsToAdd.Add(new Item("Guam leaf", "A bitter green herb.", "herbCleanGuam", Color.ForestGreen.GetBright(), 13)); 
+                    itemsToAdd.Add(new Item("Grimy guam leaf", "It needs cleaning.", "herbGrimyGuam", ColorLib.Guam, 13) { UseString = "CleanHerb", UseString2 = "herbCleanGuam", UseInt = 1, UseInt2 = 3 }); 
+                    itemsToAdd.Add(new Item("Guam leaf", "A bitter green herb.", "herbCleanGuam", ColorLib.Guam.GetBright(), 13)); 
                  
                     // Tarromin
                     itemsToAdd.Add(new Item("Tarromin seed", "A tarromin seed - plant in an herb patch. (5)", "seedTarromin", Color.Lime, 10, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyTarromin",
                         UseInt = 5 /* Level */,  UseInt2 = 30 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy tarromin", "It needs cleaning.", "herbGrimyTarromin", Color.SeaGreen.GetDark(), 13) { UseString = "CleanHerb", UseString2 = "herbCleanTarromin", UseInt = 5, UseInt2 = 4 }); 
-                    itemsToAdd.Add(new Item("Tarromin", "A fresh herb.", "herbCleanTarromin", Color.SeaGreen, 13)); 
+                    itemsToAdd.Add(new Item("Grimy tarromin", "It needs cleaning.", "herbGrimyTarromin", ColorLib.Tarromin.GetDark(), 13) { UseString = "CleanHerb", UseString2 = "herbCleanTarromin", UseInt = 5, UseInt2 = 4 }); 
+                    itemsToAdd.Add(new Item("Tarromin", "A fresh herb.", "herbCleanTarromin", ColorLib.Tarromin, 13)); 
                  
                     // Marrentill
                     itemsToAdd.Add(new Item("Marrentill seed", "A marrentill seed - plant in an herb patch. (7)", "seedMarrentill", Color.Green, 11, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyMarrentill",
                         UseInt = 9 /* Level */,  UseInt2 = 40 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy marrentill", "It needs cleaning.", "herbGrimyMarrentill", Color.SeaGreen.GetDark(), 13) { UseString = "CleanHerb", UseString2 = "herbCleanMarrentill", UseInt = 9, UseInt2 = 5 }); 
-                    itemsToAdd.Add(new Item("Marrentill", "A fresh herb.", "herbCleanMarrentill", Color.SeaGreen, 13)); 
+                    itemsToAdd.Add(new Item("Grimy marrentill", "It needs cleaning.", "herbGrimyMarrentill", ColorLib.Marrentill.GetDark(), 13) { UseString = "CleanHerb", UseString2 = "herbCleanMarrentill", UseInt = 9, UseInt2 = 5 }); 
+                    itemsToAdd.Add(new Item("Marrentill", "A fresh herb.", "herbCleanMarrentill", ColorLib.Marrentill, 13)); 
 
                     // Harralander
                     itemsToAdd.Add(new Item("Harralander seed", "A harralander seed - plant in an herb patch. (20)", "seedHarralander", Color.SeaGreen, 15, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyHarralander",
                         UseInt = 20 /* Level */,  UseInt2 = 50 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy harralander", "It needs cleaning.", "herbGrimyHarralander", Color.MediumSpringGreen.GetDark(), 13) { UseString = "CleanHerb", UseString2 = "herbCleanHarralander", UseInt = 20, UseInt2 = 6 }); 
-                    itemsToAdd.Add(new Item("Harralander", "A fresh herb.", "herbCleanHarralander", Color.MediumSpringGreen, 13));
+                    itemsToAdd.Add(new Item("Grimy harralander", "It needs cleaning.", "herbGrimyHarralander", ColorLib.Harralander.GetDark(), 13) { UseString = "CleanHerb", UseString2 = "herbCleanHarralander", UseInt = 20, UseInt2 = 6 }); 
+                    itemsToAdd.Add(new Item("Harralander", "A fresh herb.", "herbCleanHarralander", ColorLib.Harralander, 13));
 
                     // Ranarr
                     itemsToAdd.Add(new Item("Ranarr seed", "A ranarr seed - plant in an herb patch. (25)", "seedRanarr", Color.DarkOliveGreen, 15, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyRanarr",
                         UseInt = 25 /* Level */,  UseInt2 = 60 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy ranarr", "It needs cleaning.", "herbGrimyRanarr", Color.MediumSpringGreen.GetDark(), 25) { UseString = "CleanHerb", UseString2 = "herbCleanRanarr", UseInt = 25, UseInt2 = 7 }); 
-                    itemsToAdd.Add(new Item("Ranarr", "A fresh herb.", "herbCleanRanarr", Color.MediumSpringGreen, 25));
+                    itemsToAdd.Add(new Item("Grimy ranarr", "It needs cleaning.", "herbGrimyRanarr", ColorLib.Ranarr.GetDark(), 25) { UseString = "CleanHerb", UseString2 = "herbCleanRanarr", UseInt = 25, UseInt2 = 7 }); 
+                    itemsToAdd.Add(new Item("Ranarr", "A fresh herb.", "herbCleanRanarr", ColorLib.Ranarr, 25));
 
                     // Toadflax
                     itemsToAdd.Add(new Item("Toadflax seed", "A toadflax seed - plant in an herb patch. (30)", "seedToadflax", Color.Green, 34, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyToadflax",
                         UseInt = 30 /* Level */,  UseInt2 = 70 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy toadflax", "It needs cleaning.", "herbGrimyToadflax", Color.Green.GetDark(), 25) { UseString = "CleanHerb", UseString2 = "herbCleanToadflax", UseInt = 30, UseInt2 = 8 }); 
-                    itemsToAdd.Add(new Item("Toadflax", "A fresh herb.", "herbCleanToadflax", Color.Green, 25));
+                    itemsToAdd.Add(new Item("Grimy toadflax", "It needs cleaning.", "herbGrimyToadflax", ColorLib.Toadflax.GetDark(), 25) { UseString = "CleanHerb", UseString2 = "herbCleanToadflax", UseInt = 30, UseInt2 = 8 }); 
+                    itemsToAdd.Add(new Item("Toadflax", "A fresh herb.", "herbCleanToadflax", ColorLib.Toadflax, 25));
 
                     // Spirit weed
                     itemsToAdd.Add(new Item("Spirit weed seed", "A spirit weed seed - plant in an herb patch. (35)", "seedSpiritweed", Color.LawnGreen, 18, true) {
-                        UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimySpiritWeed",
+                        UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimySpiritweed",
                         UseInt = 35 /* Level */,  UseInt2 = 80 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy spirit weed", "It needs cleaning.", "herbGrimySpiritWeed", Color.LawnGreen.GetDark(), 25) { UseString = "CleanHerb", UseString2 = "herbCleanSpiritWeed", UseInt = 35, UseInt2 = 9 }); 
-                    itemsToAdd.Add(new Item("Spirit weed", "A fresh herb.", "herbCleanSpiritWeed", Color.LawnGreen, 25));
+                    itemsToAdd.Add(new Item("Grimy spirit weed", "It needs cleaning.", "herbGrimySpiritweed", ColorLib.Spiritweed.GetDark(), 25) { UseString = "CleanHerb", UseString2 = "herbCleanSpiritweed", UseInt = 35, UseInt2 = 9 }); 
+                    itemsToAdd.Add(new Item("Spirit weed", "A fresh herb.", "herbCleanSpiritweed", ColorLib.Spiritweed, 25));
 
                     // Irit
                     itemsToAdd.Add(new Item("Irit seed", "An irit seed - plant in an herb patch. (40)", "seedIrit", Color.LawnGreen, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyIrit",
                         UseInt = 40 /* Level */,  UseInt2 = 90 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy irit", "It needs cleaning.", "herbGrimyIrit", Color.Lime.GetDark(), 40) { UseString = "CleanHerb", UseString2 = "herbCleanIrit", UseInt = 40, UseInt2 = 9 }); 
-                    itemsToAdd.Add(new Item("Irit", "A fresh herb.", "herbCleanIrit", Color.Lime, 40));
+                    itemsToAdd.Add(new Item("Grimy irit", "It needs cleaning.", "herbGrimyIrit", ColorLib.Irit.GetDark(), 40) { UseString = "CleanHerb", UseString2 = "herbCleanIrit", UseInt = 40, UseInt2 = 9 }); 
+                    itemsToAdd.Add(new Item("Irit", "A fresh herb.", "herbCleanIrit", ColorLib.Irit, 40));
 
                     // Wergali
                     itemsToAdd.Add(new Item("Wergali seed", "A wergali seed - plant in an herb patch. (41)", "seedWergali", Color.Crimson, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyWergali",
                         UseInt = 41 /* Level */,  UseInt2 = 100 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy wergali", "It needs cleaning.", "herbGrimyWergali", Color.Crimson.GetDark(), 44) { UseString = "CleanHerb", UseString2 = "herbCleanWergali", UseInt = 41, UseInt2 = 9 }); 
-                    itemsToAdd.Add(new Item("Wergali", "A fresh herb.", "herbCleanWergali", Color.Crimson, 44));
+                    itemsToAdd.Add(new Item("Grimy wergali", "It needs cleaning.", "herbGrimyWergali", ColorLib.Wergali.GetDark(), 44) { UseString = "CleanHerb", UseString2 = "herbCleanWergali", UseInt = 41, UseInt2 = 9 }); 
+                    itemsToAdd.Add(new Item("Wergali", "A fresh herb.", "herbCleanWergali", ColorLib.Wergali, 44));
 
                     // Avantoe
                     itemsToAdd.Add(new Item("Avantoe seed", "A avantoe seed - plant in an herb patch. (48)", "seedAvantoe", Color.SpringGreen, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyAvantoe",
                         UseInt = 48 /* Level */,  UseInt2 = 110 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy avantoe", "It needs cleaning.", "herbGrimyAvantoe", Color.SpringGreen.GetDark(), 48) { UseString = "CleanHerb", UseString2 = "herbCleanAvantoe", UseInt = 48, UseInt2 = 10 }); 
-                    itemsToAdd.Add(new Item("Avantoe", "A fresh herb.", "herbCleanAvantoe", Color.SpringGreen, 48));
+                    itemsToAdd.Add(new Item("Grimy avantoe", "It needs cleaning.", "herbGrimyAvantoe", ColorLib.Avantoe.GetDark(), 48) { UseString = "CleanHerb", UseString2 = "herbCleanAvantoe", UseInt = 48, UseInt2 = 10 }); 
+                    itemsToAdd.Add(new Item("Avantoe", "A fresh herb.", "herbCleanAvantoe", ColorLib.Avantoe, 48));
 
                     // Kwuarm
                     itemsToAdd.Add(new Item("Kwuarm seed", "A kwuarm seed - plant in an herb patch. (54)", "seedKwuarm", Color.Olive, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyKwuarm",
                         UseInt = 54 /* Level */,  UseInt2 = 120 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy kwuarm", "It needs cleaning.", "herbGrimyKwuarm", Color.Olive.GetDark(), 48) { UseString = "CleanHerb", UseString2 = "herbCleanKwuarm", UseInt = 54, UseInt2 = 11 }); 
-                    itemsToAdd.Add(new Item("Kwuarm", "A fresh herb.", "herbCleanKwuarm", Color.Olive, 48));
+                    itemsToAdd.Add(new Item("Grimy kwuarm", "It needs cleaning.", "herbGrimyKwuarm", ColorLib.Kwuarm.GetDark(), 48) { UseString = "CleanHerb", UseString2 = "herbCleanKwuarm", UseInt = 54, UseInt2 = 11 }); 
+                    itemsToAdd.Add(new Item("Kwuarm", "A fresh herb.", "herbCleanKwuarm", ColorLib.Kwuarm, 48));
 
                     // Bloodweed
                     itemsToAdd.Add(new Item("Bloodweed seed", "A bloodweed seed - plant in an herb patch. (57)", "seedBloodweed", Color.Crimson, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyBloodweed",
                         UseInt = 57 /* Level */,  UseInt2 = 130 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy bloodweed", "It needs cleaning.", "herbGrimyBloodweed", Color.Crimson.GetDark(), 100) { UseString = "CleanHerb", UseString2 = "herbCleanBloodweed", UseInt = 57, UseInt2 = 12 }); 
-                    itemsToAdd.Add(new Item("Bloodweed", "A fresh herb.", "herbCleanBloodweed", Color.Crimson, 100));
+                    itemsToAdd.Add(new Item("Grimy bloodweed", "It needs cleaning.", "herbGrimyBloodweed", ColorLib.Bloodweed.GetDark(), 100) { UseString = "CleanHerb", UseString2 = "herbCleanBloodweed", UseInt = 57, UseInt2 = 12 }); 
+                    itemsToAdd.Add(new Item("Bloodweed", "A fresh herb.", "herbCleanBloodweed", ColorLib.Bloodweed, 100));
 
                     // Snapdragon
                     itemsToAdd.Add(new Item("Snapdragon seed", "A snapdragon seed - plant in an herb patch. (59)", "seedSnapdragon", Color.Orange, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimySnapdragon",
                         UseInt = 59 /* Level */,  UseInt2 = 150 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy snapdragon", "It needs cleaning.", "herbGrimySnapdragon", Color.Orange.GetDark(), 60) { UseString = "CleanHerb", UseString2 = "herbCleanSnapdragon", UseInt = 59, UseInt2 = 12 }); 
-                    itemsToAdd.Add(new Item("Snapdragon", "A fresh herb.", "herbCleanSnapdragon", Color.Orange, 60));
+                    itemsToAdd.Add(new Item("Grimy snapdragon", "It needs cleaning.", "herbGrimySnapdragon", ColorLib.Snapdragon.GetDark(), 60) { UseString = "CleanHerb", UseString2 = "herbCleanSnapdragon", UseInt = 59, UseInt2 = 12 }); 
+                    itemsToAdd.Add(new Item("Snapdragon", "A fresh herb.", "herbCleanSnapdragon", ColorLib.Snapdragon, 60));
 
                     // Cadantine
                     itemsToAdd.Add(new Item("Cadantine seed", "A cadantine seed - plant in an herb patch. (65)", "seedCadantine", Color.YellowGreen, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyCadantine",
                         UseInt = 65 /* Level */,  UseInt2 = 180 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy cadantine", "It needs cleaning.", "herbGrimyCadantine", Color.YellowGreen.GetDark(), 65) { UseString = "CleanHerb", UseString2 = "herbCleanCadantine", UseInt = 65, UseInt2 = 13 }); 
-                    itemsToAdd.Add(new Item("Cadantine", "A fresh herb.", "herbCleanCadantine", Color.YellowGreen, 65));
+                    itemsToAdd.Add(new Item("Grimy cadantine", "It needs cleaning.", "herbGrimyCadantine", ColorLib.Cadantine.GetDark(), 65) { UseString = "CleanHerb", UseString2 = "herbCleanCadantine", UseInt = 65, UseInt2 = 13 }); 
+                    itemsToAdd.Add(new Item("Cadantine", "A fresh herb.", "herbCleanCadantine", ColorLib.Cadantine, 65));
 
                     // Lantadyme
                     itemsToAdd.Add(new Item("Lantadyme seed", "A lantadyme seed - plant in an herb patch. (67)", "seedLantadyme", Color.Teal, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyLantadyme",
                         UseInt = 67 /* Level */,  UseInt2 = 220 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy lantadyme", "It needs cleaning.", "herbGrimyLantadyme", Color.Teal.GetDark(), 70) { UseString = "CleanHerb", UseString2 = "herbCleanLantadyme", UseInt = 67, UseInt2 = 13 }); 
-                    itemsToAdd.Add(new Item("Lantadyme", "A fresh herb.", "herbCleanLantadyme", Color.Teal, 70));
+                    itemsToAdd.Add(new Item("Grimy lantadyme", "It needs cleaning.", "herbGrimyLantadyme", ColorLib.Lantadyme.GetDark(), 70) { UseString = "CleanHerb", UseString2 = "herbCleanLantadyme", UseInt = 67, UseInt2 = 13 }); 
+                    itemsToAdd.Add(new Item("Lantadyme", "A fresh herb.", "herbCleanLantadyme", ColorLib.Lantadyme, 70));
 
                     // Dwarf weed
                     itemsToAdd.Add(new Item("Dwarf weed seed", "A dwarf weed seed - plant in an herb patch. (70)", "seedDwarfweed", Color.ForestGreen, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyDwarfweed",
                         UseInt = 70 /* Level */,  UseInt2 = 220 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy dwarf weed", "It needs cleaning.", "herbGrimyDwarfweed", Color.ForestGreen.GetDark(), 100) { UseString = "CleanHerb", UseString2 = "herbCleanDwarfweed", UseInt = 70, UseInt2 = 14 }); 
-                    itemsToAdd.Add(new Item("Dwarf weed", "A fresh herb.", "herbCleanDwarfweed", Color.ForestGreen, 150));
+                    itemsToAdd.Add(new Item("Grimy dwarf weed", "It needs cleaning.", "herbGrimyDwarfweed", ColorLib.Dwarfweed.GetDark(), 100) { UseString = "CleanHerb", UseString2 = "herbCleanDwarfweed", UseInt = 70, UseInt2 = 14 }); 
+                    itemsToAdd.Add(new Item("Dwarf weed", "A fresh herb.", "herbCleanDwarfweed", ColorLib.Dwarfweed, 150));
 
                     // Torstol
                     itemsToAdd.Add(new Item("Torstol seed", "A torstol seed - plant in an herb patch. (75)", "seedTorstol", Color.DarkGreen, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyTorstol",
                         UseInt = 75 /* Level */,  UseInt2 = 270 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy torstol", "It needs cleaning.", "herbGrimyTorstol", Color.DarkGreen.GetDark(), 75) { UseString = "CleanHerb", UseString2 = "herbCleanTorstol", UseInt = 75, UseInt2 = 15 }); 
-                    itemsToAdd.Add(new Item("Torstol", "A fresh herb.", "herbCleanTorstol", Color.DarkGreen, 75));
+                    itemsToAdd.Add(new Item("Grimy torstol", "It needs cleaning.", "herbGrimyTorstol", ColorLib.Torstol.GetDark(), 75) { UseString = "CleanHerb", UseString2 = "herbCleanTorstol", UseInt = 75, UseInt2 = 15 }); 
+                    itemsToAdd.Add(new Item("Torstol", "A fresh herb.", "herbCleanTorstol", ColorLib.Torstol, 75));
 
                     // Arbuck
                     itemsToAdd.Add(new Item("Arbuck seed", "An arbuck seed - plant in an herb patch. (77)", "seedArbuck", Color.Orange, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyArbuck",
                         UseInt = 77 /* Level */,  UseInt2 = 350 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy arbuck", "It needs cleaning.", "herbGrimyArbuck", Color.Orange.GetDark(), 100) { UseString = "CleanHerb", UseString2 = "herbCleanArbuck", UseInt = 77, UseInt2 = 14 }); 
-                    itemsToAdd.Add(new Item("Arbuck", "A fresh herb.", "herbCleanArbuck", Color.Orange, 150));
+                    itemsToAdd.Add(new Item("Grimy arbuck", "It needs cleaning.", "herbGrimyArbuck", ColorLib.Arbuck.GetDark(), 100) { UseString = "CleanHerb", UseString2 = "herbCleanArbuck", UseInt = 77, UseInt2 = 14 }); 
+                    itemsToAdd.Add(new Item("Arbuck", "A fresh herb.", "herbCleanArbuck", ColorLib.Arbuck, 150));
 
                     // Fellstalk
                     itemsToAdd.Add(new Item("Fellstalk seed", "A fellstalk seed - plant in an herb patch. (91)", "seedFellstalk", Color.AntiqueWhite, 64, true) {
                         UseString = "PlantSeed", UseString2 = "Herb", UseString3 = "herbGrimyFellstalk",
                         UseInt = 91 /* Level */,  UseInt2 = 500 /* Exp On Harvest */, UseInt3 = 4800 /* Growth time in seconds */ 
                     });
-                    itemsToAdd.Add(new Item("Grimy fellstalk", "It needs cleaning.", "herbGrimyFellstalk", Color.AntiqueWhite.GetDark(), 100) { UseString = "CleanHerb", UseString2 = "herbCleanFellstalk", UseInt = 91, UseInt2 = 17 }); 
-                    itemsToAdd.Add(new Item("Fellstalk", "A fresh herb.", "herbCleanFellstalk", Color.AntiqueWhite, 150));
+                    itemsToAdd.Add(new Item("Grimy fellstalk", "It needs cleaning.", "herbGrimyFellstalk", ColorLib.Fellstalk.GetDark(), 100) { UseString = "CleanHerb", UseString2 = "herbCleanFellstalk", UseInt = 91, UseInt2 = 17 }); 
+                    itemsToAdd.Add(new Item("Fellstalk", "A fresh herb.", "herbCleanFellstalk", ColorLib.Fellstalk, 150));
                 }
 
                 // // Farming - Hops
@@ -1145,6 +1145,16 @@ namespace ZeroPlayersOnline.Hardcodes {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier + 1, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Slash", AttackSpeed = 1.5, TwoHanded = true
                 };
                 itemsToAdd.Add(battleaxe);
+
+                Item sqshield = new Item(Metals[i].Name + " square shield", "A medium square shield.", "sqShield" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
+                    EquipSlot = "Offhand",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
+                };
+                itemsToAdd.Add(sqshield);
+
+                Item kiteshield = new Item(Metals[i].Name + " kiteshield", "A large metal shield.", "kiteshield" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 3) {
+                    EquipSlot = "Offhand",  EquipTier = Metals[i].Tier + 1, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
+                };
+                itemsToAdd.Add(kiteshield);
             }
              
             itemsToAdd.Add(new Item("Huge club", "Upon closer inspection this is actually a huge femur.", "clubHuge", 255, 255, 255, 1000) {
@@ -1164,9 +1174,29 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Eye of newt", "A basic herblore ingredient and only slightly gross.", "eyeNewt", 255, 255, 255, 3));
             itemsToAdd.Add(new Item("Vial", "A glass vial, currently empty.", "vialEmpty", 200, 200, 200, 2) { colA = 150 });
             itemsToAdd.Add(new Item("Vial of water", "A glass vial full of water.", "vialWater", 14, 129, 205, 2) { colA = 150 });
-            itemsToAdd.Add(new Item("Guam potion (unf)", "I need another ingredient to finish this Guam potion.", "potionUnfGuam", 0, 128, 128, 3) { colA = 150 });
+            itemsToAdd.Add(new Item("Guam potion (unf)", "I need another ingredient to finish this Guam potion.", "potionUnfGuam", ColorLib.Guam.SetAlpha(150), 3));
+            itemsToAdd.Add(new Item("Marrentill potion (unf)", "I need another ingredient to finish this Marrentill potion.", "potionUnfMarrentill", ColorLib.Marrentill.SetAlpha(150), 5));
+            itemsToAdd.Add(new Item("Tarromin potion (unf)", "I need another ingredient to finish this Tarromin potion.", "potionUnfTarromin", ColorLib.Tarromin.SetAlpha(150), 11));
+            itemsToAdd.Add(new Item("Harralander potion (unf)", "I need another ingredient to finish this Harralander potion.", "potionUnfHarralander", ColorLib.Harralander.SetAlpha(150), 20));
+            itemsToAdd.Add(new Item("Ranarr potion (unf)", "I need another ingredient to finish this Ranarr potion.", "potionUnfRanarr", ColorLib.Ranarr.SetAlpha(150), 25));
+            itemsToAdd.Add(new Item("Toadflax potion (unf)", "I need another ingredient to finish this Toadflax potion.", "potionUnfToadflax", ColorLib.Toadflax.SetAlpha(150), 48));
+            itemsToAdd.Add(new Item("Irit potion (unf)", "I need another ingredient to finish this Irit potion.", "potionUnfIrit", ColorLib.Irit.SetAlpha(150), 40));
+            itemsToAdd.Add(new Item("Avantoe potion (unf)", "I need another ingredient to finish this Avantoe potion.", "potionUnfAvantoe", ColorLib.Avantoe.SetAlpha(150), 48));
+            itemsToAdd.Add(new Item("Snapdragon potion (unf)", "I need another ingredient to finish this Snapdragon potion.", "potionUnfSnapdragon", ColorLib.Snapdragon.SetAlpha(150), 59));
+            itemsToAdd.Add(new Item("Cadantine potion (unf)", "I need another ingredient to finish this Cadantine potion.", "potionUnfCadantine", ColorLib.Cadantine.SetAlpha(150), 65));
+            itemsToAdd.Add(new Item("Lantadyme potion (unf)", "I need another ingredient to finish this Lantadyme potion.", "potionUnfLantadyme", ColorLib.Lantadyme.SetAlpha(150), 68));
+            itemsToAdd.Add(new Item("Dwarf weed potion (unf)", "I need another ingredient to finish this Dwarf weed potion.", "potionUnfDwarfweed", ColorLib.Dwarfweed.SetAlpha(150), 70));
+            itemsToAdd.Add(new Item("Torstol potion (unf)", "I need another ingredient to finish this Torstol potion.", "potionUnfTorstol", ColorLib.Torstol.SetAlpha(150), 25));
+            itemsToAdd.Add(new Item("Spirit weed potion (unf)", "I need another ingredient to finish this Spirit weed potion.", "potionUnfSpiritweed", ColorLib.Spiritweed.SetAlpha(150), 54));
+            itemsToAdd.Add(new Item("Fellstalk potion (unf)", "I need another ingredient to finish this Fellstalk potion.", "potionUnfFellstalk", ColorLib.Fellstalk.SetAlpha(150), 150));
+            itemsToAdd.Add(new Item("Arbuck potion (unf)", "I need another ingredient to finish this Arbuck potion.", "potionUnfArbuck", ColorLib.Arbuck.SetAlpha(150), 100));
+            itemsToAdd.Add(new Item("Bloodweed potion (unf)", "I need another ingredient to finish this Bloodweed potion.", "potionUnfBloodweed", ColorLib.Bloodweed.SetAlpha(150), 70));
+            itemsToAdd.Add(new Item("Wergali potion (unf)", "I need another ingredient to finish this Wergali potion.", "potionUnfWergali", ColorLib.Wergali.SetAlpha(150), 45));
+            itemsToAdd.Add(new Item("Kwuarm potion (unf)", "I need another ingredient to finish this Kwuarm potion.", "potionUnfKwuarm", ColorLib.Kwuarm.SetAlpha(150), 54));
+            
+            
             itemsToAdd.Add(new Item("Attack potion", "Temporarily boosts your Attack level by 5.", "potionAttack", 0, 255, 255, 15) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Attack", 5) } });
-            //itemsToAdd.Add(new Item("Energy potion", "Temporarily boosts your Attack level by 5.", "potionEnergy", 0, 255, 255, 15) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Attack", 5) } });
+            itemsToAdd.Add(new Item("Energy potion", "Energizes you to receive up to 5% additional experience from all actions.", "potionEnergy", Color.DeepPink.GetDark(), 15) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Experience", 5) } });
 
 
             itemsToAdd.Add(new Item("Rusted sword [Q]", "The sword is useless now. You notice someone has scratched something into the handle: 'PlayerOne'.", "TI_HI_RustedSword", 205, 127, 50, 0, trade: false));

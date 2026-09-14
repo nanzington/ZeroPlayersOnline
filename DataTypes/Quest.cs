@@ -73,9 +73,13 @@ namespace ZeroPlayersOnline.DataTypes {
                 }
 
                 if (kv.RewardType == "Item") {
-                    if (GameLoop.ZPO.ResolveItem(kv.MiscString) is Item reward) {
-                        Item pickup = Helper.Clone(reward);
-                        pickup.Quantity = kv.MiscInt;
+                    if (kv.MiscString == "Gold") {
+                        p.HeldGold += kv.MiscInt;
+                    } else {
+                        if (GameLoop.ZPO.ResolveItem(kv.MiscString) is Item reward) {
+                            Item pickup = Helper.Clone(reward);
+                            pickup.Quantity = kv.MiscInt;
+                        }
                     }
                 }
             }

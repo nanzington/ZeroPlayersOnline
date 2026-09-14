@@ -154,6 +154,9 @@ namespace ZeroPlayersOnline {
                                     GraceTimeStart = Helper.Time();
                                     AttackingMonster = null;
 
+                                    CurrDialogueStage = -1;
+                                    ConversationPartner = null;
+
                                     if (curr.MonstersHere.Count > 0) {
                                         for (int j = 0; j < curr.MonstersHere.Count; j++) {
                                             curr.MonstersHere[j].AttackingPlayer = false;
@@ -1217,6 +1220,23 @@ namespace ZeroPlayersOnline {
                                                         if (!printedAny) {
                                                             Log.AddMessage("Looks like you haven't got any clue steps active right now!", ColorLib.Mithril);
                                                         }
+                                                    }
+
+                                                    if (newDia.ActionWhenChosen == "hansTime") {
+                                                        int totalSeconds = player.SecondsPlayed;
+                                                        int days = (totalSeconds > 86400 ? totalSeconds / 86400 : 0);
+                                                        totalSeconds -= (days * 86400);
+                                                        int hours = (totalSeconds > 3600 ? totalSeconds / 3600 : 0);
+                                                        totalSeconds -= (hours * 3600);
+                                                        int minutes = (totalSeconds > 60 ? totalSeconds / 60 : 0);
+                                                        totalSeconds -= (minutes * 60);
+
+                                                        string time = (days > 1 ? days + " days, " : days > 0 ? days + " day, " : "") +
+                                                                      (hours > 1 ? hours + " hours, " : hours > 0 ? hours + " hour, " : "") +
+                                                                      (minutes > 1 ? minutes + " minutes, " : minutes > 0 ? minutes + " minute, " : "") +
+                                                                      (totalSeconds > 1 ? totalSeconds + " seconds" : totalSeconds > 0 ? totalSeconds + " second" : "") + ".";
+
+                                                        Log.AddMessage("You've played for a total of " + time, ColorLib.Mithril);
                                                     }
                                                 }
                                             }

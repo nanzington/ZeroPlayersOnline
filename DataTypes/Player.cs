@@ -412,7 +412,16 @@ namespace ZeroPlayersOnline.DataTypes {
         }
 
 
-        public void TryGrantExp(string which, int amount, MessageLog log, List<Skill> RecentSkills, bool buying = false) {
+        public void TryGrantExp(string which, int amountIn, MessageLog log, List<Skill> RecentSkills, bool buying = false) {
+            int amount = amountIn;
+
+            foreach (var pot in ActivePotions) {
+                if (pot.Stat == "Experience") {
+                    amount = amount + ((int) Math.Ceiling(amount * (pot.Change / 100.0)));
+                }
+            }
+
+
             if (Skills.ContainsKey(which)) { 
                 int oldLevel = Skills[which].Level; 
 

@@ -286,7 +286,16 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new ItemSpot("bowlEmpty", 1),
                         new ItemSpot("knife", 1)
                     },
-                    ProcessingStations = new() { "Range", "Sink" }
+                    ProcessingStations = new() { "Range", "Sink" },
+                    NPCsHere = new() { "mistLumCook" }
+                }); 
+
+                locsToAdd.Add(new Location("MIST_LumbridgeCastleDiningHall", "Lumbridge - Castle Dining Hall", "Misthalin") {
+                    Description = "An ornately, bordering on gaudily, decorated dining hall. Well, there's only ten chairs, so it's not really much of a 'hall', but it's certainly a place to eat in a castle. The walls are decorated with tapestries and portraits. Suits of armor and standing candelabras line the walls. There's a fireplace on the west side of the room with candles on the mantle and a painting above it. It, inexplicably, has a fire roaring in it despite the room being empty. There's a plush red rug covering most of the floor, and the center of the room is occupied by a rectangular table with ten chairs around it.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_LumbridgeCastleFoyer"),
+                        new Connection("MIST_LumbridgeCastleKitchen")
+                    }
                 }); 
 
                 locsToAdd.Add(new Location("MIST_LumbridgeCastleCellar", "Lumbridge - Castle Cellar", "Misthalin") {

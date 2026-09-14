@@ -749,6 +749,48 @@ namespace ZeroPlayersOnline.Hardcodes {
                  { 100, new("Righto, let me take a look here...", new() { new DialogueChoice("More help?", 0), byeThen }, action: "clueHelp") }
              }));
 
+            toAdd.Add(new("Hans", "mistLumHans", new() { 
+                 { 0, new("Hello. What are you doing here?", new() { new DialogueChoice("Who runs this place?", 10), new DialogueChoice("I have come to kill everyone!", 20), new DialogueChoice("I don't know, I'm lost.", 30), new DialogueChoice("How long have I been here?", 40), byeThen }) }, 
+                 { 10, new("That'd be Duke. He's in his study, on the second floor.", new() { byeThen }) },
+                 { 20, new("Guards! Help! Help!", new() { byeThen }) },
+                 { 30, new("Well consider yourself found! This is Lumbridge Castle, second in Misthalin only to Varrock Castle.", new() { new DialogueChoice("How many castles in Misthalin?", 31), byeThen }) },
+                 { 31, new("Just the two, I suppose. I hadn't really thought about it before.", new() { byeThen }) },
+                 { 40, new("Righto, let me take a look here...", new() { byeThen }, action: "hansTime") }
+             }));
+
+            toAdd.Add(new("Fred the Farmer", "mistLumFred", new() { 
+                 { 0, new("What are you doing on my land? You're not the one leaving the gates open so the animals can get out, are you?", new() { new DialogueChoice("I'm looking for a quest.", 10), new DialogueChoice("Got those balls of wool.", 20, new() { new("QuestAt", 0, "MI_SheepShearer") }), byeThen }) }, 
+                 { 10, new("Oh? Well, I could do with a bit of help.", new() { new DialogueChoice("(NEXT)", 11), byeThen }) },
+                 { 11, new("My sheep are getting mighty wooly. I'd be much obliged if you could shear them and spin the wool for me.", new() { new DialogueChoice("(NEXT)", 12), byeThen }) },
+                 { 12, new("Yes, that's it. Bring me 15 balls of wool. I'm sure I could sort out some sort of payment.", new() { new DialogueChoice("[Q+] Sheep Shearer", 13), byeThen }) },
+                 { 13, new("Excellent! Do you actually know how to shear a sheep?", new() { new DialogueChoice("Of course!", 16), new DialogueChoice("Well, now that you mention it...", 14), byeThen }, "MI_SheepShearer", 0) }, 
+                 { 14, new("Well all you've got to do is find some shears, find some sheep like the ones here, then just... shear them.", new() { new DialogueChoice("That's not very helpful.", 15), byeThen }) }, 
+                 { 15, new("It's not a very complicated process, you'll figure it out.", new() { new DialogueChoice("(NEXT)", 16), byeThen }) },
+                 { 16, new("Now, do you know how to spin the wool into balls after you've sheared it off?", new() { new DialogueChoice("Of course!", 19), new DialogueChoice("Well, not quite...", 17), byeThen }) },
+                 { 17, new("Just take the wool you get from the sheep to a spinning wheel and run them through that.", new() { new DialogueChoice("Is there a spinning wheel nearby?", 18), byeThen }) },
+                 { 18, new("Aye, there's one upstairs in Lumbridge Castle. It's open for anyone to use.", new() { new DialogueChoice("(NEXT)", 19), byeThen }) },
+                 { 19, new("Well what're you waiting for then? Go shear those sheep and bring me the wool.", new() { byeThen }) },
+                 { 20, new("Right, hand them over then.", new() { new DialogueChoice("(GIVE WOOL)", 22, new() { new("Item", 15, "woolBall", true) }, true), new DialogueChoice("Actually, I haven't got them yet.", 21), byeThen }) },
+                 { 21, new("... Do you need a reminder of how to do it, or are you just wasting my time for fun?", new() { new DialogueChoice("Please explain again.", 13), byeThen }) },
+                 { 22, new("Thanks for the help, friend! Here's a bit of gold for your time.", new() { byeThen }, "MI_SheepShearer", 10) }
+             }));
+
+            toAdd.Add(new("Cook", "mistLumCook", new() { 
+                 { 0, new("Have you got the ingredients?", new() { new DialogueChoice("What ingredients?", 10), new DialogueChoice("Here they are.", 20, new() { new("QuestAt", 0, "MI_CooksAssistant") }), byeThen }) }, 
+                 { 10, new("The... the ingredients. Everyone brings me the ingredients. Well, not anymore, but usually.", new() { new DialogueChoice("What are they for?", 11), byeThen }) },
+                 { 11, new("I don't... remember... It's been so long. All I can remember is that I need an egg, a pot of flour, and a bucket of milk.", new() { new DialogueChoice("Sounds like you're making a cake.", 12), byeThen }) },
+                 { 12, new("Does it? I suppose that could be right... Either way, have you got them? Can you get them?", new() { new DialogueChoice("[Q+] Cook's Assistant", 13), byeThen }) },
+                 { 13, new("Excellent!", new() { new DialogueChoice("(NEXT)", 14), byeThen }, "MI_CooksAssistant", 0) }, 
+                 { 14, new("...You're still here. Don't tell me you don't know how to find them?", new() { new DialogueChoice("Chicken egg", 15), new DialogueChoice("Pot of flour", 16), new DialogueChoice("Bucket of milk", 18), byeThen }) }, 
+                 { 15, new("I haven't left the castle in... I haven't left the castle. But I suppose an egg might be found at a chicken farm, no?", new() { new DialogueChoice("Pot of flour", 16), new DialogueChoice("Bucket of milk", 18), byeThen }) }, 
+                 { 16, new("Is there a mill nearby? You might be able to take some, what's that yellow stuff called? Grows in the ground?", new() { new DialogueChoice("... Wheat?", 17), byeThen }) }, 
+                 { 17, new("Wheat, that's the stuff! Grab a handful of that from a field somewhere and take it to a mill. Take a pot too.", new() { new DialogueChoice("Chicken egg", 15), new DialogueChoice("Bucket of milk", 18), byeThen }) },  
+                 { 18, new("Milk seems pretty easy. Comes in a bucket, right? Probably grows on trees, those are made of bucket.", new() { new DialogueChoice("Chicken egg", 15), new DialogueChoice("Pot of flour", 16), byeThen }) },
+                 { 20, new("Right, hand them over then.", new() { new DialogueChoice("(GIVE ITEMS)", 22, new() { new("Item", 1, "eggChicken", true), new("Item", 1, "potFlour", true), new("Item", 1, "bucketMilk", true) }, true), new DialogueChoice("Actually, I haven't got them yet.", 21), byeThen }) },
+                 { 21, new("Come back when you have them, then. Do you need a reminder of where you can find each item?", new() { new DialogueChoice("Please explain again.", 14), byeThen }) },
+                 { 22, new("Thank you for the help! Now I just have to figure out how to bake a cake... and what it was for.", new() { byeThen }, "MI_CooksAssistant", 10) }
+            }));
+
             for (int i = 0; i < toAdd.Count; i++) { 
                 NPCLib.Add(toAdd[i].ID, toAdd[i]);
             }
