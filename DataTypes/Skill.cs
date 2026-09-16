@@ -14,22 +14,26 @@
             while (Exp >= ExpToLevel() && Level < 120) {
                 Level++;
                  
-                log.AddMessage("You levelled " + Name + " to " + Level + ".");
+                if (log != null) {
+                    log.AddMessage("You levelled " + Name + " to " + Level + ".");
 
-                if (Level == 99)
-                    log.AddMessage("You have mastered " + Name + "!");
-                if (Level == 120)
-                    log.AddMessage("You have achieved true " + Name + " mastery!"); 
+                    if (Level == 99)
+                        log.AddMessage("You have mastered " + Name + "!");
+                    if (Level == 120)
+                        log.AddMessage("You have achieved true " + Name + " mastery!"); 
+                }
             }
 
-            if (RecentSkills.Contains(this)) {
-                RecentSkills.Remove(this);
+            if (RecentSkills != null) {
+                if (RecentSkills.Contains(this)) {
+                    RecentSkills.Remove(this);
+                }
+
+                if (RecentSkills.Count > 10)
+                    RecentSkills.RemoveAt(10);
+
+                RecentSkills.Insert(0, this);
             }
-
-            if (RecentSkills.Count > 10)
-                RecentSkills.RemoveAt(10);
-
-            RecentSkills.Insert(0, this);
         }
 
         public int ExpToLevel() { 

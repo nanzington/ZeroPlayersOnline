@@ -11,11 +11,27 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new ClueStep("T_DigNewts", "Tutorial", "Dig", "TI_Newts", "Dig somewhere allegedly being 'supervised'."));
             toAdd.Add(new ClueStep("T_DigAltar", "Tutorial", "Dig", "TI_AirAltar", "Dig where the magic is made.")); 
             toAdd.Add(new ClueStep("T_EmoteBank", "Tutorial", "Emote", "TI_Bank", "Cry in the bank. Equip a bronze helm, leather chaps, and a pine shortbow.", "Cry", "helmBronze", "chapsLeather", "shortbowPine"));
-            toAdd.Add(new ClueStep("T_EmoteTemple", "Tutorial", "Emote", "TI_Temple", "Yawn in the temple. Equip a leather cowl, bronze platebody, and bronze dagger.", "Yawn", "coifLeather", "platebodyBronze", "daggerBronze"));
+            toAdd.Add(new ClueStep("T_EmoteTemple", "Tutorial", "Emote", "TI_Temple", "Yawn in the temple. Equip a leather coif, bronze platebody, and bronze dagger.", "Yawn", "coifLeather", "platebodyBronze", "daggerBronze"));
             toAdd.Add(new ClueStep("T_AnagramCombatTutor", "Tutorial", "Anagram", "TI_Cavern", "The anagram reveals who to speak to next: TOMCAT TO RUB", "tutorCombat"));
             toAdd.Add(new ClueStep("T_AnagramRunecraftTutor", "Tutorial", "Anagram", "TI_AirAltar", "The anagram reveals who to speak to next: UNFORGET RUIN TRACT", "tutorRunecrafting"));
-            toAdd.Add(new ClueStep("T_GatherCrates", "Tutorial", "Gather", "TI_GeneralStore", "If these were employee only, they wouldn't be out in the open!", "clueCrates"));
+            toAdd.Add(new ClueStep("T_GatherCrates", "Tutorial", "Gather", "TI_GeneralStore", "Am I allowed to rummage through these? I guess there's no employee around to stop me!", "clueCrates"));
             toAdd.Add(new ClueStep("T_GatherShrimp", "Tutorial", "Gather", "TI_Main", "Look for a really strange shrimp.", "fishNetSmall"));
+
+            // Beginner Steps 
+            toAdd.Add(new ClueStep("B_SpeakHans", "Beginner", "Speak", "MIST_LumbridgeCastleBailey", "Always walking around the castle grounds and somehow knows everyones age.", "mistLumHans"));
+            toAdd.Add(new ClueStep("B_SpeakCook", "Beginner", "Speak", "MIST_LumbridgeCastleKitchen", "In the place Duke Horacio calls home, talk to a man with a hat dropped by goblins.", "mistLumCook"));
+            toAdd.Add(new ClueStep("B_EmoteBobs", "Beginner", "Emote", "MIST_LumbridgeBobsAxes", "Clap at Bob's Brilliant Axes. Equip a bronze hatchet and leather boots.", "Clap", "hatchetBronze", "bootsLeather"));
+            toAdd.Add(new ClueStep("B_AnagramSedridor", "Tutorial", "Anagram", "MIST_WizardTowerBasement", "The anagram reveals who to speak to next: CHAR GAME DISORDER", "mistWizSedridor"));
+            toAdd.Add(new ClueStep("B_MapWizardTowerIsland", "Tutorial", "Map", "MIST_WizardTowerIsland", "Seems like you have to find the location that matches the description of the clue.", ""));
+            toAdd.Add(new ClueStep("B_MapDraynorOutskirtsSouth", "Tutorial", "Map", "MIST_DraynorOutskirtsSouth", "Seems like you have to find the location that matches the description of the clue.", ""));
+
+            // Easy Steps
+            toAdd.Add(new ClueStep("E_DigLumbridgeBailey", "Easy", "Dig", "MIST_LumbridgeCastleBailey", "Dig where only the skilled, the wealthy, or the brave can choose not to visit again."));
+            toAdd.Add(new ClueStep("E_GatherLumbridgeUrhney", "Easy", "Gather", "MIST_LumbridgeSwampUrhney", "Search a bookcase in the Lumbridge Swamp.", "clueBookcase"));
+            toAdd.Add(new ClueStep("E_GatherLumbridgeShed", "Easy", "Gather", "MIST_LumbridgeSwampShed", "Search a crate in the Lumbridge Swamp.", "clueCrates")); 
+            toAdd.Add(new ClueStep("E_GatherLumbridgeFred", "Easy", "Gather", "MIST_LumbridgeFredsFarm", "Search the chest in Fred the Farmer's bedroom.", "clueChest"));
+            toAdd.Add(new ClueStep("E_GatherLumbridgeGoblins", "Easy", "Gather", "MIST_LumbridgeAcrossLum", "Search the chest in Fred the Farmer's bedroom.", "clueChest"));
+            
 
             for (int i = 0; i < toAdd.Count; i++) {
                 clueLib.TryAdd(toAdd[i].ID, toAdd[i]);

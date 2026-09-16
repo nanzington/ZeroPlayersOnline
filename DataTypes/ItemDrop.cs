@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace ZeroPlayersOnline.DataTypes {
     public class ItemDrop {
@@ -18,6 +14,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool Noted = false;
          
         public Requirement? Requirement = null;
+
 
         public ItemDrop(string id, int x, int y, int min, int max, bool noted = false, bool evenIf0 = false, Requirement? req = null) {
             ItemID = id;
@@ -38,7 +35,7 @@ namespace ZeroPlayersOnline.DataTypes {
         // So if DropX is 1 and InY is 10, then on a roll of 0-9, landing on a 0 is a successful drop, giving 10% chance to drop
 
 
-        public void RollDrop(Player player, CollectionLogEntry? log) {
+        public void RollDrop(Player player, CollectionLogEntry? log, bool inaccessible = false) {
             if (Requirement != null && !Requirement.CheckRequirement(player, true))
                 return;
 
@@ -83,7 +80,7 @@ namespace ZeroPlayersOnline.DataTypes {
                                     spawn.Quantity = amt;
                                 }
 
-                                GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn)); 
+                                GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn, inaccessible)); 
                             }
                         }
                     } else {
@@ -102,12 +99,64 @@ namespace ZeroPlayersOnline.DataTypes {
                                     spawn.Quantity = amt;
                                 }
 
-                                GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn));
+                                GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn, inaccessible));
                             }
                         }
                     }
                 }
             }
+        }
+
+        public Item? PickpocketRoll(Player player) {
+            if (Requirement != null && !Requirement.CheckRequirement(player, true))
+                return null;
+
+
+            if (player.DropMultiplier > 0 || EvenAt0x) {
+                int dropX = DropX;
+
+                dropX *= player.DropMultiplier;
+
+                if (EvenAt0x && dropX == 0)
+                    dropX = DropX;
+
+                if (dropX != 0) {
+                    if (player.DropModifier != 2) {
+                        int dropRoll = GameLoop.rand.Next(InY);
+                        int dropRoll2 = GameLoop.rand.Next(InY);
+
+                        if (dropRoll < dropX || (player.PrayerActive("Good Fortune") && dropRoll2 < dropX)) {
+                            if (GameLoop.ZPO.ItemLibrary.ContainsKey(ItemID)) {
+                                Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[ItemID]);
+
+                                if (QuantityMin == QuantityMax)
+                                    spawn.Quantity = QuantityMin;
+                                else {
+                                    int amt = GameLoop.rand.Next(QuantityMax - QuantityMin) + QuantityMin;
+                                    spawn.Quantity = amt;
+                                }
+
+                                return spawn;
+                            }
+                        }
+                    } else { 
+                        if (GameLoop.ZPO.ItemLibrary.ContainsKey(ItemID)) {
+                            Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[ItemID]);
+
+                            if (QuantityMin == QuantityMax) {
+                                spawn.Quantity = QuantityMin;
+                            } else {
+                                int amt = GameLoop.rand.Next(QuantityMax - QuantityMin) + QuantityMin;
+                                spawn.Quantity = amt;
+                            }
+
+                            return spawn;
+                        } 
+                    }
+                } 
+            } 
+
+            return null;
         }
     }
 }

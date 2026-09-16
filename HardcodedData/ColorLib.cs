@@ -6,6 +6,7 @@
         public static Color Steel = new Color(150, 150, 150, 255);
         public static Color Mithril = Color.SteelBlue;
         public static Color Adamant = new Color(34, 139, 34, 255);
+        public static Color Rune = Color.Turquoise;
 
         // Logs 
         public static Color Pine = new Color(237, 202, 161, 255);

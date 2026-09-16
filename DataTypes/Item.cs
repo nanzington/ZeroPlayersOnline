@@ -50,6 +50,9 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public List<string> PetBlurbs = new();
 
+        [JsonIgnore]
+        public bool Inaccessible = false;
+
         public Item() { }
 
         public Item(string n, string ex, string id, Color c, int v, bool stack = false, bool trade = true, string misc = "") : this(n, ex, id, c.R, c.G, c.B, v, stack, trade, misc) { } 

@@ -19,10 +19,23 @@ namespace ZeroPlayersOnline.Hardcodes {
                 OpensUI = true
             });
 
+            toAdd.Add(new("Dairy Churn") {
+                Recipes = new() {
+                    new ProcessingRecipe("bucketMilk", "cream", "Cooking", 21, 18, secondaryOut: "bucketEmpty"),
+                    new ProcessingRecipe("cream", "butter", "Cooking", 38, 23),
+                    new ProcessingRecipe("butter", "cheese", "Cooking", 48, 24)
+                }
+            });
+
             toAdd.Add(new("Tannery") {
                 Recipes = new() {
                     new ProcessingRecipe("cowhide", "leatherSoft", "Crafting", 1, 5),
-                    new ProcessingRecipe("leatherSoft", "leatherHard", "Crafting", 1, 5)
+                    new ProcessingRecipe("leatherSoft", "leatherHard", "Crafting", 10, 5),
+                    new ProcessingRecipe("hideSnake", "leatherSnakeskin", "Crafting", 20, 5),
+                    new ProcessingRecipe("hideDragonGreen", "leatherDragonGreen", "Crafting", 40, 5),
+                    new ProcessingRecipe("hideDragonBlue", "leatherDragonBlue", "Crafting", 50, 5),
+                    new ProcessingRecipe("hideDragonRed", "leatherDragonRed", "Crafting", 55, 5),
+                    new ProcessingRecipe("hideDragonBlack", "leatherDragonBlack", "Crafting", 60, 5)
                 }
             });
 

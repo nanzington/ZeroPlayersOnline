@@ -71,7 +71,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             toAdd.Add(new("MI_CooksAssistant", "Cook's Assistant", "Very Short", "Novice", "The Lumbridge Castle cook is in a mess. It is the Duke of Lumbridge's birthday and the cook is making the cake. He needs a lot of ingredients and doesn't have much time.", 10, new() { "Misthalin" }) {
-                DateFullyImplemented = 20260829,
+                DateFullyImplemented = 20260913,
                 Rewards = { new("Experience", "Cooking", 300) },
                 QuestPoints = 1,
                 Stages = new() {
@@ -82,6 +82,46 @@ namespace ZeroPlayersOnline.Hardcodes {
                     {
                         10,
                         new("Ingredients delivered to the cook, and the Duke's birthday saved. Assuming the cook remembers how to make a cake. And that it's the Duke's birthday. Maybe I should've told him what the quest log said it was for?", 10)
+                    }
+                }
+            });
+
+            toAdd.Add(new("MI_ImpCatcher", "Imp Catcher", "Short", "Novice", "The Wizard Grayzag has summoned hundreds of little imps. They have stolen a lot of things belonging to the Wizard Mizgog including his magic beads.", 10, new() { "Misthalin" }) {
+                DateFullyImplemented = 20260915,
+                Rewards = { new("Experience", "Magic", 875), new("Item", "amuletAccuracy", 1) },
+                QuestPoints = 1,
+                Stages = new() {
+                    {
+                        0,
+                        new("Wizard Mizgog has tasked me with finding his stolen beads, which were taken by imps. I think I remember seeing some imps near Lumbridge Castle, so I'll just have to kill them until I get all four colors of bead.", 10)
+                    },
+                    {
+                        10,
+                        new("The lost beads have been returning to Wizard Mizgog and he has awarded me with an amulet of accuracy. If I ever get a full set of beads again I can take them to him for another amulet.", 10)
+                    }
+                }
+            });
+
+            toAdd.Add(new("MI_RestlessGhost", "Restless Ghost", "Short", "Novice", "A ghost is haunting Lumbridge graveyard. The priest of Lumbridge church of Saradomin wants you to find out how to get rid of it.", 30, new() { "Misthalin" }) {
+                DateFullyImplemented = 20260915,
+                Rewards = { new("Experience", "Prayer", 1125) },
+                QuestPoints = 1,
+                Stages = new() {
+                    {
+                        0,
+                        new("I have spoken to Father Aereck and he suggested I go talk to Father Urhney, who lives in the south of the Lumbridge swamps, about getting rid of the ghost. He gave me a map to help navigate the confusing swamps. If I lose it, I can probably speak to him to get another.", 10)
+                    },
+                    {
+                        10,
+                        new("I found and spoke to Father Urhney. After explaining I was sent by Father Aereck he was willing to help, and suggested that ghosts may linger when they have unfinished business to attend to. He gave me an amulet of ghostspeak, which should allow me to speak to ghosts, so that I can go talk to the ghost and ask what might be keeping it from moving on.", 20)
+                    },
+                    {
+                        20,
+                        new("The ghost didn't really seem to know exactly why they're a ghost, but said that a 'warlock' had taken the skull from their coffin and returning it might let them move on. I think the 'warlocks' in question might actually be the wizards at the Wizards' Tower near Draynor, so I should go take a look around there and see what I can turn up.", 30, "Gather", "mistLumCoffin", 1)
+                    },
+                    {
+                        30,
+                        new("I found the skull in the basement of the Wizards' Tower and returned it to the coffin, causing the ghost to fade away. Nobody asked for the amulet of ghostspeak back, so I'll hold onto it. Could be useful in the future.", 30)
                     }
                 }
             });

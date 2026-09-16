@@ -5,7 +5,7 @@
 
         public int PickpocketLevel = 0;
         public int PickpocketEXP = 0;
-        public List<WeightedItem> PickpocketLoot = new();
+        public List<ItemDrop> PickpocketLoot = new();
 
         public Dictionary<int, DialogueStage> Dialogue = new();
         public Requirement? ReqToSee = null;
@@ -36,11 +36,20 @@
                         p.TryGrantExp("Thieving", PickpocketEXP, log, RecentlyTrained);
 
                         if (PickpocketLoot != null && PickpocketLoot.Count > 0) {
-                            string item = Helper.ChooseWeighted(PickpocketLoot).Item;
+                            List<Item> rolled = new();
+                            foreach (var item in PickpocketLoot) {
+                                Item? roll = item.PickpocketRoll(p);
 
-                            if (ItemLib.ContainsKey(item)) {
-                                Item spawned = Helper.Clone(ItemLib[item]);
-                                p.TryPickup(spawned, spawned.Quantity);
+                                if (roll != null) {
+                                    roll.UseInt3 = item.InY;
+                                    rolled.Add(roll);
+                                }
+                            }
+
+                            rolled = rolled.OrderBy(o => o.UseInt3).Reverse().ToList();
+
+                            if (rolled.Count > 0) {
+                                p.TryPickup(rolled[0], rolled[0].Quantity);
                             }
                         } 
                     } else { 

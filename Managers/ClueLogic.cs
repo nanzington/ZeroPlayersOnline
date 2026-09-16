@@ -1,226 +1,53 @@
-﻿using ZeroPlayersOnline.DataTypes;
+﻿using SadRogue.Primitives.GridViews;
+using ZeroPlayersOnline.DataTypes;
 
 namespace ZeroPlayersOnline.Managers {
     public static class ClueLogic {
-        public static bool GenericStep(Player player, MessageLog Log, string clueType, string interacted = "") {
-            if (player.CurrentClueTutorial != "") {
-                if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(player.CurrentClueTutorial, out ClueStep? clueTut)) {
-                    if (clueTut != null) {
-                        if (clueTut.ClueType == clueType && player.NavLoc == clueTut.SolveLoc && interacted == clueTut.EmoteOrNpc) {
-                            if (clueTut.ClueType != "Emote") {
-                                ProgressStep("Tutorial", player, Log);
-                                return true;
-                            } else {
-                                bool first = false;
-                                bool second = false;
-                                bool third = false;
+        public static bool GenericStep(Player player, MessageLog Log, string clueType, string interacted = "") { 
+            List<string> ClueDiffs = new() { "Tutorial", "Beginner", "Easy", "Medium", "Hard", "Elite", "Master" }; 
+            ref string clueID = ref player.CurrentClueTutorial;
 
-                                foreach (var kv in GameLoop.ZPO.player.Equipment) {
-                                    if (kv.Value.ID == clueTut.Equip1)
-                                        first = true;
-                                    if (kv.Value.ID == clueTut.Equip2)
-                                        second = true;
-                                    if (kv.Value.ID == clueTut.Equip3)
-                                        third = true;
-                                }
+            foreach (var diff in ClueDiffs) {
+                if (diff == "Beginner") { clueID = ref player.CurrentClueBeginner; }
+                if (diff == "Easy") { clueID = ref player.CurrentClueEasy; }
+                if (diff == "Medium") { clueID = ref player.CurrentClueMedium; }
+                if (diff == "Hard") { clueID = ref player.CurrentClueHard; }
+                if (diff == "Elite") { clueID = ref player.CurrentClueElite; }
+                if (diff == "Master") { clueID = ref player.CurrentClueMaster; }
 
-                                if (!first || !second || !third)
-                                    return false; 
+                if (clueID != "") {
+                    if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(clueID, out ClueStep? clueTut)) {
+                        if (clueTut != null) {
+                            if (clueTut.ClueType == clueType && player.NavLoc == clueTut.SolveLoc && interacted == clueTut.EmoteOrNpc) {
+                                if (clueTut.ClueType != "Emote") {
+                                    ProgressStep(diff, player, Log);
+                                    return true;
+                                } else {
+                                    bool first = false;
+                                    bool second = false;
+                                    bool third = false;
+
+                                    foreach (var kv in GameLoop.ZPO.player.Equipment) {
+                                        if (kv.Value.ID == clueTut.Equip1)
+                                            first = true;
+                                        if (kv.Value.ID == clueTut.Equip2)
+                                            second = true;
+                                        if (kv.Value.ID == clueTut.Equip3)
+                                            third = true;
+                                    } 
+
+                                    if (!first && clueTut.Equip1 != "")
+                                        return false; 
+
+                                    if (!second && clueTut.Equip2 != "")
+                                        return false; 
+
+                                    if (!third && clueTut.Equip3 != "")
+                                        return false; 
                                  
-                                ProgressStep("Tutorial", player, Log);
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (player.CurrentClueBeginner != "") {
-                if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(player.CurrentClueBeginner, out ClueStep? clueTut)) {
-                    if (clueTut != null) {
-                        if (clueTut.ClueType == clueType && player.NavLoc == clueTut.SolveLoc && interacted == clueTut.EmoteOrNpc) {
-                            if (clueTut.ClueType != "Emote") {
-                                ProgressStep("Beginner", player, Log);
-                                return true;
-                            } else {
-                                bool first = false;
-                                bool second = false;
-                                bool third = false;
-
-                                foreach (var kv in GameLoop.ZPO.player.Equipment) {
-                                    if (kv.Value.ID == clueTut.Equip1)
-                                        first = true;
-                                    if (kv.Value.ID == clueTut.Equip2)
-                                        second = true;
-                                    if (kv.Value.ID == clueTut.Equip3)
-                                        third = true;
+                                    ProgressStep(diff, player, Log);
+                                    return true;
                                 }
-
-                                if (!first || !second || !third)
-                                    return false;
-
-                                ProgressStep("Beginner", player, Log);
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (player.CurrentClueEasy != "") {
-                if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(player.CurrentClueEasy, out ClueStep? clueTut)) {
-                    if (clueTut != null) {
-                        if (clueTut.ClueType == clueType && player.NavLoc == clueTut.SolveLoc && interacted == clueTut.EmoteOrNpc) {
-                            if (clueTut.ClueType != "Emote") {
-                                ProgressStep("Easy", player, Log);
-                                return true;
-                            } else {
-                                bool first = false;
-                                bool second = false;
-                                bool third = false;
-
-                                foreach (var kv in GameLoop.ZPO.player.Equipment) {
-                                    if (kv.Value.ID == clueTut.Equip1)
-                                        first = true;
-                                    if (kv.Value.ID == clueTut.Equip2)
-                                        second = true;
-                                    if (kv.Value.ID == clueTut.Equip3)
-                                        third = true;
-                                }
-
-                                if (!first || !second || !third)
-                                    return false;
-
-                                ProgressStep("Easy", player, Log);
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (player.CurrentClueMedium != "") {
-                if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(player.CurrentClueMedium, out ClueStep? clueTut)) {
-                    if (clueTut != null) {
-                        if (clueTut.ClueType == clueType && player.NavLoc == clueTut.SolveLoc && interacted == clueTut.EmoteOrNpc) {
-                            if (clueTut.ClueType != "Emote") {
-                                ProgressStep("Medium", player, Log);
-                                return true;
-                            } else {
-                                bool first = false;
-                                bool second = false;
-                                bool third = false;
-
-                                foreach (var kv in GameLoop.ZPO.player.Equipment) {
-                                    if (kv.Value.ID == clueTut.Equip1)
-                                        first = true;
-                                    if (kv.Value.ID == clueTut.Equip2)
-                                        second = true;
-                                    if (kv.Value.ID == clueTut.Equip3)
-                                        third = true;
-                                }
-
-                                if (!first || !second || !third)
-                                    return false;
-
-                                ProgressStep("Medium", player, Log);
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (player.CurrentClueHard != "") {
-                if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(player.CurrentClueHard, out ClueStep? clueTut)) {
-                    if (clueTut != null) {
-                        if (clueTut.ClueType == clueType && player.NavLoc == clueTut.SolveLoc && interacted == clueTut.EmoteOrNpc) {
-                            if (clueTut.ClueType != "Emote") {
-                                ProgressStep("Hard", player, Log);
-                                return true;
-                            } else {
-                                bool first = false;
-                                bool second = false;
-                                bool third = false;
-
-                                foreach (var kv in GameLoop.ZPO.player.Equipment) {
-                                    if (kv.Value.ID == clueTut.Equip1)
-                                        first = true;
-                                    if (kv.Value.ID == clueTut.Equip2)
-                                        second = true;
-                                    if (kv.Value.ID == clueTut.Equip3)
-                                        third = true;
-                                }
-
-                                if (!first || !second || !third)
-                                    return false;
-
-                                ProgressStep("Hard", player, Log);
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (player.CurrentClueElite != "") {
-                if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(player.CurrentClueElite, out ClueStep? clueTut)) {
-                    if (clueTut != null) {
-                        if (clueTut.ClueType == clueType && player.NavLoc == clueTut.SolveLoc && interacted == clueTut.EmoteOrNpc) {
-                            if (clueTut.ClueType != "Emote") {
-                                ProgressStep("Elite", player, Log);
-                                return true;
-                            } else {
-                                bool first = false;
-                                bool second = false;
-                                bool third = false;
-
-                                foreach (var kv in GameLoop.ZPO.player.Equipment) {
-                                    if (kv.Value.ID == clueTut.Equip1)
-                                        first = true;
-                                    if (kv.Value.ID == clueTut.Equip2)
-                                        second = true;
-                                    if (kv.Value.ID == clueTut.Equip3)
-                                        third = true;
-                                }
-
-                                if (!first || !second || !third)
-                                    return false;
-
-                                ProgressStep("Elite", player, Log);
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (player.CurrentClueMaster != "") {
-                if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(player.CurrentClueMaster, out ClueStep? clueTut)) {
-                    if (clueTut != null) {
-                        if (clueTut.ClueType == clueType && player.NavLoc == clueTut.SolveLoc && interacted == clueTut.EmoteOrNpc) {
-                            if (clueTut.ClueType != "Emote") {
-                                ProgressStep("Master", player, Log);
-                                return true;
-                            } else {
-                                bool first = false;
-                                bool second = false;
-                                bool third = false;
-
-                                foreach (var kv in GameLoop.ZPO.player.Equipment) {
-                                    if (kv.Value.ID == clueTut.Equip1)
-                                        first = true;
-                                    if (kv.Value.ID == clueTut.Equip2)
-                                        second = true;
-                                    if (kv.Value.ID == clueTut.Equip3)
-                                        third = true;
-                                }
-
-                                if (!first || !second || !third)
-                                    return false;
-
-                                ProgressStep("Master", player, Log);
-                                return true;
                             }
                         }
                     }
@@ -273,7 +100,39 @@ namespace ZeroPlayersOnline.Managers {
             }
         }
 
-        public static void SetOrShowStep(string tier, Player player, MessageLog Log) {
+        public static void SetOrShowStep(string tier, Player player, MessageLog Log) { 
+            ref string clueID = ref player.CurrentClueTutorial;
+            
+            if (tier == "Beginner") { clueID = ref player.CurrentClueBeginner; }
+            if (tier == "Easy") { clueID = ref player.CurrentClueEasy; }
+            if (tier == "Medium") { clueID = ref player.CurrentClueMedium; }
+            if (tier == "Hard") { clueID = ref player.CurrentClueHard; }
+            if (tier == "Elite") { clueID = ref player.CurrentClueElite; }
+            if (tier == "Master") { clueID = ref player.CurrentClueMaster; } 
+
+             if (clueID == "") {
+                List<string> allClueSteps = new();
+
+                foreach (var kv in GameLoop.ZPO.ClueStepLibrary) {
+                    if (kv.Value.Difficulty == tier) {
+                        allClueSteps.Add(kv.Key);
+                    }
+                }
+
+                clueID = allClueSteps[GameLoop.rand.Next(allClueSteps.Count)];
+            }
+
+            if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(clueID, out ClueStep? clue) && clue != null) { 
+                if (clue.ClueType != "Map") { 
+                    Log.AddMessage(new ColoredString("Clue: " + clue.HintText, Color.SandyBrown, Color.Black));
+                } else {
+                    ExtraWindows.Clue.IsVisible = true;
+                    ExtraWindows.CurrentClue = clue.ID;
+                    Log.AddMessage(new ColoredString("Clue: " + clue.HintText, Color.SandyBrown, Color.Black));
+                }
+            }
+
+            /*
             if (tier == "Tutorial") {
                 if (player.CurrentClueTutorial == "") {
                     List<string> allTutorialClues = new();
@@ -386,7 +245,7 @@ namespace ZeroPlayersOnline.Managers {
                 if (GameLoop.ZPO.ClueStepLibrary.ContainsKey(player.CurrentClueMaster)) {
                     Log.AddMessage(new ColoredString("Clue: " + GameLoop.ZPO.ClueStepLibrary[player.CurrentClueMaster].HintText, Color.SandyBrown, Color.Black));
                 }
-            }
+            }*/
         }
 
         public static string HelpLog(string which, Player p) {

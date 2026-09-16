@@ -23,6 +23,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public string NeedToolCat = "";
         public string NeededBait = "";
+        public string ExtraAction = "";
 
 
         public List<WeightedItem>? PossibleItems = null;
@@ -30,7 +31,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double LastGathered = 0;
 
-        public GatheringTile(string id, string name, string verb, int succ, int deplete, int restock, string skill = "", int skLevel = 0, int exp = 0, int expFail = 0, int damageOnFail = 0, bool levelBasedSucc = false, string neededTool = "", string neededBait = "", List<WeightedItem>? items = null ) {
+        public GatheringTile(string id, string name, string verb, int succ, int deplete, int restock, string skill = "", int skLevel = 0, int exp = 0, int expFail = 0, int damageOnFail = 0, bool levelBasedSucc = false, string neededTool = "", string neededBait = "", List<WeightedItem>? items = null, string action = "") {
             ID = id;
             Name = name;
             InteractVerb = verb;
@@ -48,6 +49,8 @@ namespace ZeroPlayersOnline.DataTypes {
             LevelBasedSuccess = levelBasedSucc;
             NeedToolCat = neededTool;
             NeededBait = neededBait;
+
+            ExtraAction = action;
         }
 
 
@@ -59,6 +62,12 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public void Gather(Player p, MessageLog log, Dictionary<string, Item> itemLibrary, Location currentLoc, List<Skill> Recents) {
             if (CanGather(p) == "") {
+                if (ExtraAction != "") {
+                    if (ExtraAction == "AltarBoost") {
+                        p.TryAddPotionEffect("Prayer", 5);
+                    }
+                }
+
                 ClueLogic.GenericStep(p, log, "Gather", ID);
 
                 int success = GameLoop.rand.Next(100) + 1;
@@ -92,13 +101,17 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 if (NeededBait != "") {
                     p.ConsumeItems([NeededBait + ",1"]); 
-                }
+                } 
 
                 if (success <= SuccessChance + mod) {
                     int level = 0;
                     if (p.Skills.ContainsKey(Skill))
                         level = p.Skills[Skill].Level;
                     WeightedItem? output = PickItem(level);
+
+                    foreach (var quest in GameLoop.ZPO.QuestLibrary) {
+                        quest.Value.CheckProgress(p, "Gather", ID, 1);
+                    }
 
                     if (output != null) {
                         if (itemLibrary.ContainsKey(output.Item)) {
@@ -107,6 +120,30 @@ namespace ZeroPlayersOnline.DataTypes {
                                 log.AddMessage(new ColoredString("You get " + receive.Name.ToLower() + " from the " + Name + ".", Color.Green, Color.Black));
                             } else {
                                 log.AddMessage(new ColoredString("Your inventory is full so the " + receive.Name.ToLower() + " falls to the ground.", Color.Goldenrod, Color.Black));
+                            }
+
+                            foreach (var quest in GameLoop.ZPO.QuestLibrary) {
+                                quest.Value.CheckProgress(p, "GatheredItem", output.Item, 1);
+                            } 
+
+                            foreach (var invWrap in p.Inventory) {
+                                if (invWrap.GetRef() is Item inv) {
+                                    if ((inv.MiscString == "Spirit" && inv.UseString2 == output.Item) || (Skill == "Fishing" && inv.ID == "spiritFish")) { 
+                                        Item dupe = Helper.Clone(itemLibrary[output.Item]);
+                                        if (p.TryPickup(receive, 1)) {
+                                            log.AddMessage(new ColoredString("A" + (Helper.VowelStart(inv.Name) ? "n ": " ") + inv.Name.ToLower() + " is released, and you receive an extra " + receive.Name.ToLower() + ".", Color.Green, Color.Black));
+                                        } else {
+                                            log.AddMessage(new ColoredString("A" + (Helper.VowelStart(inv.Name) ? "n ": " ") + inv.Name.ToLower() + " is released, and the extra " + receive.Name.ToLower() + " falls to the ground.", Color.Goldenrod, Color.Black));
+                                        }
+
+                                        invWrap.Quantity -= 1;
+
+                                        if (invWrap.Quantity <= 0) {
+                                            p.Inventory.Remove(invWrap);
+                                        }
+                                        break;
+                                    }
+                                }
                             }
 
                             if (output.MiscInt2 != 0) {
@@ -187,6 +224,7 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (!p.HasAllItems([NeededBait + ",1"]))
                     return "a " + GameLoop.ZPO.ResolveItemName(NeededBait).ToLower();
             }
+
             return "";
         }
     }

@@ -1,31 +1,45 @@
 Misthalin Mania
 - Lumbridge locations filled out
 - Draynor Village locations filled out
-- HAM Hideout locations filled out
+- (DONE) HAM Hideout locations filled out
 - Wizard Tower locations filled out
 - Varrock locations filled out
 - Barbarian Village locations filled out
 - Edgeville locations filled out
 - Zanaris locations filled out
 - Lumbridge underground (swamp caves, castle possibly all the way to Dorgesh-kaan? not necessary until the cave goblin quests can be added) locations filled out
-- Quest: Demon Slayer
+- (DONE) Quest: Sheep Shearer
+- (DONE) Quest: Cook's Assistant
+- Quest: Demon Slayer (needs varrock)
 - Quest: The Restless Ghost
-- Quest: Romeo & Juliet
-- Quest: Shield of Arrav
-- Quest: Ernest the Chicken
-- Quest: Vampire Slayer
+- Quest: Romeo & Juliet (needs varrock)
+- Quest: Shield of Arrav (needs varrock)
+- Quest: Ernest the Chicken (needs draynor but christ)
+- Quest: Vampire Slayer (needs varrock)
 - Quest: Imp Catcher
-- Quest: Rune Mysteries
-- Quest: Misthalin Mystery
-- Quest: The Ides of Milk
-- Quest: The Blood Pact
-- Quest: Gertrude's Cat
-- Quest: Priest in Peril
-- Quest: A Soul's Bane
-- Quest: All Fired Up
-- Quest: Lost City
+- Quest: Rune Mysteries (needs varrock)
+- Quest: Misthalin Mystery (just lumbridge i think but this one might be spicy to do right)
+- Quest: The Ides of Milk (just lumbridge, should be fairly straitforward)
+- Quest: The Blood Pact (only lumbridge but so involved)
+- Quest: Gertrude's Cat (needs varrock)
+- Quest: Priest in Peril (needs varrock / silvarea)
+- Quest: A Soul's Bane (needs varrock)
+- Quest: All Fired Up (needs varrock / silvarea)
+- Quest: Lost City (needs port sarim / entrana and god that's gonna suck)
 
 
+Clue scroll window instead of log, at least for the "map" clues since they're so long
+Go back and add more clues as Barbarian Village, Varrock, Draynor, Al Kharid, and Falador are added
+Imp Catcher and Restless Ghost now that Wizard Tower is added
+Buttons that automatically detect the first UseRecipe in your inventory and repeat last
+
+Maybe expand a lil bit into Al Kharid and Port Sarim/Falador to open some more content relevant to Misthalin there?
+- Al Kharid for clue steps and the mine, just to the Shantay Pass and leave the actual desert for later
+- Port Sarim for Entrana, access to be able to expand into Karamja
+- Falador also for the mine
+- If Port Sarim and Falador added, might as well do Rimmington and the Crafting Guild since that's not much more. Taverly/Burthorpe can probably wait, might as well do ice mountain to tie into Barb Village and Edgeville
+
+ 
 Weapon poison, maybe a poison equipment slot that applies to any melee or ranged attack?
 Lumbridge Swamp Caves, make it so maps can require a light source, add some light sources, then fill out the cave
 Optionally hide connections if requirements not met? Maybe default to visible regardless since it'd mostly be for sneaky map copies
@@ -57,16 +71,6 @@ Less immediate but still important:
 - Achievement Diaries / tasks for areas, split into difficulties, reward item for completing it, reward item only if it doesn't exist anywhere in the world, your bank, inventory, or equipment
 - Random Events
 - Skill pets, tiny chance when gaining exp in the skill if pet is not already owned
-
-
-Things Monsters Can Drop Instead of Gathering outputs
-- Logs: wood sppurehearts, if you're chopping a tree and the have corresponding wood sppureheart, consume one sppureheart and get one extra log
-- Ores: ore sppurehearts, if you're mining an ore and have the corresponding ore sppureheart, consume one sppureheart and get one extra ore
-- Fish: enticing bait? generic fish duplicator, if you gather from a fish spot and have these it'll consume one and give you a duplicate of the fish you caught
-- Herbs: potion filler, when you make a potion, if you have any potion filler then the potion will have 4 doses instead of 3
-
-
-
 
 
 
@@ -155,10 +159,12 @@ Clue Step Notes
 - Elite only up to level 80, may require up to master quests
 - Master up to 99, may require up to grandmaster quests
 
+- - Hot and Cold / Coordinate clues: Maybe create a system to check all connections out to 10 layers to see if the target map is in it, then give a response based on shortest distance to it?
+- - Map clues: gives you the description of a map, go to the map and dig there with a spade
+- - Charlie the Tramp: Have to give Charlie a specific item, need to tweak the list a bit to make sure it's all level 10 and under to acquire
+- - Music Steps? Would require finally implementing music
 
-
-Next quests to implement and things they need
-- Cooks Assistant
+Next quests to implement and things they need 
 - Demon Slayer
 - - Locations: Path from Lumbridge to Varrock, a decent portion of Varrock, Wizard tower so also path to Draynor
 - - Mechanics: Boss fight vs Delrith (or temporary monsters), partial item delivery for quest steps?
@@ -167,7 +173,6 @@ Next quests to implement and things they need
 - - Mechanics: Temporary monsters
 - Romeo and Juliet
 - - Locations: Basically all of varrock and the surrounding area / the southeast mine
-- Sheep Shearer
 - Shield of Arrav
 - - Locations: Seedy parts of Varrock, Varrock Castle
 - - Mechanics: Probably just use the RS3 changes to make it solo, can have multiplayer stuff if multiplayer is added later

@@ -60,9 +60,14 @@ namespace ZeroPlayersOnline.DataTypes {
                         if (stage.ProgressType == type && stage.MiscString == misc && stage.MiscInt <= num) {
                             status.CurrentStage = stage.LeadsToStage;
                         }
+
+                        if (status.CurrentStage == CompleteStage) {
+                            GameLoop.ZPO.Log.AddMessage(new ColoredString("You have completed " + Name + "!", Color.Lime, Color.Black));
+                            ProcessRewards(p);
+                        }
                     }
                 }
-            }
+            } 
         }
 
 
@@ -75,10 +80,11 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (kv.RewardType == "Item") {
                     if (kv.MiscString == "Gold") {
                         p.HeldGold += kv.MiscInt;
-                    } else {
-                        if (GameLoop.ZPO.ResolveItem(kv.MiscString) is Item reward) {
+                    } else { 
+                        if (GameLoop.ZPO.ItemLibrary.TryGetValue(kv.MiscString, out Item? reward) && reward != null) {
                             Item pickup = Helper.Clone(reward);
                             pickup.Quantity = kv.MiscInt;
+                            p.TryPickup(pickup, pickup.Quantity);
                         }
                     }
                 }

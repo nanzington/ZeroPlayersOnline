@@ -7,15 +7,20 @@
         public int MiscInt = 0;
         public int MiscInt2 = 0;
 
+        public List<Requirement> Requirements = new();
+
         int IWeighted.Weight { get => Weight; set => Weight = value; }
 
-        public WeightedItem(string i, int w, string misc = "", int misc1 = 0, int misc2 = 0) {
+        public WeightedItem(string i, int w, string misc = "", int misc1 = 0, int misc2 = 0, List<Requirement>? reqs = null) {
             Item = i;
             Weight = w;
 
             MiscString = misc;
             MiscInt = misc1;
             MiscInt2 = misc2;
+
+            if (reqs != null)
+                Requirements = reqs;
         }
     }
 }

@@ -15,6 +15,9 @@ namespace ZeroPlayersOnline.Managers {
         public static string QuestSort = "A->Z"; 
         public static string MagicTab = "Combat"; 
 
+        public static TwoWayString LastFoundRecipe = null;
+        public static TwoWayString LastPerformedRecipe = null;
+
         public static void Draw(UI_EmbeddedMini mini, Player player) {
             Point mousePos = new MouseScreenObjectState(mini.Con, GameHost.Instance.Mouse).CellPosition;
 
@@ -651,7 +654,16 @@ namespace ZeroPlayersOnline.Managers {
                     for (int i = SidebarScrollTop; i < playerSkills.Count && i < SidebarScrollTop + 18; i++) {
                         bool mouseHovering = mousePos.X < 54 && mousePos.Y == printY;
 
-                        mini.Con.Print(1, printY, playerSkills[i].Name, mouseHovering ? Color.Yellow : Color.White);
+                        mini.Con.PrintClickable(1, printY, new ColoredString(playerSkills[i].Name, mouseHovering ? Color.Yellow : Color.White, Color.Black), () => {
+                            ExtraWindows.Compendium.IsVisible = true;
+                            ExtraWindows.ResetAllCompendiumValues(); 
+                            ExtraWindows.CompendiumSidebarTop = 0;
+                            ExtraWindows.CompendiumSourceTop = 0;
+                            ExtraWindows.CompendiumDropTop = 0;
+                            ExtraWindows.CompendiumCat = "Skills";
+                            ExtraWindows.CompendiumViewingID = playerSkills[i].Name;
+                            ExtraWindows.Sources = ExtraWindows.AllSkillUses(playerSkills[i].Name);
+                        });
 
                         int esl = player.GetEffectiveSkillLevel(playerSkills[i].Name);
 
@@ -875,13 +887,24 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (SidebarMenu == "Log") {
                     mini.Con.Print(1, 15, "Clue Collection Logs");
 
+                    if (!player.CollectionLogClues.ContainsKey("casketTutorial")) {
+                        player.CollectionLogClues.Add("casketTutorial", new("casketTutorial"));
+                    }
+
                     if (player.CollectionLogClues.TryGetValue("casketTutorial", out CollectionLogEntry? tutLog) && tutLog != null)
                         mini.Con.PrintClickable(1, 16, new ColoredString("| Tutorial: " + tutLog.ActualObtained().ToString().Align(HorizontalAlignment.Right, 3) + " / " + tutLog.TryFindTotal().ToString().Align(HorizontalAlignment.Right, 3), tutLog.LogComplete() ? Color.Lime : Color.White, Color.Black), () => { ExtraWindows.CollectionID = "casketTutorial"; ExtraWindows.CollectionLog.IsVisible = true; ExtraWindows.CollectionDropTop = 0; ExtraWindows.CollectionCat = "Clue"; });
                     else 
                         mini.Con.Print(1, 16, "| Tutorial: ");
 
+                    if (!player.CollectionLogClues.ContainsKey("casketBeginner")) {
+                        player.CollectionLogClues.Add("casketBeginner", new("casketBeginner"));
+                    }
 
-                    mini.Con.Print(1, 17, "| Beginner: ");
+                    if (player.CollectionLogClues.TryGetValue("casketBeginner", out CollectionLogEntry? begLog) && begLog != null)
+                        mini.Con.PrintClickable(1, 17, new ColoredString("| Beginner: " + begLog.ActualObtained().ToString().Align(HorizontalAlignment.Right, 3) + " / " + begLog.TryFindTotal().ToString().Align(HorizontalAlignment.Right, 3), begLog.LogComplete() ? Color.Lime : Color.White, Color.Black), () => { ExtraWindows.CollectionID = "casketBeginner"; ExtraWindows.CollectionLog.IsVisible = true; ExtraWindows.CollectionDropTop = 0; ExtraWindows.CollectionCat = "Clue"; });
+                    else 
+                        mini.Con.Print(1, 17, "| Beginner: ");
+
                     mini.Con.Print(1, 18, "|     Easy: ");
                     mini.Con.Print(1, 19, "|   Medium: ");
                     mini.Con.Print(1, 20, "|     Hard: ");
@@ -918,7 +941,7 @@ namespace ZeroPlayersOnline.Managers {
                         mini.Con.Print(1, printY++, "(no active potion effects)", Color.DarkSlateGray);
                     }
                 }
-            }
+            } 
         }
 
     }

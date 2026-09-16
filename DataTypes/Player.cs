@@ -602,6 +602,14 @@ namespace ZeroPlayersOnline.DataTypes {
                         }
                     }
 
+                    foreach (var kv in Equipment) {
+                        if (kv.Value.GetRef() is Item eqp) {
+                            if (eqp.MiscString == which + "Boost") {
+                                level += eqp.EquipTier;
+                            }
+                        }
+                    }
+
                     return level;
                 }
             }
@@ -834,7 +842,7 @@ namespace ZeroPlayersOnline.DataTypes {
             foreach (var kv in Equipment) {
                 if (kv.Value.GetRef() is Item eqp) {
                     double num = eqp.EquipTier;
-                    if (eqp.EquipSkill == "Defense") {
+                    if (eqp.EquipSkill == "Defense" || eqp.MiscString == "DefenseAll") {
                         if (eqp.MiscString == "DefenseMelee") {
                             if (against == "Ranged") {
                                 num *= 2;
@@ -939,6 +947,25 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             return "";
+        }
+
+        public void TryAddPotionEffect(string stat, int change) {
+            bool found = false;
+            for (int j = 0; j < ActivePotions.Count; j++) {
+                if (ActivePotions[j].Stat == stat) {
+                    if (ActivePotions[j].Change < 0) {
+                        ActivePotions[j].Change += change;
+                        found = true;
+                    } else {
+                        if (ActivePotions[j].Change < change) {
+                            ActivePotions[j].Change = change;
+                            found = true;
+                        }
+                    }
+                }
+            }
+            if (!found)
+                ActivePotions.Add(new(stat, change));
         }
     }
 }

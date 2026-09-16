@@ -53,6 +53,13 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             tiles.Add(new GatheringTile("sheep", "Sheep", "Shear", 100, 100, 5, "Farming", 0, 0, 0, 0, false, "Shears", "", new() { new("woolRaw", 1) }));
             tiles.Add(new GatheringTile("clueCrates", "Crates", "Search", 100, 100, 5));
+            tiles.Add(new GatheringTile("clueBookcase", "Bookcase", "Search", 100, 100, 5));
+            tiles.Add(new GatheringTile("clueChest", "Chest", "Search", 100, 100, 5));
+            tiles.Add(new GatheringTile("bookshelfWizard", "Bookshelves", "Search", 100, 100, 0));
+            tiles.Add(new GatheringTile("altar", "Altar", "Pray at", 100, 100, 0, action: "AltarBoost"));
+            
+            tiles.Add(new GatheringTile("mistWizAltar", "Altar", "Search", 100, 100, 0, items: new() { new("mistWizGhostSkull", 1, reqs: new() { new("QuestAt", 20, "MI_RestlessGhost") }) })); // Used for Restless Ghost
+            tiles.Add(new GatheringTile("mistLumCoffin", "Coffin", "Search", 100, 100, 0, neededBait: "mistWizGhostSkull")); // Used for Restless Ghost
 
             tiles.Add(new GatheringTile("lumbridgeFlag", "Lumbridge Flag", "Raise", 100, 100, 0)); // TODO: Make this tie into the task/achievement diary system, it's a Lumbridge task
 

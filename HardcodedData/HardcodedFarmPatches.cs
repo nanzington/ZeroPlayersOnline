@@ -12,6 +12,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             // Misthalin
             toAdd.Add(new FarmingPatch("MIST_LumbTree", "Tree"));
+            toAdd.Add(new FarmingPatch("MIST_LumbHops", "Hops"));
 
 
             for (int i = 0; i < toAdd.Count; i++) {

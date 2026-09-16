@@ -31,6 +31,9 @@ namespace ZeroPlayersOnline.DataTypes {
         public List<Requirement> Requirements = new();
         public bool SeeWithoutRequirements = true;
 
+        public bool Inaccessible = false;
+        public bool CountsAsUndead = false;
+
         [JsonIgnore]
         public double TimeLastKilled = 0;
         [JsonIgnore]
@@ -38,7 +41,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double TimeLastAttacked = 0;
 
-        public AreaMonster(string n, string id, int lv, int hp, int dr, int aggroLv, bool aggro, string ddice, string weakness, int respawn, string dtype, List<Requirement>? reqs = null, bool seeAnyways = true) {
+        public AreaMonster(string n, string id, int lv, int hp, int dr, int aggroLv, bool aggro, string ddice, string weakness, int respawn, string dtype, List<Requirement>? reqs = null, bool seeAnyways = true, bool inaccessible = false,bool undead = false) {
             Name = n;
             ID = id;
             Level = lv;
@@ -54,10 +57,26 @@ namespace ZeroPlayersOnline.DataTypes {
             DamageType = dtype;
 
             RespawnTime = respawn;
+            Inaccessible = inaccessible;
+            CountsAsUndead = undead;
 
             if (reqs != null)
                 Requirements = reqs;
             SeeWithoutRequirements = seeAnyways;
         } 
+
+        public bool AllReqsMet(Player p) {
+            bool all = true;
+
+            if (Requirements != null && Requirements.Count > 0) {
+                for (int i = 0; i < Requirements.Count; i++) {
+                    if (!Requirements[i].CheckRequirement(p, false)) {
+                        all = false;
+                    }
+                }
+            }
+
+            return all;
+        }
     }
 }

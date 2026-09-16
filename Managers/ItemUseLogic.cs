@@ -21,22 +21,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     if (item.Potion != null) {
                         for (int i = 0; i < item.Potion.Count; i++) {
-                            bool found = false;
-                            for (int j = 0; j < player.ActivePotions.Count; j++) {
-                                if (player.ActivePotions[j].Stat == item.Potion[i].Stat) {
-                                    if (player.ActivePotions[j].Change < 0) {
-                                        player.ActivePotions[j].Change += item.Potion[i].Change;
-                                        found = true;
-                                    } else {
-                                        if (player.ActivePotions[j].Change < item.Potion[i].Change) {
-                                            player.ActivePotions[j].Change = item.Potion[i].Change;
-                                            found = true;
-                                        }
-                                    }
-                                }
-                            }
-                            if (!found)
-                                player.ActivePotions.Add(Helper.Clone(item.Potion[i]));
+                            player.TryAddPotionEffect(item.Potion[i].Stat, item.Potion[i].Change);
                         } 
                     }
                 } else if (item.UseString == "FillPot") {
@@ -120,49 +105,51 @@ namespace ZeroPlayersOnline.Managers {
                         player.CollectionLogClues.Add(item.ID, new(item.ID)); 
                     player.CollectionLogClues[item.ID].KillCount += 1;
 
-                    for (int j = 0; j < item.DropTable.Count; j++) {
-                        ItemDrop drop = item.DropTable[j]; 
-                        if (player.DropModifier != 2 && player.DropMultiplier != 0) {
-                            if (GameLoop.rand.Next(drop.InY) < (drop.DropX * player.DropMultiplier) || (player.PrayerActive("Good Fortune") && GameLoop.rand.Next(drop.InY) < (drop.DropX * player.DropMultiplier)) || (player.DropModifier == 1 && player.CollectionLogClues[item.ID].DryProtection(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier))))) {
-                                if (GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
-                                    Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[drop.ItemID]);
+                    while (rolledItems.Count < 5) {
+                        for (int j = 0; j < item.DropTable.Count; j++) {
+                            ItemDrop drop = item.DropTable[j]; 
+                            if (player.DropModifier != 2 && player.DropMultiplier != 0) {
+                                if (GameLoop.rand.Next(drop.InY) < (drop.DropX * player.DropMultiplier) || (player.PrayerActive("Good Fortune") && GameLoop.rand.Next(drop.InY) < (drop.DropX * player.DropMultiplier)) || (player.DropModifier == 1 && player.CollectionLogClues[item.ID].DryProtection(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier))))) {
+                                    if (GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
+                                        Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[drop.ItemID]);
 
-                                    if (drop.QuantityMin == drop.QuantityMax)
-                                        spawn.Quantity = drop.QuantityMin;
-                                    else {
-                                        int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
-                                        spawn.Quantity = amt;
-                                    } 
-
-                                    if (player.CollectionLogClues[item.ID].DryProtection(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier)))) {
-                                        GameLoop.ZPO.Log.AddMessage("Due to Dry Protection you receive " + spawn.Name + ".", Color.Lime);
-                                        guaranteedItems.Add(spawn);
-                                    } else {
-                                        rolledItems.Add(spawn);
+                                        if (drop.QuantityMin == drop.QuantityMax)
+                                            spawn.Quantity = drop.QuantityMin;
+                                        else {
+                                            int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
+                                            spawn.Quantity = amt;
+                                        } 
+                                         
+                                        if (player.DropModifier == 1 && player.CollectionLogClues[item.ID].DryProtection(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier)))) {
+                                            GameLoop.ZPO.Log.AddMessage("Due to Dry Protection you receive " + spawn.Name + ".", Color.Lime);
+                                            guaranteedItems.Add(spawn);
+                                        } else {
+                                            rolledItems.Add(spawn);
+                                        }
                                     }
+
+                                    if (!player.CollectionLogClues[item.ID].DropsObtained.ContainsKey(drop.ItemID))
+                                        player.CollectionLogClues[item.ID].DropsObtained.Add(drop.ItemID, 0); 
                                 }
-
-                                if (!player.CollectionLogClues[item.ID].DropsObtained.ContainsKey(drop.ItemID))
-                                    player.CollectionLogClues[item.ID].DropsObtained.Add(drop.ItemID, 0); 
                             }
-                        }
 
-                        if (player.DropModifier == 2) {
-                            if (player.CollectionLogClues[item.ID].NoRNGDrop(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier)))) {
-                                if (!player.CollectionLogClues[item.ID].DropsObtained.ContainsKey(drop.ItemID))
-                                    player.CollectionLogClues[item.ID].DropsObtained.Add(drop.ItemID, 0);
+                            if (player.DropModifier == 2) {
+                                if (player.CollectionLogClues[item.ID].NoRNGDrop(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier)))) {
+                                    if (!player.CollectionLogClues[item.ID].DropsObtained.ContainsKey(drop.ItemID))
+                                        player.CollectionLogClues[item.ID].DropsObtained.Add(drop.ItemID, 0);
 
-                                if (GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
-                                    Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[drop.ItemID]);
+                                    if (GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
+                                        Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[drop.ItemID]);
 
-                                    if (drop.QuantityMin == drop.QuantityMax)
-                                        spawn.Quantity = drop.QuantityMin;
-                                    else {
-                                        int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
-                                        spawn.Quantity = amt;
+                                        if (drop.QuantityMin == drop.QuantityMax)
+                                            spawn.Quantity = drop.QuantityMin;
+                                        else {
+                                            int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
+                                            spawn.Quantity = amt;
+                                        }
+
+                                        guaranteedItems.Add(spawn);
                                     }
-
-                                    guaranteedItems.Add(spawn);
                                 }
                             }
                         }
@@ -194,7 +181,7 @@ namespace ZeroPlayersOnline.Managers {
                             if (rolledItems[i].Quantity > 1)
                                 name = rolledItems[i].Quantity + " " + name + "s";
 
-                            GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it!", excitement, Color.Black));
+                            GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it!" + (player.CollectionLogClues[item.ID].DropsObtained[rolledItems[i].ID] == 1 ? " (new!)" : ""), excitement, Color.Black));
                             player.TryPickup(rolledItems[i], rolledItems[i].Quantity);
                         } else {
                             player.HeldGold += item.UseInt;
@@ -221,9 +208,9 @@ namespace ZeroPlayersOnline.Managers {
                         string name = guaranteedItems[i].Name;
 
                         if (guaranteedItems[i].Quantity > 1)
-                            name = guaranteedItems[i].Quantity + " " + name + "s";
+                            name = guaranteedItems[i].Quantity + " " + name + (name[^1] != 's' ? "s" : "");
 
-                        GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it!", excitement, Color.Black));
+                        GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it! (new)", Color.Lime, Color.Black));
                         player.TryPickup(guaranteedItems[i], guaranteedItems[i].Quantity);
                     } 
                 } else if (item.UseString == "Needle") {
@@ -306,6 +293,26 @@ namespace ZeroPlayersOnline.Managers {
             return false;
         }
 
+        public static bool TryCombineItems(Player player, string first, string second) {
+            UsingSlot = -1;
+            int i = -1;
+
+            for(int j = 0; j < player.Inventory.Count; j++) {
+                if (UsingSlot == -1 && player.Inventory[j].ID == first)
+                    UsingSlot = j;
+                if (UsingSlot != j && player.Inventory[j].ID == second)
+                    i = j;
+            } 
+
+            if (UsingSlot != -1 && i != -1) {
+                return TryCombineItems(player, i);
+            }
+
+            UsingSlot = -1;
+
+            return false;
+        }
+
 
         public static bool TryCombineItems(Player player, int i) {
             if (UsingSlot == -1) {
@@ -334,8 +341,10 @@ namespace ZeroPlayersOnline.Managers {
 
                     UsingSlot = -1;
                 } else { 
-                    if (GameLoop.ZPO.UseRecipes.ContainsKey(new TwoWayString(first, second))) {
-                        Recipe rec = GameLoop.ZPO.UseRecipes[new TwoWayString(first, second)];
+                    TwoWayString two = new TwoWayString(first, second);
+                    if (GameLoop.ZPO.UseRecipes.ContainsKey(two)) {
+                        SidebarManager.LastPerformedRecipe = two;
+                        Recipe rec = GameLoop.ZPO.UseRecipes[two];
                         int firstSlot = UsingSlot;
                         int secondSlot = i;
 
@@ -378,6 +387,23 @@ namespace ZeroPlayersOnline.Managers {
                                 if (GameLoop.ZPO.ItemLibrary.ContainsKey(rec.OutputItem)) {
                                     Item made = Helper.Clone(GameLoop.ZPO.ItemLibrary[rec.OutputItem]);
                                     made.Quantity = rec.OutputQty;
+
+                                    if (rec.SkillUsed == "Herblore" && made.UseInt4 > 0) {
+                                        foreach (var invWrap in player.Inventory) {
+                                            if (invWrap.GetRef() is Item inv) {
+                                                if (inv.ID == "spiritHerb") {   
+                                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("An herb spirit is released, and your vial fills with an extra dose of " + made.Name.ToLower() + ".", Color.Goldenrod, Color.Black));
+                                                    made.UseInt4 = 4;
+                                                    invWrap.Quantity -= 1;
+
+                                                    if (invWrap.Quantity <= 0) {
+                                                        player.Inventory.Remove(invWrap);
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
 
                                     player.TryPickup(made, made.Quantity);
                                 } else {
@@ -445,22 +471,29 @@ namespace ZeroPlayersOnline.Managers {
                     if (player.Equipment.ContainsKey(eqp.EquipSlot)) {
                         if (player.Equipment[eqp.EquipSlot].ID == player.Inventory[i].ID && eqp.Stackable) {
                             player.Equipment[eqp.EquipSlot].Quantity += player.Inventory[i].Quantity; 
+                            player.Inventory.RemoveAt(i);
                             return true;
                         } else {
                             ItemWrapper unequip = player.Equipment[eqp.EquipSlot];
                             player.TryPickup(unequip, unequip.Quantity);
-                            player.Equipment.Remove(eqp.EquipSlot);
-
-                            if (eqp.EquipSlot == "Weapon" && eqp.TwoHanded && player.Equipment.ContainsKey("Offhand")) {
-                                ItemWrapper offhand = player.Equipment["Offhand"];
-                                player.TryPickup(offhand, offhand.Quantity);
-                                player.Equipment.Remove("Offhand");
-                            }
+                            player.Equipment.Remove(eqp.EquipSlot); 
                         }
+                    }
+
+                    if (eqp.EquipSlot == "Weapon" && eqp.TwoHanded && player.Equipment.ContainsKey("Offhand")) {
+                        ItemWrapper offhand = player.Equipment["Offhand"];
+                        player.TryPickup(offhand, offhand.Quantity);
+                        player.Equipment.Remove("Offhand");
+                    }
+
+                    if (eqp.EquipSlot == "Offhand" && player.Equipment.TryGetValue("Weapon", out ItemWrapper? wrap) && wrap.GetRef() is Item item && item.TwoHanded) {
+                        ItemWrapper unequip = player.Equipment["Weapon"];
+                        player.TryPickup(unequip, unequip.Quantity);
+                        player.Equipment.Remove("Weapon");
                     }
                     
                     player.Inventory.RemoveAt(i);
-                    player.Equipment.Add(eqp.EquipSlot, new(eqp));
+                    player.Equipment.Add(eqp.EquipSlot, new(eqp)); 
 
                     return true;
                 }

@@ -393,6 +393,7 @@ namespace ZeroPlayersOnline.UI {
 
             if (!loading && SkippingTutorialIsland > 0) {
                 GameLoop.ZPO.player.NavLoc = "MIST_LumbridgeCastleBailey";
+                GameLoop.ZPO.player.NavRespawn = "MIST_LumbridgeCastleBailey";
                 
                 if (GameLoop.ZPO.player.QuestLog.TryGetValue("TI_HauntedIsland", out QuestStatus? haunted)) { 
                     haunted.CurrentStage = 90; 
@@ -400,6 +401,25 @@ namespace ZeroPlayersOnline.UI {
 
                 if (SkippingTutorialIsland == 2) {
                     if (GameLoop.ZPO.ItemLibrary.TryGetValue("capeCompTI", out Item? cape)) {
+                        foreach (var kv in GameLoop.ZPO.player.Skills) {
+                            kv.Value.Level = 9;
+                            GameLoop.ZPO.player.TryGrantExp(kv.Key, kv.Value.EXPNeeded(), null, null, GameLoop.ZPO.player.OnlyPayToWin);
+                        }
+
+                        GameLoop.ZPO.player.CollectionLogClues.TryAdd("casketTutorial", new("casketTutorial")); 
+                        if (GameLoop.ZPO.ItemLibrary.TryGetValue("casketTutorial", out Item? cask)) {
+                            foreach (var kv in cask.DropTable) {
+                                GameLoop.ZPO.player.CollectionLogClues["casketTutorial"].DropsObtained.TryAdd(kv.ItemID, 1);
+                            }
+                        }
+
+                        GameLoop.ZPO.player.CollectionLogBoss.TryAdd("bossZombie", new("bossZombie")); 
+                        if (GameLoop.ZPO.BossLibrary.TryGetValue("bossZombie", out BossFight? boss)) {
+                            foreach (var kv in boss.DropTable) {
+                                GameLoop.ZPO.player.CollectionLogBoss["bossZombie"].DropsObtained.TryAdd(kv.ItemID, 1);
+                            }
+                        }
+
                         GameLoop.ZPO.player.TryPickup(cape, 1);
                     }
                 }

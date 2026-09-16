@@ -200,7 +200,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_Lumbridge"),
                             new Connection("MIST_LumbridgeBehindCastle")
                         },
-                        NPCsHere = new() { "mistLumHans", "mistLumGee", "man", "man", "man", "woman", "woman" },
+                        NPCsHere = new() { "mistLumHans", "man", "man", "man", "woman", "woman" },
                         AreaMonsters = new() { "rat", "rat", "rat", "imp" },
                         GatheringSpots = new() { "treeOak", "treePine", "treePine" }
                     }); 
@@ -276,9 +276,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                 locsToAdd.Add(new Location("MIST_LumbridgeCastleKitchen", "Lumbridge - Castle Kitchen", "Misthalin") {
                     Description = "A surprisingly humble kitchen, considering it's in a castle. There are a couple tables and crates scattered around almost haphazardly, along with a sink, range, and pile of pots and pans. Various cooking implements hang from racks on the walls, and a trapdoor set into the floor leads to the basement. A door to the side of the kitchen leads directly into the Dining Hall.",
                     ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleFoyer"),
-                        new Connection("MIST_LumbridgeCastleCellar", alt: "(Climb Ladder)"),
-                        new Connection("MIST_LumbridgeCastleDiningHall")
+                        new Connection("MIST_LumbridgeCastleFoyer"), 
+                        new Connection("MIST_LumbridgeCastleDiningHall"),
+                        new Connection("MIST_LumbridgeCastleCellar", alt: "(Climb Ladder)")
                     },
                     ItemSpawns = new List<ItemSpot>() {
                         new ItemSpot("potEmpty", 1),
@@ -319,6 +319,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     ConnectedLocations = new List<Connection>() {
                         new Connection("MIST_LumbridgeCastleBailey"),
                         new Connection("MIST_LumbridgeNorth"),
+                        new Connection("MIST_LumbridgeAcrossLum"),
                         new Connection("MIST_LumbridgeChurch"),
                         new Connection("MIST_LumbridgeGraveyard"),
                         new Connection("MIST_LumbridgeBobsAxes"),
@@ -351,8 +352,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new Connection("MIST_LumbridgeCatacombs"),
                         new Connection("MIST_LumbridgeSwamp5")
                     },
-                    NPCsHere = new() { "mistLumXenia" },
-                    GatheringSpots = new() { "treeYew" }
+                    NPCsHere = new() { "mistLumXenia", "mistLumRestlessGhost" },
+                    GatheringSpots = new() { "treeYew", "mistLumCoffin" }
                 });
 
                 locsToAdd.Add(new Location("MIST_LumbridgeEmptyHouse", "Empty House", "Misthalin") {
@@ -382,7 +383,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new Connection("MIST_LumbridgeMarket"),
                         new Connection("MIST_LumbridgeFishingStore"),
                         new Connection("MIST_LumbridgeShearedRam"),
-                        new Connection("MIST_LumbridgeCommunalForge")
+                        new Connection("MIST_LumbridgeCommunalForge"),
+                        new Connection("MIST_GroatsFarm")
                     },
                     NPCsHere = new() { "man", "man", "man", "man" },
                     GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeWillow", "treeWillow", "fishBaitLow", "fishBaitLow", "fishBaitLow", "fishLure", "fishLure", "fishLure" }
@@ -445,7 +447,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     ItemSpawns = new List<ItemSpot>() {
                         new ItemSpot("hatchetBronze", 1)
                     },
-                    GatheringSpots = new() { "treePine", "treePine", "treePine", "sheep", "sheep", "sheep", "plantPotato", "plantPotato", "plantPotato", "plantGrain", "plantGrain", "plantGrain"},
+                    GatheringSpots = new() { "clueChest", "treePine", "treePine", "treePine", "sheep", "sheep", "sheep", "plantPotato", "plantPotato", "plantPotato", "plantGrain", "plantGrain", "plantGrain"},
                     ProcessingStations = new() { "Windmill" },
                     NPCsHere = new() { "mistLumFred", "farmer" }
                 }); 
@@ -475,13 +477,99 @@ namespace ZeroPlayersOnline.Hardcodes {
                 locsToAdd.Add(new Location("MIST_LumbridgeBehindCastle", "Lumbridge - Behind the Castle", "Misthalin") {
                     Description = "The area behind Lumbridge Castle is lightly forested. For some reason there's an unlocked door leading inside the walls, and nobody is guarding it. A few more poles hang the Lumbridge banner back here. There are a few stray sheep, some rodents of unusual size, some rodents of usual size, and a farming patch to grow trees as well.",
                     ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleBailey")
+                        new Connection("MIST_LumbridgeCastleBailey"), 
+                        new Connection("MIST_LumbridgeTowardsDraynor")
                     },
                     GatheringSpots = new() { "treeOak", "treeOak", "treeYew", "treePine", "treePine", "treePine", "sheep", "sheep" },
                     FarmingPatchesHere = new() { "MIST_LumbTree" },
                     AreaMonsters = new() { "rat", "rat", "rat", "ratGiant", "ratGiant" }
                 });
+
+                locsToAdd.Add(new Location("MIST_LumbridgeTowardsDraynor", "Between Lumbridge and Draynor", "Misthalin") {
+                    Description = "Just outside Lumbridge on the path leading from there to Draynor Village. The path winds back and forth between the small hills of the countryside. A small smattering of monsters and trees can be found here, and a crumbling ruin of a building, but not a lot else of interest. There's a suspicious locked trapdoor in the ruin.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_LumbridgeNorth"),
+                        new Connection("MIST_LumbridgeBehindCastle"),
+                        new Connection("MIST_HamHideout", new() { new("Skill", 5, "Thieving") }, false, 5, "Thieving", "(Pick-lock Trapdoor)"),
+                        new Connection("MIST_DraynorOutskirtsSouth")
+                    },
+                    GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
+                    AreaMonsters = new() { "spiderGiant", "spiderGiant", "goblin", "goblin", "goblin" }
+                });
+
+                locsToAdd.Add(new Location("MIST_LumbridgeAcrossLum", "Across the River Lum", "Misthalin") {
+                    Description = "There is a small ruined shack here surrounded by goblins and a couple giant spiders. A signpost here says 'North: farms and Varrock', 'East: Al Kharid toll gate', 'South: the River Lum', 'West: Lumbridge'.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_GroatsFarm"),
+                        new Connection("DES_AlKharidOutskirts", new() { new("QuestAt", 100, "DES_PrinceAliRescue"), new("Item", 10, "Gold", true) }, true), // TODO: When Prince Ali Rescue is implemented, update this to the actual complete stage
+                        new Connection("MIST_Lumbridge")
+                    },
+                    ItemSpawns = new List<ItemSpot>() {
+                        new ItemSpot("daggerIron", 1)
+                    },
+                    NPCsHere = new() { "desBorderGuard", "mistLumBarfyBill" },
+                    GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeDead", "treeDead", "treeDead" },
+                    AreaMonsters = new() { "goblin", "goblin", "goblin", "goblin", "goblin", "spiderGiant", "spiderGiant" }
+                });
+
+                locsToAdd.Add(new Location("MIST_GroatsFarm", "Groats' Farm", "Misthalin") {
+                    Description = "A sprawling farmstead on the banks of the River Lum, just east of Lumbridge. There are a variety of trees here, a small potato field, a chicken coop, and a modest house where Seth and his daughter live. Some farmhands walk around managing the chores. There's a cow field taking up the east half of the farm, and a farm patch suitable for growing hops.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_VarrockOutskirtsSouth"),
+                        new Connection("MIST_GroatsFarmCows"),
+                        new Connection("MIST_LumbridgeAcrossLum")
+                    },
+                    ItemSpawns = new List<ItemSpot>() {
+                        new ItemSpot("eggChicken", 1)
+                    },
+                    NPCsHere = new() { "mistLumGroatsSeth", "mistLumGroatsGillie" },
+                    ProcessingStations = new() { "Range", "Dairy Churn" },
+                    FarmingPatchesHere = new() { "MIST_LumbHops" },
+                    GatheringSpots = new() { "treeWillow", "treeWillow", "treeWillow", "treeOak", "treeOak", "treePine", "treePine", "treePine", "plantPotato", "plantPotato", "plantPotato" },
+                    AreaMonsters = new() { "farmer", "farmer", "farmer", "chicken", "chicken", "chicken", "chicken", "chicken" }
+                });
+
+                locsToAdd.Add(new Location("MIST_GroatsFarmCows", "Groats' Farm - Cow Pen", "Misthalin") {
+                    Description = "A spacious pen holding many cows, which are grazing passively on the short grass coating the ground of the pen. It is surrounded by a wooden fence, with the Lum and Groats' Farm to the west and a spot north of Al Kharid to the east.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_GroatsFarm"),
+                        new Connection("MIST_GroatsFarmBrutus") // TODO: Block entry until Ides of Milk is progressed enough
+                    },
+                    ItemSpawns = new List<ItemSpot>() {
+                        new ItemSpot("bucketEmpty", 1)
+                    },
+                    ProcessingStations = new() { "Dairy Cow" }, 
+                    AreaMonsters = new() { "cow", "cow", "cow", "cow", "cow", "cow", "cow", "cow" }
+                });
+
+                locsToAdd.Add(new Location("MIST_GroatsFarmBrutus", "Groats' Farm - Brutus", "Misthalin") {
+                    Description = "This part of the field has a huge angry-looking bull with huge horns and red eyes whose name seems to be Brutus. He snorts and stomps around like he owns the place which, at least by the standards of animals, he essentially does. Brutus looks a bit intimidating. Definitely doesn't skip leg day.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_GroatsFarmCows"), 
+                    },
+                    BossHere = "bossBrutus"
+                });
+
+                locsToAdd.Add(new Location("MIST_HamHideout", "H.A.M. Hideout", "Misthalin") {
+                    Description = "This is a surprisingly large cavern lit by braziers and torches. Banners are hung haphazardly everywhere bearing a logo consisting of the letters 'HAM' stylized in purple, green, and red. A handful of wooden benches are facing a small stage that a fanatic is preaching about the evils of 'monsters' on. Other fanatics are scattered around the cavern speaking energetically with eachother. They are all dressed in nearly identical magenta clothing.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_LumbridgeTowardsDraynor", alt: "(Climb Ladder)"),
+                        new Connection("MIST_HamHideoutCells")
+                    }, 
+                    NPCsHere = new() { "hamFemale", "hamFemale", "hamFemale", "hamMale", "hamMale", "hamMale" },
+                    AreaMonsters = new() { "hamGuard", "hamGuard", "hamGuard", "hamGuard", "hamGuard" }
+                });
+
+                locsToAdd.Add(new Location("MIST_HamHideoutCells", "H.A.M. Hideout - Cells", "Misthalin") {
+                    Description = "This small branch off the main hideout is less populated but still lit by braziers and torches. Banners are hung haphazardly everywhere bearing a logo consisting of the letters 'HAM' stylized in purple, green, and red. A few small jail cells are set up with the metal bars sunk into the floor of the cavern.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_HamHideout")
+                    }, 
+                    NPCsHere = new() { "mistHamJimmy", "hamFemale" },
+                    AreaMonsters = new() { "hamGuard", "hamGuard" }
+                });
             }
+
             // Lumbridge Swamp
             {
                 int index = 0;
@@ -922,7 +1010,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new Connection("MIST_LumbridgeSwamp21")
                     },
                     ItemSpawns = new() { new("vambracesLeather", 1) }, 
-                    NPCsHere = new() { "mistLumUrhney" }
+                    NPCsHere = new() { "mistLumUrhney" },
+                    GatheringSpots = new() { "clueBookcase" }
                 });
 
                 locsToAdd.Add(new Location("MIST_LumbridgeSwampShed", "Swamp Shed", "Misthalin") {
@@ -931,7 +1020,84 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new Connection("MIST_LumbridgeSwamp9"),
                         new Connection("MIST_Zanaris")
                     },
-                    ItemSpawns = new() { new("shovel", 1) }
+                    ItemSpawns = new() { new("shovel", 1) },
+                    GatheringSpots = new() { "clueCrates" }
+                });
+            }
+
+            // Draynor Village
+            {
+                locsToAdd.Add(new Location("MIST_DraynorOutskirtsSouth", "Between Draynor and Lumbridge", "Misthalin") {
+                    Description = "Just outside Draynor Village on the path leading from there to Lumbridge. The path winds back and forth between the small hills of the countryside. A smaller path branches off and leads towards the Wizard's Tower. Closer to Draynor, just off the path, is the old jail building. There are a few willow trees here and some fish swarming near the coast.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_DraynorVillage"),
+                        new Connection("MIST_DraynorJail"),
+                        new Connection("MIST_WizardTowerBridge"),
+                        new Connection("MIST_LumbridgeTowardsDraynor"),
+                        new Connection("MIST_LumbridgeSwamp0")
+                    },
+                    GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
+                    AreaMonsters = new() { "spiderGiant", "spiderGiant", "goblin", "goblin", "goblin" }
+                });
+
+                locsToAdd.Add(new Location("MIST_WizardTowerBridge", "Wizard's Tower Bridge", "Misthalin") {
+                    Description = "On the large wide path from the Wizard Tower island to mainland Misthalin. There are a few banners hanging from poles, and some crates left partway down the bridge. The marble Wizard Tower spears into the sky above you, visible from far and wide.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_WizardTowerIsland"),
+                        new Connection("MIST_DraynorOutskirtsSouth")
+                    },
+                    GatheringSpots = new() { "clueCrates" }
+                });
+
+                locsToAdd.Add(new Location("MIST_WizardTowerIsland", "Wizard's Tower Island", "Misthalin") {
+                    Description = "This island holds the Wizard's Tower, towering high above you. Two statues of famous wizards of old stand guard at the bridge entrance, while a fountain is just off the path into the tower. There is some sparse tree and shrub coverage on the island but otherwise not a lot of interest.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_WizardTower"),
+                        new Connection("MIST_WizardTowerBridge")
+                    },
+                    GatheringSpots = new() { "treePine", "treePine" }
+                });
+
+                locsToAdd.Add(new Location("MIST_WizardTower", "Wizard's Tower", "Misthalin") {
+                    Description = "Wizards bustle about in here in the midst of completing various magical research projects. There are a few small rooms here on the first floor, plus a staircase up to the next floor and a ladder down to the basement. One of the rooms contains a library with some bookshelves containing various books that are probably very interesting if you're a wizard doing research.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_WizardTower2F"),
+                        new Connection("MIST_WizardTowerBasement", alt: "(Climb Ladder)"),
+                        new Connection("MIST_WizardTowerIsland")
+                    },
+                    GatheringSpots = new() { "bookshelfWizard", "bookshelfWizard", "bookshelfWizard" },
+                    NPCsHere = new() { "mistWizOnglewip" },
+                    ItemSpawns = new() { new("bootsLeather", 1), new("logPine", 1) },
+                    AreaMonsters = new() { "wizard", "wizard", "wizard", "wizard" }
+                });
+
+                locsToAdd.Add(new Location("MIST_WizardTower2F", "Wizard's Tower - Second Floor", "Misthalin") {
+                    Description = "This floor of the tower seems to be more of a sleeping area than the research areas below or above, with some cots placed in the rooms for weary wizards. There's not much else in here except a nice view through the windows looking out onto the surrounding landscape.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_WizardTower3F"),
+                        new Connection("MIST_WizardTower")
+                    },
+                    NPCsHere = new() { "mistWizTraiborn", "mistWizJalarast" },
+                    AreaMonsters = new() { "wizard", "wizard" }
+                });
+
+                locsToAdd.Add(new Location("MIST_WizardTower3F", "Wizard's Tower - Third Floor", "Misthalin") {
+                    Description = "A decent portion of this floor is taken up by a large cage holding a lesser demon captive inside it. Though you can't reach it with melee attacks, you could probably hit it with ranged and magic attacks without it being able to retaliate. Slightly cruel, but it's a demon, so it's probably okay? There are also some high-ranking wizards up here busying themselves in their offices with various works. Illegible research notes cover a few of the tables up here.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_WizardTower2F")
+                    },
+                    NPCsHere = new() { "mistWizMizgog", "mistWizGrayzag" },
+                    AreaMonsters = new() { "wizDemonLesser", "wizard", "wizard" }
+                });
+
+                locsToAdd.Add(new Location("MIST_WizardTowerBasement", "Wizard's Tower - Third Floor", "Misthalin") {
+                    Description = "A decent portion of this floor is taken up by a large cage holding a lesser demon captive inside it. Though you can't reach it with melee attacks, you could probably hit it with ranged and magic attacks without it being able to retaliate. Slightly cruel, but it's a demon, so it's probably okay? There are also some high-ranking wizards up here busying themselves in their offices with various works. Illegible research notes cover a few of the tables up here.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_WizardTower2F")
+                    },
+                    NPCsHere = new() { "mistWizSedridor" },
+                    AreaMonsters = new() { "chicken", "mistWizSkeleton" },
+                    GatheringSpots = new() { "mistWizAltar" }
                 });
             }
 

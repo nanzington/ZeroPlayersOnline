@@ -623,6 +623,7 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
                 || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
                 || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
+                || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return;
             }
@@ -712,6 +713,46 @@ namespace ZeroPlayersOnline {
             return output;
         } 
 
+        public static int PrintMultiLine(this Console instance, int x, int y, string str, int width, int colR = 255, int colG = 255, int colB = 255, bool center = false) {
+            List<string> words = str.Split(" ").ToList();
+            Color col = new Color(colR, colG, colB);
+
+            int cX = x;
+            int cY = y;
+
+            string line = "";
+
+            foreach (string word in words) {
+                if (line.Length + word.Length + 1 < width && word != "/n") {
+                    line += word + " ";  
+                }
+                else { 
+                    if (center) { 
+                        instance.Print(cX, cY++, line.Align(HorizontalAlignment.Center, width), col, Color.Black);
+                    } else {
+                        instance.Print(cX, cY++, line, col, Color.Black);
+                    }  
+                    
+                    if (word == "/n") {
+                        line = "";
+                    } else {
+                        line = word + " ";
+                    } 
+                }
+            }
+
+            if (line != "") {
+                if (center) { 
+                    instance.Print(cX, cY++, line.Align(HorizontalAlignment.Center, width), col, Color.Black);
+                } else {
+                    instance.Print(cX, cY++, line, col, Color.Black);
+                } 
+            }
+
+            return cY;
+        }
+
+        /* Left for reference in case the new code above ever crashes and burns horribly
         public static int PrintMultiLine(this Console instance, int x, int y, string str, int width, int colR = 255, int colG = 255, int colB = 255) {
             List<string> words = str.Split(" ").ToList();
             Color col = new Color(colR, colG, colB);
@@ -735,50 +776,93 @@ namespace ZeroPlayersOnline {
             }
 
             return cY;
-        }
+        } */
 
-        public static void PrintMultilineClickable(this SadConsole.Console instance, int x, int y, int height, ColoredString str, Action OnClick) {
-            Point mousePos = new MouseScreenObjectState(instance, GameHost.Instance.Mouse).CellPosition;
+        public static int PrintMultiLineClickable(this Console instance, int x, int y, string str, int width, Action OnClick, int colR = 255, int colG = 255, int colB = 255, bool center = false) {
+            List<string> words = str.Split(" ").ToList();
+            Color col = new Color(colR, colG, colB);
 
-            if (mousePos.X >= x && mousePos.X < x + str.Length && mousePos.Y >= y && mousePos.Y < y + height) {
-                str.GetDarker();
-                for (int i = 0; i < height; i++) {
-                    instance.Print(x, y + i, str);
+            
+            MouseScreenObjectState mouse = new MouseScreenObjectState(instance, GameHost.Instance.Mouse);
+            Point mousePos = mouse.CellPosition;
+            bool mouseOn = mouse.IsOnScreenObject; 
+            
+            //instance.Print(x, y, mousePos.X >= x && mousePos.X <= x + length && mousePos.Y == y ? str.GetDarker() : str);
+
+            if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
+                || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
+                || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
+                || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
+                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
+                || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
+                || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
+                || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
+                return y;
+            }
+
+            int cX = x;
+            int cY = y;
+
+            string line = "";
+
+            foreach (string word in words) {
+                bool mouseHere = mousePos.X >= x && mousePos.X <= x + width && mousePos.Y >= y && mousePos.Y <= cY && mouseOn;
+                if (line.Length + word.Length + 1 < width && word != "/n") {
+                    line += word + " ";  
+                }
+                else { 
+                    cY++;
+                    
+                    if (word == "/n") {
+                        line = "";
+                    } else {
+                        line = word + " ";
+                    } 
                 }
             }
-            else {
-                for (int i = 0; i < height; i++) {
-                    instance.Print(x, y + i, str);
+
+            int heightMax = cY;
+
+            cX = x;
+            cY = y;
+            line = "";
+
+            foreach (string word in words) {
+                bool mouseHere = mousePos.X >= x && mousePos.X <= x + width && mousePos.Y >= y && mousePos.Y <= heightMax && mouseOn;
+                if (line.Length + word.Length + 1 < width && word != "/n") {
+                    line += word + " ";  
                 }
+                else { 
+                    if (center) { 
+                        instance.Print(cX, cY++, line.Align(HorizontalAlignment.Center, width), mouseHere ? col.GetDarker() : col, Color.Black);
+                    } else {
+                        instance.Print(cX, cY++, line, mouseHere ? col.GetDarker() : col, Color.Black);
+                    }  
+                    
+                    if (word == "/n") {
+                        line = "";
+                    } else {
+                        line = word + " ";
+                    } 
+                }
+            }
+
+            if (line != "") {
+                bool mouseHere = mousePos.X >= x && mousePos.X <= x + width && mousePos.Y >= y && mousePos.Y <= heightMax && mouseOn;
+                if (center) { 
+                    instance.Print(cX, cY++, line.Align(HorizontalAlignment.Center, width), mouseHere ? col.GetDarker() : col, Color.Black);
+                } else {
+                    instance.Print(cX, cY++, line, mouseHere ? col.GetDarker() : col, Color.Black);
+                } 
             }
 
             if (GameHost.Instance.Mouse.LeftClicked) {
-                if (mousePos.X >= x && mousePos.X < x + str.Length && mousePos.Y >= y && mousePos.Y < y + height) {
+                if (mousePos.X >= x && mousePos.X <= x + width && mousePos.Y >= y && mousePos.Y <= cY - 1 && mouseOn) {
                     OnClick();
                 }
             }
-        }
 
-        public static void PrintMultilineClickable(this SadConsole.Console instance, int x, int y, int height, ColoredString str, Action<string> OnClick, string ID) {
-            Point mousePos = new MouseScreenObjectState(instance, GameHost.Instance.Mouse).CellPosition;
-
-            if (mousePos.X >= x && mousePos.X < x + str.Length && mousePos.Y >= y && mousePos.Y < y + height) {
-                str.GetDarker();
-                for (int i = 0; i < height; i++) { 
-                    instance.Print(x, y + i, str);
-                } 
-            }
-            else {
-                for (int i = 0; i < height; i++) {
-                    instance.Print(x, y + i, str);
-                }
-            }
-
-            if (GameHost.Instance.Mouse.LeftClicked) {
-                if (mousePos.X >= x && mousePos.X < x + str.Length && mousePos.Y >= y && mousePos.Y < y + height) {
-                    OnClick(ID);
-                }
-            }
+            return cY;
         }
 
         public static List<Color> GradientList(int stepsOneWay, Color first, Color second) {
@@ -798,25 +882,73 @@ namespace ZeroPlayersOnline {
          
 
         public static WeightedItem? ChooseWeighted(List<WeightedItem> list, string misc = "", int misc1 = 0) {
-            int totalWeight = list.Sum(c => misc == "" ? c.Weight : ((misc == c.MiscString || c.MiscString == "") && (misc1 >= c.MiscInt || c.MiscInt == 0) ? c.Weight : 0));
-            int currentCount = 0;
-            int targetWeight = GameLoop.rand.Next(0, totalWeight);
+            int totalWeight = 0;
+            int currentCount = 0; 
 
-            foreach (WeightedItem item in list) { 
+            foreach (var item in list) {
                 if (item.MiscString != "") {
                     if (item.MiscString == misc && misc1 >= item.MiscInt) {
-                        currentCount += item.Weight;
-                        if (currentCount > targetWeight) {
-                            return item;
+                        if (item.Requirements != null && item.Requirements.Count > 0) {
+                            bool canAdd = true;
+                            for (int i = 0; i < item.Requirements.Count; i++) {
+                                if (!item.Requirements[i].CheckRequirement(GameLoop.ZPO.player, false)) {
+                                    canAdd = false;
+                                    break;
+                                }
+                            } 
+
+                            if (canAdd) {
+                                totalWeight += item.Weight;
+                            }
+                        } else {
+                            totalWeight += item.Weight;
                         }
                     }
                 } else {
+                    if (item.Requirements != null && item.Requirements.Count > 0) {
+                        bool canAdd = true;
+                        for (int i = 0; i < item.Requirements.Count; i++) {
+                            if (!item.Requirements[i].CheckRequirement(GameLoop.ZPO.player, false)) {
+                                canAdd = false;
+                                break;
+                            }
+                        } 
+
+                        if (canAdd) {
+                            totalWeight += item.Weight;
+                        }
+                    } else {
+                        totalWeight += item.Weight;
+                    }
+                }
+            }
+
+            int targetWeight = GameLoop.rand.Next(0, totalWeight);
+
+            foreach (WeightedItem item in list) { 
+                bool isValid = true;
+
+                if (item.MiscString != "" && item.MiscString == misc) {
+                    if (item.MiscString != misc || misc1 < item.MiscInt) {
+                        isValid = false;
+                    }
+                }
+
+                if (item.Requirements != null && item.Requirements.Count > 0) {
+                    foreach (var req in item.Requirements) {
+                        if (!req.CheckRequirement(GameLoop.ZPO.player, false)) {
+                            isValid = false;
+                        }
+                    }
+                }
+
+                if (isValid) {
                     currentCount += item.Weight;
 
                     if (currentCount > targetWeight) {
                         return item;
                     }
-                }
+                } 
             }
 
             return null;
@@ -849,6 +981,46 @@ namespace ZeroPlayersOnline {
             Point where = new(tx, ty);
 
             return numbers[where.ToIndex(mapW)];
+        }
+
+        public static int SimulateDropTable(List<ItemDrop> table, int maxRewards = -1) {
+            Dictionary<string, int> obtained = new();
+            int cycles = 0;
+            List<string> rolled = new();
+
+            while (obtained.Count != table.Count && cycles < 1000000) {
+                rolled.Clear();
+                 
+                foreach (var drop in table) {
+                    if (GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (GameLoop.ZPO.player.PrayerActive("Good Fortune") && GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
+                        rolled.Add(drop.ItemID);
+                    }
+                }
+
+                if (maxRewards != -1) {
+                    while(rolled.Count < maxRewards) {
+                        foreach (var drop in table) {
+                            if (GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (GameLoop.ZPO.player.PrayerActive("Good Fortune") && GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
+                                rolled.Add(drop.ItemID);
+                            }
+                        }
+                    }
+                }
+
+                if (maxRewards == -1) {
+                    for (int i = 0; i < rolled.Count; i++) {
+                        obtained.TryAdd(rolled[i], 1);
+                    }
+                } else {
+                    for (int i = 0; i < rolled.Count && i < maxRewards; i++) {
+                        obtained.TryAdd(rolled[i], 1);
+                    }
+                }
+
+                cycles++;
+            }
+
+            return cycles;
         }
     }
 

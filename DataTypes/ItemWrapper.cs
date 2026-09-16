@@ -13,15 +13,20 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public Item? Library = null; 
 
+        [JsonIgnore]
+        public bool Inaccessible = false;
+
         public ItemWrapper() { }
 
-        public ItemWrapper(Item wrap) {
+        public ItemWrapper(Item wrap, bool inaccessible = false) {
             ID = wrap.ID;
             Quantity = wrap.Quantity;
              
             Charges = wrap.UseInt4; 
 
             Noted = wrap.Noted;
+
+            Inaccessible = inaccessible;
         }
 
         public ItemWrapper(string id, int qty, bool note = false, int chg = 1) {

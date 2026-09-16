@@ -116,6 +116,12 @@ namespace ZeroPlayersOnline.Hardcodes {
                     toAdd.Add(new("uncut" + mat.Name, "chisel", "cut" + mat.Name, 1, 0, 1, "Crafting", mat.Level, mat.CostMultiplier)); 
                 }
             }
+             
+            toAdd.Add(new("bodyHardleather", "studsSteel", "bodyStudded", 1, 1, 1, "Crafting", 20, 40)); 
+            toAdd.Add(new("coifHardleather", "studsSteel", "coifStudded", 1, 1, 1, "Crafting", 20, 40)); 
+            toAdd.Add(new("chapsHardleather", "studsSteel", "chapsStudded", 1, 1, 1, "Crafting", 20, 40)); 
+            toAdd.Add(new("vambracesHardleather", "studsSteel", "vambracesStudded", 1, 1, 1, "Crafting", 20, 40)); 
+            toAdd.Add(new("bootsHardleather", "studsSteel", "bootsStudded", 1, 1, 1, "Crafting", 20, 40)); 
 
 
 

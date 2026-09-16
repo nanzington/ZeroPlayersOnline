@@ -55,6 +55,9 @@ namespace ZeroPlayersOnline.Managers {
         public static Window Debug;
         public static string DebugMenu = "Unfound";
 
+        public static Window Clue;
+        public static string CurrentClue = "";
+
         public static bool AnyVisible(string except = "") {
             if (CollectionLog.IsVisible && except != "Collection")
                 return true;
@@ -70,6 +73,8 @@ namespace ZeroPlayersOnline.Managers {
                 return true;
             if (Debug.IsVisible && except != "Debug")
                 return true;
+            if (Clue.IsVisible && except != "Clue")
+                return true;
             
             return false;
         }
@@ -82,10 +87,11 @@ namespace ZeroPlayersOnline.Managers {
             Compendium.IsVisible = false;
             Map.IsVisible = false;
             Debug.IsVisible = false;
+            Clue.IsVisible = false;
         }
 
         public static void SetupWindows() {
-            CollectionLog = new(70, 30);
+            CollectionLog = new(100, 30);
             CollectionLog.CanDrag = true;
             CollectionLog.Position = new Point(25, 10);
             CollectionLog.Title = "Collection Log".Align(HorizontalAlignment.Center, 68);
@@ -119,6 +125,11 @@ namespace ZeroPlayersOnline.Managers {
             Debug.CanDrag = true;
             Debug.Position = new Point(25, 10);
             Debug.Title = "Debug Menu".Align(HorizontalAlignment.Center, 98);
+
+            Clue = new(70, 20);
+            Clue.CanDrag = true;
+            Clue.Position = new Point(40, 10);
+            Clue.Title = "Clue Scroll".Align(HorizontalAlignment.Center, 68);
         }
 
         public static void GuideDraw() {
@@ -201,7 +212,7 @@ namespace ZeroPlayersOnline.Managers {
             Map.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Map.IsVisible = false; });
         }
 
-        static List<CompendiumResult> Sources = new();
+        public static List<CompendiumResult> Sources = new();
         
         public static void DebugDraw() {
             Debug.Clear();
@@ -366,8 +377,8 @@ namespace ZeroPlayersOnline.Managers {
 
             foreach (var kv in GameLoop.ZPO.NPCLibrary) {  
                 foreach (var pick in kv.Value.PickpocketLoot) {
-                    if (!GameLoop.ZPO.ItemLibrary.ContainsKey(pick.Item)) {
-                        findings.Add(new("NPC: " + kv.Value.Name + " Pickpocket (" + pick.Item + ")", "", "", "", "", 0));
+                    if (!GameLoop.ZPO.ItemLibrary.ContainsKey(pick.ItemID)) {
+                        findings.Add(new("NPC: " + kv.Value.Name + " Pickpocket (" + pick.ItemID + ")", "", "", "", "", 0));
                     }
                 }
 
@@ -375,7 +386,7 @@ namespace ZeroPlayersOnline.Managers {
                     if (dia.Value.ItemsGiven != null) {
                         foreach (var item in dia.Value.ItemsGiven) {
                             string[] split = item.Split(",");
-                            if (!GameLoop.ZPO.ItemLibrary.ContainsKey(split[0])) {
+                            if (split[0] != "Gold" && !GameLoop.ZPO.ItemLibrary.ContainsKey(split[0])) {
                                 findings.Add(new("NPC: " + kv.Value.Name + " Dialogue (" + split[0] + ")", "", "", "", "", 0));
                             }
                         }
@@ -510,9 +521,11 @@ namespace ZeroPlayersOnline.Managers {
                     qty *= 10;
 
 
-                if (items.Count > 24 && mousePos.X < 30) {
-                    if (Helper.ScrolledUp()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop - qty, 0, items.Count - 24); }
-                    if (Helper.ScrolledDown()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop + qty, 0, items.Count - 24); }
+                if (items.Count > 24) {
+                    if (mousePos.X < 30) {
+                        if (Helper.ScrolledUp()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop - qty, 0, items.Count - 24); }
+                        if (Helper.ScrolledDown()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop + qty, 0, items.Count - 24); }
+                    }
                 } else {
                     CompendiumSidebarTop = 0;
                 }
@@ -916,7 +929,7 @@ namespace ZeroPlayersOnline.Managers {
                             Compendium.Print(32, npcY++, "Pickpocket: " + npc.PickpocketLevel + " (+" + npc.PickpocketEXP + " exp)", Color.White);
 
                             for (int i = 0; i < npc.PickpocketLoot.Count; i++) {
-                                Compendium.PrintClickable(32, npcY++, "| " + GameLoop.ZPO.ResolveItemName(npc.PickpocketLoot[i].Item) + " [" + npc.PickpocketLoot[i].Weight + "]", () => { ResetAllCompendiumValues(); CompendiumCat = "Items"; CompendiumViewingID = npc.PickpocketLoot[i].Item; });
+                                Compendium.PrintClickable(32, npcY++, "| " + GameLoop.ZPO.ResolveItemName(npc.PickpocketLoot[i].ItemID) + " [" + npc.PickpocketLoot[i].DropX + "/" + npc.PickpocketLoot[i].InY + "]", () => { ResetAllCompendiumValues(); CompendiumCat = "Items"; CompendiumViewingID = npc.PickpocketLoot[i].ItemID; });
                             }
                         }
 
@@ -2178,6 +2191,9 @@ namespace ZeroPlayersOnline.Managers {
                     Compendium.Print(32, prayerY++, "Skill Buffed: " + prayer.SkillBuffed, Color.White);
                 } 
             }
+        
+            
+            Compendium.PrintClickable(99, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Compendium.IsVisible = false; });    
         }
 
         public static void ResetAllCompendiumValues() {
@@ -2538,15 +2554,10 @@ namespace ZeroPlayersOnline.Managers {
                         }
                     }
 
-                    if (kv.Value.PickpocketLoot != null) {
-                        int totalWeight = 0;
+                    if (kv.Value.PickpocketLoot != null) {  
                         for (int i = 0; i < kv.Value.PickpocketLoot.Count; i++) {
-                            totalWeight += kv.Value.PickpocketLoot[i].Weight;
-                        }
-
-                        for (int i = 0; i < kv.Value.PickpocketLoot.Count; i++) {
-                            if (kv.Value.PickpocketLoot[i].Item == id) { 
-                                sources.Add(new("Pickpocket: " + kv.Value.PickpocketLoot[i].Weight + "/" + totalWeight + " from " + kv.Value.Name, "NPCs", "", kv.Value.ID, "", 0));
+                            if (kv.Value.PickpocketLoot[i].ItemID == id) { 
+                                sources.Add(new("Pickpocket: " + kv.Value.PickpocketLoot[i].DropX + "/" + kv.Value.PickpocketLoot[i].InY + " from " + kv.Value.Name, "NPCs", "", kv.Value.ID, "", 0));
                             }
                         }
                     }
@@ -2571,9 +2582,10 @@ namespace ZeroPlayersOnline.Managers {
         static List<AreaMonster> monsterList = new();
         static List<BossFight> bossList = new();
 
-        public static void CollectionLogDraw() {
+        public static void CollectionLogDraw() { 
+            Point mousePos = new MouseScreenObjectState(CollectionLog, GameHost.Instance.Mouse).CellPosition;
             CollectionLog.Clear();
-            Helper.DrawBox(CollectionLog, 0, 0, 68, 28);
+            Helper.DrawBox(CollectionLog, 0, 0, 98, 28);
             CollectionLog.Print(2, 0, "[Collection Log]");
 
 
@@ -2588,7 +2600,7 @@ namespace ZeroPlayersOnline.Managers {
                 CollectionLog.PrintClickable(2, 6, new ColoredString("Elite Casket", CollectionID == "casketElite" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketElite"; });
                 CollectionLog.PrintClickable(2, 7, new ColoredString("Master Casket", CollectionID == "casketMaster" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketMaster"; });
                 
-                if (GameLoop.ZPO.ItemLibrary.TryGetValue(CollectionID, out Item? cask) && cask != null) { 
+                if (GameLoop.ZPO.ItemLibrary.TryGetValue(CollectionID, out Item? cask) && cask != null && GameLoop.ZPO.player.CollectionLogClues.ContainsKey(CollectionID)) { 
                     if (cask.DropTable.Count > 24) {
                         if (Helper.ScrolledUp()) { CollectionDropTop = Math.Clamp(CollectionDropTop - 1, 0, cask.DropTable.Count - 24); }
                         if (Helper.ScrolledDown()) { CollectionDropTop = Math.Clamp(CollectionDropTop + 1, 0, cask.DropTable.Count - 24); }
@@ -2600,38 +2612,51 @@ namespace ZeroPlayersOnline.Managers {
                         KC = GameLoop.ZPO.player.CollectionLogClues[CollectionID].KillCount;
                     }
 
-                    CollectionLog.Print(26, 1, (cask.Name + " (" + KC + " Opened)").Align(HorizontalAlignment.Center, 42), Color.White);
-                    CollectionLog.DrawLine(new Point(26, 2), new Point(68, 2), 196, Color.White);
-                    CollectionLog.Print(26, 3, "Item Name", Color.White);
-                    CollectionLog.Print(49, 3, "Chance", Color.White);
-                    CollectionLog.Print(60, 3, "Obtained", Color.White);
-                    CollectionLog.DrawLine(new Point(26, 4), new Point(68, 4), 196, Color.White);
+                    CollectionLog.Print(26, 1, (cask.Name + " (" + KC + " Opened)").Align(HorizontalAlignment.Center, 72), Color.White);
+                    CollectionLog.DrawLine(new Point(26, 2), new Point(98, 2), 196, Color.White);
+                    CollectionLog.Print(27, 3, "Item Name", Color.White);
+                    CollectionLog.Print(79, 3, "Chance", Color.White);
+                    CollectionLog.Print(90, 3, "Obtained", Color.White);
+                    CollectionLog.DrawLine(new Point(26, 4), new Point(98, 4), 196, Color.White);
 
                     int printCount = 0;
-                    for (int i = CollectionDropTop; i < cask.DropTable.Count && i < CollectionDropTop + 24; i++) { 
+                    List<ItemDrop> dropsSorted = cask.DropTable.OrderBy(o => o.InY).ThenBy(p => GameLoop.ZPO.ResolveItemName(p.ItemID)).ToList();
+                    for (int i = CollectionDropTop; i < dropsSorted.Count && i < CollectionDropTop + 24; i++) { 
                         int timesObtained = 0;
 
-                        if (GameLoop.ZPO.player.CollectionLogClues[CollectionID].DropsObtained.ContainsKey(cask.DropTable[i].ItemID)) {
-                            timesObtained = GameLoop.ZPO.player.CollectionLogClues[CollectionID].DropsObtained[cask.DropTable[i].ItemID];
+                        if (GameLoop.ZPO.player.CollectionLogClues[CollectionID].DropsObtained.ContainsKey(dropsSorted[i].ItemID)) {
+                            timesObtained = GameLoop.ZPO.player.CollectionLogClues[CollectionID].DropsObtained[dropsSorted[i].ItemID];
                         }
 
-                        string name = GameLoop.ZPO.ResolveItemName(cask.DropTable[i].ItemID); 
+                        string name = GameLoop.ZPO.ResolveItemName(dropsSorted[i].ItemID); 
 
-                        string dropchance = (cask.DropTable[i].DropX).ToString().PadLeft(5) + " in " + cask.DropTable[i].InY;
+                        if (dropsSorted[i].QuantityMax > 1) {
+                            if (dropsSorted[i].QuantityMin == dropsSorted[i].QuantityMax) {
+                                name += " (" + dropsSorted[i].QuantityMin + ")";
+                            } else { 
+                                name += " (" + dropsSorted[i].QuantityMin + "-" + dropsSorted[i].QuantityMax + ")";
+                            }
+                        }
 
-                        CollectionLog.Print(26, 5 + printCount, name, timesObtained > 0 ? Color.White : Color.DarkSlateGray);
-                        CollectionLog.Print(58, 5 + printCount, timesObtained.ToString().PadLeft(10), timesObtained > 0 ? Color.White : Color.DarkSlateGray);
-                        CollectionLog.Print(45, 5 + printCount, dropchance, timesObtained > 0 ? Color.White : Color.DarkSlateGray);
+                        string dropchance = (dropsSorted[i].DropX).ToString().PadLeft(5) + " in " + dropsSorted[i].InY;
+
+                        Color col = timesObtained > 0 ? Color.White : Color.DarkSlateGray;
+                        if (mousePos.Y == 5 + printCount && mousePos.X > 25)
+                            col = col.GetDarker();
+
+                        CollectionLog.Print(27, 5 + printCount, name, col);
+                        CollectionLog.Print(88, 5 + printCount, timesObtained.ToString().PadLeft(10), col);
+                        CollectionLog.Print(75, 5 + printCount, dropchance, col);
                         printCount++;
                     } 
 
                     if (CollectionDropTop != 0) {
-                        CollectionLog.PrintVertical(69, 5, new ColoredString("^++", Color.Lime, Color.Black));
+                        CollectionLog.PrintVertical(99, 5, new ColoredString("^++", Color.Lime, Color.Black));
                         CollectionLog.PrintVertical(25, 5, new ColoredString("^++", Color.Lime, Color.Black));
                     }
 
                     if (cask.DropTable.Count > CollectionDropTop + 24) {
-                        CollectionLog.PrintVertical(69, 26, new ColoredString("++v", Color.Lime, Color.Black));
+                        CollectionLog.PrintVertical(99, 26, new ColoredString("++v", Color.Lime, Color.Black));
                         CollectionLog.PrintVertical(25, 26, new ColoredString("++v", Color.Lime, Color.Black));
                     }
                 }
@@ -2657,40 +2682,44 @@ namespace ZeroPlayersOnline.Managers {
                         KC = GameLoop.ZPO.player.CollectionLogBoss[view.ID].KillCount;
                     }
 
-                    CollectionLog.Print(26, 1, (view.Name + " (" + KC + " KC)").Align(HorizontalAlignment.Center, 42), Color.White);
-                    CollectionLog.DrawLine(new Point(26, 2), new Point(68, 2), 196, Color.White);
-                    CollectionLog.Print(26, 3, "Item Name", Color.White);
-                    CollectionLog.Print(49, 3, "Chance", Color.White);
-                    CollectionLog.Print(60, 3, "Obtained", Color.White);
-                    CollectionLog.DrawLine(new Point(26, 4), new Point(68, 4), 196, Color.White);
+                    CollectionLog.Print(26, 1, (view.Name + " (" + KC + " KC)").Align(HorizontalAlignment.Center, 72), Color.White);
+                    CollectionLog.DrawLine(new Point(26, 2), new Point(98, 2), 196, Color.White);
+                    CollectionLog.Print(27, 3, "Item Name", Color.White);
+                    CollectionLog.Print(79, 3, "Chance", Color.White);
+                    CollectionLog.Print(90, 3, "Obtained", Color.White);
+                    CollectionLog.DrawLine(new Point(26, 4), new Point(98, 4), 196, Color.White);
 
-                    int printCount = 0;
-                    for (int i = CollectionDropTop; i < view.DropTable.Count && i < CollectionDropTop + 24; i++) {
+                    int printCount = 0; 
+                    List<ItemDrop> dropsSorted = view.DropTable.OrderBy(o => o.InY).ThenBy(p => GameLoop.ZPO.ResolveItemName(p.ItemID)).ToList();
+                    for (int i = CollectionDropTop; i < dropsSorted.Count && i < CollectionDropTop + 24; i++) {
                         int timesObtained = 0;
 
                         if (GameLoop.ZPO.player.CollectionLogBoss.ContainsKey(view.ID)) {
-                            if (GameLoop.ZPO.player.CollectionLogBoss[view.ID].DropsObtained.ContainsKey(view.DropTable[i].ItemID)) {
-                                timesObtained = GameLoop.ZPO.player.CollectionLogBoss[view.ID].DropsObtained[view.DropTable[i].ItemID];
+                            if (GameLoop.ZPO.player.CollectionLogBoss[view.ID].DropsObtained.ContainsKey(dropsSorted[i].ItemID)) {
+                                timesObtained = GameLoop.ZPO.player.CollectionLogBoss[view.ID].DropsObtained[dropsSorted[i].ItemID];
                             }
                         }
 
-                        string name = GameLoop.ZPO.ResolveItemName(view.DropTable[i].ItemID);
+                        string name = GameLoop.ZPO.ResolveItemName(dropsSorted[i].ItemID); 
+                        string dropchance = (dropsSorted[i].DropX).ToString().PadLeft(5) + " in " + dropsSorted[i].InY;
 
-                        string dropchance = (view.DropTable[i].DropX).ToString().PadLeft(5) + " in " + view.DropTable[i].InY;
+                        Color col = timesObtained > 0 ? Color.White : Color.DarkSlateGray;
+                        if (mousePos.Y == 5 + printCount && mousePos.X > 25)
+                            col = col.GetDarker();
 
-                        CollectionLog.Print(26, 5 + printCount, name, timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        CollectionLog.Print(58, 5 + printCount, timesObtained.ToString().PadLeft(10), timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        CollectionLog.Print(45, 5 + printCount, dropchance, timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
+                        CollectionLog.Print(27, 5 + printCount, name, col);
+                        CollectionLog.Print(88, 5 + printCount, timesObtained.ToString().PadLeft(10), col);
+                        CollectionLog.Print(75, 5 + printCount, dropchance, col);
                         printCount++;
                     }
 
                     if (CollectionDropTop != 0) {
-                        CollectionLog.PrintVertical(69, 5, new ColoredString("^++", Color.Lime, Color.Black));
+                        CollectionLog.PrintVertical(99, 5, new ColoredString("^++", Color.Lime, Color.Black));
                         CollectionLog.PrintVertical(25, 5, new ColoredString("^++", Color.Lime, Color.Black));
                     }
 
                     if (view.DropTable.Count > CollectionDropTop + 24) {
-                        CollectionLog.PrintVertical(69, 26, new ColoredString("++v", Color.Lime, Color.Black));
+                        CollectionLog.PrintVertical(99, 26, new ColoredString("++v", Color.Lime, Color.Black));
                         CollectionLog.PrintVertical(25, 26, new ColoredString("++v", Color.Lime, Color.Black));
                     }
                 }
@@ -2716,40 +2745,44 @@ namespace ZeroPlayersOnline.Managers {
                         KC = GameLoop.ZPO.player.CollectionLog[view.ID].KillCount;
                     }
 
-                    CollectionLog.Print(26, 1, (view.Name + " (" + KC + " KC)").Align(HorizontalAlignment.Center, 42), Color.White);
-                    CollectionLog.DrawLine(new Point(26, 2), new Point(68, 2), 196, Color.White);
-                    CollectionLog.Print(26, 3, "Item Name", Color.White);
-                    CollectionLog.Print(49, 3, "Chance", Color.White);
-                    CollectionLog.Print(60, 3, "Obtained", Color.White);
-                    CollectionLog.DrawLine(new Point(26, 4), new Point(68, 4), 196, Color.White);
+                    CollectionLog.Print(26, 1, (view.Name + " (" + KC + " KC)").Align(HorizontalAlignment.Center, 72), Color.White);
+                    CollectionLog.DrawLine(new Point(26, 2), new Point(98, 2), 196, Color.White);
+                    CollectionLog.Print(27, 3, "Item Name", Color.White);
+                    CollectionLog.Print(79, 3, "Chance", Color.White);
+                    CollectionLog.Print(90, 3, "Obtained", Color.White);
+                    CollectionLog.DrawLine(new Point(26, 4), new Point(98, 4), 196, Color.White);
 
                     int printCount = 0;
-                    for (int i = CollectionDropTop; i < view.DropTable.Count && i < CollectionDropTop + 24; i++) {
+                    List<ItemDrop> dropsSorted = view.DropTable.OrderBy(o => o.InY).ThenBy(p => GameLoop.ZPO.ResolveItemName(p.ItemID)).ToList();
+                    for (int i = CollectionDropTop; i < dropsSorted.Count && i < CollectionDropTop + 24; i++) {
                         int timesObtained = 0;
 
                         if (GameLoop.ZPO.player.CollectionLog.ContainsKey(view.ID)) {
-                            if (GameLoop.ZPO.player.CollectionLog[view.ID].DropsObtained.ContainsKey(view.DropTable[i].ItemID)) {
-                                timesObtained = GameLoop.ZPO.player.CollectionLog[view.ID].DropsObtained[view.DropTable[i].ItemID];
+                            if (GameLoop.ZPO.player.CollectionLog[view.ID].DropsObtained.ContainsKey(dropsSorted[i].ItemID)) {
+                                timesObtained = GameLoop.ZPO.player.CollectionLog[view.ID].DropsObtained[dropsSorted[i].ItemID];
                             }
                         }
 
-                        string name = GameLoop.ZPO.ResolveItemName(view.DropTable[i].ItemID);
+                        string name = GameLoop.ZPO.ResolveItemName(dropsSorted[i].ItemID); 
+                        string dropchance = (dropsSorted[i].DropX).ToString().PadLeft(5) + " in " + dropsSorted[i].InY;
 
-                        string dropchance = (view.DropTable[i].DropX).ToString().PadLeft(5) + " in " + view.DropTable[i].InY;
+                        Color col = timesObtained > 0 ? Color.White : Color.DarkSlateGray;
+                        if (mousePos.Y == 5 + printCount && mousePos.X > 25)
+                            col = col.GetDarker();
 
-                        CollectionLog.Print(26, 5 + printCount, name, timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        CollectionLog.Print(58, 5 + printCount, timesObtained.ToString().PadLeft(10), timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
-                        CollectionLog.Print(45, 5 + printCount, dropchance, timesObtained > 0 ? Color.White : Color.DarkSlateGray, Color.Black);
+                        CollectionLog.Print(27, 5 + printCount, name, col);
+                        CollectionLog.Print(88, 5 + printCount, timesObtained.ToString().PadLeft(10), col);
+                        CollectionLog.Print(75, 5 + printCount, dropchance, col);
                         printCount++;
                     }
 
                     if (CollectionDropTop != 0) {
-                        CollectionLog.PrintVertical(69, 5, new ColoredString("^++", Color.Lime, Color.Black));
+                        CollectionLog.PrintVertical(99, 5, new ColoredString("^++", Color.Lime, Color.Black));
                         CollectionLog.PrintVertical(25, 5, new ColoredString("^++", Color.Lime, Color.Black));
                     }
 
                     if (view.DropTable.Count > CollectionDropTop + 24) {
-                        CollectionLog.PrintVertical(69, 26, new ColoredString("++v", Color.Lime, Color.Black));
+                        CollectionLog.PrintVertical(99, 26, new ColoredString("++v", Color.Lime, Color.Black));
                         CollectionLog.PrintVertical(25, 26, new ColoredString("++v", Color.Lime, Color.Black));
                     }
                 }
@@ -2757,11 +2790,11 @@ namespace ZeroPlayersOnline.Managers {
 
 
             
-            CollectionLog.PrintClickable(45, 0, new ColoredString("[CLUE]", CollectionCat == "Clue" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Clue"; });
-            CollectionLog.PrintClickable(52, 0, new ColoredString("[BOSS]", CollectionCat == "Boss" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Boss"; }); 
-            CollectionLog.PrintClickable(59, 0, new ColoredString("[MONSTER]", CollectionCat == "Monster" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Monster"; });
+            CollectionLog.PrintClickable(75, 0, new ColoredString("[CLUE]", CollectionCat == "Clue" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Clue"; });
+            CollectionLog.PrintClickable(82, 0, new ColoredString("[BOSS]", CollectionCat == "Boss" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Boss"; }); 
+            CollectionLog.PrintClickable(89, 0, new ColoredString("[MONSTER]", CollectionCat == "Monster" ? Color.White : Color.DarkSlateGray, Color.Black), () => { CollectionCat = "Monster"; });
 
-            CollectionLog.PrintClickable(69, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { CollectionLog.IsVisible = false; });
+            CollectionLog.PrintClickable(99, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { CollectionLog.IsVisible = false; });
         }
 
         public static void CraftingMenuDraw() { 
@@ -3017,5 +3050,28 @@ namespace ZeroPlayersOnline.Managers {
 
             Quests.PrintClickable(99, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Quests.IsVisible = false; });
         }
+    
+        
+        public static void ClueDraw() {
+            Clue.Clear();
+            Helper.DrawBox(Clue, 0, 0, 68, 18);
+            Clue.Print(2, 0, "[Clue Scroll]".Align(HorizontalAlignment.Center, 66, (char) 196)); 
+
+            if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(CurrentClue, out ClueStep? clue) && clue != null) {
+                if (GameLoop.ZPO.Atlas.TryGetValue(clue.SolveLoc, out Location? loc) && loc != null) {
+                    int endpoint = Clue.PrintMultiLine(2, 0, loc.Description, 66);
+
+                    Clue.Clear();
+                    Helper.DrawBox(Clue, 0, 0, 68, 18);
+                    Clue.Print(2, 0, "[Clue Scroll]".Align(HorizontalAlignment.Center, 66, (char) 196)); 
+
+                    Clue.PrintMultiLine(2, (20 - endpoint) / 2, loc.Description, 66, center: true);
+                }
+            }
+             
+            
+            Clue.Print(2, 18, "Find the map location with this description.", Color.DarkSlateGray); 
+            Clue.PrintClickable(69, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Clue.IsVisible = false; });
+        }    
     }
 }
