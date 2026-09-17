@@ -56,25 +56,29 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             itemsToAdd.Add(new Item("Arrow shaft", "The most important part of an arrow.", "arrowshaft", 139, 69, 19, 2, true));
             itemsToAdd.Add(new Item("Headless shafts", "An arrow shaft with a feather attached. Needs to be tipped.", "headlessShaft", 139, 69, 19, 2, true));
+            itemsToAdd.Add(new Item("Flax", "I should use this with a spinning wheel.", "flax", 189, 246, 254, 5));
+            itemsToAdd.Add(new Item("Bow string", "I need a bow stave to attach this to.", "bowstring", 207, 185, 151, 10));
+            itemsToAdd.Add(new Item("Sinew", "I can use this to make a crossbow string.", "sinew", 207, 185, 151, 10));
+            itemsToAdd.Add(new Item("Crossbow string", "A string for a crossbow.", "crossbowString", 207, 185, 151, 10));
 
 
             // Fletching Factory
             List<MaterialDef> Woods = new() {
-                new("Pine", ColorLib.Pine, 1, 1, 5, "pine"),
-                new("Oak", ColorLib.Oak, 2, 10, 20, "oak"),
-                new("Willow", ColorLib.Willow, 3, 20, 40, "willow"),
-                new("Teak", ColorLib.Teak, 4, 30, 30, "teak"),
-                new("Maple", ColorLib.Maple, 5, 40, 80, "maple"),
-                new("Acadia", ColorLib.Acadia, 6, 50, 85, "acadia"),
-                new("Mahogany", ColorLib.Mahogany, 7, 60, 50, "mahogany"),
-                new("Yew", ColorLib.Yew, 8, 70, 160, "yew"),
-                new("Magic", ColorLib.Magic, 9, 80, 320, "magic"),
-                new("Elder", ColorLib.Elder, 10, 90, 480, "elder")
+                new("Pine", ColorLib.Pine, 1, 1, 5, "bronze"),
+                new("Oak", ColorLib.Oak, 2, 10, 20, "iron"),
+                new("Willow", ColorLib.Willow, 3, 20, 40, "steel"),
+                new("Teak", ColorLib.Teak, 4, 30, 30, "mithril"),
+                new("Maple", ColorLib.Maple, 5, 40, 80, "adamant"),
+                new("Acadia", ColorLib.Acadia, 6, 50, 85, "rune"),
+                new("Mahogany", ColorLib.Mahogany, 7, 60, 50, "orichalcum"),
+                new("Yew", ColorLib.Yew, 8, 70, 160, "necrite"),
+                new("Magic", ColorLib.Magic, 9, 80, 320, "banite"),
+                new("Elder", ColorLib.Elder, 10, 90, 480, "elder rune")
             };
 
             foreach (var mat in Woods) { 
-                itemsToAdd.Add(new Item(mat.Name + " shortbow (u)", "A shortbow stave fletched from " + mat.Descriptor + ".", "shortbow" + mat.Name + "U", mat.R, mat.G, mat.B, mat.CostMultiplier));
-                itemsToAdd.Add(new Item(mat.Name + " shortbow", "A shortbow fletched from " + mat.Descriptor + ".", "shortbow" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier + 15) {
+                itemsToAdd.Add(new Item(mat.Name + " shortbow (u)", "A shortbow stave fletched from " + mat.Name.ToLower() + ".", "shortbow" + mat.Name + "U", mat.R, mat.G, mat.B, mat.CostMultiplier));
+                itemsToAdd.Add(new Item(mat.Name + " shortbow", "A shortbow fletched from " + mat.Name.ToLower() + ".", "shortbow" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier + 15) {
                     EquipSlot = "Weapon",
                     EquipTier = mat.Tier,
                     EquipLevel = mat.Level, 
@@ -85,8 +89,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                     TwoHanded = true
                 });
 
-                itemsToAdd.Add(new Item(mat.Name + " longbow (u)", "A longbow stave fletched from " + mat.Descriptor + ".", "longbow" + mat.Name + "U", mat.R, mat.G, mat.B, mat.CostMultiplier));
-                itemsToAdd.Add(new Item(mat.Name + " longbow", "A longbow fletched from " + mat.Descriptor + ".", "longbow" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier + 15) {
+                itemsToAdd.Add(new Item(mat.Name + " longbow (u)", "A longbow stave fletched from " + mat.Name.ToLower() + ".", "longbow" + mat.Name + "U", mat.R, mat.G, mat.B, mat.CostMultiplier));
+                itemsToAdd.Add(new Item(mat.Name + " longbow", "A longbow fletched from " + mat.Name.ToLower() + ".", "longbow" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier + 15) {
                     EquipSlot = "Weapon",
                     EquipTier = mat.Tier + 1,
                     EquipLevel = mat.Level, 
@@ -96,7 +100,30 @@ namespace ZeroPlayersOnline.Hardcodes {
                     AttackSpeed = 1.25, 
                     TwoHanded = true
                 });
-            }  
+
+                itemsToAdd.Add(new Item(mat.Name + " composite bow", "A composite bow fletched from " + mat.Name.ToLower() + ".", "compbow" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier * 10) {
+                    EquipSlot = "Weapon",
+                    EquipTier = mat.Tier + 1,
+                    EquipLevel = mat.Level, 
+                    EquipDamageType = "RangedStandard",
+                    EquipSkill = "Ranged",
+                    EquipAmmo = "RangedStandard",
+                    AttackSpeed = 1, 
+                    TwoHanded = true
+                });
+
+                itemsToAdd.Add(new Item(mat.Name + " stock", "A crossbow stock fletched from " + mat.Name.ToLower() + ". Could be attached to " + mat.Descriptor + " limbs.", "stock" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier));
+                itemsToAdd.Add(new Item(mat.Name + " crossbow (u)", "An unstrung crossbow stock fletched from " + mat.Name.ToLower() + " attached to " + mat.Descriptor + " limbs.", "crossbow" + mat.Name + "U", mat.R, mat.G, mat.B, mat.CostMultiplier));
+                itemsToAdd.Add(new Item(mat.Name + " crossbow", "A crossbow made from " + mat.Name.ToLower() + " and " + mat.Descriptor + ". Fires bolts.", "crossbow" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier * 2) {
+                    EquipSlot = "Weapon",
+                    EquipTier = mat.Tier,
+                    EquipLevel = mat.Level, 
+                    EquipDamageType = "RangedHeavy",
+                    EquipSkill = "Ranged",
+                    EquipAmmo = "RangedHeavy",
+                    AttackSpeed = 1
+                });
+            }   
 
             itemsToAdd.Add(new Item("Shovel", "Could be used to dig for buried treasure.", "shovel", 200, 200, 200, 3) { UseString = "Dig", ConsumedOnUse = false });
             itemsToAdd.Add(new Item("Map (Lumbridge Swamp)", "Useful for navigating a confusing swamp.", "mapLumbridgeSwamp", Color.Khaki, 3) { Noteable = false, EquipSlot = "Pocket", UseString = "Map", UseString2 = "Lumbridge Swamp", UseInt = 6, UseInt2 = 4, ConsumedOnUse = false });
@@ -287,14 +314,315 @@ namespace ZeroPlayersOnline.Hardcodes {
                     DestroyOnDrop = true
                 });
 
-                itemsToAdd.Add(new Item("Clue casket (beginner)", "The treasure at the end of the hunt! What could be inside?", "casketEasy", 218, 165, 32, 0, true, false) {
+                itemsToAdd.Add(new Item("Clue casket (easy)", "The treasure at the end of the hunt! What could be inside?", "casketEasy", 218, 165, 32, 0, true, false) {
                     UseString = "Casket",
                     UseString2 = "Easy",
                     UseInt = 10000,
                     DropTable = {
-                        new ItemDrop("clueFeetMole", 1, 360, 1, 1),
+                        new ItemDrop("compbowWillow", 1, 360, 1, 1),
+                        new ItemDrop("clueAmuletMagicT", 1, 360, 1, 1),
+                        new ItemDrop("helmBlackT", 1, 1404, 1, 1),
+                        new ItemDrop("platebodyBlackT", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsBlackT", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtBlackT", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldBlackT", 1, 1404, 1, 1),
+                        new ItemDrop("helmBlackG", 1, 1404, 1, 1),
+                        new ItemDrop("platebodyBlackG", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsBlackG", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtBlackG", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldBlackG", 1, 1404, 1, 1),
+                        new ItemDrop("helmBlackH", 1, 1404, 1, 1),
+                        new ItemDrop("platebodyBlackH", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsBlackH", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtBlackH", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldBlackH", 1, 1404, 1, 1),
+                        new ItemDrop("helmSteelT", 1, 1404, 1, 1),
+                        new ItemDrop("platebodySteelT", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsSteelT", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtSteelT", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldSteelT", 1, 1404, 1, 1),
+                        new ItemDrop("helmSteelG", 1, 1404, 1, 1),
+                        new ItemDrop("platebodySteelG", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsSteelG", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtSteelG", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldSteelG", 1, 1404, 1, 1),
+                        new ItemDrop("helmIronT", 1, 1404, 1, 1),
+                        new ItemDrop("platebodyIronT", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsIronT", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtIronT", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldIronT", 1, 1404, 1, 1),
+                        new ItemDrop("helmIronG", 1, 1404, 1, 1),
+                        new ItemDrop("platebodyIronG", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsIronG", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtIronG", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldIronG", 1, 1404, 1, 1), 
+                        new ItemDrop("helmBronzeT", 1, 1404, 1, 1),
+                        new ItemDrop("platebodyBronzeT", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsBronzeT", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtBronzeT", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldBronzeT", 1, 1404, 1, 1),
+                        new ItemDrop("helmBronzeG", 1, 1404, 1, 1),
+                        new ItemDrop("platebodyBronzeG", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsBronzeG", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtBronzeG", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldBronzeG", 1, 1404, 1, 1),
+                        new ItemDrop("bodyStuddedG", 1, 1404, 1, 1),
+                        new ItemDrop("chapsStuddedG", 1, 1404, 1, 1),
+                        new ItemDrop("bodyStuddedT", 1, 1404, 1, 1),
+                        new ItemDrop("chapsStuddedT", 1, 1404, 1, 1),
+                        new ItemDrop("bodyLeatherG", 1, 1404, 1, 1),
+                        new ItemDrop("chapsLeatherG", 1, 1404, 1, 1),
+                        new ItemDrop("bodyLeatherT", 1, 1404, 1, 1),
+                        new ItemDrop("chapsLeatherT", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlueHatG", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlueRobeG", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlueBottomG", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlueHatT", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlueRobeT", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlueBottomT", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlackHatG", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlackRobeG", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlackBottomG", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlackHatT", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlackRobeT", 1, 1404, 1, 1),
+                        new ItemDrop("wizardBlackBottomT", 1, 1404, 1, 1),
+                        new ItemDrop("clueSaradominTop", 1, 1404, 1, 1),
+                        new ItemDrop("clueSaradominBottom", 1, 1404, 1, 1),
+                        new ItemDrop("clueGuthixTop", 1, 1404, 1, 1),
+                        new ItemDrop("clueGuthixBottom", 1, 1404, 1, 1),
+                        new ItemDrop("clueZamorakTop", 1, 1404, 1, 1),
+                        new ItemDrop("clueZamorakBottom", 1, 1404, 1, 1),
+                        new ItemDrop("clueAncientTop", 1, 1404, 1, 1),
+                        new ItemDrop("clueAncientBottom", 1, 1404, 1, 1),
+                        new ItemDrop("clueArmadylTop", 1, 1404, 1, 1),
+                        new ItemDrop("clueArmadylBottom", 1, 1404, 1, 1),
+                        new ItemDrop("clueBandosTop", 1, 1404, 1, 1),
+                        new ItemDrop("clueBandosBottom", 1, 1404, 1, 1),
+                        new ItemDrop("clueBobShirtRed", 1, 1404, 1, 1),
+                        new ItemDrop("clueBobShirtGreen", 1, 1404, 1, 1),
+                        new ItemDrop("clueBobShirtBlue", 1, 1404, 1, 1),
+                        new ItemDrop("clueBobShirtBlack", 1, 1404, 1, 1),
+                        new ItemDrop("clueBobShirtPurple", 1, 1404, 1, 1),
+                        new ItemDrop("clueHighwaymanMask", 1, 1404, 1, 1),
+                        new ItemDrop("clueBeretBlue", 1, 1404, 1, 1),
+                        new ItemDrop("clueBeretBlack", 1, 1404, 1, 1),
+                        new ItemDrop("clueBeretRed", 1, 1404, 1, 1),
+                        new ItemDrop("clueBeretWhite", 1, 1404, 1, 1),
+                        new ItemDrop("cluePowderedWig", 1, 1404, 1, 1),
+                        new ItemDrop("clueBeanie", 1, 1404, 1, 1),
+                        new ItemDrop("clueMaskImp", 1, 1404, 1, 1),
+                        new ItemDrop("clueMaskGoblin", 1, 1404, 1, 1),
+                        new ItemDrop("clueSleepingCap", 1, 1404, 1, 1),
+                        new ItemDrop("clueFlaredTrousers", 1, 1404, 1, 1),
+                        new ItemDrop("cluePantaloons", 1, 1404, 1, 1),
+                        new ItemDrop("clueCaneBlack", 1, 1404, 1, 1),
+                        new ItemDrop("clueStaffBob", 1, 1404, 1, 1),
+                        new ItemDrop("clueAmuletPowerT", 1, 1404, 1, 1),
+                        new ItemDrop("clueHamJoint", 1, 1404, 1, 1),
+                        new ItemDrop("clueRainbow", 1, 1404, 1, 1),
+                        new ItemDrop("clueGoldenChefHat", 1, 2808, 1, 1),
+                        new ItemDrop("clueGoldenChefApron", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantShirtRed", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantBlouseRed", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantLegsRed", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantSkirtRed", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantShirtGreen", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantBlouseGreen", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantLegsGreen", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantSkirtGreen", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantShirtBlue", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantBlouseBlue", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantLegsBlue", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantSkirtBlue", 1, 2808, 1, 1),
+                        new ItemDrop("clueCapeTeamZero", 1, 5616, 1, 1),
+                        new ItemDrop("clueCapeTeamI", 1, 5616, 1, 1),
+                        new ItemDrop("clueCapeTeamX", 1, 5616, 1, 1),
+                        new ItemDrop("clueCapeSkulls", 1, 5616, 1, 1),
+                        new ItemDrop("clueTopMonkG", 1, 14040, 1, 1),
+                        new ItemDrop("clueBottomMonkG", 1, 14040, 1, 1),
+                        new ItemDrop("helmBlack", 1, 36, 1, 1),
+                        new ItemDrop("platebodyBlack", 1, 36, 1, 1),
+                        new ItemDrop("platelegsBlack", 1, 36, 1, 1),
+                        new ItemDrop("swordBlack", 1, 36, 1, 1),
+                        new ItemDrop("battleaxeBlack", 1, 36, 1, 1),
+                        new ItemDrop("hatchetBlack", 1, 36, 1, 1),
+                        new ItemDrop("daggerBlack", 1, 36, 1, 1),
+                        new ItemDrop("pickaxeSteel", 1, 36, 1, 1),
+                        new ItemDrop("pickaxeBlack", 1, 36, 1, 1),
+                        new ItemDrop("coifStudded", 1, 36, 1, 1),
+                        new ItemDrop("bodyStudded", 1, 36, 1, 1),
+                        new ItemDrop("chapsStudded", 1, 36, 1, 1),
+                        new ItemDrop("shortbowWillow", 1, 36, 1, 1),
+                        new ItemDrop("staffAir", 1, 36, 1, 1),
+                        new ItemDrop("longbowWillow", 1, 36, 1, 1),
+                        new ItemDrop("amuletMagic", 1, 36, 1, 1),
+                        new ItemDrop("runeAir", 1, 36, 30, 50),
+                        new ItemDrop("runeMind", 1, 36, 30, 50),
+                        new ItemDrop("runeWater", 1, 36, 30, 50),
+                        new ItemDrop("runeEarth", 1, 36, 30, 50),
+                        new ItemDrop("runeFire", 1, 36, 30, 50),
+                        new ItemDrop("runeBody", 1, 36, 30, 50),
+                        new ItemDrop("runeChaos", 1, 36, 5, 10),
+                        new ItemDrop("runeNature", 1, 36, 5, 10),
+                        new ItemDrop("runeLaw", 1, 36, 5, 10),
+                        new ItemDrop("cluePurpleSweets", 1, 36, 2, 6, altlog: "General"),
+                        new ItemDrop("clueFirelighterRed", 1, 180, 3, 5, altlog: "General"),
+                        new ItemDrop("clueFirelighterGreen", 1, 180, 3, 5, altlog: "General"),
+                        new ItemDrop("clueFirelighterBlue", 1, 180, 3, 5, altlog: "General"),
+                        new ItemDrop("clueFirelighterPurple", 1, 180, 3, 5, altlog: "General"),
+                        new ItemDrop("clueFirelighterWhite", 1, 180, 3, 5, altlog: "General"),
+                        new ItemDrop("clueChargeDragonstoneScroll", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportNardah", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportMosLeHarmless", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportMortton", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportFeldipHills", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportLunar", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportDigsite", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportPiscatoris", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportPestControl", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportTaiBwoWannai", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportLumberyard", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportIorwerthCamp", 1, 453, 5, 15, altlog: "General"),
+                        new ItemDrop("clueMasterScrollBook", 1, 793, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageSaradomin1", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageSaradomin2", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageSaradomin3", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageSaradomin4", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageZamorak1", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageZamorak2", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageZamorak3", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageZamorak4", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageGuthix1", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageGuthix2", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageGuthix3", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageGuthix4", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageBandos1", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageBandos2", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageBandos3", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageBandos4", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageArmadyl1", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageArmadyl2", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageArmadyl3", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageArmadyl4", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageAncient1", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageAncient2", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageAncient3", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageAncient4", 1, 864, 1, 1, altlog: "General"),
+                        new ItemDrop("clueHolyBlessing", 1, 2160, 1, 1, altlog: "General"),
+                        new ItemDrop("clueUnholyBlessing", 1, 2160, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePeacefulBlessing", 1, 2160, 1, 1, altlog: "General"),
+                        new ItemDrop("clueWarBlessing", 1, 2160, 1, 1, altlog: "General"),
+                        new ItemDrop("clueHonourableBlessing", 1, 2160, 1, 1, altlog: "General"),
+                        new ItemDrop("clueAncientBlessing", 1, 2160, 1, 1, altlog: "General"),
+                        new ItemDrop("clueScrollMaster", 1, 50, 1, 1, altlog: "General")
                     }
                 });
+
+                // Easy Clue Uniques
+                itemsToAdd.Add(new Item("Amulet of magic (t)", "An enchanted sapphire amulet of magic.", "clueAmuletMagicT", Color.DeepSkyBlue, 900) { EquipSlot = "Amulet", MiscString = "MagicBoost", EquipTier = 5 });
+                itemsToAdd.Add(new Item("Bob's red shirt", "'Bob says: Never give your password out to anyone.'", "clueBobShirtRed", Color.Crimson, 3) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Bob's green shirt", "'Bob says: Never trade in the wilderness!'", "clueBobShirtGreen", Color.Green, 3) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Bob's blue shirt", "'Bob says: Always check the second trade screen.'", "clueBobShirtBlue", Color.Turquoise, 3) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Bob's black shirt", "'Bob says: A bank pin will keep your items secure.'", "clueBobShirtBlack", Color.DimGray, 3) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Bob's purple shirt", "'Bob says: Keep your computer keylogger free and virus scanned.'", "clueBobShirtPurple", Color.MediumPurple, 3) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Highwayman mask", "Your money or your life!", "clueHighwaymanMask", Color.DimGray, 40) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Blue beret", "Parlez-vous francais?", "clueBeretBlue", Color.CadetBlue, 80) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Black beret", "Parlez-vous francais?", "clueBeretBlack", Color.DimGray, 80) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Red beret", "Parlez-vous francais?", "clueBeretRed", Color.Crimson, 80) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("White beret", "Parlez-vous francais?", "clueBeretWhite", Color.White, 80) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("A powdered wig", "A big do about nothing.", "cluePowderedWig", Color.White, 2000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Beanie", "Weeeeeee!", "clueBeanie", Color.Yellow, 600) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Imp mask", "What mischief can I get up to with this?", "clueMaskImp", Color.Crimson, 2000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Goblin mask", "Let's start a flash mob!", "clueMaskGoblin", Color.ForestGreen, 2000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Sleeping cap", "A cap for wearing whilzzzzzzzzzz.", "clueSleepingCap", Color.SkyBlue, 2000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Flared trousers", "These'll help me stay alive.", "clueFlaredTrousers", Color.White, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Pantaloons", "Alas, someone has slashed my pantaloons.", "cluePantaloons", Color.Purple, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Black cane", "A ruby topped cane.", "clueCaneBlack", Color.DimGray, 600) { EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush" });
+                itemsToAdd.Add(new Item("Staff of Bob the Cat", "A staff styled after the elusive cat.", "clueStaffBob", Color.DimGray, 600) { EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush" });
+                itemsToAdd.Add(new Item("Amulet of power (t)", "An enchanted diamond amulet of magic.", "clueAmuletPowerT", Color.White, 900) { EquipSlot = "Amulet", MiscString = "OffenseBoost", EquipTier = 2 });
+                itemsToAdd.Add(new Item("Ham joint", "A delicious joint of ham.", "clueHamJoint", Color.Pink, 1500) { EquipSlot = "Weapon",  EquipTier = 0, EquipSkill = "Attack", EquipLevel = 0, EquipDamageType = "Crush" });
+                itemsToAdd.Add(new Item("Rain bow", "Short but effective and very colorful.", "clueRainbow", Color.White, 500) {
+                    EquipSlot = "Weapon",
+                    EquipTier = 1,
+                    EquipLevel = 1, 
+                    EquipDamageType = "RangedStandard",
+                    EquipSkill = "Ranged",
+                    EquipAmmo = "RangedStandard",
+                    AttackSpeed = 0.75, 
+                    TwoHanded = true
+                });
+                itemsToAdd.Add(new Item("Golden chef's hat", "What a perfectly reasonable hat.", "clueGoldenChefHat", Color.Goldenrod, 2) { EquipSlot = "Head", Cosmetic = true, MiscString = "CountsAs", UseString2 = "chefHat" });
+                itemsToAdd.Add(new Item("Golden chef's apron", "What a perfectly reasonable hat.", "clueGoldenChefApron", Color.Goldenrod, 2) { EquipSlot = "Body", Cosmetic = true, MiscString = "CountsAs", UseString2 = "brownApron" });
+                itemsToAdd.Add(new Item("Red elegant shirt", "A well made elegant men's red shirt.", "clueElegantShirtRed", Color.Maroon, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Red elegant blouse", "A well made elegant ladies' red blouse.", "clueElegantBlouseRed", Color.Maroon, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Red elegant legs", "A rather elegant pair of men's red pantaloons.", "clueElegantLegsRed", Color.Maroon, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Red elegant skirt", "A rather elegant red skirt.", "clueElegantSkirtRed", Color.Maroon, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Green elegant shirt", "A well made elegant men's green shirt.", "clueElegantShirtGreen", Color.SpringGreen, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Green elegant blouse", "A well made elegant ladies' green blouse.", "clueElegantBlouseGreen", Color.SpringGreen, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Green elegant legs", "A rather elegant pair of men's green pantaloons.", "clueElegantLegsGreen", Color.SpringGreen, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Green elegant skirt", "A rather elegant green skirt.", "clueElegantSkirtGreen", Color.SpringGreen, 2000) { EquipSlot = "Legs", Cosmetic = true }); 
+                itemsToAdd.Add(new Item("Blue elegant shirt", "A well made elegant men's blue shirt.", "clueElegantShirtBlue", Color.SkyBlue, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Blue elegant blouse", "A well made elegant ladies' blue blouse.", "clueElegantBlouseBlue", Color.SkyBlue, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Blue elegant legs", "A rather elegant pair of men's blue pantaloons.", "clueElegantLegsBlue", Color.SkyBlue, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Blue elegant skirt", "A rather elegant blue skirt.", "clueElegantSkirtBlue", Color.SkyBlue, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Team cape zero", "Ooohhh look at the dirty colours...", "clueCapeTeamZero", Color.SlateGray, 50) { EquipSlot = "Cape", Cosmetic = true });
+                itemsToAdd.Add(new Item("Team cape i", "Ooohhh look at the dirty colours...", "clueCapeTeamI", Color.SlateGray, 50) { EquipSlot = "Cape", Cosmetic = true });
+                itemsToAdd.Add(new Item("Team cape x", "Ooohhh look at the dirty colours...", "clueCapeTeamX", Color.SlateGray, 50) { EquipSlot = "Cape", Cosmetic = true });
+                itemsToAdd.Add(new Item("Cape of skulls", "Lets the person behind you know that you mean business.", "clueCapeSkulls", Color.SlateGray, 5000) { EquipSlot = "Cape", EquipTier = 5, MiscString = "DefenseAll" });
+                itemsToAdd.Add(new Item("Monk's robe top (g)", "I feel the gods don't enjoy my materialistic obsessions.", "clueTopMonkG", Color.SaddleBrown, 500) { EquipSlot = "Body", MiscString = "PrayerBoost", EquipTier = 2 });
+                itemsToAdd.Add(new Item("Monk's robe (g)", "I feel the gods don't enjoy my materialistic obsessions.", "clueBottomMonkG", Color.SaddleBrown, 500) { EquipSlot = "Legs", MiscString = "PrayerBoost", EquipTier = 2 });
+                
+
+                List<MaterialDef> Gods = new() {
+                    new("Saradomin", Color.Turquoise, 3, 20, 5, "Holy"),
+                    new("Guthix", Color.Green, 3, 10, 20, "Peaceful"),
+                    new("Zamorak", Color.Crimson, 3, 20, 40, "Unholy"),
+                    new("Ancient", Color.MediumPurple, 3, 20, 30, "Ancient"),
+                    new("Armadyl", Color.White, 3, 20, 80, "Honourable"),
+                    new("Bandos", Color.DarkGoldenrod, 6, 20, 85, "War")
+                };
+
+                foreach (var god in Gods) {
+                    itemsToAdd.Add(new Item(god.Name + " robe top", god.Name + " vestments.", "clue" + god.Name + "Top", god.R, god.G, god.B, 7000) { EquipSlot = "Body", MiscString = "PrayerBoost", EquipTier = 2, EquipSkill = "Prayer", EquipLevel = 20 });
+                    itemsToAdd.Add(new Item(god.Name + " robe legs", "Leggings from the " + god.Name + " vestments.", "clue" + god.Name + "Bottom", god.R, god.G, god.B, 7000) { EquipSlot = "Legs", MiscString = "PrayerBoost", EquipTier = 2, EquipSkill = "Prayer", EquipLevel = 20 });
+                     
+                    itemsToAdd.Add(new Item(god.Name + " mitre", "A" + (Helper.VowelStart(god.Name) ? "n " : "") + god.Name + " mitre.", "clue" + god.Name + "Mitre", god.R, god.G, god.B, 5000) { EquipSlot = "Head", MiscString = "PrayerBoost", EquipTier = 2, EquipSkill = "Prayer", EquipLevel = 40 });
+                    itemsToAdd.Add(new Item(god.Name + " cloak", "A" + (Helper.VowelStart(god.Name) ? "n " : "") + god.Name + " cloak.", "clue" + god.Name + "Cloak", god.R, god.G, god.B, 2000) { EquipSlot = "Cape", MiscString = "PrayerBoost", EquipTier = 2, EquipSkill = "Prayer", EquipLevel = 40 });
+                    itemsToAdd.Add(new Item(god.Name + " stole", "A" + (Helper.VowelStart(god.Name) ? "n " : "") + god.Name + " stole.", "clue" + god.Name + "Stole", god.R, god.G, god.B, 2500) { EquipSlot = "Amulet", MiscString = "PrayerBoost", EquipTier = 2, EquipSkill = "Prayer", EquipLevel = 60 });
+                    
+                    itemsToAdd.Add(new Item(god.Name + " crozier", "A" + (Helper.VowelStart(god.Name) ? "n " : "") + god.Name + " crozier.", "clue" + god.Name + "Crozier", god.R, god.G, god.B, 5000) { EquipSlot = "Weapon", MiscString = "PrayerBoost", EquipTier = 2, EquipSkill = "Prayer", EquipLevel = 60, EquipDamageType = "Crush" });
+                    
+                    
+                    itemsToAdd.Add(new Item(god.Name + " page 1", "This seems to have been torn from a book...", "cluePage" + god.Name + "1", god.R, god.G, god.B, 200));
+                    itemsToAdd.Add(new Item(god.Name + " page 2", "This seems to have been torn from a book...", "cluePage" + god.Name + "2", god.R, god.G, god.B, 200));
+                    itemsToAdd.Add(new Item(god.Name + " page 3", "This seems to have been torn from a book...", "cluePage" + god.Name + "3", god.R, god.G, god.B, 200));
+                    itemsToAdd.Add(new Item(god.Name + " page 4", "This seems to have been torn from a book...", "cluePage" + god.Name + "4", god.R, god.G, god.B, 200));
+                    
+                    itemsToAdd.Add(new Item(god.Descriptor + " blessing", "A" + (Helper.VowelStart(god.Descriptor) ? "n " : "") + god.Descriptor + " blessing.", "clue" + god.Descriptor + "Blessing", god.R, god.G, god.B, 80) { EquipSlot = "Ammo", MiscString = "PrayerBoost", EquipTier = 1, EquipSkill = "Prayer" });
+                } 
+
+
+                // General clue table 
+                itemsToAdd.Add(new Item("Purple sweets", "Remember to brush after eating!", "cluePurpleSweets", Color.MediumPurple, 15, true) { UseString = "Heal", UseInt = 2 }); 
+                itemsToAdd.Add(new Item("Red firelighter", "Makes firelighting a lot easier.", "clueFirelighterRed", Color.Maroon, 15, true)); 
+                itemsToAdd.Add(new Item("Green firelighter", "Makes firelighting a lot easier.", "clueFirelighterGreen", ColorLib.Adamant, 15, true));  
+                itemsToAdd.Add(new Item("Blue firelighter", "Makes firelighting a lot easier.", "clueFirelighterBlue", ColorLib.Mithril, 15, true));  
+                itemsToAdd.Add(new Item("Purple firelighter", "Makes firelighting a lot easier.", "clueFirelighterPurple", Color.Purple, 15, true));  
+                itemsToAdd.Add(new Item("White firelighter", "Makes firelighting a lot easier.", "clueFirelighterWhite", Color.White, 15, true));
+                  
+                itemsToAdd.Add(new Item("Charge dragonstone jewellery scroll", "A scroll for charging dragonstone jewellery.", "clueChargeDragonstoneScroll", Color.White, 200, true) { UseString = "ChargeDragonstone" });
+                itemsToAdd.Add(new Item("Nardah teleport", "Teleports you to Nardah.", "clueTeleportNardah", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Mos le'harmless teleport", "Teleports you to Mos Le'Harmless.", "clueTeleportMosLeHarmless", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Mort'ton teleport", "Teleports you to Mort'ton.", "clueTeleportMortton", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Feldip hills teleport", "Teleports you to Feldip Hills.", "clueTeleportFeldipHills", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Lunar isle teleport", "Teleports you to Lunar isle.", "clueTeleportLunar", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Digsite teleport", "Teleports you to the Digsite.", "clueTeleportDigsite", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Piscatoris teleport", "Teleports you to Piscatoris.", "clueTeleportPiscatoris", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Pest control teleport", "Teleports you to Pest control.", "clueTeleportPestControl", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Tai bwo wannai teleport", "Teleports you to Tai bwo wannai.", "clueTeleportTaiBwoWannai", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Lumberyard teleport", "Teleports you to the Lumberyard.", "clueTeleportLumberyard", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Iorwerth camp teleport", "Teleports you to the Iorwerth Camp.", "clueTeleportIorwerthCamp", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
+                itemsToAdd.Add(new Item("Master scroll book", "I can store my teleport scrolls in this.", "clueMasterScrollBook", Color.Khaki, 5000, true)); 
             }
 
             itemsToAdd.Add(new Item("Tutorial Island cape", "A cape signifying you completed all challenges on Tutorial Island. Congratulations!", "capeCompTI", 135, 206, 235, 0) { EquipSlot = "Cape", EquipTier = 1, MiscString = "OmniBoost" });
@@ -333,11 +661,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Black wizard skirt (g)", "I can do better magic in this. Trimmed with gold.", "wizardBlackBottomG", Color.DimGray, 30) { EquipSlot = "Legs", EquipTier = 1, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseMagic" });
             }
 
-            itemsToAdd.Add(new Item("Staff", "It's a slightly magical stick.", "staff", Color.BurlyWood, 15) { EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush" });
-
+            itemsToAdd.Add(new Item("Staff", "It's a slightly magical stick.", "staff", Color.BurlyWood, 15) { EquipSlot = "Weapon",  EquipTier = 0, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush" });
+            itemsToAdd.Add(new Item("Magic staff", "It's a slightly magical stick.", "staffMagic", Color.BurlyWood, 200) { EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush" });
+            
 
 
             itemsToAdd.Add(new Item("Chef's hat", "What a silly hat.", "chefHat", 255, 255, 255, 2) { EquipSlot = "Head", Cosmetic = true });
+            itemsToAdd.Add(new Item("White apron", "What a silly hat.", "whiteApron", 255, 255, 255, 2) { EquipSlot = "Body", Cosmetic = true });
+            itemsToAdd.Add(new Item("Brown apron", "A mostly clean apron.", "brownApron", Color.SaddleBrown, 2) { EquipSlot = "Body", Cosmetic = true });
             itemsToAdd.Add(new Item("Goblin mail", "Some brown armor designed to fit goblins.", "goblinMail", Color.SaddleBrown, 40));
             itemsToAdd.Add(new Item("Goblin book", "A tattered goblin holy book.", "goblinBook", Color.SaddleBrown, 1) { UseString = "Book", UseString2 = "Goblin", ConsumedOnUse = false });
 
@@ -728,6 +1059,15 @@ namespace ZeroPlayersOnline.Hardcodes {
                     itemsToAdd.Add(new Item("Avocado", "A tasty fruit grown from a primal bush. Free shavoca do.", "avocado", Color.SaddleBrown, 1400));
                 }
 
+                // // Farming - Special
+                {
+                    // Belladonna / Nightshade
+                    itemsToAdd.Add(new Item("Belladonna seed", "A belladonna seed - plant in a belladonna patch. (63)", "seedBelladonna", Color.MediumPurple, 177, true) {
+                        UseString = "PlantSeed", UseString2 = "Belladonna", UseString3 = "nightshade",
+                        UseInt = 63 /* Level */,  UseInt2 = 400 /* Exp On Harvest */, UseInt3 = 320 /* Growth time in seconds */ 
+                    });
+                    itemsToAdd.Add(new Item("Nightshade", "Deadly but compact.", "nightshade", Color.MediumPurple, 30));
+                }
             
                 itemsToAdd.Add(new Item("Plant pot", "A plant pot filled with soil.", "plantPot", 207, 185, 151, 1));
                 // // Farming - Trees
@@ -966,6 +1306,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
                 itemsToAdd.Add(new Item("Brass necklace", "I'd prefer a gold one.", "necklaceBrass", ColorLib.Bronze.GetBright(), 30) { EquipSlot = "Amulet" });
                 itemsToAdd.Add(new Item("Amulet of accuracy", "It increases my aim.", "amuletAccuracy", Color.Orange, 100) { EquipSlot = "Amulet", MiscString = "HitChance", EquipTier = 10 });
+                itemsToAdd.Add(new Item("Amulet of magic", "An enchanted sapphire amulet of magic.", "amuletMagic", Color.DeepSkyBlue, 900) { EquipSlot = "Amulet", MiscString = "MagicBoost", EquipTier = 5 });
                 
                 
 
@@ -1000,8 +1341,6 @@ namespace ZeroPlayersOnline.Hardcodes {
 
 
                 itemsToAdd.Add(new Item("Grain", "Some wheat hands.", "grain", 207, 185, 151, 2));
-                itemsToAdd.Add(new Item("Flax", "I should use this with a spinning wheel.", "flax", 189, 246, 254, 5));
-                itemsToAdd.Add(new Item("Bow string", "I need a bow stave to attach this to.", "bowstring", 207, 185, 151, 10));
             }
 
             // Ranged Armor Factory
@@ -1155,6 +1494,56 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
+            itemsToAdd.Add(new Item("Seed pouch (master farmer)", "A small bag of seeds that a master farmer had in his pocket.", "seedPouchFarmerMaster", 111, 66, 33, 0, true, false) {
+                UseString = "SeedPouch",
+                DropTable = {
+                    new ItemDrop("seedPotato", 1, 6, 1, 4),
+                    new ItemDrop("seedOnion", 1, 8, 1, 3),
+                    new ItemDrop("seedCabbage", 1, 14, 1, 3),
+                    new ItemDrop("seedTomato", 1, 16, 1, 2),
+                    new ItemDrop("seedSweetcorn", 1, 45, 1, 2),
+                    new ItemDrop("seedStrawberry", 1, 90, 1, 1),
+                    new ItemDrop("seedWatermelon", 1, 189, 1, 1),
+                    new ItemDrop("seedSnapegrass", 1, 260, 1, 1),
+                    new ItemDrop("seedBarley", 1, 18, 1, 12),
+                    new ItemDrop("seedHammerstone", 1, 18, 1, 9),
+                    new ItemDrop("seedAsgarnian", 1, 24, 1, 6),
+                    new ItemDrop("seedJute", 1, 24, 1, 9),
+                    new ItemDrop("seedYanillian", 1, 36, 1, 6),
+                    new ItemDrop("seedKrandorian", 1, 72, 1, 6),
+                    new ItemDrop("seedWildblood", 1, 142, 1, 3),
+                    new ItemDrop("seedMarigold", 1, 22, 1, 1),
+                    new ItemDrop("seedNasturtium", 1, 33, 1, 1),
+                    new ItemDrop("seedRosemary", 1, 51, 1, 1),
+                    new ItemDrop("seedWoad", 1, 69, 1, 1),
+                    new ItemDrop("seedLimpwurt", 1, 86, 1, 1),
+                    new ItemDrop("seedRedberry", 1, 26, 1, 1),
+                    new ItemDrop("seedCadava", 1, 37, 1, 1),
+                    new ItemDrop("seedDwellberry", 1, 52, 1, 1),
+                    new ItemDrop("seedJangerberry", 1, 129, 1, 1),
+                    new ItemDrop("seedWhiteberry", 1, 355, 1, 1),
+                    new ItemDrop("seedPoisonIvy", 1, 937, 1, 1),
+                    new ItemDrop("seedBittercap", 1, 492, 1, 1),
+                    new ItemDrop("seedBelladonna", 1, 820, 1, 1),
+                    new ItemDrop("seedCactus", 1, 1230, 1, 1),
+                    new ItemDrop("seedPotatoCactus", 1, 2460, 1, 1),
+                    new ItemDrop("seedGuam", 1, 58, 1, 1),
+                    new ItemDrop("seedMarrentill", 1, 96, 1, 1),
+                    new ItemDrop("seedTarromin", 1, 140, 1, 1),
+                    new ItemDrop("seedHarralander", 1, 206, 1, 1),
+                    new ItemDrop("seedRanarr", 1, 270, 1, 1),
+                    new ItemDrop("seedToadflax", 1, 443, 1, 1),
+                    new ItemDrop("seedIrit", 1, 651, 1, 1),
+                    new ItemDrop("seedAvantoe", 1, 947, 1, 1),
+                    new ItemDrop("seedKwuarm", 1, 1389, 1, 1),
+                    new ItemDrop("seedSnapdragon", 1, 1854, 1, 1),
+                    new ItemDrop("seedCadantine", 1, 2976, 1, 1),
+                    new ItemDrop("seedLantadyme", 1, 4167, 1, 1),
+                    new ItemDrop("seedDwarfweed", 1, 6944, 1, 1),
+                    new ItemDrop("seedTorstol", 1, 9272, 1, 1)
+                }
+            });
+
 
 
 
@@ -1172,6 +1561,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Cooked newt meat", "A cooked newt steak.", "meatCookedNewt", 150, 100, 50, 4) { UseString = "Heal", UseInt = 3 }); 
             itemsToAdd.Add(new Item("Raw beef", "A cut of meat taken from a cow.", "meatRawBeef", 138, 3, 3, 1));
             itemsToAdd.Add(new Item("Raw rat meat", "A cut of meat taken from a rat.", "meatRawRat", 138, 3, 3, 1));
+            itemsToAdd.Add(new Item("Raw bear meat", "A cut of meat taken from a rat.", "meatRawBear", 138, 3, 3, 1));
             itemsToAdd.Add(new Item("Cooked steak", "A cooked steak.", "meatCookedBeef", 150, 100, 50, 4) { UseString = "Heal", UseInt = 3 }); 
             itemsToAdd.Add(new Item("Raw chicken", "A whole chicken, currently very inedible.", "meatRawChicken", 138, 3, 3, 1));
             itemsToAdd.Add(new Item("Cooked chicken", "A cooked chicken.", "meatCookedChicken", 150, 100, 50, 4) { UseString = "Heal", UseInt = 3 }); 
@@ -1284,203 +1674,211 @@ namespace ZeroPlayersOnline.Hardcodes {
                 new("Steel", ColorLib.Steel, 3, 20, 90, "adequate"), 
                 new("Mithril", ColorLib.Mithril, 4, 30, 180, "good"), 
                 new("Adamant", ColorLib.Adamant, 3, 40, 360, "great"), 
-                new("Rune", ColorLib.Rune, 3, 40, 720, "proprietary")
+                new("Rune", ColorLib.Rune, 3, 40, 720, "proprietary"), 
+                new("Orichalcum", Color.Crimson, 3, 40, 1500, "excellent"), 
+                new("Necrite", Color.ForestGreen, 3, 40, 3000, "incredible"), 
+                new("Banite", Color.MediumSlateBlue, 3, 40, 6000, "amazing"), 
+                new("Elder rune", ColorLib.Rune.GetBrighter(), 3, 40, 12000, "unbelievable")
             }; 
 
             for (int i = 0; i < Metals.Count; i++) {
                 int fullMult = Metals[i].CostMultiplier;
 
-                Item helm = new Item(Metals[i].Name + " helmet", "Provides " + Metals[i].Descriptor + " melee protection for the head.", "helm" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
+                string tempName = Metals[i].Name == "Elder rune" ? "ElderRune" : Metals[i].Name;
+
+                Item helm = new Item(Metals[i].Name + " helmet", "Provides " + Metals[i].Descriptor + " melee protection for the head.", "helm" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
                     EquipSlot = "Head",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(helm);
 
-                Item platebody = new Item(Metals[i].Name + " platebody", "Provides " + Metals[i].Descriptor + " melee protection for the torso.", "platebody" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 5) {
+                Item platebody = new Item(Metals[i].Name + " platebody", "Provides " + Metals[i].Descriptor + " melee protection for the torso.", "platebody" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 5) {
                     EquipSlot = "Body",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(platebody);
 
-                Item chainmail = new Item(Metals[i].Name + " chainmail", "Provides " + Metals[i].Descriptor + " melee protection for the torso.", "chainmail" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 5) {
+                Item chainmail = new Item(Metals[i].Name + " chainmail", "Provides " + Metals[i].Descriptor + " melee protection for the torso.", "chainmail" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 5) {
                     EquipSlot = "Body",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(chainmail);
 
-                Item platelegs = new Item(Metals[i].Name + " platelegs", "Provides " + Metals[i].Descriptor + " melee protection for the legs.", "platelegs" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 3) {
+                Item platelegs = new Item(Metals[i].Name + " platelegs", "Provides " + Metals[i].Descriptor + " melee protection for the legs.", "platelegs" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 3) {
                     EquipSlot = "Legs",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(platelegs);
 
-                Item plateskirt = new Item(Metals[i].Name + " plateskirt", "Provides " + Metals[i].Descriptor + " melee protection for the legs.", "plateskirt" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 3) {
+                Item plateskirt = new Item(Metals[i].Name + " plateskirt", "Provides " + Metals[i].Descriptor + " melee protection for the legs.", "plateskirt" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 3) {
                     EquipSlot = "Legs",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(plateskirt);
 
-                Item boots = new Item(Metals[i].Name + " boots", "Provides " + Metals[i].Descriptor + " melee protection for the feet.", "boots" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
+                Item boots = new Item(Metals[i].Name + " boots", "Provides " + Metals[i].Descriptor + " melee protection for the feet.", "boots" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
                     EquipSlot = "Feet",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(boots);
 
-                Item gauntlets = new Item(Metals[i].Name + " gauntlets", "Provides " + Metals[i].Descriptor + " melee protection for the hands.", "gauntlets" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
+                Item gauntlets = new Item(Metals[i].Name + " gauntlets", "Provides " + Metals[i].Descriptor + " melee protection for the hands.", "gauntlets" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
                     EquipSlot = "Hands",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(gauntlets);
 
-                Item arrows = new Item(Metals[i].Name + " arrows", "Time flies like an arrow. Fruit flies like a banana.", "arrows" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 15, true) {
+                Item arrows = new Item(Metals[i].Name + " arrows", "Time flies like an arrow. Fruit flies like a banana.", "arrows" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 15, true) {
                     EquipSlot = "Ammo",  EquipTier = Metals[i].Tier, EquipSkill = "Ranged", EquipLevel = Metals[i].Level, EquipDamageType = "RangedStandard"
                 };
                 itemsToAdd.Add(arrows);
 
-                Item unfbolts = new Item(Metals[i].Name + " bolts (unf)", Metals[i].Name + " crossbow bolts, sans feathers.", "boltsUnf" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 15, true);
+                Item unfbolts = new Item(Metals[i].Name + " bolts (unf)", tempName + " crossbow bolts, sans feathers.", "boltsUnf" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 15, true);
                 itemsToAdd.Add(unfbolts);
 
-                Item bolts = new Item(Metals[i].Name + " bolts", Metals[i].Name + " crossbow bolts.", "bolts" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 15, true) {
+                Item bolts = new Item(Metals[i].Name + " bolts", tempName + " crossbow bolts.", "bolts" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 15, true) {
                     EquipSlot = "Ammo",  EquipTier = Metals[i].Tier, EquipSkill = "Ranged", EquipLevel = Metals[i].Level, EquipDamageType = "RangedHeavy"
                 };
                 itemsToAdd.Add(bolts);
 
-                Item knives = new Item(Metals[i].Name + " knives", "A finely balanced throwing knife.", "knives" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 5, true) {
+                Item knives = new Item(Metals[i].Name + " knives", "A finely balanced throwing knife.", "knives" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 5, true) {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Ranged", EquipLevel = Metals[i].Level, EquipDamageType = "RangedLight", EquipAmmo = "Self"
                 };
                 itemsToAdd.Add(knives);
 
-                Item arrowheads = new Item(Metals[i].Name + " arrowheads", "I can make some arrows with these.", "arrowheads" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 15, true);
+                Item arrowheads = new Item(Metals[i].Name + " arrowheads", "I can make some arrows with these.", "arrowheads" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 15, true);
                 itemsToAdd.Add(arrowheads);
 
-                Item hatchet = new Item(Metals[i].Name + " hatchet", "Good for chopping trees.", "hatchet" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult, misc: "Hatchet") {
+                Item hatchet = new Item(Metals[i].Name + " hatchet", "Good for chopping trees.", "hatchet" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult, misc: "Hatchet") {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Slash"
                 };
                 itemsToAdd.Add(hatchet);
 
-                Item pickaxe = new Item(Metals[i].Name + " pickaxe", "Good for mining.", "pickaxe" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult, misc: "Pickaxe") {
+                Item pickaxe = new Item(Metals[i].Name + " pickaxe", "Good for mining.", "pickaxe" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult, misc: "Pickaxe") {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Stab", AttackSpeed = 1.5
                 };
                 itemsToAdd.Add(pickaxe);
 
-                Item dagger = new Item(Metals[i].Name + " dagger", "Good for stabbing.", "dagger" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
+                Item dagger = new Item(Metals[i].Name + " dagger", "Good for stabbing.", "dagger" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Stab"
                 };
                 itemsToAdd.Add(dagger);
 
-                Item sword = new Item(Metals[i].Name + " sword", "Good for slashing.", "sword" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
+                Item sword = new Item(Metals[i].Name + " sword", "Good for slashing.", "sword" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Slash"
                 };
                 itemsToAdd.Add(sword);
 
-                Item mace = new Item(Metals[i].Name + " mace", "Good for crushing.", "mace" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
+                Item mace = new Item(Metals[i].Name + " mace", "Good for crushing.", "mace" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult) {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Crush"
                 };
-                itemsToAdd.Add(mace);
+                itemsToAdd.Add(mace); 
 
-                Item scimitar = new Item(Metals[i].Name + " scimitar", "Good for slashing quickly.", "scimitar" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
+                Item scimitar = new Item(Metals[i].Name + " scimitar", "Good for slashing quickly.", "scimitar" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Slash", AttackSpeed = 0.75
                 };
                 itemsToAdd.Add(scimitar);
 
-                Item spear = new Item(Metals[i].Name + " spear", "Good for stabbing quickly.", "spear" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
+                Item spear = new Item(Metals[i].Name + " spear", "Good for stabbing quickly.", "spear" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Stab", AttackSpeed = 0.75, TwoHanded = true
                 };
                 itemsToAdd.Add(spear);
 
-                Item battleaxe = new Item(Metals[i].Name + " battleaxe", "Powerful slashes but slow.", "battleaxe" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
+                Item battleaxe = new Item(Metals[i].Name + " battleaxe", "Powerful slashes but slow.", "battleaxe" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier + 1, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Slash", AttackSpeed = 1.5, TwoHanded = true
                 };
                 itemsToAdd.Add(battleaxe);
                  
-                Item sword2h = new Item(Metals[i].Name + " 2h sword", "Powerful stabs but slow.", "sword2h" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
+                Item sword2h = new Item(Metals[i].Name + " 2h sword", "Powerful stabs but slow.", "sword2h" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier + 1, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Stab", AttackSpeed = 1.5, TwoHanded = true
                 };
                 itemsToAdd.Add(sword2h);
 
-                Item warhammer = new Item(Metals[i].Name + " warhammer", "Powerful crushing but slow.", "warhammer" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
+                Item warhammer = new Item(Metals[i].Name + " warhammer", "Powerful crushing but slow.", "warhammer" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
                     EquipSlot = "Weapon",  EquipTier = Metals[i].Tier + 1, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Crush", AttackSpeed = 1.5, TwoHanded = true
                 };
                 itemsToAdd.Add(warhammer);
 
-                Item sqshield = new Item(Metals[i].Name + " square shield", "A medium square shield.", "sqShield" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
+                Item sqshield = new Item(Metals[i].Name + " square shield", "A medium square shield.", "sqShield" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
                     EquipSlot = "Offhand",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(sqshield);
 
-                Item kiteshield = new Item(Metals[i].Name + " kiteshield", "A large metal shield.", "kiteshield" + Metals[i].Name, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 3) {
+                Item kiteshield = new Item(Metals[i].Name + " kiteshield", "A large metal shield.", "kiteshield" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 3) {
                     EquipSlot = "Offhand",  EquipTier = Metals[i].Tier + 1, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };
                 itemsToAdd.Add(kiteshield);
 
-                if (Metals[i].Name == "Bronze" || Metals[i].Name == "Bronze" || Metals[i].Name == "Steel" || Metals[i].Name == "Black") {
+                itemsToAdd.Add(new Item(Metals[i].Name + " crossbow limbs", "Can be combined with a crossbow stock to make an unstrung crossbow.", "limbs" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult));
+
+                if (tempName == "Bronze" || tempName == "Bronze" || tempName == "Iron" || tempName == "Steel" || tempName == "Black") {
                     // Trimmed
-                    Item helmT = new Item(Metals[i].Name + " helmet (t)", "Provides " + Metals[i].Descriptor + " melee protection for the head. Trimmed.", "helm" + Metals[i].Name + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
+                    Item helmT = new Item(Metals[i].Name + " helmet (t)", "Provides " + Metals[i].Descriptor + " melee protection for the head. Trimmed.", "helm" + tempName + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
                         EquipSlot = "Head",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(helmT); 
 
-                    Item platebodyT = new Item(Metals[i].Name + " platebody (t)", "Provides " + Metals[i].Descriptor + " melee protection for the torso. Trimmed.", "platebody" + Metals[i].Name + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 10) {
+                    Item platebodyT = new Item(Metals[i].Name + " platebody (t)", "Provides " + Metals[i].Descriptor + " melee protection for the torso. Trimmed.", "platebody" + tempName + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 10) {
                         EquipSlot = "Body",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(platebodyT);
 
-                    Item platelegsT = new Item(Metals[i].Name + " platelegs (t)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Trimmed.", "platelegs" + Metals[i].Name + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
+                    Item platelegsT = new Item(Metals[i].Name + " platelegs (t)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Trimmed.", "platelegs" + tempName + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
                         EquipSlot = "Legs",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(platelegsT);
 
-                    Item plateskirtT = new Item(Metals[i].Name + " plateskirt (t)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Trimmed.", "plateskirt" + Metals[i].Name + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
+                    Item plateskirtT = new Item(Metals[i].Name + " plateskirt (t)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Trimmed.", "plateskirt" + tempName + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
                         EquipSlot = "Legs",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(plateskirtT);
 
-                    Item kiteshieldT = new Item(Metals[i].Name + " kiteshield (t)", "A large metal shield. Trimmed.", "kiteshield" + Metals[i].Name + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
+                    Item kiteshieldT = new Item(Metals[i].Name + " kiteshield (t)", "A large metal shield. Trimmed.", "kiteshield" + tempName + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
                         EquipSlot = "Offhand",  EquipTier = Metals[i].Tier + 1, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(kiteshieldT);
 
                     // Gold trimmed
-                    Item helmG = new Item(Metals[i].Name + " helmet (g)", "Provides " + Metals[i].Descriptor + " melee protection for the head. Trimmed with gold.", "helm" + Metals[i].Name + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
+                    Item helmG = new Item(Metals[i].Name + " helmet (g)", "Provides " + Metals[i].Descriptor + " melee protection for the head. Trimmed with gold.", "helm" + tempName + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
                         EquipSlot = "Head",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(helmG); 
 
-                    Item platebodyG = new Item(Metals[i].Name + " platebody (g)", "Provides " + Metals[i].Descriptor + " melee protection for the torso. Trimmed with gold.", "platebody" + Metals[i].Name + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 10) {
+                    Item platebodyG = new Item(Metals[i].Name + " platebody (g)", "Provides " + Metals[i].Descriptor + " melee protection for the torso. Trimmed with gold.", "platebody" + tempName + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 10) {
                         EquipSlot = "Body",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(platebodyG);
 
-                    Item platelegsG = new Item(Metals[i].Name + " platelegs (g)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Trimmed with gold.", "platelegs" + Metals[i].Name + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
+                    Item platelegsG = new Item(Metals[i].Name + " platelegs (g)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Trimmed with gold.", "platelegs" + tempName + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
                         EquipSlot = "Legs",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(platelegsG);
 
-                    Item plateskirtG = new Item(Metals[i].Name + " plateskirt (g)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Trimmed with gold.", "plateskirt" + Metals[i].Name + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
+                    Item plateskirtG = new Item(Metals[i].Name + " plateskirt (g)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Trimmed with gold.", "plateskirt" + tempName + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
                         EquipSlot = "Legs",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(plateskirtG);
 
-                    Item kiteshieldG = new Item(Metals[i].Name + " kiteshield (g)", "A large metal shield. Trimmed with gold.", "kiteshield" + Metals[i].Name + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
+                    Item kiteshieldG = new Item(Metals[i].Name + " kiteshield (g)", "A large metal shield. Trimmed with gold.", "kiteshield" + tempName + "G", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
                         EquipSlot = "Offhand",  EquipTier = Metals[i].Tier + 1, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(kiteshieldG);
 
                     // Heraldric
-                    Item helmH = new Item(Metals[i].Name + " helmet (h)", "Provides " + Metals[i].Descriptor + " melee protection for the head. Bears a heraldric design.", "helm" + Metals[i].Name + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
+                    Item helmH = new Item(Metals[i].Name + " helmet (h)", "Provides " + Metals[i].Descriptor + " melee protection for the head. Bears a heraldric design.", "helm" + tempName + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
                         EquipSlot = "Head",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(helmH); 
 
-                    Item platebodyH = new Item(Metals[i].Name + " platebody (h)", "Provides " + Metals[i].Descriptor + " melee protection for the torso. Bears a heraldric design.", "platebody" + Metals[i].Name + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 10) {
+                    Item platebodyH = new Item(Metals[i].Name + " platebody (h)", "Provides " + Metals[i].Descriptor + " melee protection for the torso. Bears a heraldric design.", "platebody" + tempName + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 10) {
                         EquipSlot = "Body",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(platebodyH);
 
-                    Item platelegsH = new Item(Metals[i].Name + " platelegs (h)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Bears a heraldric design.", "platelegs" + Metals[i].Name + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
+                    Item platelegsH = new Item(Metals[i].Name + " platelegs (h)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Bears a heraldric design.", "platelegs" + tempName + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
                         EquipSlot = "Legs",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(platelegsH);
 
-                    Item plateskirtH = new Item(Metals[i].Name + " plateskirt (h)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Bears a heraldric design.", "plateskirt" + Metals[i].Name + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
+                    Item plateskirtH = new Item(Metals[i].Name + " plateskirt (h)", "Provides " + Metals[i].Descriptor + " melee protection for the legs. Bears a heraldric design.", "plateskirt" + tempName + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
                         EquipSlot = "Legs",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(plateskirtH);
 
-                    Item kiteshieldH = new Item(Metals[i].Name + " kiteshield (h)", "A large metal shield. Bears a heraldric design.", "kiteshield" + Metals[i].Name + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
+                    Item kiteshieldH = new Item(Metals[i].Name + " kiteshield (h)", "A large metal shield. Bears a heraldric design.", "kiteshield" + tempName + "H", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 6) {
                         EquipSlot = "Offhand",  EquipTier = Metals[i].Tier + 1, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                     };
                     itemsToAdd.Add(kiteshieldH);
@@ -1500,8 +1898,18 @@ namespace ZeroPlayersOnline.Hardcodes {
             
             
             itemsToAdd.Add(new Item("Swamp tar", "A foul smelling thick tar-like substance.", "swampTar", 50, 50, 50, 1, true));
-
+            
+            itemsToAdd.Add(new Item("Pestle and mortar", "I can grind things for potions in this.", "pestleMortar", Color.White, 4));
             itemsToAdd.Add(new Item("Eye of newt", "A basic herblore ingredient and only slightly gross.", "eyeNewt", 255, 255, 255, 3));
+            itemsToAdd.Add(new Item("Unicorn horn", "This horn has restorative properties.", "unicornHorn", Color.SandyBrown, 20));
+            itemsToAdd.Add(new Item("Unicorn horn dust", "Finely ground horn of Unicorn.", "unicornHornDust", Color.SandyBrown, 25));
+            itemsToAdd.Add(new Item("Chocolate bar", "Mmmmmmmm chocolate.", "chocolateBar", Color.Chocolate, 10));
+            itemsToAdd.Add(new Item("Unicorn horn dust", "It's ground up chocolate.", "chocolateDust", Color.Chocolate, 10));
+            itemsToAdd.Add(new Item("Bear fur", "This would make warm clothing.", "bearFur", Color.SandyBrown, 10));
+            itemsToAdd.Add(new Item("Red spiders' eggs", "Ewww!", "spiderEggsRed", Color.Crimson, 7));
+            itemsToAdd.Add(new Item("Goat horn", "Not much good for blowing.", "goatHorn", Color.AntiqueWhite, 12));
+            itemsToAdd.Add(new Item("Goat horn dust", "Finely ground goat horn.", "goatHornDust", Color.AntiqueWhite, 12));
+
             itemsToAdd.Add(new Item("Vial", "A glass vial, currently empty.", "vialEmpty", 200, 200, 200, 2) { colA = 150 });
             itemsToAdd.Add(new Item("Vial of water", "A glass vial full of water.", "vialWater", 14, 129, 205, 2) { colA = 150 });
             itemsToAdd.Add(new Item("Guam potion (unf)", "I need another ingredient to finish this Guam potion.", "potionUnfGuam", ColorLib.Guam.SetAlpha(150), 3));
@@ -1525,8 +1933,15 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Kwuarm potion (unf)", "I need another ingredient to finish this Kwuarm potion.", "potionUnfKwuarm", ColorLib.Kwuarm.SetAlpha(150), 54));
             
             
-            itemsToAdd.Add(new Item("Attack potion", "Temporarily boosts your Attack level by 5.", "potionAttack", 0, 255, 255, 15) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Attack", 5) } });
-            itemsToAdd.Add(new Item("Energy potion", "Energizes you to receive up to 5% additional experience from all actions.", "potionEnergy", Color.DeepPink.GetDark(), 15) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Experience", 5) } });
+            itemsToAdd.Add(new Item("Attack potion", "Temporarily boosts your Attack level by 5.", "potionAttack", 0, 255, 255, 5) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Attack", 5) } });
+            itemsToAdd.Add(new Item("Strength potion", "Temporarily boosts your Strength level by 5.", "potionStrength", Color.Yellow, 5) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Strength", 5) } });
+            itemsToAdd.Add(new Item("Magic potion", "Temporarily boosts your Magic level by 5.", "potionMagic", Color.CadetBlue, 80) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Magic", 5) } });
+            itemsToAdd.Add(new Item("Defense potion", "Temporarily boosts your Defense level by 5.", "potionDefense", Color.Lime, 50) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Defense", 5) } });
+            itemsToAdd.Add(new Item("Combat potion", "Temporarily boosts your Attack and Strength levels by 5 each.", "potionCombat", Color.SpringGreen, 70) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Attack", 5), new("Strength", 5) } });
+            itemsToAdd.Add(new Item("Cooking potion", "Temporarily boosts your Cooking level by 5.", "potionCooking", Color.Orange, 50) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Cooking", 5) } });
+            itemsToAdd.Add(new Item("Ranging potion", "Temporarily boosts your Ranged level by 5.", "potionRanging", Color.Cyan, 90) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Ranged", 5) } });
+            itemsToAdd.Add(new Item("Energy potion", "Energizes you to receive up to 5% additional experience from all actions.", "potionEnergy", Color.DeepPink.GetDark(), 50) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Experience", 5) } });
+            itemsToAdd.Add(new Item("Restore potion", "Restores reduced stats by up to 5 levels per sip.", "potionRestore", Color.Salmon, 30) { UseString = "Potion", UseInt4 = 3, Potion = new() { new("Restore", 5) } });
 
 
             itemsToAdd.Add(new Item("Rusted sword [Q]", "The sword is useless now. You notice someone has scratched something into the handle: 'PlayerOne'.", "TI_HI_RustedSword", 205, 127, 50, 0, trade: false));
@@ -1543,7 +1958,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Yellow bead [Q]", "A small round yellow bead.", "beadYellow", 255, 255, 0, 4));
             
             itemsToAdd.Add(new Item("Ghostspeak amulet [Q]", "It lets me talk to ghosts.", "amuletGhostspeak", 255, 255, 0, 4) { EquipSlot = "Amulet" });
-            itemsToAdd.Add(new Item("Ghost's skull [Q]", "Ooooh spooky!", "mistWizGhostSkull", 255, 255, 255, 4) { UseString = "SecondExamine", MiscString = "It's the skull of the ghost that is haunting Lumbridge graveyard. Maybe I should return this back to the ghost's coffin."});
+            itemsToAdd.Add(new Item("Ghost's skull [Q]", "Ooooh spooky!", "mistWizGhostSkull", 255, 255, 255, 4) { UseString = "SecondExamine", MiscString = "It's the skull of the ghost that is haunting Lumbridge graveyard. Maybe I should return this back to the ghost's coffin.", ConsumedOnUse = false});
+            itemsToAdd.Add(new Item("Al Kharid flyer", "The money off voucher has expired.", "flyerAli", Color.Khaki, 1) { UseString = "SecondExamine", MiscString = "'Come to the Al Kharid Market place! High quality produce at low, low prices! Show this flyer to a merchant for money off your next purchase, courtesy of Ali Morrisane!'", ConsumedOnUse = false});
 
             itemsToAdd.Add(new Item("Ham hood", "Light-weight head protection and eye shield.", "hamHood", Color.HotPink, 75) { EquipSlot = "Head" });
             itemsToAdd.Add(new Item("Ham shirt", "The label says 'Vivid Crimson' but it looks pink to me!", "hamShirt", Color.HotPink, 75) { EquipSlot = "Torso" });

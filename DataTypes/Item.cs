@@ -50,6 +50,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public List<string> PetBlurbs = new();
 
+        public Requirement? EquipReq = null;
+
         [JsonIgnore]
         public bool Inaccessible = false;
 
@@ -72,7 +74,7 @@ namespace ZeroPlayersOnline.DataTypes {
             Tradeable = trade; 
 
             MiscString = misc; 
-        } 
+        }
 
         public int ColorSum() {
             return colR + colG + colB;
@@ -88,6 +90,14 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public int LowAlchVal() {
             return (int) Math.Ceiling(Value * 0.33);
+        }
+
+        public bool CanEquip(Player p) {
+            if (EquipReq != null) {
+                return EquipReq.CheckRequirement(p, false);
+            }
+
+            return true;
         }
     }
 }

@@ -721,6 +721,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Man", "man", new() { { 0, new("Lovely day for it!", new() { byeThen }) } }, 1, 10) { PickpocketLoot = new() { new("coinPouchSmall", 1, 1, 1, 1) } });
             toAdd.Add(new("Woman", "woman", new() { { 0, new("Lovely day for it!", new() { byeThen }) } }, 1, 10) { PickpocketLoot = new() { new("coinPouchSmall", 1, 1, 1, 1) } });
             toAdd.Add(new("Farmer", "farmer", new() { { 0, new("Have you seen m'chickens?", new() { byeThen }) } }, 10, 15) { PickpocketLoot = new() { new("coinPouchMedium", 1, 1, 1, 1), new("seedPouchFarmer", 1, 1, 1, 1) } });
+            toAdd.Add(new("Master Farmer", "farmerMaster", new() { { 0, new("Hello there! Nice weather we've been having. Perfect for a day outdoors!", new() { byeThen }) } }, 38, 43, 3) { PickpocketLoot = new() { new("seedPouchFarmerMaster", 1, 1, 1, 1) } });
 
             toAdd.Add(new("Bartender", "mistLumBartender", new() { 
                 { 0, new("Welcome to the Sheared Ram. What can I do for you?", new() {  new DialogueChoice("I'll have a beer please?", 1, new() { new("Item", 2, "Gold", true)}, true), new DialogueChoice("Heard any rumors?", 2), byeThen }) },
@@ -944,7 +945,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                  { 7, new("Yeah. For example, when we were trainee priests he kept on getting stuck up bell ropes.", new() { new DialogueChoice("(NEXT)", 8), byeThen }) },
                  { 8, new("Anyway. I don't have time for chitchat. What's his problem THIS time?", new() { new DialogueChoice("He's got a ghost haunting his graveyard.", 9), byeThen }) },
                  { 9, new("Oh, the silly fool.", new() { new DialogueChoice("(NEXT)", 10), byeThen }) },
-                 { 10, new("I leave town for just five months, and ALRADY he can't manage.", new() { new DialogueChoice("(NEXT)", 11), byeThen }) },
+                 { 10, new("I leave town for just five months, and ALREADY he can't manage.", new() { new DialogueChoice("(NEXT)", 11), byeThen }) },
                  { 11, new("(sigh)", new() { new DialogueChoice("(NEXT)", 12), byeThen }) },
                  { 12, new("Well, I can't go back and exorcise it. I voewed not to leave this place until I had done two full years of prayer and meditation.", new() { new DialogueChoice("(NEXT)", 13), byeThen }) },
                  { 13, new("Tell you what I can do though; take this amulet.", new() { new DialogueChoice("(NEXT)", 14), byeThen }) },
@@ -1002,6 +1003,23 @@ namespace ZeroPlayersOnline.Hardcodes {
             }) {
                 ReqToSee = new("QuestBelow", 30, "MI_RestlessGhost")
             });
+
+            toAdd.Add(new("Ali the Leaflet Dropper", "mistVarAliLeaflet", new() { 
+                 { 0, new("I don't have time to talk right now! Ali Morrisane is paying me to hand out these flyers.", new() { new DialogueChoice("Who is Ali Morrisane?", 1), new DialogueChoice("What are the flyers for?", 3), new DialogueChoice("What is there to do round here, boy?", 9), byeThen }) }, 
+                 { 1, new("Ali Morrisane is the greatest merchant in the east!", new() { new DialogueChoice("Were you paid to say that?", 2), byeThen }) },
+                 { 2, new("Of course I was! You can find him on the north edge of town.", new() { byeThen }) },
+                 { 3, new("Well, Ali Morrisane isn't too popular with the other traders in Al Kharid, mainly because he's from Pollnivneach and they feel he has no business trading in their town.", new() { new DialogueChoice("(NEXT)", 4), byeThen }) },
+                 { 4, new("I think they're just sour because he's better at making money than them.", new() { new DialogueChoice("(NEXT)", 5), byeThen }) },
+                 { 5, new("The flyer advertises the different shops you can find in Al Kharid.", new() { new DialogueChoice("(NEXT)", 6), byeThen }) },
+                 { 6, new("It also entitles you to money off your next purchase in any of the shops listed on it. It's Ali's way of getting on the good side of the traders.", new() { new DialogueChoice("Which shops?", 7), byeThen }) },
+                 { 7, new("Here! Take one and let me get back to work.", new() { new DialogueChoice("(NEXT)", 8), byeThen }, items: new() { "flyerAli,1" }) },
+                 { 8, new("I still have hundreds of these flyers to hang out, I wonder if my boss would notice if I quietly dumped them somewhere?", new() { byeThen }) },
+                 { 9, new("I'm very busy, so listen carefully! I shall say this only once.", new() { new DialogueChoice("(NEXT)", 10), byeThen }) },
+                 { 10, new("Apart from a busy and wonderous market place in Al Kharid to the south, there is the Emir's Arena to the south-east where you can challenge other players to a fight.", new() { new DialogueChoice("(NEXT)", 11), byeThen }) },
+                 { 11, new("If you're here to make money, there is a mine to the south.", new() { new DialogueChoice("(NEXT)", 12), byeThen }) },
+                 { 12, new("Watch out for scorpions though, they'll take a pop at you if you go too near them. To avoid them just follow the western fence as you travel south.", new() { new DialogueChoice("(NEXT)", 13), byeThen }) },
+                 { 13, new("If you're in the mood for a little rest and relaxation, there are a couple of nice fishing spots south of the town.", new() { new DialogueChoice("Thanks for the help!", -1), byeThen }) }           
+            }));
 
             for (int i = 0; i < toAdd.Count; i++) { 
                 NPCLib.Add(toAdd[i].ID, toAdd[i]);

@@ -29,6 +29,29 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("bowstring", "shortbowYewU", "shortbowYew", 1, 1, 1, "Fletching", 70, 90));
             toAdd.Add(new("bowstring", "shortbowMagicU", "shortbowMagic", 1, 1, 1, "Fletching", 80, 105));
             toAdd.Add(new("bowstring", "shortbowElderU", "shortbowElder", 1, 1, 1, "Fletching", 90, 120));
+             
+            toAdd.Add(new("stockPine", "limbsBronze", "crossbowPineU", 1, 1, 1, "Fletching", 1, 5));
+            toAdd.Add(new("stockOak", "limbsIron", "crossbowOakU", 1, 1, 1, "Fletching", 10, 10));
+            toAdd.Add(new("stockWillow", "limbsSteel", "crossbowWillowU", 1, 1, 1, "Fletching", 20, 15));
+            toAdd.Add(new("stockTeak", "limbsMithril", "crossbowTeakU", 1, 1, 1, "Fletching", 30, 30));
+            toAdd.Add(new("stockMaple", "limbsAdamant", "crossbowMapleU", 1, 1, 1, "Fletching", 40, 45));
+            toAdd.Add(new("stockAcadia", "limbsRune", "crossbowAcadiaU", 1, 1, 1, "Fletching", 50, 60));
+            toAdd.Add(new("stockMahogany", "limbsOrichalcum", "crossbowMahoganyU", 1, 1, 1, "Fletching", 60, 75));
+            toAdd.Add(new("stockYew", "limbsNecrite", "crossbowYewU", 1, 1, 1, "Fletching", 70, 90));
+            toAdd.Add(new("stockMagic", "limbsBanite", "crossbowMagicU", 1, 1, 1, "Fletching", 80, 105));
+            toAdd.Add(new("stockElder", "limbsElderRune", "crossbowElderU", 1, 1, 1, "Fletching", 90, 120));
+             
+            toAdd.Add(new("crossbowString", "crossbowPineU", "crossbowPine", 1, 1, 1, "Fletching", 1, 3));
+            toAdd.Add(new("crossbowString", "crossbowOakU", "crossbowOak", 1, 1, 1, "Fletching", 10, 5));
+            toAdd.Add(new("crossbowString", "crossbowWillowU", "crossbowWillow", 1, 1, 1, "Fletching", 20, 8));
+            toAdd.Add(new("crossbowString", "crossbowTeakU", "crossbowTeak", 1, 1, 1, "Fletching", 30, 15));
+            toAdd.Add(new("crossbowString", "crossbowMapleU", "crossbowMaple", 1, 1, 1, "Fletching", 40, 23));
+            toAdd.Add(new("crossbowString", "crossbowAcadiaU", "crossbowAcadia", 1, 1, 1, "Fletching", 50, 30));
+            toAdd.Add(new("crossbowString", "crossbowMahoganyU", "crossbowMahogany", 1, 1, 1, "Fletching", 60, 38));
+            toAdd.Add(new("crossbowString", "crossbowYewU", "crossbowYew", 1, 1, 1, "Fletching", 70, 45));
+            toAdd.Add(new("crossbowString", "crossbowMagicU", "crossbowMagic", 1, 1, 1, "Fletching", 80, 53));
+            toAdd.Add(new("crossbowString", "crossbowElderU", "crossbowElder", 1, 1, 1, "Fletching", 90, 60));
+
             toAdd.Add(new("arrowshaft", "feather", "headlessShaft", 15, 15, 15, "Fletching", 1, 15)); 
             toAdd.Add(new("headlessShaft", "arrowheadsBronze", "arrowsBronze", 15, 15, 15, "Fletching", 1, 20)); 
             toAdd.Add(new("headlessShaft", "arrowheadsIron", "arrowsIron", 15, 15, 15, "Fletching", 10, 40)); 
@@ -62,8 +85,26 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("vialWater", "herbCleanTorstol", "potionUnfTorstol", 1, 1, 1, "Herblore", 75, 0)); 
             toAdd.Add(new("vialWater", "herbCleanArbuck", "potionUnfArbuck", 1, 1, 1, "Herblore", 77, 0)); 
             toAdd.Add(new("vialWater", "herbCleanFellstalk", "potionUnfFellstalk", 1, 1, 1, "Herblore", 91, 0));  
-            
-            toAdd.Add(new("potionUnfGuam", "eyeNewt", "potionAttack", 1, 1, 1, "Herblore", 1, 25)); 
+              
+            toAdd.Add(new("potionUnfGuam", "eyeNewt", "potionAttack", 1, 1, 1, "Herblore", 1, 25));
+            toAdd.Add(new("potionUnfGuam", "redberry", "potionRanging", 1, 1, 1, "Herblore", 3, 30));
+
+            toAdd.Add(new("potionUnfTarromin", "beadRed", "potionMagic", 1, 1, 1, "Herblore", 5, 35));
+            toAdd.Add(new("potionUnfTarromin", "beadWhite", "potionMagic", 1, 1, 1, "Herblore", 5, 35));
+            toAdd.Add(new("potionUnfTarromin", "beadBlack", "potionMagic", 1, 1, 1, "Herblore", 5, 35));
+            toAdd.Add(new("potionUnfTarromin", "beadYellow", "potionMagic", 1, 1, 1, "Herblore", 5, 35));
+            toAdd.Add(new("potionUnfTarromin", "limpwurt", "potionStrength", 1, 1, 1, "Herblore", 7, 40));
+
+            toAdd.Add(new("potionUnfMarrentill", "bearFur", "potionDefense", 1, 1, 1, "Herblore", 9, 45));
+            toAdd.Add(new("potionUnfMarrentill", "unicornHornDust", "potionAntipoison", 1, 1, 1, "Herblore", 13, 50));  
+             
+            toAdd.Add(new("potionUnfHarralander", "goatHornDust", "potionCombat", 1, 1, 1, "Herblore", 36, 84));  
+            toAdd.Add(new("potionUnfHarralander", "fishCookedSwordfish", "potionCooking", 1, 1, 1, "Herblore", 55, 125)); 
+            toAdd.Add(new("potionUnfHarralander", "chocolateDust", "potionEnergy", 1, 1, 1, "Herblore", 30, 74));
+            toAdd.Add(new("potionUnfHarralander", "spiderEggsRed", "potionRestore", 1, 1, 1, "Herblore", 22, 63));     
+             
+            toAdd.Add(new("pestleMortar", "unicornHorn", "unicornHornDust", 0, 1, 1, "")); 
+            toAdd.Add(new("pestleMortar", "chocolateBar", "chocolateDust", 0, 1, 1, "")); 
 
 
             // Cooking 

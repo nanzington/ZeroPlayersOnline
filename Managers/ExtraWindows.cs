@@ -54,6 +54,7 @@ namespace ZeroPlayersOnline.Managers {
         
         public static Window Debug;
         public static string DebugMenu = "Unfound";
+        public static int DebugRandomSource = 0;
 
         public static Window Clue;
         public static string CurrentClue = "";
@@ -220,7 +221,8 @@ namespace ZeroPlayersOnline.Managers {
             Debug.Print(2, 0, "[Debug Menu]");
             Debug.DrawLine(new Point(20, 1), new Point(20, 28), 179);
 
-            Debug.PrintClickable(2, 2, new ColoredString("Broken Links", DebugMenu == "Unfound" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; });
+            Debug.PrintClickable(2, 1, new ColoredString("Broken Links", DebugMenu == "Unfound" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; });
+            Debug.PrintClickable(18, 1, new ColoredString("?", Color.MediumPurple, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; DebugRandomSource = GameLoop.rand.Next(Sources.Count); });
             
             int qty = 1;
             if (Helper.EitherShift())
@@ -240,7 +242,7 @@ namespace ZeroPlayersOnline.Managers {
             Debug.Print(22, sourceY++, "Things found where the ID may be wrong or refer to a nonexistent item: ", Color.Crimson);
 
             for (int source = CompendiumSourceTop; source < Sources.Count && source < CompendiumSourceTop + 27; source++) {
-                Debug.Print(22, sourceY++, Sources[source].Display, Color.White);
+                Debug.Print(22, sourceY++, Sources[source].Display, DebugRandomSource == sourceY - 2 ? Color.Yellow : Color.White);
             }
         }
 
@@ -2599,11 +2601,31 @@ namespace ZeroPlayersOnline.Managers {
                 CollectionLog.PrintClickable(2, 5, new ColoredString("Hard Casket", CollectionID == "casketHard" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketHard"; });
                 CollectionLog.PrintClickable(2, 6, new ColoredString("Elite Casket", CollectionID == "casketElite" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketElite"; });
                 CollectionLog.PrintClickable(2, 7, new ColoredString("Master Casket", CollectionID == "casketMaster" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "casketMaster"; });
+                CollectionLog.PrintClickable(2, 7, new ColoredString("General Collection", CollectionID == "General" ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = "General"; });
                 
-                if (GameLoop.ZPO.ItemLibrary.TryGetValue(CollectionID, out Item? cask) && cask != null && GameLoop.ZPO.player.CollectionLogClues.ContainsKey(CollectionID)) { 
-                    if (cask.DropTable.Count > 24) {
-                        if (Helper.ScrolledUp()) { CollectionDropTop = Math.Clamp(CollectionDropTop - 1, 0, cask.DropTable.Count - 24); }
-                        if (Helper.ScrolledDown()) { CollectionDropTop = Math.Clamp(CollectionDropTop + 1, 0, cask.DropTable.Count - 24); }
+                Item? cask = null;
+
+                GameLoop.ZPO.ItemLibrary.TryGetValue(CollectionID, out cask);
+
+                if (CollectionID == "General") {
+                    GameLoop.ZPO.ItemLibrary.TryGetValue("casketEasy", out cask);
+                }
+
+
+                if (cask != null && GameLoop.ZPO.player.CollectionLogClues.ContainsKey(CollectionID)) { 
+                    int qty = 1;
+                    if (Helper.EitherShift()) {
+                        qty *= 5;
+                    }
+                    if (Helper.EitherControl()) {
+                        qty *= 10;
+                    }
+
+                    int count = cask.DropTable.Where(o => o.AltLog == CollectionID || (CollectionID != "General" && o.AltLog == "")).ToList().Count;
+
+                    if (count > 24) {
+                        if (Helper.ScrolledUp()) { CollectionDropTop = Math.Clamp(CollectionDropTop - qty, 0, count - 24); }
+                        if (Helper.ScrolledDown()) { CollectionDropTop = Math.Clamp(CollectionDropTop + qty, 0, count - 24); }
                     }
 
                     int KC = 0;
@@ -2620,7 +2642,7 @@ namespace ZeroPlayersOnline.Managers {
                     CollectionLog.DrawLine(new Point(26, 4), new Point(98, 4), 196, Color.White);
 
                     int printCount = 0;
-                    List<ItemDrop> dropsSorted = cask.DropTable.OrderBy(o => o.InY).ThenBy(p => GameLoop.ZPO.ResolveItemName(p.ItemID)).ToList();
+                    List<ItemDrop> dropsSorted = cask.DropTable.Where(o => o.AltLog == CollectionID || (CollectionID != "General" && o.AltLog == "")).OrderBy(o => o.InY).ThenBy(p => GameLoop.ZPO.ResolveItemName(p.ItemID)).ToList();
                     for (int i = CollectionDropTop; i < dropsSorted.Count && i < CollectionDropTop + 24; i++) { 
                         int timesObtained = 0;
 

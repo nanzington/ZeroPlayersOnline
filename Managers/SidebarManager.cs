@@ -905,11 +905,28 @@ namespace ZeroPlayersOnline.Managers {
                     else 
                         mini.Con.Print(1, 17, "| Beginner: ");
 
-                    mini.Con.Print(1, 18, "|     Easy: ");
+                    if (!player.CollectionLogClues.ContainsKey("casketEasy")) {
+                        player.CollectionLogClues.Add("casketEasy", new("casketEasy"));
+                    }
+
+                    if (player.CollectionLogClues.TryGetValue("casketEasy", out CollectionLogEntry? easyLog) && easyLog != null)
+                        mini.Con.PrintClickable(1, 18, new ColoredString("|     Easy: " + easyLog.ActualObtained().ToString().Align(HorizontalAlignment.Right, 3) + " / " + easyLog.TryFindTotal().ToString().Align(HorizontalAlignment.Right, 3), easyLog.LogComplete() ? Color.Lime : Color.White, Color.Black), () => { ExtraWindows.CollectionID = "casketEasy"; ExtraWindows.CollectionLog.IsVisible = true; ExtraWindows.CollectionDropTop = 0; ExtraWindows.CollectionCat = "Clue"; });
+                    else 
+                        mini.Con.Print(1, 18, "|     Easy: ");
+                     
                     mini.Con.Print(1, 19, "|   Medium: ");
                     mini.Con.Print(1, 20, "|     Hard: ");
                     mini.Con.Print(1, 21, "|    Elite: ");
                     mini.Con.Print(1, 22, "|   Master: ");
+
+                    if (!player.CollectionLogClues.ContainsKey("General")) {
+                        player.CollectionLogClues.Add("General", new("General"));
+                    }
+
+                    if (player.CollectionLogClues.TryGetValue("General", out CollectionLogEntry? genLog) && genLog != null)
+                        mini.Con.PrintClickable(1, 23, new ColoredString("|  General: " + genLog.ActualObtained().ToString().Align(HorizontalAlignment.Right, 3) + " / " + genLog.TryFindTotal().ToString().Align(HorizontalAlignment.Right, 3), genLog.LogComplete() ? Color.Lime : Color.White, Color.Black), () => { ExtraWindows.CollectionID = "General"; ExtraWindows.CollectionLog.IsVisible = true; ExtraWindows.CollectionDropTop = 0; ExtraWindows.CollectionCat = "Clue"; });
+                    else 
+                        mini.Con.Print(1, 23, "|  General: ");
                 } else if (SidebarMenu == "Potions") {
                     mini.Con.Print(1, 15, "Active Potion Effects", Color.White);
                     mini.Con.DrawLine(new Point(0, 16), new Point(54, 16), 196);

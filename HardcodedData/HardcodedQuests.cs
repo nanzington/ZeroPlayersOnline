@@ -103,7 +103,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             toAdd.Add(new("MI_RestlessGhost", "Restless Ghost", "Short", "Novice", "A ghost is haunting Lumbridge graveyard. The priest of Lumbridge church of Saradomin wants you to find out how to get rid of it.", 30, new() { "Misthalin" }) {
-                DateFullyImplemented = 20260915,
+                DateFullyImplemented = 20260916,
                 Rewards = { new("Experience", "Prayer", 1125) },
                 QuestPoints = 1,
                 Stages = new() {

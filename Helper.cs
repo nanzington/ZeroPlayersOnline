@@ -135,7 +135,7 @@ namespace ZeroPlayersOnline {
             var serializeSettings = new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
 
             T output = JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source, serializeSettings), deserializeSettings);
-              
+            
             return output;
         }
 
@@ -781,13 +781,10 @@ namespace ZeroPlayersOnline {
         public static int PrintMultiLineClickable(this Console instance, int x, int y, string str, int width, Action OnClick, int colR = 255, int colG = 255, int colB = 255, bool center = false) {
             List<string> words = str.Split(" ").ToList();
             Color col = new Color(colR, colG, colB);
-
             
             MouseScreenObjectState mouse = new MouseScreenObjectState(instance, GameHost.Instance.Mouse);
             Point mousePos = mouse.CellPosition;
             bool mouseOn = mouse.IsOnScreenObject; 
-            
-            //instance.Print(x, y, mousePos.X >= x && mousePos.X <= x + length && mousePos.Y == y ? str.GetDarker() : str);
 
             if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
                 || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
@@ -854,6 +851,170 @@ namespace ZeroPlayersOnline {
                 } else {
                     instance.Print(cX, cY++, line, mouseHere ? col.GetDarker() : col, Color.Black);
                 } 
+            }
+
+            if (GameHost.Instance.Mouse.LeftClicked) {
+                if (mousePos.X >= x && mousePos.X <= x + width && mousePos.Y >= y && mousePos.Y <= cY - 1 && mouseOn) {
+                    OnClick();
+                }
+            }
+
+            return cY;
+        }
+
+        public static int PrintMultiLine(this Console instance, int x, int y, ColoredString str, int width) {
+            MouseScreenObjectState mouse = new MouseScreenObjectState(instance, GameHost.Instance.Mouse);
+            Point mousePos = mouse.CellPosition;
+            bool mouseOn = mouse.IsOnScreenObject; 
+            List<ColoredGlyphAndEffect> temp = str.ToList();
+            List<ColoredString> words = new();
+            
+            ColoredString tempWord = new ColoredString("");
+            for(int i = 0; i < temp.Count; i++) {
+                if (temp[i].GlyphCharacter == ' ') {
+                    words.Add(Clone(tempWord));
+                    tempWord = new ColoredString("");
+                } else {
+                    tempWord += new ColoredString(temp[i]);
+                }
+            }   
+            words.Add(Clone(tempWord));
+            tempWord = new("");
+
+            if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
+                || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
+                || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
+                || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
+                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
+                || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
+                || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
+                || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
+                return y;
+            }
+
+            int cX = x;
+            int cY = y;
+
+            ColoredString line = new("");
+
+            foreach (ColoredString word in words) {
+                if (line.Length + word.Length + 1 < width && word.String != "/n") {
+                    line += word + " ";  
+                }
+                else { 
+                    cY++;
+                    
+                    if (word.String == "/n") {
+                        line = new("");
+                    } else {
+                        line = word + " ";
+                    } 
+                }
+            }
+
+            int heightMax = cY;
+
+            cX = x;
+            cY = y;
+            line = new("");
+
+            foreach (ColoredString word in words) {
+                if (line.Length + word.Length + 1 < width && word.String != "/n") {
+                    line += word + " ";  
+                }
+                else { 
+                    instance.Print(cX, cY++, line);
+                    
+                    if (word.String == "/n") {
+                        line = new("");
+                    } else {
+                        line = word + " ";
+                    } 
+                }
+            }
+
+            if (line.String != "") {
+                instance.Print(cX, cY++, line); 
+            }
+
+            return cY;
+        }
+
+        public static int PrintMultiLineClickable(this Console instance, int x, int y, ColoredString str, int width, Action OnClick) {
+            List<ColoredGlyphAndEffect> temp = str.ToList();
+            List<ColoredString> words = new();
+            
+            ColoredString tempWord = new ColoredString("");
+            for(int i = 0; i < temp.Count; i++) {
+                if (temp[i].GlyphCharacter == ' ') {
+                    words.Add(Helper.Clone(tempWord));
+                    tempWord = new ColoredString("");
+                } else {
+                    tempWord += new ColoredString(temp[i]);
+                }
+            } 
+            
+            MouseScreenObjectState mouse = new MouseScreenObjectState(instance, GameHost.Instance.Mouse);
+            Point mousePos = mouse.CellPosition;
+            bool mouseOn = mouse.IsOnScreenObject; 
+
+            if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
+                || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
+                || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
+                || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
+                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
+                || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
+                || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
+                || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
+                return y;
+            }
+
+            int cX = x;
+            int cY = y;
+
+            ColoredString line = new("");
+
+            foreach (ColoredString word in words) {
+                bool mouseHere = mousePos.X >= x && mousePos.X <= x + width && mousePos.Y >= y && mousePos.Y <= cY && mouseOn;
+                if (line.Length + word.Length + 1 < width && word.String != "/n") {
+                    line += word + " ";  
+                }
+                else { 
+                    cY++;
+                    
+                    if (word.String == "/n") {
+                        line = new("");
+                    } else {
+                        line = word + " ";
+                    } 
+                }
+            }
+
+            int heightMax = cY;
+
+            cX = x;
+            cY = y;
+            line = new("");
+
+            foreach (ColoredString word in words) {
+                bool mouseHere = mousePos.X >= x && mousePos.X <= x + width && mousePos.Y >= y && mousePos.Y <= heightMax && mouseOn;
+                if (line.Length + word.Length + 1 < width && word.String != "/n") {
+                    line += word + " ";  
+                }
+                else { 
+                    instance.Print(cX, cY++, mouseHere ? line.GetDarker() : line);
+                    
+                    if (word.String == "/n") {
+                        line = new("");
+                    } else {
+                        line = word + " ";
+                    } 
+                }
+            }
+
+            if (line.String != "") {
+                bool mouseHere = mousePos.X >= x && mousePos.X <= x + width && mousePos.Y >= y && mousePos.Y <= heightMax && mouseOn; 
+                instance.Print(cX, cY++, mouseHere ? line.GetDarker() : line); 
             }
 
             if (GameHost.Instance.Mouse.LeftClicked) {
@@ -983,24 +1144,26 @@ namespace ZeroPlayersOnline {
             return numbers[where.ToIndex(mapW)];
         }
 
-        public static int SimulateDropTable(List<ItemDrop> table, int maxRewards = -1) {
+        public static int SimulateDropTable(List<ItemDrop> table, int maxRewards = -1, string altTable = "", bool fortune = false) {
             Dictionary<string, int> obtained = new();
             int cycles = 0;
             List<string> rolled = new();
 
-            while (obtained.Count != table.Count && cycles < 1000000) {
+            List<ItemDrop> filtered = table.Where(o => o.AltLog == altTable).ToList();
+
+            while (obtained.Count < filtered.Count && cycles < 10000) {
                 rolled.Clear();
                  
-                foreach (var drop in table) {
-                    if (GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (GameLoop.ZPO.player.PrayerActive("Good Fortune") && GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
+                foreach (var drop in filtered) {
+                    if (GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (fortune && GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
                         rolled.Add(drop.ItemID);
                     }
                 }
 
                 if (maxRewards != -1) {
                     while(rolled.Count < maxRewards) {
-                        foreach (var drop in table) {
-                            if (GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (GameLoop.ZPO.player.PrayerActive("Good Fortune") && GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
+                        foreach (var drop in filtered) {
+                            if (GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (fortune && GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
                                 rolled.Add(drop.ItemID);
                             }
                         }
@@ -1021,6 +1184,37 @@ namespace ZeroPlayersOnline {
             }
 
             return cycles;
+        }
+
+
+        public static int ReadWorldState(string id) {
+            if (GameLoop.ZPO.player.WorldState.TryGetValue(id, out int val)) {
+                return val;
+            } 
+            return 0;
+        }
+
+        public static void AlterWorldState(string id, string how, int num) {
+            if (!GameLoop.ZPO.player.WorldState.ContainsKey(id)) { GameLoop.ZPO.player.WorldState.Add(id, 0); }
+
+            if (how == "set") { GameLoop.ZPO.player.WorldState[id] = num; }  
+            if (how == "add") { GameLoop.ZPO.player.WorldState[id] += num; }  
+            if (how == "sub") { GameLoop.ZPO.player.WorldState[id] -= num; } 
+            if (how == "mul") { GameLoop.ZPO.player.WorldState[id] *= num; }
+            if (how == "div") { GameLoop.ZPO.player.WorldState[id] /= num; } // May give unexpected results due to how dividing by ints works, try to avoid
+            if (how == "pow") { GameLoop.ZPO.player.WorldState[id] = (int) Math.Pow(GameLoop.ZPO.player.WorldState[id], num); } 
+        }
+
+        public static bool CompareWorldState(string id, string how, int num) {
+            if (!GameLoop.ZPO.player.WorldState.ContainsKey(id)) { GameLoop.ZPO.player.WorldState.Add(id, 0); }
+
+            if (how == "over") { return GameLoop.ZPO.player.WorldState[id] > num; }
+            if (how == "below") { return GameLoop.ZPO.player.WorldState[id] < num; }
+            if (how == "equals") { return GameLoop.ZPO.player.WorldState[id] == num; }
+            if (how == "overOrEqual") { return GameLoop.ZPO.player.WorldState[id] >= num; }
+            if (how == "belowOrEqual") { return GameLoop.ZPO.player.WorldState[id] <= num; }
+
+            return false;
         }
     }
 

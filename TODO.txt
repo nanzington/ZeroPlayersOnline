@@ -2,7 +2,7 @@ Misthalin Mania
 - Lumbridge locations filled out
 - Draynor Village locations filled out
 - (DONE) HAM Hideout locations filled out
-- Wizard Tower locations filled out
+- (DONE) Wizard Tower locations filled out
 - Varrock locations filled out
 - Barbarian Village locations filled out
 - Edgeville locations filled out
@@ -10,13 +10,13 @@ Misthalin Mania
 - Lumbridge underground (swamp caves, castle possibly all the way to Dorgesh-kaan? not necessary until the cave goblin quests can be added) locations filled out
 - (DONE) Quest: Sheep Shearer
 - (DONE) Quest: Cook's Assistant
-- Quest: Demon Slayer (needs varrock)
-- Quest: The Restless Ghost
+- (DONE) Quest: The Restless Ghost
+- (DONE) Quest: Imp Catcher
+- Quest: Demon Slayer (needs varrock) 
 - Quest: Romeo & Juliet (needs varrock)
 - Quest: Shield of Arrav (needs varrock)
 - Quest: Ernest the Chicken (needs draynor but christ)
 - Quest: Vampire Slayer (needs varrock)
-- Quest: Imp Catcher
 - Quest: Rune Mysteries (needs varrock)
 - Quest: Misthalin Mystery (just lumbridge i think but this one might be spicy to do right)
 - Quest: The Ides of Milk (just lumbridge, should be fairly straitforward)
@@ -26,12 +26,11 @@ Misthalin Mania
 - Quest: A Soul's Bane (needs varrock)
 - Quest: All Fired Up (needs varrock / silvarea)
 - Quest: Lost City (needs port sarim / entrana and god that's gonna suck)
+- Quest: Prince Ali Rescue (needs varrock, al kharid, and draynor)
+- Quest: Dragon Slayer (need varrock/champions guild, edgeville, ice mountain, dwarven mine, rimmington, port sarim, crandor)
 
-
-Clue scroll window instead of log, at least for the "map" clues since they're so long
+Drop logs with multiple of the same entry at different rates can't actually be completed because all credits will go to the first in the list, fix or remove dupes 
 Go back and add more clues as Barbarian Village, Varrock, Draynor, Al Kharid, and Falador are added
-Imp Catcher and Restless Ghost now that Wizard Tower is added
-Buttons that automatically detect the first UseRecipe in your inventory and repeat last
 
 Maybe expand a lil bit into Al Kharid and Port Sarim/Falador to open some more content relevant to Misthalin there?
 - Al Kharid for clue steps and the mine, just to the Shantay Pass and leave the actual desert for later
@@ -48,22 +47,11 @@ Optionally hide connections if requirements not met? Maybe default to visible re
 Immediately important stuff to get working:
 - Start splitting stuff out of the ZPO file because it's getting ridiculous and it doesn't need to be that dense now
 - An achievement tracking thing where performing an action can check to see if doing it progresses an achievement/task, also have a screen to show all achieves with some sort options
-- Move data from being hardcoded to json files
-- Make all skills accessible somewhere on tutorial island?
-- - Construction might not be possible? Would have to have just one house instead of a house per area
-- - Summoning / Necromancy / Taming or maybe some kind of combo of the three into one "minion fights for you" combat skill
-- - Divination might be okay because I can make it not suck as much as in RS3
-- - Artisan, slayer for gathering/crafting, categories of items that combine multiple other skills at once
-
-
-BUGS TO FIX
-- Stay observant for issues regarding pickup and noting code
-- Some Skill uses might be missing in the Compendium, keep an eye out and try to capture them as they appear
+- Figure out how to convey how WorldState data is changed 
 
 
 Less immediate but still important:
 - Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
-- Find a way to show all items needed for a CraftRecipe if there are multiple
 - Dungeoneering areas that are actual random layout dungeons, reset layout somehow (on reload, if player is in a dungeon then reset their loc to the entrance, or if they reach the end crystal tp back to start and give set exp) 
 - Bank preset options somehow
 - Add slayer shop (slayer points and gold), way to skip/block/prefer tasks
@@ -103,6 +91,7 @@ Future Skills to work on:
 - Divination (create gathering spots, transmute materials, etc)
 - Proxy combat skill of some kind (ex necromancy, summoning, taming, something like that)
 - Some kind of skill to enchant weapons/armor somehow maybe?
+- Sailing, massive Maze Area to sail around to different ports
 
 Distraction and Diversions / Activities / Minigames
 - Implement Existing Ones
@@ -204,16 +193,13 @@ How will this even be possible?
 - Player owned house? Make it useful to have somehow? 
 - Make wilderness dangerous but rewarding?
 - Some of the popular minigames, at least where possible to play singleplayer (though maybe show ways it should be multiplayer)
-- Fully viable poison build?
+- Fully viable poison build? 
 
 =========================================
 
-Prayer
-- Prayers to still get working: all stats, good fortune
-- Prayer potions now raise your level temporarily
+Prayer 
+- Prayer potions now raise your level temporarily 
 
-Runecrafting
-- Probably just have the altars as location options in the appropriate place, make it so location nodes can require an item or stat to pass
 
 Treasure Trails   
 - Consider whether or not it's even worth adding sliding puzzles when they kinda suck, maybe let players force them open with strength score/check

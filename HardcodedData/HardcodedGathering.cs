@@ -11,6 +11,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             List<GatheringTile> tiles = new();
             tiles.Add(new GatheringTile("plantFlax", "Wild Flax", "Pick", 100, 60, 10, "Farming", 1, 0, 0, items: new() { new("flax", 1) })); 
             tiles.Add(new GatheringTile("plantPotato", "Potato Plant", "Pick", 100, 100, 5, "Farming", 1, 0, 0, items: new() { new("potato", 1) })); 
+            tiles.Add(new GatheringTile("plantOnion", "Onion Plant", "Pick", 100, 100, 5, "Farming", 1, 0, 0, items: new() { new("onion", 1) })); 
             tiles.Add(new GatheringTile("plantGrain", "Wheat", "Pick", 100, 100, 5, "Farming", 1, 0, 0, items: new() { new("grain", 1) })); 
             tiles.Add(new GatheringTile("plantGuam", "Guam Bush", "Pick", 100, 100, 10, "Farming", 1, 5, 0,items: new() { new("herbGrimyGuam", 1) }));
 

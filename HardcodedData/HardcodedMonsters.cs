@@ -71,8 +71,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                 new("runeBlood", 1, 128, 2, 2), new("runeLaw", 1, 128, 2, 2), new("talismanMind", 1, 32, 1, 1), new("talismanWater", 1, 43, 1, 1)
             } });
 
-            toAdd.Add(new("Skeleton", "mistWizSkeleton", 13, 18, 0, 0, true, "1d3-1", "Earth", 10, "Melee") { Requirements = new() { new("QuestAt", 30, "MI_RestlessGhost") }, SeeWithoutRequirements = false, DropTable = new() { new("bonesRegular", 1, 1, 1, 1) } });
-
+            toAdd.Add(new("Skeleton", "mistWizSkeleton", 13, 18, 0, 0, true, "1d3-1", "Earth", 10, "Melee") { Requirements = new() { new("QuestAt", 20, "MI_RestlessGhost"), new("Item", 1, "mistWizGhostSkull", false) }, SeeWithoutRequirements = false, DropTable = new() { new("bonesRegular", 1, 1, 1, 1) } });
+            toAdd.Add(new("Unicorn", "unicorn", 15, 19, 0, 0, false, "1d3-1", "Stab", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("unicornHorn", 1, 1, 1, 1) } });
+            toAdd.Add(new("Black bear", "bearBlack", 19, 25, 0, 0, false, "1d3", "Fire", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("bearFur", 1, 1, 1, 1), new("meatRawBear", 1, 1, 1, 1) } });
+            toAdd.Add(new("Ram", "ram", 2, 8, 0, 0, false, "1d3-2", "Fire", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1) } });
+            
 
             for (int i = 0; i < toAdd.Count; i++) { 
                 MonsterLib.Add(toAdd[i].ID, toAdd[i]);

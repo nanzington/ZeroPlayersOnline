@@ -48,6 +48,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("meatRawNewt", "meatCookedNewt", "Cooking", 1, 15),
                     new ProcessingRecipe("meatRawBeef", "meatCookedBeef", "Cooking", 1, 15),
                     new ProcessingRecipe("meatRawRat", "meatCookedBeef", "Cooking", 1, 15),
+                    new ProcessingRecipe("meatRawBear", "meatCookedBeef", "Cooking", 1, 30),
+                    new ProcessingRecipe("meatCookedBeef", "sinew", "Cooking", 1, 3),
                     new ProcessingRecipe("meatRawChicken", "meatCookedChicken", "Cooking", 1, 15),
                     new ProcessingRecipe("meatRawBird", "meatCookedBird", "Cooking", 10, 50),
                     new ProcessingRecipe("fishRawShrimp", "fishCookedShrimp", "Cooking", 1, 15),
@@ -110,6 +112,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Spinning Wheel") {
                 Recipes = new() {
                     new ProcessingRecipe("flax", "bowstring", "Crafting", 1, 5),
+                    new ProcessingRecipe("sinew", "crossbowString", "Crafting", 1, 5),
                     new ProcessingRecipe("woolRaw", "woolBall", "Crafting", 1, 3)
                 }
             });

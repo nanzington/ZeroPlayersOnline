@@ -98,9 +98,9 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "ClueMaster") {
                     ClueLogic.SetOrShowStep("Master", player, GameLoop.ZPO.Log);
                 } else if (item.UseString == "Casket") {
-                    List<Item> rolledItems = new();
-                    List<Item> guaranteedItems = new();
-
+                    List<ItemDrop> rolledItems = new();
+                    List<ItemDrop> guaranteedItems = new();
+                     
                     if (!player.CollectionLogClues.ContainsKey(item.ID))
                         player.CollectionLogClues.Add(item.ID, new(item.ID)); 
                     player.CollectionLogClues[item.ID].KillCount += 1;
@@ -110,35 +110,38 @@ namespace ZeroPlayersOnline.Managers {
                             ItemDrop drop = item.DropTable[j]; 
                             if (player.DropModifier != 2 && player.DropMultiplier != 0) {
                                 if (GameLoop.rand.Next(drop.InY) < (drop.DropX * player.DropMultiplier) || (player.PrayerActive("Good Fortune") && GameLoop.rand.Next(drop.InY) < (drop.DropX * player.DropMultiplier)) || (player.DropModifier == 1 && player.CollectionLogClues[item.ID].DryProtection(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier))))) {
-                                    if (GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
-                                        Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[drop.ItemID]);
-
-                                        if (drop.QuantityMin == drop.QuantityMax)
-                                            spawn.Quantity = drop.QuantityMin;
-                                        else {
-                                            int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
-                                            spawn.Quantity = amt;
-                                        } 
-                                         
-                                        if (player.DropModifier == 1 && player.CollectionLogClues[item.ID].DryProtection(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier)))) {
-                                            GameLoop.ZPO.Log.AddMessage("Due to Dry Protection you receive " + spawn.Name + ".", Color.Lime);
-                                            guaranteedItems.Add(spawn);
-                                        } else {
-                                            rolledItems.Add(spawn);
-                                        }
+                                    if (player.DropModifier == 1 && player.CollectionLogClues[item.ID].DryProtection(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier)))) {
+                                        GameLoop.ZPO.Log.AddMessage("Due to Dry Protection you receive " + GameLoop.ZPO.ResolveItemName(drop.ItemID) + ".", Color.Lime);
+                                        guaranteedItems.Add(drop);
+                                    } else {
+                                        rolledItems.Add(drop);
                                     }
 
-                                    if (!player.CollectionLogClues[item.ID].DropsObtained.ContainsKey(drop.ItemID))
-                                        player.CollectionLogClues[item.ID].DropsObtained.Add(drop.ItemID, 0); 
+                                    if (drop.AltLog == "") {
+                                        if (!player.CollectionLogClues[item.ID].DropsObtained.ContainsKey(drop.ItemID))
+                                            player.CollectionLogClues[item.ID].DropsObtained.Add(drop.ItemID, 0); 
+                                    } else {
+                                        if (!player.CollectionLogClues.ContainsKey(drop.AltLog))
+                                            player.CollectionLogClues.Add(drop.AltLog, new(drop.AltLog)); 
+                                        if (!player.CollectionLogClues[drop.AltLog].DropsObtained.ContainsKey(drop.ItemID))
+                                            player.CollectionLogClues[drop.AltLog].DropsObtained.Add(drop.ItemID, 0); 
+                                    }
                                 }
                             }
 
                             if (player.DropModifier == 2) {
                                 if (player.CollectionLogClues[item.ID].NoRNGDrop(drop.ItemID, (int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier)))) {
-                                    if (!player.CollectionLogClues[item.ID].DropsObtained.ContainsKey(drop.ItemID))
-                                        player.CollectionLogClues[item.ID].DropsObtained.Add(drop.ItemID, 0);
+                                   if (drop.AltLog == "") {
+                                        if (!player.CollectionLogClues[item.ID].DropsObtained.ContainsKey(drop.ItemID))
+                                            player.CollectionLogClues[item.ID].DropsObtained.Add(drop.ItemID, 0); 
+                                    } else {
+                                        if (!player.CollectionLogClues.ContainsKey(drop.AltLog))
+                                            player.CollectionLogClues.Add(drop.AltLog, new(drop.AltLog)); 
+                                        if (!player.CollectionLogClues[drop.AltLog].DropsObtained.ContainsKey(drop.ItemID))
+                                            player.CollectionLogClues[drop.AltLog].DropsObtained.Add(drop.ItemID, 0); 
+                                    }
 
-                                    if (GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
+                                    if (GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {/*
                                         Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[drop.ItemID]);
 
                                         if (drop.QuantityMin == drop.QuantityMax)
@@ -146,9 +149,9 @@ namespace ZeroPlayersOnline.Managers {
                                         else {
                                             int amt = GameLoop.rand.Next(drop.QuantityMax - drop.QuantityMin) + drop.QuantityMin;
                                             spawn.Quantity = amt;
-                                        }
+                                        }*/
 
-                                        guaranteedItems.Add(spawn);
+                                        guaranteedItems.Add(drop);
                                     }
                                 }
                             }
@@ -161,11 +164,83 @@ namespace ZeroPlayersOnline.Managers {
                     GameLoop.ZPO.Log.AddMessage(new ColoredString("You open the casket...", Color.Green, Color.Black));
                     for (int i = 0; i < 5; i++) {
                         if (i < rolledItems.Count) {
-                            player.CollectionLogClues[item.ID].DropsObtained[rolledItems[i].ID] += 1;
+                            if (GameLoop.ZPO.ItemLibrary.TryGetValue(rolledItems[i].ItemID, out Item? rolled)) {
+                                Item spawn = Helper.Clone(rolled);
+
+                                if (rolledItems[i].QuantityMin == rolledItems[i].QuantityMax)
+                                    spawn.Quantity = rolledItems[i].QuantityMin;
+                                else {
+                                    int amt = GameLoop.rand.Next(rolledItems[i].QuantityMax - rolledItems[i].QuantityMin) + rolledItems[i].QuantityMin;
+                                    spawn.Quantity = amt;
+                                }  
+
+                                bool newToLog = false;
+                                if (rolledItems[i].AltLog == "") {
+                                    player.CollectionLogClues[item.ID].DropsObtained[rolledItems[i].ItemID] += 1;
+                                } else {
+                                    if (player.CollectionLogClues.ContainsKey(rolledItems[i].AltLog)) {
+                                        player.CollectionLogClues[rolledItems[i].AltLog].DropsObtained[rolledItems[i].ItemID] += 1;
+
+                                        if (player.CollectionLogClues[rolledItems[i].AltLog].DropsObtained[rolledItems[i].ItemID] == 1) {
+                                            newToLog = true;
+                                        }
+                                    }
+                                }
+
+                                int odds = 1;
+                                for (int j = 0; j < item.DropTable.Count; j++) {
+                                    if (item.DropTable[j].ItemID == rolledItems[i].ItemID) {
+                                        odds = item.DropTable[j].InY;
+                                        break;
+                                    }
+                                }
+
+                                Color excitement = Color.Goldenrod;
+                                if (odds >= 10) {
+                                    excitement = Color.LightGoldenrodYellow;
+                                }
+
+                                string name = spawn.Name;
+
+                                if (spawn.Quantity > 1)
+                                    name = spawn.Quantity + " " + name + "s";
+
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it!" + (newToLog ? " (new!)" : ""), excitement, Color.Black));
+                                player.TryPickup(spawn, spawn.Quantity); 
+                            }
+                        } else {
+                            player.HeldGold += item.UseInt;
+                            GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + item.UseInt + " gold pieces in it.", Color.DarkGoldenrod, Color.Black));
+                        }
+                    }
+                
+                    for (int i = 0; i < guaranteedItems.Count; i++) { 
+                        if (GameLoop.ZPO.ItemLibrary.TryGetValue(guaranteedItems[i].ItemID, out Item? rolled)) {
+                            Item spawn = Helper.Clone(rolled);
+
+                            if (guaranteedItems[i].QuantityMin == guaranteedItems[i].QuantityMax)
+                                spawn.Quantity = guaranteedItems[i].QuantityMin;
+                            else {
+                                int amt = GameLoop.rand.Next(guaranteedItems[i].QuantityMax - guaranteedItems[i].QuantityMin) + guaranteedItems[i].QuantityMin;
+                                spawn.Quantity = amt;
+                            }  
+
+                            bool newToLog = false;
+                            if (guaranteedItems[i].AltLog == "") {
+                                player.CollectionLogClues[item.ID].DropsObtained[guaranteedItems[i].ItemID] += 1;
+                            } else {
+                                if (player.CollectionLogClues.ContainsKey(guaranteedItems[i].AltLog)) {
+                                    player.CollectionLogClues[guaranteedItems[i].AltLog].DropsObtained[guaranteedItems[i].ItemID] += 1;
+
+                                    if (player.CollectionLogClues[guaranteedItems[i].AltLog].DropsObtained[guaranteedItems[i].ItemID] == 1) {
+                                        newToLog = true;
+                                    }
+                                }
+                            }
 
                             int odds = 1;
                             for (int j = 0; j < item.DropTable.Count; j++) {
-                                if (item.DropTable[j].ItemID == rolledItems[i].ID) {
+                                if (item.DropTable[j].ItemID == guaranteedItems[i].ItemID) {
                                     odds = item.DropTable[j].InY;
                                     break;
                                 }
@@ -176,42 +251,14 @@ namespace ZeroPlayersOnline.Managers {
                                 excitement = Color.LightGoldenrodYellow;
                             }
 
-                            string name = rolledItems[i].Name;
+                            string name = spawn.Name;
 
-                            if (rolledItems[i].Quantity > 1)
-                                name = rolledItems[i].Quantity + " " + name + "s";
+                            if (spawn.Quantity > 1)
+                                name = spawn.Quantity + " " + name + "s";
 
-                            GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it!" + (player.CollectionLogClues[item.ID].DropsObtained[rolledItems[i].ID] == 1 ? " (new!)" : ""), excitement, Color.Black));
-                            player.TryPickup(rolledItems[i], rolledItems[i].Quantity);
-                        } else {
-                            player.HeldGold += item.UseInt;
-                            GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + item.UseInt + " gold pieces in it.", Color.DarkGoldenrod, Color.Black));
+                            GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it!" + (newToLog ? " (new!)" : ""), excitement, Color.Black));
+                            player.TryPickup(spawn, spawn.Quantity); 
                         }
-                    }
-                
-                    for (int i = 0; i < guaranteedItems.Count; i++) { 
-                        player.CollectionLogClues[item.ID].DropsObtained[guaranteedItems[i].ID] += 1;
-
-                        int odds = 1;
-                        for (int j = 0; j < item.DropTable.Count; j++) {
-                            if (item.DropTable[j].ItemID == guaranteedItems[i].ID) {
-                                odds = item.DropTable[j].InY;
-                                break;
-                            }
-                        }
-
-                        Color excitement = Color.Goldenrod;
-                        if (odds >= 10) {
-                            excitement = Color.LightGoldenrodYellow;
-                        }
-
-                        string name = guaranteedItems[i].Name;
-
-                        if (guaranteedItems[i].Quantity > 1)
-                            name = guaranteedItems[i].Quantity + " " + name + (name[^1] != 's' ? "s" : "");
-
-                        GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it! (new)", Color.Lime, Color.Black));
-                        player.TryPickup(guaranteedItems[i], guaranteedItems[i].Quantity);
                     } 
                 } else if (item.UseString == "Needle") {
                     ExtraWindows.CraftingMenu.IsVisible = true;
@@ -251,12 +298,18 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "Potion") {
                     if (item.Potion != null) {
                         for (int i = 0; i < item.Potion.Count; i++) {
-                            bool found = false;
-                            for (int j = 0; j < player.ActivePotions.Count; j++) {
-                                if (item.Potion[i].Stat == "Heal") { 
-                                    player.CurrentHP = Math.Clamp(player.CurrentHP + item.Potion[i].Change, player.CurrentHP, player.Skills["Constitution"].Level);
-                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("The " + item.Name.ToLowerInvariant() + " restores some hitpoints.", Color.Goldenrod, Color.Black));
-                                } else {
+                            if (item.Potion[i].Stat == "Heal") { 
+                                player.CurrentHP = Math.Clamp(player.CurrentHP + item.Potion[i].Change, player.CurrentHP, player.Skills["Constitution"].Level);
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString("The " + item.Name.ToLowerInvariant() + " restores some hitpoints.", Color.Goldenrod, Color.Black)); 
+                            } else if (item.Potion[i].Stat == "Restore") {  
+                                foreach (var pot in player.ActivePotions) {
+                                    if (pot.Change < 0) {
+                                        pot.Change = Math.Clamp(pot.Change + item.Potion[i].Change, pot.Change, 0);
+                                    }
+                                }
+                            } else {
+                                bool found = false;
+                                for (int j = 0; j < player.ActivePotions.Count; j++) {
                                     if (player.ActivePotions[j].Stat == item.Potion[i].Stat) {
                                         if (player.ActivePotions[j].Change < 0) {
                                             player.ActivePotions[j].Change += item.Potion[i].Change;
@@ -269,10 +322,10 @@ namespace ZeroPlayersOnline.Managers {
                                         }
                                     }
                                 }
-                            }
 
-                            if (!found && item.Potion[i].Stat != "Heal")
-                                player.ActivePotions.Add(Helper.Clone(item.Potion[i])); 
+                                if (!found)
+                                    player.ActivePotions.Add(Helper.Clone(item.Potion[i])); 
+                            } 
                         }
 
                         itemWrap.Charges--;

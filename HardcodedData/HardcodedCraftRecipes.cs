@@ -63,33 +63,43 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Knife", "Fletching", 1, 5, ["logPine" + "," + 1], "arrowshaft", 15, "knife"));
             toAdd.Add(new("Knife", "Fletching", 1, 5, ["logPine" + "," + 1], "shortbowPineU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 1, 5, ["logPine" + "," + 1], "longbowPineU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 1, 5, ["logPine" + "," + 1], "stockPine", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 10, 10, ["logOak" + "," + 1], "arrowshaft", 30, "knife"));
             toAdd.Add(new("Knife", "Fletching", 10, 10, ["logOak" + "," + 1], "shortbowOakU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 10, 10, ["logOak" + "," + 1], "longbowOakU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 10, 10, ["logOak" + "," + 1], "stockOak", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 20, 15, ["logWillow" + "," + 1], "arrowshaft", 45, "knife"));
             toAdd.Add(new("Knife", "Fletching", 20, 15, ["logWillow" + "," + 1], "shortbowWillowU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 20, 15, ["logWillow" + "," + 1], "longbowWillowU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 20, 15, ["logWillow" + "," + 1], "stockWillow", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 30, 20, ["logTeak" + "," + 1], "arrowshaft", 60, "knife"));
             toAdd.Add(new("Knife", "Fletching", 30, 30, ["logTeak" + "," + 1], "shortbowTeakU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 30, 30, ["logTeak" + "," + 1], "longbowTeakU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 30, 30, ["logTeak" + "," + 1], "stockTeak", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 40, 25, ["logMaple" + "," + 1], "arrowshaft", 75, "knife"));
             toAdd.Add(new("Knife", "Fletching", 40, 45, ["logMaple" + "," + 1], "shortbowMapleU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 40, 45, ["logMaple" + "," + 1], "longbowMapleU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 40, 45, ["logMaple" + "," + 1], "stockMaple", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 50, 30, ["logAcadia" + "," + 1], "arrowshaft", 90, "knife"));
             toAdd.Add(new("Knife", "Fletching", 50, 60, ["logAcadia" + "," + 1], "shortbowAcadiaU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 50, 60, ["logAcadia" + "," + 1], "longbowAcadiaU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 50, 60, ["logAcadia" + "," + 1], "stockAcadia", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 60, 35, ["logMahogany" + "," + 1], "arrowshaft", 105, "knife"));
             toAdd.Add(new("Knife", "Fletching", 60, 75, ["logMahogany" + "," + 1], "shortbowMahoganyU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 60, 75, ["logMahogany" + "," + 1], "longbowMahoganyU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 60, 75, ["logMahogany" + "," + 1], "stockMahogany", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 70, 40, ["logYew" + "," + 1], "arrowshaft", 120, "knife"));
             toAdd.Add(new("Knife", "Fletching", 70, 90, ["logYew" + "," + 1], "shortbowYewU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 70, 90, ["logYew" + "," + 1], "longbowYewU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 70, 90, ["logYew" + "," + 1], "stockYew", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 80, 45, ["logMagic" + "," + 1], "arrowshaft", 135, "knife"));
             toAdd.Add(new("Knife", "Fletching", 80, 105, ["logMagic" + "," + 1], "shortbowMagicU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 80, 105, ["logMagic" + "," + 1], "longbowMagicU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 80, 105, ["logMagic" + "," + 1], "stockMagic", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 90, 50, ["logElder" + "," + 1], "arrowshaft", 150, "knife"));
             toAdd.Add(new("Knife", "Fletching", 90, 120, ["logElder" + "," + 1], "shortbowElderU", tool: "knife"));
             toAdd.Add(new("Knife", "Fletching", 90, 120, ["logElder" + "," + 1], "longbowElderU", tool: "knife"));
+            toAdd.Add(new("Knife", "Fletching", 90, 120, ["logElder" + "," + 1], "stockElder", tool: "knife"));
 
 
 

@@ -15,8 +15,10 @@ namespace ZeroPlayersOnline.DataTypes {
          
         public Requirement? Requirement = null;
 
+        public string AltLog = "";
 
-        public ItemDrop(string id, int x, int y, int min, int max, bool noted = false, bool evenIf0 = false, Requirement? req = null) {
+
+        public ItemDrop(string id, int x, int y, int min, int max, bool noted = false, bool evenIf0 = false, Requirement? req = null, string altlog = "") {
             ItemID = id;
             DropX = x;
             InY = y;
@@ -29,6 +31,7 @@ namespace ZeroPlayersOnline.DataTypes {
             EvenAt0x = evenIf0;
 
             Requirement = req;
+            AltLog = altlog; // Basically just used for the general clue log drops to redirect them
         }
 
         // Rolls 0 to InY, if less than DropX, success

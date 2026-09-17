@@ -923,12 +923,17 @@ namespace ZeroPlayersOnline {
                             if (Helper.EitherControl()) {
                                 qty *= 10;
                             }
-                            if (Helper.ScrolledUp()) { ActivityItemTop = Math.Clamp(ActivityItemTop - qty, 0, player.BankedItems.Count); }
-                            if (Helper.ScrolledDown()) { ActivityItemTop = Math.Clamp(ActivityItemTop + qty, 0, player.BankedItems.Count); }
+
+                            if (player.BankedItems.Count > 19) {
+                                if (Helper.ScrolledUp()) { ActivityItemTop = Math.Clamp(ActivityItemTop - qty, 0, player.BankedItems.Count - 19); }
+                                if (Helper.ScrolledDown()) { ActivityItemTop = Math.Clamp(ActivityItemTop + qty, 0, player.BankedItems.Count - 19); }
+                            } else {
+                                ActivityItemTop = 0;
+                            }
                         }
 
                         if (player.BankedItems.Count > 0) {
-                            for (int i = ActivityItemTop; i < player.BankedItems.Count && i < ActivityItemTop + 22; i++) { 
+                            for (int i = ActivityItemTop; i < player.BankedItems.Count && i < ActivityItemTop + 19; i++) { 
                                 if (player.BankedItems[i].GetRef() is Item item) { 
                                     string name = item.Name;
                                     if (name.Length > 25)
@@ -1767,12 +1772,12 @@ namespace ZeroPlayersOnline {
 
         public void LogDraw(UI_EmbeddedMini mini) {
             mini.Con.DrawLine(new Point(0, 35), new Point(148, 35), 196);
-            for (int i = Log.TopIndex; i < Log.Log.Count && i < Log.TopIndex + 12; i++) {
-                int printY = 36 + (i - Log.TopIndex);
+            int printY = 36;
+            for (int i = Log.TopIndex; i < Log.Log.Count && printY < 49; i++) {
                 if (Log.Log[i].Count == 1)
-                    mini.Con.Print(0, printY, Log.Log[i].Message);
+                    printY = mini.Con.PrintMultiLine(0, printY, Log.Log[i].Message, 148);
                 else
-                    mini.Con.Print(0, printY, Log.Log[i].Message + " (x" + Log.Log[i].Count.ToString() + ")");
+                    printY = mini.Con.PrintMultiLine(0, printY, Log.Log[i].Message + " (x" + Log.Log[i].Count.ToString() + ")", 148);
             }
         }
 
@@ -1900,7 +1905,7 @@ namespace ZeroPlayersOnline {
                     ExtraWindows.Compendium.IsVisible = true; 
                 }
             }
-            /*
+            
             if (Helper.HotkeyDown(Key.F12) && !ExtraWindows.AnyVisible("Debug")) {
                 if (ExtraWindows.Debug.IsVisible) { 
                     ExtraWindows.Debug.IsVisible = false; 
@@ -1908,7 +1913,7 @@ namespace ZeroPlayersOnline {
                     ExtraWindows.HideAll();
                     ExtraWindows.Debug.IsVisible = true; 
                 }
-            }*/
+            }
 
             if (Helper.HotkeyDown(Key.F5) && !ExtraWindows.AnyVisible("Debug")) {
                 ManualSave();
@@ -1970,25 +1975,25 @@ namespace ZeroPlayersOnline {
                 //player.HeldGold += 1000;  
                 //Item knives = Helper.Clone(ItemLibrary["knivesBronze"]);
                 //knives.Quantity = 500;
-                //player.TryPickup(Helper.Clone(ItemLibrary["beadWhite"]), 1);
-                //player.TryPickup(Helper.Clone(ItemLibrary["beadRed"]), 1);
+                //player.TryPickup(Helper.Clone(ItemLibrary["potionRestore"]), 1);
+                //player.TryPickup(Helper.Clone(ItemLibrary["fleshRotten"]), 5);
                 //player.TryPickup(Helper.Clone(ItemLibrary["beadYellow"]), 1);
                 //player.TryPickup(Helper.Clone(ItemLibrary["beadBlack"]), 1);
                 //player.TryPickup(Helper.Clone(ItemLibrary["hatchetBronze"]), 1);
+                //player.TryPickup(Helper.Clone(ItemLibrary["casketTutorial"]), 1);
                 //player.TryPickup(Helper.Clone(ItemLibrary["casketBeginner"]), 1); 
-                /*
-                if (ItemLibrary.TryGetValue("casketBeginner", out Item? cask) && cask != null) {
+                //player.TryPickup(Helper.Clone(ItemLibrary["casketEasy"]), 1); 
+                
+                /*if (ItemLibrary.TryGetValue("casketEasy", out Item? cask) && cask != null) {
                     int totalCycles = 0;
-                    double simCount = 1000;
+                    double simCount = 100;
                     for (int i = 0; i < simCount; i++) {
-                        totalCycles += Helper.SimulateDropTable(cask.DropTable, 5);
+                        totalCycles += Helper.SimulateDropTable(cask.DropTable, 5, "", true);
                     }
 
                     Log.AddMessage(cask.Name + " log completed in average " + (totalCycles / simCount) + " opens over " + simCount + " simulations.");
-                }
-                */
-                
-                //Log.AddMessage("In the place Duke Horacio calls home, talk to a man with a hat dropped by goblins.");
+                }*/ 
+
             }
         }
 

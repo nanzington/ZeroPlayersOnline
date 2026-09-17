@@ -37,7 +37,13 @@
             }
 
             if (GameLoop.ZPO.ItemLibrary.TryGetValue(MonsterID, out Item? cask) && cask != null) {
-                return cask.DropTable.Count;
+                return cask.DropTable.Where(o => o.AltLog == "").ToList().Count;
+            }
+
+            if (MonsterID == "General") {
+                if (GameLoop.ZPO.ItemLibrary.TryGetValue("casketEasy", out Item? gen) && gen != null) {
+                    return gen.DropTable.Where(o => o.AltLog == "General").ToList().Count;
+                }
             }
 
             return -1;

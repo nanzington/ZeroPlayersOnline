@@ -5,6 +5,7 @@
 
         public int PickpocketLevel = 0;
         public int PickpocketEXP = 0;
+        public int PickpocketDamage = 0;
         public List<ItemDrop> PickpocketLoot = new();
 
         public Dictionary<int, DialogueStage> Dialogue = new();
@@ -13,13 +14,14 @@
         public int SlayerLevel = 0;
         public List<SlayerTask> SlayerTasks = new();
 
-        public NPC(string n, string id, Dictionary<int, DialogueStage> dia, int ppL = 0, int ppExp = 0, Requirement req = null) {
+        public NPC(string n, string id, Dictionary<int, DialogueStage> dia, int ppL = 0, int ppExp = 0, int ppDmg = 1, Requirement req = null) {
             Name = n;
             ID = id;
             Dialogue = dia;
 
             PickpocketLevel = ppL;
             PickpocketEXP = ppExp;
+            PickpocketDamage = ppDmg;
 
             ReqToSee = req;
         }
@@ -54,7 +56,7 @@
                         } 
                     } else { 
                         log.AddMessage(new ColoredString("Failed to pickpocket " + Name + ".", Color.Crimson, Color.Black));
-                        p.TakeDamage(1, log);
+                        p.TakeDamage(PickpocketDamage, log);
                     }
                 } else {
                     log.AddMessage(new ColoredString("You need " + PickpocketLevel + " Thieving to do that.", Color.Crimson, Color.Black));

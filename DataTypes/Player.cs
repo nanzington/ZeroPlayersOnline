@@ -104,6 +104,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public int SecondsPlayed = 0;
 
+        public Dictionary<string, int> WorldState = new();
+
         [JsonIgnore]
         public List<HunterCreature> SpawnedCreatures = new();
 
@@ -151,9 +153,11 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             foreach (var kv in Equipment) {
-                if (kv.Value.GetRef() is Item item && item.MiscString == "OmniBoost") {
-                    strength += item.EquipTier;
-                }
+                if (kv.Value.GetRef() is Item item) {
+                    if (item.MiscString == "OmniBoost" || item.MiscString == "OffenseBoost") {
+                        strength += item.EquipTier;
+                    }
+                } 
             }
 
             return weaponTier + "d" + strength;

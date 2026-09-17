@@ -3,16 +3,25 @@
         public string RequirementType = "";
         public int MiscInt = 0;
         public string MiscString = "";
+        public string MiscString2 = "";
         public bool ConsumeItem = false;
 
-        public Requirement(string ty, int misc1 = 0, string misc2 = "", bool consume = false) {
+        public string CustomSummary = "";
+
+        public Requirement(string ty, int misc1 = 0, string misc2 = "", bool consume = false, string misc3 = "", string summ = "") {
             RequirementType = ty;
             MiscInt = misc1;
             MiscString = misc2;
+            MiscString2 = misc3;
             ConsumeItem = consume;
+            CustomSummary = summ;
         }
 
         public string GetSummary() {
+            if (CustomSummary != "") {
+                return CustomSummary;
+            }
+
             if (RequirementType == "Skill") {
                 if (MiscString == "All") { 
                     return "Need level " + MiscInt + " in all skills";
@@ -80,6 +89,10 @@
             if (RequirementType == "Wearing") { 
                 return "Wearing a " + GameLoop.ZPO.ResolveItemName(MiscString); 
             } 
+
+            if (RequirementType == "Data") {
+                return "WorldState: " + MiscString + " " + MiscString2 + " " + MiscInt;
+            }
 
             return "";
         }
@@ -255,6 +268,10 @@
                         }
                     }
                 }
+            }
+
+            if (RequirementType == "Data") {
+                return Helper.CompareWorldState(MiscString, MiscString2, MiscInt);
             }
 
             return false;

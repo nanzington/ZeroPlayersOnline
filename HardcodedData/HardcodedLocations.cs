@@ -181,924 +181,962 @@ namespace ZeroPlayersOnline.Hardcodes {
 
 
             // Misthalin Locations
-
-            // // Lumbridge
             {
-                if (GameLoop.DemoMode) {
-                    locsToAdd.Add(new Location("MIST_LumbridgeCastleBailey", "Lumbridge - Castle Bailey", "Misthalin") {
-                        Description = "That's the end of the demo! Thank you for taking the time to try out 'my' game. I hope you enjoyed your time, and if you encountered any bugs, want to make suggestions for future content or tweaks to existing content, want to follow the development progress as I continue working my way into mainland Gielinor, or even just want to talk about the game feel free to join the discord linked on itch! /n /n If you wish to continue playing this character, a teleport back to Tutorial Island is provided for your convenience. /n /n Thanks again!",
-                        ConnectedLocations = new List<Connection>() {
-                            new Connection("TI_Main")
+                // // Lumbridge
+                {
+                    if (GameLoop.DemoMode) {
+                        locsToAdd.Add(new Location("MIST_LumbridgeCastleBailey", "Lumbridge - Castle Bailey", "Misthalin") {
+                            Description = "That's the end of the demo! Thank you for taking the time to try out 'my' game. I hope you enjoyed your time, and if you encountered any bugs, want to make suggestions for future content or tweaks to existing content, want to follow the development progress as I continue working my way into mainland Gielinor, or even just want to talk about the game feel free to join the discord linked on itch! /n /n If you wish to continue playing this character, a teleport back to Tutorial Island is provided for your convenience. /n /n Thanks again!",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("TI_Main")
+                            }
+                        });
+                    } else {
+                        locsToAdd.Add(new Location("MIST_LumbridgeCastleBailey", "Lumbridge - Castle Bailey", "Misthalin") {
+                            Description = "A simple but elegant bailey surrounding a castle, encircled by a stone wall with a large gate set into the east wall, flanked by two guard towers. Around the back of a castle is a smaller tower with a door leading out to the west. To either side of the path leading from the castle doors out of the gate is a beautiful fountain burbling water endlessly. Neatly manicured bushes and flowers line the paths and edges of the walls.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_LumbridgeCastleFoyer"),
+                                new Connection("MIST_LumbridgeCastleGatehouse"),
+                                new Connection("MIST_Lumbridge"),
+                                new Connection("MIST_LumbridgeBehindCastle")
+                            },
+                            NPCsHere = new() { "mistLumHans", "man", "man", "man", "woman", "woman" },
+                            AreaMonsters = new() { "rat", "rat", "rat", "imp" },
+                            GatheringSpots = new() { "treeOak", "treePine", "treePine" }
+                        }); 
+                    } 
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleGatehouse", "Lumbridge - Castle Gatehouse", "Misthalin") {
+                        Description = "There's not really much in this gatehouse except for some crates, mostly full of spare guard equipment. There's a ladder going up to the next floor.",
+                            ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeCastleBailey"),
+                            new Connection("MIST_LumbridgeCastleGatehouse2", alt: "(Climb Ladder)")
                         }
                     });
-                } else {
-                    locsToAdd.Add(new Location("MIST_LumbridgeCastleBailey", "Lumbridge - Castle Bailey", "Misthalin") {
-                        Description = "A simple but elegant bailey surrounding a castle, encircled by a stone wall with a large gate set into the east wall, flanked by two guard towers. Around the back of a castle is a smaller tower with a door leading out to the west. To either side of the path leading from the castle doors out of the gate is a beautiful fountain burbling water endlessly. Neatly manicured bushes and flowers line the paths and edges of the walls.",
+            
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleGatehouse2", "Lumbridge - Castle Gatehouse Second Floor", "Misthalin") {
+                        Description = "This floor of the gatehouse is even more stuffed full of crates of spare and old equipment, which seems impractical given you'd have to carry things up a ladder to get here. There's a ladder going up to the roof and back down to the ground floor.",
+                            ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeCastleGatehouse", alt: "(Climb Ladder Down)"),
+                            new Connection("MIST_LumbridgeCastleGatehouse3", alt: "(Climb Ladder Up)")
+                        }
+                    });
+            
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleGatehouse3", "Lumbridge - Castle Gatehouse Roof", "Misthalin") {
+                        Description = "Climbing the leader leads you to the roof, where there are a few more barrels stacked up. Some flags are flying banners bearing the Lumbridge colors. For some reason there are a couple cannons up here, though they wouldn't really be able to aim at much. There's a bronze pickaxe up here that seems out of place, so you could probably take it without issue. You have a decent view of the surroundings from up here of the nearby farms to the north, the swamp to the south, and Al Kharid to the east.",
+                            ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeCastleGatehouse2", alt: "(Climb Ladder Down)")
+                        },
+                        ItemSpawns = new List<ItemSpot>() {
+                            new ItemSpot("pickaxeBronze", 1)
+                        }
+                    }); 
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleFoyer", "Lumbridge - Castle Foyer", "Misthalin") {
+                        Description = "The castle foyer is well lit by torches and windows. A couple paintings hang on the wall, one of a former King and one of Ice Mountain. Some banners and tapestries bearing the Lumbridge heraldry also adorn the walls, a blue-and-white rug edged with gold covers part of the floor, and a few decorative suits of armor are strategically placed along the edge of the room. There are staircases on the north and south sides of the castle, but the one to the south seems much more heavily trafficked.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeCastleBailey"),
+                            new Connection("MIST_LumbridgeCastleKitchen"),
+                            new Connection("MIST_LumbridgeCastleFloor2"), 
+                            new Connection("MIST_LumbridgeCastleDiningHall")
+                        },
+                        ItemSpawns = new List<ItemSpot>() {
+                            new ItemSpot("runeMind", 1),
+                            new ItemSpot("arrowsBronze", 1)
+                        }
+                    }); 
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleFloor2", "Lumbridge - Castle Second Floor", "Misthalin") {
+                        Description = "There are two rooms on this floor of the Castle. The northern room is the bedroom of the Lumbridge Duke, Duke Horacio. It is elegantly furnished as befitting his status, the four-posted bed and other furniture in the room of exquisite construction. The other room is home to the Duke's advisor, Sigmund, and is much more modest. Sigmund's room is fairly sparse other than a bed, set of drawers, spinning wheel, and a fairly nice rug spread across the floor.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeCastleFoyer"),
-                            new Connection("MIST_LumbridgeCastleGatehouse"),
-                            new Connection("MIST_Lumbridge"),
-                            new Connection("MIST_LumbridgeBehindCastle")
+                            new Connection("MIST_LumbridgeCastleFloor3")
                         },
-                        NPCsHere = new() { "mistLumHans", "man", "man", "man", "woman", "woman" },
-                        AreaMonsters = new() { "rat", "rat", "rat", "imp" },
-                        GatheringSpots = new() { "treeOak", "treePine", "treePine" }
+                        NPCsHere = new() { "mistLumDukeHoracio", "mistLumSigmund" },
+                        ProcessingStations = new() { "Spinning Wheel" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleFloor3", "Lumbridge - Castle Third Floor", "Misthalin") {
+                        Description = "There is little up here except for, strangely, a free-standing building on top of the Castle containing a bank. The inside of the bank is fairly nice, though spartan by necessity due to the small size of the room. Besides the bank booths it has a small desk and a couple chairs, plus another Saradomin rug spread on the floor. There's a ladder leaning against one side of the bank building allowing you to climb up even higher if desired.",
+                        IsBank = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeCastleFloor2"),
+                            new Connection("MIST_LumbridgeCastleFloor4", alt: "(Climb Ladder)")
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleFloor4", "Lumbridge - Top of the Castle", "Misthalin") {
+                        Description = "It's quite breezy up here, but you've reached the absolute highest point in Lumbridge. You can see the windmill and the city of Varrock to the north, Al Kharid to the west, and Draynor Village to the east. There is a small flagpole here with a crank to raise the flag.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeCastleFloor3", alt: "(Climb Ladder)")
+                        },
+                        GatheringSpots = new() { "lumbridgeFlag" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleKitchen", "Lumbridge - Castle Kitchen", "Misthalin") {
+                        Description = "A surprisingly humble kitchen, considering it's in a castle. There are a couple tables and crates scattered around almost haphazardly, along with a sink, range, and pile of pots and pans. Various cooking implements hang from racks on the walls, and a trapdoor set into the floor leads to the basement. A door to the side of the kitchen leads directly into the Dining Hall.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeCastleFoyer"), 
+                            new Connection("MIST_LumbridgeCastleDiningHall"),
+                            new Connection("MIST_LumbridgeCastleCellar", alt: "(Climb Ladder)")
+                        },
+                        ItemSpawns = new List<ItemSpot>() {
+                            new ItemSpot("potEmpty", 1),
+                            new ItemSpot("jugEmpty", 1),
+                            new ItemSpot("bowlEmpty", 1),
+                            new ItemSpot("knife", 1)
+                        },
+                        ProcessingStations = new() { "Range", "Sink" },
+                        NPCsHere = new() { "mistLumCook" }
                     }); 
-                } 
 
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleGatehouse", "Lumbridge - Castle Gatehouse", "Misthalin") {
-                    Description = "There's not really much in this gatehouse except for some crates, mostly full of spare guard equipment. There's a ladder going up to the next floor.",
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleDiningHall", "Lumbridge - Castle Dining Hall", "Misthalin") {
+                        Description = "An ornately, bordering on gaudily, decorated dining hall. Well, there's only ten chairs, so it's not really much of a 'hall', but it's certainly a place to eat in a castle. The walls are decorated with tapestries and portraits. Suits of armor and standing candelabras line the walls. There's a fireplace on the west side of the room with candles on the mantle and a painting above it. It, inexplicably, has a fire roaring in it despite the room being empty. There's a plush red rug covering most of the floor, and the center of the room is occupied by a rectangular table with ten chairs around it.",
                         ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleBailey"),
-                        new Connection("MIST_LumbridgeCastleGatehouse2", alt: "(Climb Ladder)")
-                    }
-                });
-            
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleGatehouse2", "Lumbridge - Castle Gatehouse Second Floor", "Misthalin") {
-                    Description = "This floor of the gatehouse is even more stuffed full of crates of spare and old equipment, which seems impractical given you'd have to carry things up a ladder to get here. There's a ladder going up to the roof and back down to the ground floor.",
+                            new Connection("MIST_LumbridgeCastleFoyer"),
+                            new Connection("MIST_LumbridgeCastleKitchen")
+                        }
+                    }); 
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeCastleCellar", "Lumbridge - Castle Cellar", "Misthalin") {
+                        Description = "Yet more cookery items litter the shelves down here, and for some reason there's another sink. A few items are strewn about on the ground that you could take, but otherwise there isn't much interesting going on in this dark and dank basement.",
                         ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleGatehouse", alt: "(Climb Ladder Down)"),
-                        new Connection("MIST_LumbridgeCastleGatehouse3", alt: "(Climb Ladder Up)")
-                    }
-                });
-            
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleGatehouse3", "Lumbridge - Castle Gatehouse Roof", "Misthalin") {
-                    Description = "Climbing the leader leads you to the roof, where there are a few more barrels stacked up. Some flags are flying banners bearing the Lumbridge colors. For some reason there are a couple cannons up here, though they wouldn't really be able to aim at much. There's a bronze pickaxe up here that seems out of place, so you could probably take it without issue. You have a decent view of the surroundings from up here of the nearby farms to the north, the swamp to the south, and Al Kharid to the east.",
+                            new Connection("MIST_LumbridgeCastleKitchen", alt: "(Climb Ladder)")
+                        },
+                        ItemSpawns = new List<ItemSpot>() {
+                            new ItemSpot("bootsLeather", 1),
+                            new ItemSpot("knife", 1),
+                            new ItemSpot("cabbage", 1),
+                            new ItemSpot("jugEmpty", 1),
+                            new ItemSpot("bucketEmpty", 1)
+                        },
+                        ProcessingStations = new() { "Sink" },
+                        GatheringSpots = new() { "clueCrates" }
+                    }); 
+
+                    locsToAdd.Add(new Location("MIST_Lumbridge", "Lumbridge", "Misthalin") {
+                        Description = "A quaint town along the banks of the River Lum. A street meanders through the town, past the castle, ending in a small cul-de-sac with the graveyard. A small church is across the street from the castle, adjacent the graveyard. Nearby at the end of the road are a few houses and Bob's Brilliant Axes. There's a bridge across the Lum, and farther north lies the rest of Lumbridge.",
                         ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleGatehouse2", alt: "(Climb Ladder Down)")
-                    },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("pickaxeBronze", 1)
-                    }
-                }); 
-
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleFoyer", "Lumbridge - Castle Foyer", "Misthalin") {
-                    Description = "The castle foyer is well lit by torches and windows. A couple paintings hang on the wall, one of a former King and one of Ice Mountain. Some banners and tapestries bearing the Lumbridge heraldry also adorn the walls, a blue-and-white rug edged with gold covers part of the floor, and a few decorative suits of armor are strategically placed along the edge of the room. There are staircases on the north and south sides of the castle, but the one to the south seems much more heavily trafficked.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleBailey"),
-                        new Connection("MIST_LumbridgeCastleKitchen"),
-                        new Connection("MIST_LumbridgeCastleFloor2"), 
-                        new Connection("MIST_LumbridgeCastleDiningHall")
-                    },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("runeMind", 1),
-                        new ItemSpot("arrowsBronze", 1)
-                    }
-                }); 
-
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleFloor2", "Lumbridge - Castle Second Floor", "Misthalin") {
-                    Description = "There are two rooms on this floor of the Castle. The northern room is the bedroom of the Lumbridge Duke, Duke Horacio. It is elegantly furnished as befitting his status, the four-posted bed and other furniture in the room of exquisite construction. The other room is home to the Duke's advisor, Sigmund, and is much more modest. Sigmund's room is fairly sparse other than a bed, set of drawers, spinning wheel, and a fairly nice rug spread across the floor.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleFoyer"),
-                        new Connection("MIST_LumbridgeCastleFloor3")
-                    },
-                    NPCsHere = new() { "mistLumDukeHoracio", "mistLumSigmund" },
-                    ProcessingStations = new() { "Spinning Wheel" }
-                });
-
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleFloor3", "Lumbridge - Castle Third Floor", "Misthalin") {
-                    Description = "There is little up here except for, strangely, a free-standing building on top of the Castle containing a bank. The inside of the bank is fairly nice, though spartan by necessity due to the small size of the room. Besides the bank booths it has a small desk and a couple chairs, plus another Saradomin rug spread on the floor. There's a ladder leaning against one side of the bank building allowing you to climb up even higher if desired.",
-                    IsBank = true,
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleFloor2"),
-                        new Connection("MIST_LumbridgeCastleFloor4", alt: "(Climb Ladder)")
-                    }
-                });
-
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleFloor4", "Lumbridge - Top of the Castle", "Misthalin") {
-                    Description = "It's quite breezy up here, but you've reached the absolute highest point in Lumbridge. You can see the windmill and the city of Varrock to the north, Al Kharid to the west, and Draynor Village to the east. There is a small flagpole here with a crank to raise the flag.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleFloor3", alt: "(Climb Ladder)")
-                    },
-                    GatheringSpots = new() { "lumbridgeFlag" }
-                });
-
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleKitchen", "Lumbridge - Castle Kitchen", "Misthalin") {
-                    Description = "A surprisingly humble kitchen, considering it's in a castle. There are a couple tables and crates scattered around almost haphazardly, along with a sink, range, and pile of pots and pans. Various cooking implements hang from racks on the walls, and a trapdoor set into the floor leads to the basement. A door to the side of the kitchen leads directly into the Dining Hall.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleFoyer"), 
-                        new Connection("MIST_LumbridgeCastleDiningHall"),
-                        new Connection("MIST_LumbridgeCastleCellar", alt: "(Climb Ladder)")
-                    },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("potEmpty", 1),
-                        new ItemSpot("jugEmpty", 1),
-                        new ItemSpot("bowlEmpty", 1),
-                        new ItemSpot("knife", 1)
-                    },
-                    ProcessingStations = new() { "Range", "Sink" },
-                    NPCsHere = new() { "mistLumCook" }
-                }); 
-
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleDiningHall", "Lumbridge - Castle Dining Hall", "Misthalin") {
-                    Description = "An ornately, bordering on gaudily, decorated dining hall. Well, there's only ten chairs, so it's not really much of a 'hall', but it's certainly a place to eat in a castle. The walls are decorated with tapestries and portraits. Suits of armor and standing candelabras line the walls. There's a fireplace on the west side of the room with candles on the mantle and a painting above it. It, inexplicably, has a fire roaring in it despite the room being empty. There's a plush red rug covering most of the floor, and the center of the room is occupied by a rectangular table with ten chairs around it.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleFoyer"),
-                        new Connection("MIST_LumbridgeCastleKitchen")
-                    }
-                }); 
-
-                locsToAdd.Add(new Location("MIST_LumbridgeCastleCellar", "Lumbridge - Castle Cellar", "Misthalin") {
-                    Description = "Yet more cookery items litter the shelves down here, and for some reason there's another sink. A few items are strewn about on the ground that you could take, but otherwise there isn't much interesting going on in this dark and dank basement.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleKitchen", alt: "(Climb Ladder)")
-                    },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("bootsLeather", 1),
-                        new ItemSpot("knife", 1),
-                        new ItemSpot("cabbage", 1),
-                        new ItemSpot("jugEmpty", 1),
-                        new ItemSpot("bucketEmpty", 1)
-                    },
-                    ProcessingStations = new() { "Sink" },
-                    GatheringSpots = new() { "clueCrates" }
-                }); 
-
-                locsToAdd.Add(new Location("MIST_Lumbridge", "Lumbridge", "Misthalin") {
-                    Description = "A quaint town along the banks of the River Lum. A street meanders through the town, past the castle, ending in a small cul-de-sac with the graveyard. A small church is across the street from the castle, adjacent the graveyard. Nearby at the end of the road are a few houses and Bob's Brilliant Axes. There's a bridge across the Lum, and farther north lies the rest of Lumbridge.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleBailey"),
-                        new Connection("MIST_LumbridgeNorth"),
-                        new Connection("MIST_LumbridgeAcrossLum"),
-                        new Connection("MIST_LumbridgeChurch"),
-                        new Connection("MIST_LumbridgeGraveyard"),
-                        new Connection("MIST_LumbridgeBobsAxes"),
-                        new Connection("MIST_LumbridgeVictoria"),
-                        new Connection("MIST_LumbridgeEmptyHouse")
-                    },
-                    GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" }
-                });
+                            new Connection("MIST_LumbridgeCastleBailey"),
+                            new Connection("MIST_LumbridgeNorth"),
+                            new Connection("MIST_LumbridgeAcrossLum"),
+                            new Connection("MIST_LumbridgeChurch"),
+                            new Connection("MIST_LumbridgeGraveyard"),
+                            new Connection("MIST_LumbridgeBobsAxes"),
+                            new Connection("MIST_LumbridgeVictoria"),
+                            new Connection("MIST_LumbridgeEmptyHouse")
+                        },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" }
+                    });
             
-                locsToAdd.Add(new Location("MIST_LumbridgeBobsAxes", "Bob's Brilliant Axes", "Misthalin") {
-                    Description = "A cozy little storefront with shelves of various types of axes on display. There's a clock ticking in one corner but the hands don't actually appear to be moving at all. A few crates and barrels are stacked in the corners of the rooms, and a small painting of a port hangs on the wall. Bob, the proprietor, stands nearly motionless behind the counter.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_Lumbridge")
-                    },
-                    ShopItemsHere = new() { "pickaxeBronze", "pickaxeIron", "pickaxeSteel", "pickaxeMithril", "pickaxeAdamant", "hatchetBronze", "hatchetIron", "hatchetSteel", "hatchetMithril", "hatchetAdamant", "battleaxeBronze", "battleaxeIron", "battleaxeSteel", "battleaxeMithril", "battleaxeAdamant" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeBobsAxes", "Bob's Brilliant Axes", "Misthalin") {
+                        Description = "A cozy little storefront with shelves of various types of axes on display. There's a clock ticking in one corner but the hands don't actually appear to be moving at all. A few crates and barrels are stacked in the corners of the rooms, and a small painting of a port hangs on the wall. Bob, the proprietor, stands nearly motionless behind the counter.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_Lumbridge")
+                        },
+                        ShopItemsHere = new() { "pickaxeBronze", "pickaxeIron", "pickaxeSteel", "pickaxeMithril", "pickaxeAdamant", "hatchetBronze", "hatchetIron", "hatchetSteel", "hatchetMithril", "hatchetAdamant", "battleaxeBronze", "battleaxeIron", "battleaxeSteel", "battleaxeMithril", "battleaxeAdamant" }
+                    });
             
-                locsToAdd.Add(new Location("MIST_LumbridgeChurch", "Lumbridge Church", "Misthalin") {
-                    Description = "The church is decorated simply but expertly in dedication to Saradomin, God of Order. Two rows of cushioned wooden pews face the altar and the walls are lined with stained glass windows. Against the wall behind the altar are a few stands of candles and a pipe organ. A couple plush rugs coat the floor, though strangely in red instead of the traditional blue of Saradomin.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_Lumbridge")
-                    },
-                    NPCsHere = new() { "mistLumAereck", "tutorPrayer", "woman" }
-                }); 
+                    locsToAdd.Add(new Location("MIST_LumbridgeChurch", "Lumbridge Church", "Misthalin") {
+                        Description = "The church is decorated simply but expertly in dedication to Saradomin, God of Order. Two rows of cushioned wooden pews face the altar and the walls are lined with stained glass windows. Against the wall behind the altar are a few stands of candles and a pipe organ. A couple plush rugs coat the floor, though strangely in red instead of the traditional blue of Saradomin.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_Lumbridge")
+                        },
+                        NPCsHere = new() { "mistLumAereck", "tutorPrayer", "woman" }
+                    }); 
 
-                locsToAdd.Add(new Location("MIST_LumbridgeGraveyard", "Lumbridge Graveyard", "Misthalin") {
-                    Description = "A low fog clings to the ground around the headstones here. The graveyard is enclosed by a short wrought-iron fence, grass and weeds growing slightly rampant due to the lack of a gardener. An imposing building holds a mausoleum and the stairs down to the catacombs.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_Lumbridge"),
-                        new Connection("MIST_LumbridgeCatacombs"),
-                        new Connection("MIST_LumbridgeSwamp5")
-                    },
-                    NPCsHere = new() { "mistLumXenia", "mistLumRestlessGhost" },
-                    GatheringSpots = new() { "treeYew", "mistLumCoffin" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeGraveyard", "Lumbridge Graveyard", "Misthalin") {
+                        Description = "A low fog clings to the ground around the headstones here. The graveyard is enclosed by a short wrought-iron fence, grass and weeds growing slightly rampant due to the lack of a gardener. An imposing building holds a mausoleum and the stairs down to the catacombs.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_Lumbridge"),
+                            new Connection("MIST_LumbridgeCatacombs"),
+                            new Connection("MIST_LumbridgeSwamp5")
+                        },
+                        NPCsHere = new() { "mistLumXenia", "mistLumRestlessGhost" },
+                        GatheringSpots = new() { "treeYew", "mistLumCoffin" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeEmptyHouse", "Empty House", "Misthalin") {
-                    Description = "It seems like someone used to live here, but they aren't around anymore. There are a couple shelves up against one wall, some more shelves hanging on another wall with cooking implements stacked on them, and a small table with two chairs in the middle of the room. A bed stuffed in one corner of the room and a couple brown rugs make the shack feel a little more homely. The last thing in the house is a range that still seems functional.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_Lumbridge")
-                    },
-                    ProcessingStations = new() { "Range" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeEmptyHouse", "Empty House", "Misthalin") {
+                        Description = "It seems like someone used to live here, but they aren't around anymore. There are a couple shelves up against one wall, some more shelves hanging on another wall with cooking implements stacked on them, and a small table with two chairs in the middle of the room. A bed stuffed in one corner of the room and a couple brown rugs make the shack feel a little more homely. The last thing in the house is a range that still seems functional.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_Lumbridge")
+                        },
+                        ProcessingStations = new() { "Range" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeVictoria", "Victoria's Home", "Misthalin") {
-                    Description = "A cozy little cramped house just off bustling downtown Lumbridge! For just a few hundred thousand gold a month this home could be yours!... If Victoria wasn't already living here, and looking somewhat displeased with you having barged in. There's a bookshelf up against one wall, some shelves holding various knick-knacks, a small table and chair, a bed, and a sink. Also one adventurer, and one woman who would prefer there was not an adventurer.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_Lumbridge")
-                    },
-                    NPCsHere = new() { "mistLumVictoria" },
-                    ProcessingStations = new() { "Sink" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeVictoria", "Victoria's Home", "Misthalin") {
+                        Description = "A cozy little cramped house just off bustling downtown Lumbridge! For just a few hundred thousand gold a month this home could be yours!... If Victoria wasn't already living here, and looking somewhat displeased with you having barged in. There's a bookshelf up against one wall, some shelves holding various knick-knacks, a small table and chair, a bed, and a sink. Also one adventurer, and one woman who would prefer there was not an adventurer.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_Lumbridge")
+                        },
+                        NPCsHere = new() { "mistLumVictoria" },
+                        ProcessingStations = new() { "Sink" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeNorth", "North Lumbridge", "Misthalin") {
-                    Description = "The more active part of Lumbridge, north of the castle. The main town road extends through this section farther north to Farmer Fred's farm, and south past the castle. There is a market, general store, forge, fishing shop, and tavern here. ",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_Lumbridge"),
-                        new Connection("MIST_LumbridgeTowardsDraynor"),
-                        new Connection("MIST_LumbridgeFredsFarm"),
-                        new Connection("MIST_LumbridgeGeneralStore"),
-                        new Connection("MIST_LumbridgeMarket"),
-                        new Connection("MIST_LumbridgeFishingStore"),
-                        new Connection("MIST_LumbridgeShearedRam"),
-                        new Connection("MIST_LumbridgeCommunalForge"),
-                        new Connection("MIST_GroatsFarm")
-                    },
-                    NPCsHere = new() { "man", "man", "man", "man" },
-                    GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeWillow", "treeWillow", "fishBaitLow", "fishBaitLow", "fishBaitLow", "fishLure", "fishLure", "fishLure" }
-                }); 
+                    locsToAdd.Add(new Location("MIST_LumbridgeNorth", "North Lumbridge", "Misthalin") {
+                        Description = "The more active part of Lumbridge, north of the castle. The main town road extends through this section farther north to Farmer Fred's farm, and south past the castle. There is a market, general store, forge, fishing shop, and tavern here. ",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_Lumbridge"),
+                            new Connection("MIST_LumbridgeTowardsDraynor"),
+                            new Connection("MIST_LumbridgeFredsFarm"),
+                            new Connection("MIST_LumbridgeGeneralStore"),
+                            new Connection("MIST_LumbridgeMarket"),
+                            new Connection("MIST_LumbridgeFishingStore"),
+                            new Connection("MIST_LumbridgeShearedRam"),
+                            new Connection("MIST_LumbridgeCommunalForge"),
+                            new Connection("MIST_GroatsFarm")
+                        },
+                        NPCsHere = new() { "man", "man", "man", "man" },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeWillow", "treeWillow", "fishBaitLow", "fishBaitLow", "fishBaitLow", "fishLure", "fishLure", "fishLure" }
+                    }); 
 
-                locsToAdd.Add(new Location("MIST_LumbridgeMarket", "Lumbridge Market", "Misthalin") {
-                    Description = "The small market is bustling, people wandering from stall to stall to peruse the goods on sale. A few sets of tables and chairs allow people to take a break and eat the things they've purchased. Some guards are walking around to guard the stalls but aren't doing a particularly good job, and an enterprising individual could easily steal without their notice.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeNorth"),
-                        new Connection("MIST_LumbridgeFishingStore")
-                    },
-                    NPCsHere = new() { "mistLumHarlan", "man", "man", "woman", "woman", "woman", "woman" },
-                    GatheringSpots = new() { "stallVegetable", "stallVegetable", "stallBakery", "stallBakery", "stallCrafting", "stallCrafting", "stallWine", "stallWine", "stallSeed", "stallSeed"}
-                    // TODO: Add some shop items here? It IS a market
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeMarket", "Lumbridge Market", "Misthalin") {
+                        Description = "The small market is bustling, people wandering from stall to stall to peruse the goods on sale. A few sets of tables and chairs allow people to take a break and eat the things they've purchased. Some guards are walking around to guard the stalls but aren't doing a particularly good job, and an enterprising individual could easily steal without their notice.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeNorth"),
+                            new Connection("MIST_LumbridgeFishingStore")
+                        },
+                        NPCsHere = new() { "mistLumHarlan", "man", "man", "woman", "woman", "woman", "woman" },
+                        GatheringSpots = new() { "stallVegetable", "stallVegetable", "stallBakery", "stallBakery", "stallCrafting", "stallCrafting", "stallWine", "stallWine", "stallSeed", "stallSeed"}
+                        // TODO: Add some shop items here? It IS a market
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeShearedRam", "The Sheared Ram", "Misthalin") {
-                    Description = "This small bar is fairly cozy, with windows looking out over the River Lum and rustic decorations around the room. There are a small handful of tables available, or you could take a seat at the bar. The occupants are a little rowdy but the bar is not overly full in such a small town.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeNorth")
-                    },
-                    NPCsHere = new() { "mistLumBartender", "mistLumVeos", "clueArthur", "man", "man", "man" },
-                    ShopItemsHere = new() { "beer" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeShearedRam", "The Sheared Ram", "Misthalin") {
+                        Description = "This small bar is fairly cozy, with windows looking out over the River Lum and rustic decorations around the room. There are a small handful of tables available, or you could take a seat at the bar. The occupants are a little rowdy but the bar is not overly full in such a small town.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeNorth")
+                        },
+                        NPCsHere = new() { "mistLumBartender", "mistLumVeos", "clueArthur", "man", "man", "man" },
+                        ShopItemsHere = new() { "beer" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeCommunalForge", "Communal Forge", "Misthalin") {
-                    Description = "This small shack isn't even really enclosed, more of a stone canopy. It has some of the basic tools for smelting and smithing. A few small workbenches with stools are pushed up against the few walls the canopy does have, and a dirty brown rug covers part of the floor. Most of the floorspace is taken up by the furnace and anvil.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeNorth")
-                    },
-                    ProcessingStations = new() { "Casting", "Furnace", "Anvil" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeCommunalForge", "Communal Forge", "Misthalin") {
+                        Description = "This small shack isn't even really enclosed, more of a stone canopy. It has some of the basic tools for smelting and smithing. A few small workbenches with stools are pushed up against the few walls the canopy does have, and a dirty brown rug covers part of the floor. Most of the floorspace is taken up by the furnace and anvil.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeNorth")
+                        },
+                        ProcessingStations = new() { "Casting", "Furnace", "Anvil" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeGeneralStore", "General Store", "Misthalin") {
-                    Description = "An assortment of products one could almost mistake for knick-knacks line the shelves of this small building. Most of it doesn't appear to be too useful, but there are a few items of interest. Seems like business here isn't quite as good since the market and fishing store moved in.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeNorth")
-                    },
-                    ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "knife", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "shovel", "hammer", "plantPotEmpty"  },
-                    NPCsHere = new() { "man", "man" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeGeneralStore", "General Store", "Misthalin") {
+                        Description = "An assortment of products one could almost mistake for knick-knacks line the shelves of this small building. Most of it doesn't appear to be too useful, but there are a few items of interest. Seems like business here isn't quite as good since the market and fishing store moved in.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeNorth")
+                        },
+                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "knife", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "shovel", "hammer", "plantPotEmpty"  },
+                        NPCsHere = new() { "man", "man" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeFishingStore", "Fishing Store", "Misthalin") {
-                    Description = "There's a fishy smell lingering in here, permeating the walls and floors. A cooler has a variety of fish available, and the tools to catch your own fish line the shelves while the disgruntled store owner lounges in a chair behind the counter.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeNorth")
-                    },
-                    ShopItemsHere = new() { "baitFish", "feather", "fishingNetSmall", "fishingNetBig", "fishingRod", "fishingRodFly", "fishingPotLobster", "fishingHarpoon", "fishRawShrimp", "fishRawAnchovies", "fishRawSardine", "fishRawHerring", "fishRawTrout", "fishRawPike", "fishRawSalmon", "fishRawTuna", "fishRawSwordfish" },
-                    NPCsHere = new() { "man", "man" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeFishingStore", "Fishing Store", "Misthalin") {
+                        Description = "There's a fishy smell lingering in here, permeating the walls and floors. A cooler has a variety of fish available, and the tools to catch your own fish line the shelves while the disgruntled store owner lounges in a chair behind the counter.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeNorth")
+                        },
+                        ShopItemsHere = new() { "baitFish", "feather", "fishingNetSmall", "fishingNetBig", "fishingRod", "fishingRodFly", "fishingPotLobster", "fishingHarpoon", "fishRawShrimp", "fishRawAnchovies", "fishRawSardine", "fishRawHerring", "fishRawTrout", "fishRawPike", "fishRawSalmon", "fishRawTuna", "fishRawSwordfish" },
+                        NPCsHere = new() { "man", "man" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeFredsFarm", "Fred's Farm", "Misthalin") {
-                    Description = "A fairly large farmstead owned and operated by Fred the Farmer. There are some sheep here, plus a cow pen and chicken coop that you could get into. A huge windmill spins endlessly atop a small hill, and there are wheat and potato fields here. An axe in front of Fred's house has a bronze hatchet stuck in it.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeNorth"),
-                        new Connection("MIST_DraynorCrossroads"),
-                        new Connection("MIST_LumbridgeFredsFarmChickens"),
-                        new Connection("MIST_LumbridgeFredsFarmCows")
-                    },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("hatchetBronze", 1)
-                    },
-                    GatheringSpots = new() { "clueChest", "treePine", "treePine", "treePine", "sheep", "sheep", "sheep", "plantPotato", "plantPotato", "plantPotato", "plantGrain", "plantGrain", "plantGrain"},
-                    ProcessingStations = new() { "Windmill" },
-                    NPCsHere = new() { "mistLumFred", "farmer" }
-                }); 
+                    locsToAdd.Add(new Location("MIST_LumbridgeFredsFarm", "Fred's Farm", "Misthalin") {
+                        Description = "A fairly large farmstead owned and operated by Fred the Farmer. There are some sheep here, plus a cow pen and chicken coop that you could get into. A huge windmill spins endlessly atop a small hill, and there are wheat and potato fields here. An axe in front of Fred's house has a bronze hatchet stuck in it.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeNorth"),
+                            new Connection("MIST_DraynorCrossroads"),
+                            new Connection("MIST_LumbridgeFredsFarmChickens"),
+                            new Connection("MIST_LumbridgeFredsFarmCows")
+                        },
+                        ItemSpawns = new List<ItemSpot>() {
+                            new ItemSpot("hatchetBronze", 1)
+                        },
+                        GatheringSpots = new() { "clueChest", "treePine", "treePine", "treePine", "sheep", "sheep", "sheep", "plantPotato", "plantPotato", "plantPotato", "plantOnion", "plantOnion", "plantGrain", "plantGrain", "plantGrain"},
+                        ProcessingStations = new() { "Windmill" },
+                        NPCsHere = new() { "mistLumFred", "farmer" }
+                    }); 
 
-                locsToAdd.Add(new Location("MIST_LumbridgeFredsFarmChickens", "Fred's Chicken Coop", "Misthalin") {
-                    Description = "It's a little cramped inside this coop, what with all the chickens wandering around and the sacks of seed and grain. One of Fred's farmhands is here keeping an eye on the chickens, but apparently isn't being paid enough to stop you from harming them.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeFredsFarm")
-                    },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("eggChicken", 1)
-                    },
-                    AreaMonsters = new() { "chicken", "chicken", "chicken", "chicken" },
-                    NPCsHere = new() { "farmer" }
-                }); 
+                    locsToAdd.Add(new Location("MIST_LumbridgeFredsFarmChickens", "Fred's Chicken Coop", "Misthalin") {
+                        Description = "It's a little cramped inside this coop, what with all the chickens wandering around and the sacks of seed and grain. One of Fred's farmhands is here keeping an eye on the chickens, but apparently isn't being paid enough to stop you from harming them.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeFredsFarm")
+                        },
+                        ItemSpawns = new List<ItemSpot>() {
+                            new ItemSpot("eggChicken", 1)
+                        },
+                        AreaMonsters = new() { "chicken", "chicken", "chicken", "chicken" },
+                        NPCsHere = new() { "farmer" }
+                    }); 
 
-                locsToAdd.Add(new Location("MIST_LumbridgeFredsFarmCows", "Fred's Cow Pen", "Misthalin") {
-                    Description = "This is a spacious pen full of cows and their calves right on the banks of the River Lum. A few thistles grow around the pen, occasionally being eaten by the cows and then reappearing a few seconds later.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeFredsFarm")
-                    },
-                    AreaMonsters = new() { "cow", "cow", "cow", "cow" },
-                    ProcessingStations = new() { "Dairy Cow" },
-                    NPCsHere = new() { "farmer" }
-                }); 
+                    locsToAdd.Add(new Location("MIST_LumbridgeFredsFarmCows", "Fred's Cow Pen", "Misthalin") {
+                        Description = "This is a spacious pen full of cows and their calves right on the banks of the River Lum. A few thistles grow around the pen, occasionally being eaten by the cows and then reappearing a few seconds later.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeFredsFarm")
+                        },
+                        AreaMonsters = new() { "cow", "cow", "cow", "cow" },
+                        ProcessingStations = new() { "Dairy Cow" },
+                        NPCsHere = new() { "farmer" }
+                    }); 
 
-                locsToAdd.Add(new Location("MIST_LumbridgeBehindCastle", "Lumbridge - Behind the Castle", "Misthalin") {
-                    Description = "The area behind Lumbridge Castle is lightly forested. For some reason there's an unlocked door leading inside the walls, and nobody is guarding it. A few more poles hang the Lumbridge banner back here. There are a few stray sheep, some rodents of unusual size, some rodents of usual size, and a farming patch to grow trees as well.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeCastleBailey"), 
-                        new Connection("MIST_LumbridgeTowardsDraynor")
-                    },
-                    GatheringSpots = new() { "treeOak", "treeOak", "treeYew", "treePine", "treePine", "treePine", "sheep", "sheep" },
-                    FarmingPatchesHere = new() { "MIST_LumbTree" },
-                    AreaMonsters = new() { "rat", "rat", "rat", "ratGiant", "ratGiant" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeBehindCastle", "Lumbridge - Behind the Castle", "Misthalin") {
+                        Description = "The area behind Lumbridge Castle is lightly forested. For some reason there's an unlocked door leading inside the walls, and nobody is guarding it. A few more poles hang the Lumbridge banner back here. There are a few stray sheep, some rodents of unusual size, some rodents of usual size, and a farming patch to grow trees as well.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeCastleBailey"), 
+                            new Connection("MIST_LumbridgeTowardsDraynor")
+                        },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treeYew", "treePine", "treePine", "treePine", "sheep", "sheep" },
+                        FarmingPatchesHere = new() { "MIST_LumbTree" },
+                        AreaMonsters = new() { "rat", "rat", "rat", "ratGiant", "ratGiant" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeTowardsDraynor", "Between Lumbridge and Draynor", "Misthalin") {
-                    Description = "Just outside Lumbridge on the path leading from there to Draynor Village. The path winds back and forth between the small hills of the countryside. A small smattering of monsters and trees can be found here, and a crumbling ruin of a building, but not a lot else of interest. There's a suspicious locked trapdoor in the ruin.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeNorth"),
-                        new Connection("MIST_LumbridgeBehindCastle"),
-                        new Connection("MIST_HamHideout", new() { new("Skill", 5, "Thieving") }, false, 5, "Thieving", "(Pick-lock Trapdoor)"),
-                        new Connection("MIST_DraynorOutskirtsSouth")
-                    },
-                    GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
-                    AreaMonsters = new() { "spiderGiant", "spiderGiant", "goblin", "goblin", "goblin" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeTowardsDraynor", "Between Lumbridge and Draynor", "Misthalin") {
+                        Description = "Just outside Lumbridge on the path leading from there to Draynor Village. The path winds back and forth between the small hills of the countryside. A small smattering of monsters and trees can be found here, and a crumbling ruin of a building, but not a lot else of interest. There's a suspicious locked trapdoor in the ruin.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeNorth"),
+                            new Connection("MIST_LumbridgeBehindCastle"),
+                            new Connection("MIST_HamHideout", new() { new("Skill", 5, "Thieving") }, false, 5, "Thieving", "(Pick-lock Trapdoor)"),
+                            new Connection("MIST_DraynorOutskirtsSouth")
+                        },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
+                        AreaMonsters = new() { "spiderGiant", "spiderGiant", "goblin", "goblin", "goblin" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeAcrossLum", "Across the River Lum", "Misthalin") {
-                    Description = "There is a small ruined shack here surrounded by goblins and a couple giant spiders. A signpost here says 'North: farms and Varrock', 'East: Al Kharid toll gate', 'South: the River Lum', 'West: Lumbridge'.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_GroatsFarm"),
-                        new Connection("DES_AlKharidOutskirts", new() { new("QuestAt", 100, "DES_PrinceAliRescue"), new("Item", 10, "Gold", true) }, true), // TODO: When Prince Ali Rescue is implemented, update this to the actual complete stage
-                        new Connection("MIST_Lumbridge")
-                    },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("daggerIron", 1)
-                    },
-                    NPCsHere = new() { "desBorderGuard", "mistLumBarfyBill" },
-                    GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeDead", "treeDead", "treeDead" },
-                    AreaMonsters = new() { "goblin", "goblin", "goblin", "goblin", "goblin", "spiderGiant", "spiderGiant" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeAcrossLum", "Across the River Lum", "Misthalin") {
+                        Description = "There is a small ruined shack here surrounded by goblins and a couple giant spiders. A signpost here says 'North: farms and Varrock', 'East: Al Kharid toll gate', 'South: the River Lum', 'West: Lumbridge'.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_GroatsFarm"),
+                            new Connection("DES_AlKharidOutskirts", new() { new("QuestAt", 100, "DES_PrinceAliRescue"), new("Item", 10, "Gold", true) }, true), // TODO: When Prince Ali Rescue is implemented, update this to the actual complete stage
+                            new Connection("MIST_Lumbridge")
+                        },
+                        ItemSpawns = new List<ItemSpot>() {
+                            new ItemSpot("daggerIron", 1)
+                        },
+                        NPCsHere = new() { "desBorderGuard", "mistLumBarfyBill" },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeDead", "treeDead", "treeDead" },
+                        AreaMonsters = new() { "goblin", "goblin", "goblin", "goblin", "goblin", "spiderGiant", "spiderGiant" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_GroatsFarm", "Groats' Farm", "Misthalin") {
-                    Description = "A sprawling farmstead on the banks of the River Lum, just east of Lumbridge. There are a variety of trees here, a small potato field, a chicken coop, and a modest house where Seth and his daughter live. Some farmhands walk around managing the chores. There's a cow field taking up the east half of the farm, and a farm patch suitable for growing hops.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_VarrockOutskirtsSouth"),
-                        new Connection("MIST_GroatsFarmCows"),
-                        new Connection("MIST_LumbridgeAcrossLum")
-                    },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("eggChicken", 1)
-                    },
-                    NPCsHere = new() { "mistLumGroatsSeth", "mistLumGroatsGillie" },
-                    ProcessingStations = new() { "Range", "Dairy Churn" },
-                    FarmingPatchesHere = new() { "MIST_LumbHops" },
-                    GatheringSpots = new() { "treeWillow", "treeWillow", "treeWillow", "treeOak", "treeOak", "treePine", "treePine", "treePine", "plantPotato", "plantPotato", "plantPotato" },
-                    AreaMonsters = new() { "farmer", "farmer", "farmer", "chicken", "chicken", "chicken", "chicken", "chicken" }
-                });
+                    locsToAdd.Add(new Location("MIST_GroatsFarm", "Groats' Farm", "Misthalin") {
+                        Description = "A sprawling farmstead on the banks of the River Lum, just east of Lumbridge. There are a variety of trees here, a small potato field, a chicken coop, and a modest house where Seth and his daughter live. Some farmhands walk around managing the chores. There's a cow field taking up the east half of the farm, and a farm patch suitable for growing hops.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockCrossroadsSouth"),
+                            new Connection("MIST_GroatsFarmCows"),
+                            new Connection("MIST_LumbridgeAcrossLum")
+                        },
+                        ItemSpawns = new List<ItemSpot>() {
+                            new ItemSpot("eggChicken", 1)
+                        },
+                        NPCsHere = new() { "mistLumGroatsSeth", "mistLumGroatsGillie" },
+                        ProcessingStations = new() { "Range", "Dairy Churn" },
+                        FarmingPatchesHere = new() { "MIST_LumbHops" },
+                        GatheringSpots = new() { "treeWillow", "treeWillow", "treeWillow", "treeOak", "treeOak", "treePine", "treePine", "treePine", "plantPotato", "plantPotato", "plantPotato" },
+                        AreaMonsters = new() { "farmer", "farmer", "farmer", "chicken", "chicken", "chicken", "chicken", "chicken" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_GroatsFarmCows", "Groats' Farm - Cow Pen", "Misthalin") {
-                    Description = "A spacious pen holding many cows, which are grazing passively on the short grass coating the ground of the pen. It is surrounded by a wooden fence, with the Lum and Groats' Farm to the west and a spot north of Al Kharid to the east.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_GroatsFarm"),
-                        new Connection("MIST_GroatsFarmBrutus") // TODO: Block entry until Ides of Milk is progressed enough
-                    },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("bucketEmpty", 1)
-                    },
-                    ProcessingStations = new() { "Dairy Cow" }, 
-                    AreaMonsters = new() { "cow", "cow", "cow", "cow", "cow", "cow", "cow", "cow" }
-                });
+                    locsToAdd.Add(new Location("MIST_GroatsFarmCows", "Groats' Farm - Cow Pen", "Misthalin") {
+                        Description = "A spacious pen holding many cows, which are grazing passively on the short grass coating the ground of the pen. It is surrounded by a wooden fence, with the Lum and Groats' Farm to the west and a spot north of Al Kharid to the east.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_GroatsFarm"),
+                            new Connection("MIST_GroatsFarmBrutus") // TODO: Block entry until Ides of Milk is progressed enough
+                        },
+                        ItemSpawns = new List<ItemSpot>() {
+                            new ItemSpot("bucketEmpty", 1)
+                        },
+                        ProcessingStations = new() { "Dairy Cow" }, 
+                        AreaMonsters = new() { "cow", "cow", "cow", "cow", "cow", "cow", "cow", "cow" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_GroatsFarmBrutus", "Groats' Farm - Brutus", "Misthalin") {
-                    Description = "This part of the field has a huge angry-looking bull with huge horns and red eyes whose name seems to be Brutus. He snorts and stomps around like he owns the place which, at least by the standards of animals, he essentially does. Brutus looks a bit intimidating. Definitely doesn't skip leg day.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_GroatsFarmCows"), 
-                    },
-                    BossHere = "bossBrutus"
-                });
+                    locsToAdd.Add(new Location("MIST_GroatsFarmBrutus", "Groats' Farm - Brutus", "Misthalin") {
+                        Description = "This part of the field has a huge angry-looking bull with huge horns and red eyes whose name seems to be Brutus. He snorts and stomps around like he owns the place which, at least by the standards of animals, he essentially does. Brutus looks a bit intimidating. Definitely doesn't skip leg day.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_GroatsFarmCows"), 
+                        },
+                        BossHere = "bossBrutus"
+                    });
 
-                locsToAdd.Add(new Location("MIST_HamHideout", "H.A.M. Hideout", "Misthalin") {
-                    Description = "This is a surprisingly large cavern lit by braziers and torches. Banners are hung haphazardly everywhere bearing a logo consisting of the letters 'HAM' stylized in purple, green, and red. A handful of wooden benches are facing a small stage that a fanatic is preaching about the evils of 'monsters' on. Other fanatics are scattered around the cavern speaking energetically with eachother. They are all dressed in nearly identical magenta clothing.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeTowardsDraynor", alt: "(Climb Ladder)"),
-                        new Connection("MIST_HamHideoutCells")
-                    }, 
-                    NPCsHere = new() { "hamFemale", "hamFemale", "hamFemale", "hamMale", "hamMale", "hamMale" },
-                    AreaMonsters = new() { "hamGuard", "hamGuard", "hamGuard", "hamGuard", "hamGuard" }
-                });
+                    locsToAdd.Add(new Location("MIST_HamHideout", "H.A.M. Hideout", "Misthalin") {
+                        Description = "This is a surprisingly large cavern lit by braziers and torches. Banners are hung haphazardly everywhere bearing a logo consisting of the letters 'HAM' stylized in purple, green, and red. A handful of wooden benches are facing a small stage that a fanatic is preaching about the evils of 'monsters' on. Other fanatics are scattered around the cavern speaking energetically with eachother. They are all dressed in nearly identical magenta clothing.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeTowardsDraynor", alt: "(Climb Ladder)"),
+                            new Connection("MIST_HamHideoutCells")
+                        }, 
+                        NPCsHere = new() { "hamFemale", "hamFemale", "hamFemale", "hamMale", "hamMale", "hamMale" },
+                        AreaMonsters = new() { "hamGuard", "hamGuard", "hamGuard", "hamGuard", "hamGuard" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_HamHideoutCells", "H.A.M. Hideout - Cells", "Misthalin") {
-                    Description = "This small branch off the main hideout is less populated but still lit by braziers and torches. Banners are hung haphazardly everywhere bearing a logo consisting of the letters 'HAM' stylized in purple, green, and red. A few small jail cells are set up with the metal bars sunk into the floor of the cavern.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_HamHideout")
-                    }, 
-                    NPCsHere = new() { "mistHamJimmy", "hamFemale" },
-                    AreaMonsters = new() { "hamGuard", "hamGuard" }
-                });
-            }
+                    locsToAdd.Add(new Location("MIST_HamHideoutCells", "H.A.M. Hideout - Cells", "Misthalin") {
+                        Description = "This small branch off the main hideout is less populated but still lit by braziers and torches. Banners are hung haphazardly everywhere bearing a logo consisting of the letters 'HAM' stylized in purple, green, and red. A few small jail cells are set up with the metal bars sunk into the floor of the cavern.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_HamHideout")
+                        }, 
+                        NPCsHere = new() { "mistHamJimmy", "hamFemale" },
+                        AreaMonsters = new() { "hamGuard", "hamGuard" }
+                    });
+                }
 
-            // Lumbridge Swamp
-            {
-                int index = 0;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds. The path out to just south of Draynor Village is clearly visible from this part of the swamp.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_DraynorOutskirtsSouth"),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant" }
-                });
+                // Lumbridge Swamp
+                {
+                    int index = 0;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds. The path out to just south of Draynor Village is clearly visible from this part of the swamp.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorOutskirtsSouth"),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant" }
+                    });
 
-                index = 1;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. A small fence separates the swamp from the area behind Lumbridge Castle to the north.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "goblin", "frogBig", "frogBig" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 1;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. A small fence separates the swamp from the area behind Lumbridge Castle to the north.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "goblin", "frogBig", "frogBig" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 2;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. A small fence separates the swamp from the area behind Lumbridge Castle to the north.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frogBig", "frogBig" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 2;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. A small fence separates the swamp from the area behind Lumbridge Castle to the north.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frogBig", "frogBig" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 3;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. A small fence separates the swamp from the area behind Lumbridge Castle to the north.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frogBig", "frogBig", "frogGiant" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 3;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. A small fence separates the swamp from the area behind Lumbridge Castle to the north.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frogBig", "frogBig", "frogGiant" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 4;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. A small fence separates the swamp from the area behind Lumbridge Castle to the north.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 4;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. A small fence separates the swamp from the area behind Lumbridge Castle to the north.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 5;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the river is the desert town of Al Kharid, and there are trees such that you could probably grapple across here with the right tools and skills.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeGraveyard"),
-                        new Connection("DES_AlKharidBank"),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    }
-                });
+                    index = 5;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the river is the desert town of Al Kharid, and there are trees such that you could probably grapple across here with the right tools and skills.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeGraveyard"),
+                            new Connection("DES_AlKharidBank"),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        }
+                    });
 
-                index = 6;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "frog", "frog", "frog" }
-                });
+                    index = 6;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "frog", "frog", "frog" }
+                    });
 
-                index = 7;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. There is a tree here with a dark hole at the base. With a rope you could climb down, but you should probably also have a light of some kind.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeSwampCave", new() { new("Item", 1, "rope") }),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 7;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. There is a tree here with a dark hole at the base. With a rope you could climb down, but you should probably also have a light of some kind.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwampCave", new() { new("Item", 1, "rope") }),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 8;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 8;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 9;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. There's a small wooden shed here.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwampShed"),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frogGiant", "frogGiant" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 9;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. There's a small wooden shed here.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwampShed"),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frogGiant", "frogGiant" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 10;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog", "frogBig", "frogBig" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 10;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog", "frogBig", "frogBig" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 11;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the river is the desert town of Al Kharid. Fish seem to be gathering at a few spots along the banks.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "fishNetSmall", "fishNetSmall", "fishBaitLow", "fishBaitLow" } 
-                });
+                    index = 11;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the river is the desert town of Al Kharid. Fish seem to be gathering at a few spots along the banks.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "fishNetSmall", "fishNetSmall", "fishBaitLow", "fishBaitLow" } 
+                    });
 
-                index = 12;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead" }
-                });
+                    index = 12;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead" }
+                    });
 
-                index = 13;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    AreaMonsters = new() { "ratGiant", "ratGiant" }
-                });
+                    index = 13;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        AreaMonsters = new() { "ratGiant", "ratGiant" }
+                    });
 
-                index = 14;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. An ancient stone altar emits a mysterious blue light here, surrounded by some crumbling stone pillars.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("RunecraftAltarWater", new() { new("Item", 1, "talismanWater") }),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog", "frogBig", "frogBig" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 14;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. An ancient stone altar emits a mysterious blue light here, surrounded by some crumbling stone pillars.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("RunecraftAltarWater", new() { new("Item", 1, "talismanWater") }),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog", "frogBig", "frogBig" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 15;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() {  
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog" },
-                    ItemSpawns = new() { new("swampTar", 1, null, 3) }
-                });
+                    index = 15;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() {  
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog" },
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                    });
 
-                index = 16;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
-                    Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() {  
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog", "frogBig", "frogBig" }
-                });
+                    index = 16;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
+                        Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() {  
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog", "frogBig", "frogBig" }
+                    });
 
-                index = 17;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the river is the desert town of Al Kharid. Fish seem to be gathering at a few spots along the banks.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "fishNetSmall", "fishNetSmall", "fishBaitLow", "fishBaitLow" } 
-                });
+                    index = 17;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the river is the desert town of Al Kharid. Fish seem to be gathering at a few spots along the banks.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "fishNetSmall", "fishNetSmall", "fishBaitLow", "fishBaitLow" } 
+                    });
 
-                index = 18;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds. There's a small mine here offering a few useful ore nodes.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "oreIron", "oreIron", "oreIron", "oreCoal", "oreCoal", "oreCoal", "oreMithril", "oreMithril", "oreAdamant", "oreAdamant" }
-                });
+                    index = 18;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds. There's a small mine here offering a few useful ore nodes.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "oreIron", "oreIron", "oreIron", "oreCoal", "oreCoal", "oreCoal", "oreMithril", "oreMithril", "oreAdamant", "oreAdamant" }
+                    });
 
-                index = 19;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. This part of the coast borders a bay, and both the Wizard Tower and part of the desert to the south are visible here.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    }
-                });
+                    index = 19;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. This part of the coast borders a bay, and both the Wizard Tower and part of the desert to the south are visible here.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        }
+                    });
 
-                index = 20;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. This part of the coast borders a bay, and both the Wizard Tower and part of the desert to the south are visible here.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    }
-                });
+                    index = 20;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. This part of the coast borders a bay, and both the Wizard Tower and part of the desert to the south are visible here.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        }
+                    });
 
-                index = 21;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. This part of the coast borders a bay, and both the Wizard Tower and part of the desert to the south are visible here. A small wooden shack is on the coast. Seems like a terrible place to live, unless you're seeking isolation from anyone who might pass by.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwampUrhney"),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    }
-                });
+                    index = 21;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. This part of the coast borders a bay, and both the Wizard Tower and part of the desert to the south are visible here. A small wooden shack is on the coast. Seems like a terrible place to live, unless you're seeking isolation from anyone who might pass by.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwampUrhney"),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        }
+                    });
 
-                index = 22;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. This part of the coast borders a bay, and both the Wizard Tower and part of the desert to the south are visible here.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    }, 
-                    AreaMonsters = new() { "ratGiant", "ratGiant" }
-                });
+                    index = 22;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. This part of the coast borders a bay, and both the Wizard Tower and part of the desert to the south are visible here.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        }, 
+                        AreaMonsters = new() { "ratGiant", "ratGiant" }
+                    });
                  
-                index = 23;
-                locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
-                    Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds. There's a small mine here offering a few useful ore nodes.",
-                    MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
-                        new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                    },
-                    GatheringSpots = new() { "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin", "rockClay", "rockClay" }
-                });
+                    index = 23;
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp Coast", "Misthalin") {
+                        Description = "The marshy ground of the swamp fades to the sand and harder packed dirt of the river banks here. Across the water is the Wizard Tower island, the tower spearing up into the clouds. There's a small mine here offering a few useful ore nodes.",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -1, 0, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
+                            new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
+                        },
+                        GatheringSpots = new() { "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin", "rockClay", "rockClay" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeSwampUrhney", "Father Urhney's Shack", "Misthalin") {
-                    Description = "Despite being located in a swamp, the inside of this shack is very cozy. It is well lit by torches with a nice rug spread on the floor. There are some crates and barrels stacked against the walls. One bookshelf holds various dishes and cooking implements, while two others are stuffed with ragged books. There's a desk with a spare pair of leather gloves on it and a padded chair to sit while you work, plus a rocking chair in the corner and a small but comfortable cot in another corner. A portrait of a mysterious figure hangs on one wall.",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp21")
-                    },
-                    ItemSpawns = new() { new("vambracesLeather", 1) }, 
-                    NPCsHere = new() { "mistLumUrhney" },
-                    GatheringSpots = new() { "clueBookcase" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampUrhney", "Father Urhney's Shack", "Misthalin") {
+                        Description = "Despite being located in a swamp, the inside of this shack is very cozy. It is well lit by torches with a nice rug spread on the floor. There are some crates and barrels stacked against the walls. One bookshelf holds various dishes and cooking implements, while two others are stuffed with ragged books. There's a desk with a spare pair of leather gloves on it and a padded chair to sit while you work, plus a rocking chair in the corner and a small but comfortable cot in another corner. A portrait of a mysterious figure hangs on one wall.",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp21")
+                        },
+                        ItemSpawns = new() { new("vambracesLeather", 1) }, 
+                        NPCsHere = new() { "mistLumUrhney" },
+                        GatheringSpots = new() { "clueBookcase" }
+                    });
 
-                locsToAdd.Add(new Location("MIST_LumbridgeSwampShed", "Swamp Shed", "Misthalin") {
-                    Description = "There's not really much in this shed, which appears to have been used to hold farming tools at some point. There's still a spade here among the empty crates, barrels, and sacks. A shelf is pushed up against one wall but holds nothing. A few windows look out onto the... beautiful... surroundings and let in all that lovely swampy air.",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("MIST_LumbridgeSwamp9"),
-                        new Connection("MIST_Zanaris")
-                    },
-                    ItemSpawns = new() { new("shovel", 1) },
-                    GatheringSpots = new() { "clueCrates" }
-                });
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampShed", "Swamp Shed", "Misthalin") {
+                        Description = "There's not really much in this shed, which appears to have been used to hold farming tools at some point. There's still a spade here among the empty crates, barrels, and sacks. A shelf is pushed up against one wall but holds nothing. A few windows look out onto the... beautiful... surroundings and let in all that lovely swampy air.",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_LumbridgeSwamp9"),
+                            new Connection("MIST_Zanaris")
+                        },
+                        ItemSpawns = new() { new("shovel", 1) },
+                        GatheringSpots = new() { "clueCrates" }
+                    });
+                }
+
+                // Draynor Village
+                {
+                    locsToAdd.Add(new Location("MIST_DraynorOutskirtsSouth", "Between Draynor and Lumbridge", "Misthalin") {
+                        Description = "Just outside Draynor Village on the path leading from there to Lumbridge. The path winds back and forth between the small hills of the countryside. A smaller path branches off and leads towards the Wizard's Tower. Closer to Draynor, just off the path, is the old jail building. There are a few willow trees here and some fish swarming near the coast.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorVillage"),
+                            new Connection("MIST_DraynorJail"),
+                            new Connection("MIST_WizardTowerBridge"),
+                            new Connection("MIST_LumbridgeTowardsDraynor"),
+                            new Connection("MIST_LumbridgeSwamp0")
+                        },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
+                        AreaMonsters = new() { "spiderGiant", "spiderGiant", "goblin", "goblin", "goblin" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_WizardTowerBridge", "Wizard's Tower Bridge", "Misthalin") {
+                        Description = "On the large wide path from the Wizard Tower island to mainland Misthalin. There are a few banners hanging from poles, and some crates left partway down the bridge. The marble Wizard Tower spears into the sky above you, visible from far and wide.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_WizardTowerIsland"),
+                            new Connection("MIST_DraynorOutskirtsSouth")
+                        },
+                        GatheringSpots = new() { "clueCrates" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_WizardTowerIsland", "Wizard's Tower Island", "Misthalin") {
+                        Description = "This island holds the Wizard's Tower, towering high above you. Two statues of famous wizards of old stand guard at the bridge entrance, while a fountain is just off the path into the tower. There is some sparse tree and shrub coverage on the island but otherwise not a lot of interest.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_WizardTower"),
+                            new Connection("MIST_WizardTowerBridge")
+                        },
+                        GatheringSpots = new() { "treePine", "treePine" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_WizardTower", "Wizard's Tower", "Misthalin") {
+                        Description = "Wizards bustle about in here in the midst of completing various magical research projects. There are a few small rooms here on the first floor, plus a staircase up to the next floor and a ladder down to the basement. One of the rooms contains a library with some bookshelves containing various books that are probably very interesting if you're a wizard doing research.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_WizardTower2F"),
+                            new Connection("MIST_WizardTowerBasement", alt: "(Climb Ladder)"),
+                            new Connection("MIST_WizardTowerIsland")
+                        },
+                        GatheringSpots = new() { "bookshelfWizard", "bookshelfWizard", "bookshelfWizard" },
+                        NPCsHere = new() { "mistWizOnglewip" },
+                        ItemSpawns = new() { new("bootsLeather", 1), new("logPine", 1) },
+                        AreaMonsters = new() { "wizard", "wizard", "wizard", "wizard" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_WizardTower2F", "Wizard's Tower - Second Floor", "Misthalin") {
+                        Description = "This floor of the tower seems to be more of a sleeping area than the research areas below or above, with some cots placed in the rooms for weary wizards. There's not much else in here except a nice view through the windows looking out onto the surrounding landscape.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_WizardTower3F"),
+                            new Connection("MIST_WizardTower")
+                        },
+                        NPCsHere = new() { "mistWizTraiborn", "mistWizJalarast" },
+                        AreaMonsters = new() { "wizard", "wizard" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_WizardTower3F", "Wizard's Tower - Third Floor", "Misthalin") {
+                        Description = "A decent portion of this floor is taken up by a large cage holding a lesser demon captive inside it. Though you can't reach it with melee attacks, you could probably hit it with ranged and magic attacks without it being able to retaliate. Slightly cruel, but it's a demon, so it's probably okay? There are also some high-ranking wizards up here busying themselves in their offices with various works. Illegible research notes cover a few of the tables up here.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_WizardTower2F")
+                        },
+                        NPCsHere = new() { "mistWizMizgog", "mistWizGrayzag" },
+                        AreaMonsters = new() { "wizDemonLesser", "wizard", "wizard" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_WizardTowerBasement", "Wizard's Tower - Third Floor", "Misthalin") {
+                        Description = "A decent portion of this floor is taken up by a large cage holding a lesser demon captive inside it. Though you can't reach it with melee attacks, you could probably hit it with ranged and magic attacks without it being able to retaliate. Slightly cruel, but it's a demon, so it's probably okay? There are also some high-ranking wizards up here busying themselves in their offices with various works. Illegible research notes cover a few of the tables up here.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_WizardTower2F")
+                        },
+                        NPCsHere = new() { "mistWizSedridor" },
+                        AreaMonsters = new() { "chicken", "mistWizSkeleton" },
+                        GatheringSpots = new() { "mistWizAltar" }
+                    });
+                }
+
+
+                // Varrock Locations
+                {
+                    locsToAdd.Add(new Location("MIST_VarrockCrossroadsSouth", "Varrock - South Crossroads", "Misthalin") {
+                        Description = "A crossroads leading between Varrock, Lumbridge, Al Kharid, and the Digsite. There's a broken cart of a traveling trader here, but it seems to contain suspiciously little of value for a traveling trader. A few tables are placed haphazardly near the crossroads for some reason but there is otherwise little here besides some trees and grass.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockOutskirtsSouth"),
+                            new Connection("MIST_VarrockAbandonedFarm"),
+                            new Connection("MIST_VarrockMineEast"),
+                            new Connection("DES_AlKharidMine"),
+                            new Connection("MIST_GroatsFarm")
+                        },
+                        NPCsHere = new() { "mistVarBurgiss", "mistVarAliLeaflet" },
+                        AreaMonsters = new() { "goblin", "unicorn", "unicorn" },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treePine", "treePine" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockAbandonedFarm", "Varrock - Abandoned Farm", "Misthalin") {
+                        Description = "This is a small fenced in area with some sheep and a pond with some swans in it. There are a handful of empty troughs placed around the pen, and some crumbling stone walls are all that remains of a shack.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockCrossroadsSouth")
+                        },
+                        NPCsHere = new() { "farmerMaster" },
+                        AreaMonsters = new() { "ram", "ram" },
+                        GatheringSpots = new() { "sheep", "sheep", "sheep", "sheep" }
+                    });
+                }
             }
 
-            // Draynor Village
+
+            // Desert Locations
             {
-                locsToAdd.Add(new Location("MIST_DraynorOutskirtsSouth", "Between Draynor and Lumbridge", "Misthalin") {
-                    Description = "Just outside Draynor Village on the path leading from there to Lumbridge. The path winds back and forth between the small hills of the countryside. A smaller path branches off and leads towards the Wizard's Tower. Closer to Draynor, just off the path, is the old jail building. There are a few willow trees here and some fish swarming near the coast.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_DraynorVillage"),
-                        new Connection("MIST_DraynorJail"),
-                        new Connection("MIST_WizardTowerBridge"),
-                        new Connection("MIST_LumbridgeTowardsDraynor"),
-                        new Connection("MIST_LumbridgeSwamp0")
-                    },
-                    GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
-                    AreaMonsters = new() { "spiderGiant", "spiderGiant", "goblin", "goblin", "goblin" }
-                });
+                // Al Kharid / North of Shantay Pass
+                {
 
-                locsToAdd.Add(new Location("MIST_WizardTowerBridge", "Wizard's Tower Bridge", "Misthalin") {
-                    Description = "On the large wide path from the Wizard Tower island to mainland Misthalin. There are a few banners hanging from poles, and some crates left partway down the bridge. The marble Wizard Tower spears into the sky above you, visible from far and wide.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_WizardTowerIsland"),
-                        new Connection("MIST_DraynorOutskirtsSouth")
-                    },
-                    GatheringSpots = new() { "clueCrates" }
-                });
-
-                locsToAdd.Add(new Location("MIST_WizardTowerIsland", "Wizard's Tower Island", "Misthalin") {
-                    Description = "This island holds the Wizard's Tower, towering high above you. Two statues of famous wizards of old stand guard at the bridge entrance, while a fountain is just off the path into the tower. There is some sparse tree and shrub coverage on the island but otherwise not a lot of interest.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_WizardTower"),
-                        new Connection("MIST_WizardTowerBridge")
-                    },
-                    GatheringSpots = new() { "treePine", "treePine" }
-                });
-
-                locsToAdd.Add(new Location("MIST_WizardTower", "Wizard's Tower", "Misthalin") {
-                    Description = "Wizards bustle about in here in the midst of completing various magical research projects. There are a few small rooms here on the first floor, plus a staircase up to the next floor and a ladder down to the basement. One of the rooms contains a library with some bookshelves containing various books that are probably very interesting if you're a wizard doing research.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_WizardTower2F"),
-                        new Connection("MIST_WizardTowerBasement", alt: "(Climb Ladder)"),
-                        new Connection("MIST_WizardTowerIsland")
-                    },
-                    GatheringSpots = new() { "bookshelfWizard", "bookshelfWizard", "bookshelfWizard" },
-                    NPCsHere = new() { "mistWizOnglewip" },
-                    ItemSpawns = new() { new("bootsLeather", 1), new("logPine", 1) },
-                    AreaMonsters = new() { "wizard", "wizard", "wizard", "wizard" }
-                });
-
-                locsToAdd.Add(new Location("MIST_WizardTower2F", "Wizard's Tower - Second Floor", "Misthalin") {
-                    Description = "This floor of the tower seems to be more of a sleeping area than the research areas below or above, with some cots placed in the rooms for weary wizards. There's not much else in here except a nice view through the windows looking out onto the surrounding landscape.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_WizardTower3F"),
-                        new Connection("MIST_WizardTower")
-                    },
-                    NPCsHere = new() { "mistWizTraiborn", "mistWizJalarast" },
-                    AreaMonsters = new() { "wizard", "wizard" }
-                });
-
-                locsToAdd.Add(new Location("MIST_WizardTower3F", "Wizard's Tower - Third Floor", "Misthalin") {
-                    Description = "A decent portion of this floor is taken up by a large cage holding a lesser demon captive inside it. Though you can't reach it with melee attacks, you could probably hit it with ranged and magic attacks without it being able to retaliate. Slightly cruel, but it's a demon, so it's probably okay? There are also some high-ranking wizards up here busying themselves in their offices with various works. Illegible research notes cover a few of the tables up here.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_WizardTower2F")
-                    },
-                    NPCsHere = new() { "mistWizMizgog", "mistWizGrayzag" },
-                    AreaMonsters = new() { "wizDemonLesser", "wizard", "wizard" }
-                });
-
-                locsToAdd.Add(new Location("MIST_WizardTowerBasement", "Wizard's Tower - Third Floor", "Misthalin") {
-                    Description = "A decent portion of this floor is taken up by a large cage holding a lesser demon captive inside it. Though you can't reach it with melee attacks, you could probably hit it with ranged and magic attacks without it being able to retaliate. Slightly cruel, but it's a demon, so it's probably okay? There are also some high-ranking wizards up here busying themselves in their offices with various works. Illegible research notes cover a few of the tables up here.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("MIST_WizardTower2F")
-                    },
-                    NPCsHere = new() { "mistWizSedridor" },
-                    AreaMonsters = new() { "chicken", "mistWizSkeleton" },
-                    GatheringSpots = new() { "mistWizAltar" }
-                });
+                }
             }
 
 
