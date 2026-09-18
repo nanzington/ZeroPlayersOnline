@@ -10,6 +10,8 @@ namespace ZeroPlayersOnline.DataTypes {
         public int MaxHP = 1;
 
         public string WeakType = "Slash";
+        public string SpecialCategory = "";
+        public string CountsAsSlayer = "";
         public int DamageReduction = 0; // Reduce damage by this as a percent unless using their weakness
 
         public int AggroLevel = 0; // If the players combat level is below this, the monster will automatically attack them 
@@ -42,7 +44,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double MovesSinceSpecial = 0;
 
-        public BossFight(string name, string id, int level, int maxHp, string weakness, int dr, int respawn, string defDmgDice, string defDmgType, double attackSpeed = 1000, int attacksBetween = 3, int lanes = 3, int aggroLevel = 10, bool alwaysAggro = false, List<BossAttack> specials = null, List<ItemDrop> drops = null) {
+        public BossFight(string name, string id, int level, int maxHp, string weakness, int dr, int respawn, string defDmgDice, string defDmgType, double attackSpeed = 1000, int attacksBetween = 3, int lanes = 3, bool aggro = false, string specialCat = "", string slayer = "", List<BossAttack> specials = null, List<ItemDrop> drops = null) {
             ID = id;
             Name = name;
 
@@ -52,9 +54,10 @@ namespace ZeroPlayersOnline.DataTypes {
 
             DamageReduction = dr;
             RespawnTime = respawn;
-
-            AggroLevel = aggroLevel;
-            AlwaysAggro = alwaysAggro;
+            
+            if (aggro)
+                AggroLevel = (level * 2) + 1;
+            AlwaysAggro = aggro;
 
             DefaultDmgDice = defDmgDice;
             DefaultDmgType = defDmgType;
@@ -62,6 +65,8 @@ namespace ZeroPlayersOnline.DataTypes {
             AttackSpeedInMS = attackSpeed;
             AttacksBetweenSpecials = attacksBetween;
             LanesHere = lanes;
+            SpecialCategory = specialCat;
+            CountsAsSlayer = slayer;
 
             if (specials != null)
                 Specials = specials;

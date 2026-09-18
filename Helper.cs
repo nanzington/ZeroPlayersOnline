@@ -624,6 +624,7 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
                 || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
                 || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
+                || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return;
             }
@@ -793,6 +794,7 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
                 || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
                 || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
+                || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return y;
             }
@@ -881,17 +883,6 @@ namespace ZeroPlayersOnline {
             words.Add(Clone(tempWord));
             tempWord = new("");
 
-            if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
-                || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
-                || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
-                || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
-                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
-                || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
-                || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
-                || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
-                return y;
-            }
-
             int cX = x;
             int cY = y;
 
@@ -965,6 +956,7 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
                 || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
                 || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
+                || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return y;
             }

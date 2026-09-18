@@ -36,18 +36,28 @@ namespace ZeroPlayersOnline.DataTypes {
             Charges = chg;
         }
 
+        public ItemWrapper(ItemWrapper other) {
+            ID = other.ID;
+            Quantity = other.Quantity;
+            Charges = other.Charges;
+            Noted = other.Noted;
+            Inaccessible = other.Inaccessible;
+            Library = other.Library;
+        }
+
 
         public Item? GetRef() {
             if (Library == null) {
                 if (GameLoop.ZPO.ItemLibrary.TryGetValue(ID, out Item? lib) && lib != null) {
-                    Item clone = Helper.Clone(lib);
+                    Item clone = new(lib);
                     clone.Quantity = Quantity;
                     clone.UseInt4 = Charges;
                     return clone;
                 }
             }
-
-            return Helper.Clone(Library);
+            if (Library != null)
+                return new(Library);
+            return null;
         }
 
         public void TryConsume() {

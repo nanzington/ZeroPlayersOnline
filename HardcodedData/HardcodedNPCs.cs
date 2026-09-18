@@ -720,8 +720,94 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Man", "man", new() { { 0, new("Lovely day for it!", new() { byeThen }) } }, 1, 10) { PickpocketLoot = new() { new("coinPouchSmall", 1, 1, 1, 1) } });
             toAdd.Add(new("Woman", "woman", new() { { 0, new("Lovely day for it!", new() { byeThen }) } }, 1, 10) { PickpocketLoot = new() { new("coinPouchSmall", 1, 1, 1, 1) } });
-            toAdd.Add(new("Farmer", "farmer", new() { { 0, new("Have you seen m'chickens?", new() { byeThen }) } }, 10, 15) { PickpocketLoot = new() { new("coinPouchMedium", 1, 1, 1, 1), new("seedPouchFarmer", 1, 1, 1, 1) } });
-            toAdd.Add(new("Master Farmer", "farmerMaster", new() { { 0, new("Hello there! Nice weather we've been having. Perfect for a day outdoors!", new() { byeThen }) } }, 38, 43, 3) { PickpocketLoot = new() { new("seedPouchFarmerMaster", 1, 1, 1, 1) } });
+            toAdd.Add(new("Farmer", "farmer", new() { { 0, new("Have you seen m'chickens?", new() { byeThen }) } }, 10, 15) { 
+                PickpocketLoot = new() { 
+                    new ItemDrop("seedBarley", 1, 25, 1, 4),
+                    new ItemDrop("seedHammerstone", 1, 26, 1, 4),
+                    new ItemDrop("seedPotato", 1, 28, 1, 3),
+                    new ItemDrop("seedOnion", 1, 32, 1, 3),
+                    new ItemDrop("seedAsgarnian", 1, 32, 1, 4),
+                    new ItemDrop("seedCabbage", 1, 35, 1, 3),
+                    new ItemDrop("seedYanillian", 1, 42, 1, 4),
+                    new ItemDrop("seedTomato", 1, 46, 1, 3),
+                    new ItemDrop("seedJute", 1, 46, 1, 3),
+                    new ItemDrop("seedSweetcorn", 1, 60, 1, 3),
+                    new ItemDrop("seedMarigold", 1, 60, 1, 1),
+                    new ItemDrop("seedKrandorian", 1, 60, 1, 4),
+                    new ItemDrop("seedStrawberry", 1, 70, 1, 3),
+                    new ItemDrop("seedTreePine", 1, 70, 1, 1),
+                    new ItemDrop("seedGuam", 1, 70, 1, 1),
+                    new ItemDrop("seedRedberry", 1, 84, 1, 1),
+                    new ItemDrop("seedRosemary", 1, 84, 1, 1),
+                    new ItemDrop("seedMarrentill", 1, 84, 1, 1),
+                    new ItemDrop("seedTarromin", 1, 84, 1, 1),
+                    new ItemDrop("seedWildblood", 1, 84, 1, 4),
+                    new ItemDrop("seedCadava", 1, 105, 1, 1),
+                    new ItemDrop("seedNasturtium", 1, 105, 1, 1),
+                    new ItemDrop("seedWoad", 1, 105, 1, 1),
+                    new ItemDrop("seedTreeOak", 1, 105, 1, 1),
+                    new ItemDrop("seedLimpwurt", 1, 139, 1, 1),
+                    new ItemDrop("seedTreeApple", 1, 139, 1, 1),
+                    new ItemDrop("seedHarralander", 1, 139, 1, 1),
+                    new ItemDrop("seedTreeWillow", 1, 139, 1, 1),
+                    new ItemDrop("seedDwellberry", 1, 209, 1, 1),
+                    new ItemDrop("seedTreeTeak", 1, 209, 1, 1),
+                    new ItemDrop("seedTreeBanana", 1, 209, 1, 1),
+                    new ItemDrop("seedRanarr", 1, 209, 1, 1), 
+                    new ItemDrop("seedTreeMaple", 1, 418, 1, 1),
+                    new ItemDrop("seedTreeOrange", 1, 418, 1, 1),
+                    new ItemDrop("seedSpiritweed", 1, 418, 1, 1),
+                    new ItemDrop("seedToadflax", 1, 418, 1, 1)
+                } 
+            });
+            toAdd.Add(new("Master Farmer", "farmerMaster", new() { { 0, new("Hello there! Nice weather we've been having. Perfect for a day outdoors!", new() { byeThen }) } }, 38, 43, 3) { 
+                PickpocketLoot = new() { 
+                    new ItemDrop("seedPotato", 1, 6, 1, 4),
+                    new ItemDrop("seedOnion", 1, 8, 1, 3),
+                    new ItemDrop("seedCabbage", 1, 14, 1, 3),
+                    new ItemDrop("seedTomato", 1, 16, 1, 2),
+                    new ItemDrop("seedSweetcorn", 1, 45, 1, 2),
+                    new ItemDrop("seedStrawberry", 1, 90, 1, 1),
+                    new ItemDrop("seedWatermelon", 1, 189, 1, 1),
+                    new ItemDrop("seedSnapegrass", 1, 260, 1, 1),
+                    new ItemDrop("seedBarley", 1, 18, 1, 12),
+                    new ItemDrop("seedHammerstone", 1, 18, 1, 9),
+                    new ItemDrop("seedAsgarnian", 1, 24, 1, 6),
+                    new ItemDrop("seedJute", 1, 24, 1, 9),
+                    new ItemDrop("seedYanillian", 1, 36, 1, 6),
+                    new ItemDrop("seedKrandorian", 1, 72, 1, 6),
+                    new ItemDrop("seedWildblood", 1, 142, 1, 3),
+                    new ItemDrop("seedMarigold", 1, 22, 1, 1),
+                    new ItemDrop("seedNasturtium", 1, 33, 1, 1),
+                    new ItemDrop("seedRosemary", 1, 51, 1, 1),
+                    new ItemDrop("seedWoad", 1, 69, 1, 1),
+                    new ItemDrop("seedLimpwurt", 1, 86, 1, 1),
+                    new ItemDrop("seedRedberry", 1, 26, 1, 1),
+                    new ItemDrop("seedCadava", 1, 37, 1, 1),
+                    new ItemDrop("seedDwellberry", 1, 52, 1, 1),
+                    new ItemDrop("seedJangerberry", 1, 129, 1, 1),
+                    new ItemDrop("seedWhiteberry", 1, 355, 1, 1),
+                    new ItemDrop("seedPoisonIvy", 1, 937, 1, 1),
+                    new ItemDrop("seedBittercap", 1, 492, 1, 1),
+                    new ItemDrop("seedBelladonna", 1, 820, 1, 1),
+                    new ItemDrop("seedCactus", 1, 1230, 1, 1),
+                    new ItemDrop("seedPotatoCactus", 1, 2460, 1, 1),
+                    new ItemDrop("seedGuam", 1, 58, 1, 1),
+                    new ItemDrop("seedMarrentill", 1, 96, 1, 1),
+                    new ItemDrop("seedTarromin", 1, 140, 1, 1),
+                    new ItemDrop("seedHarralander", 1, 206, 1, 1),
+                    new ItemDrop("seedRanarr", 1, 270, 1, 1),
+                    new ItemDrop("seedToadflax", 1, 443, 1, 1),
+                    new ItemDrop("seedIrit", 1, 651, 1, 1),
+                    new ItemDrop("seedAvantoe", 1, 947, 1, 1),
+                    new ItemDrop("seedKwuarm", 1, 1389, 1, 1),
+                    new ItemDrop("seedSnapdragon", 1, 1854, 1, 1),
+                    new ItemDrop("seedCadantine", 1, 2976, 1, 1),
+                    new ItemDrop("seedLantadyme", 1, 4167, 1, 1),
+                    new ItemDrop("seedDwarfweed", 1, 6944, 1, 1),
+                    new ItemDrop("seedTorstol", 1, 9272, 1, 1)
+                } 
+            });
 
             toAdd.Add(new("Bartender", "mistLumBartender", new() { 
                 { 0, new("Welcome to the Sheared Ram. What can I do for you?", new() {  new DialogueChoice("I'll have a beer please?", 1, new() { new("Item", 2, "Gold", true)}, true), new DialogueChoice("Heard any rumors?", 2), byeThen }) },
@@ -1020,6 +1106,62 @@ namespace ZeroPlayersOnline.Hardcodes {
                  { 12, new("Watch out for scorpions though, they'll take a pop at you if you go too near them. To avoid them just follow the western fence as you travel south.", new() { new DialogueChoice("(NEXT)", 13), byeThen }) },
                  { 13, new("If you're in the mood for a little rest and relaxation, there are a couple of nice fishing spots south of the town.", new() { new DialogueChoice("Thanks for the help!", -1), byeThen }) }           
             }));
+            
+            // Desert
+            {
+                // Al Kharid
+                {
+                    toAdd.Add(new("Ayesha", "desAlKharidAyesha", new() { { 0, new("Feel free to grow some cacti here if you like!", new() { byeThen }) } })); 
+
+                    toAdd.Add(new("Zeke", "desAlKharidZeke", new() { 
+                        { 0, new("A thousand greetings, sir.", new() { new DialogueChoice("Do you want to trade?", 1), new DialogueChoice("Nice cloak.", 2), new DialogueChoice("Could you sell me a dragon scimitar?", 3), new DialogueChoice("Hi! I have this money-off voucher!", 7), byeThen }) }, // TODO: More dialogue after Rogue Trader is added
+                        { 1, new("Yes, certainly. I deal in scimitars.", new() { byeThen }) },
+                        { 2, new("Thank you.", new() { byeThen }) }, 
+                        { 3, new("A dragon scimitar? A DRAGON scimitar?", new() { new DialogueChoice("(NEXT)", 4), byeThen }) }, 
+                        { 4, new("The banana-brained nitwits who make them would never dream of selling any to me.", new() { new DialogueChoice("(NEXT)", 4), byeThen }) },
+                        { 5, new("Seriously, you'll be a monkey's uncle before you'll ever hold a dragon scimitar.", new() { new DialogueChoice("Oh well, thanks anyway.", 7), byeThen }) }, // TODO: If Monkey Madness ever gets implemented the dialogue should branch a tiny bit here
+                        { 6, new("Perhaps you'd like to take a look at my stock?", new() { new DialogueChoice("Yes please, Zeke.", -1), new DialogueChoice("Not today, thank you.", -1), byeThen }) }, // The illusion of free will
+                        { 7, new("So I see! Unfortunately, it seems to have expired yesterday! Nevermind.", new() { new DialogueChoice("But I only just got it!", 8), byeThen }) },
+                        { 8, new("I'm sorry, there's nothing I can do. Goodbye.", new() { byeThen }) }
+                    }));
+
+                    toAdd.Add(new("Dommik", "desAlKharidDommik", new() { 
+                        { 0, new("Would you like to buy some crafting equipment?", new() { new DialogueChoice("No thanks; I've got all the crafting equipment I need.", 1), new DialogueChoice("Let's see what you've got, then.", -1), new DialogueChoice("Hi! I have this money-off voucher!", 2), byeThen }) }, // TODO: More dialogue after Rogue Trader is added
+                        { 1, new("Okay. Fare well on your travels.", new() { byeThen }) },
+                        { 2, new("So I see! Unfortunately, it seems to have expired yesterday! Nevermind.", new() { new DialogueChoice("But I only just got it!", 3), byeThen }) },
+                        { 3, new("I'm sorry, there's nothing I can do. Goodbye.", new() { byeThen }) }
+                    }));
+
+                    toAdd.Add(new("Shopkeeper", "desAlKharidShopkeeper", new() { 
+                        { 0, new("Can I help you at all?", new() { new DialogueChoice("Yes please. What are you selling?", -1), new DialogueChoice("No thanks.", -1), byeThen }) }, // TODO: More dialogue after Rogue Trader is added
+                    }));
+
+                    toAdd.Add(new("Louie Legs", "desAlKharidLouie", new() { 
+                        { 0, new("Hey, wanna buy some armour?", new() { new DialogueChoice("What have you got?", 1), new DialogueChoice("No, thank you.", -1), new DialogueChoice("Hi! I have this money-off voucher!", 2), byeThen }) }, // TODO: More dialogue after Rogue Trader is added
+                        { 1, new("I provide items to help you keep your legs!", new() { byeThen }) },
+                        { 2, new("So I see! Unfortunately, it seems to have expired yesterday! Nevermind.", new() { new DialogueChoice("But I only just got it!", 3), byeThen }) },
+                        { 3, new("I'm sorry, there's nothing I can do. Goodbye.", new() { byeThen }) }
+                    }));
+
+                    toAdd.Add(new("Ranael", "desAlKharidRanael", new() { 
+                        { 0, new("Do you want to buy any armoured skirts? Designed especially for ladies who like to fight.", new() { new DialogueChoice("Yes please", -1), new DialogueChoice("No thank you, that's not my scene.", -1), new DialogueChoice("Hi! I have this money-off voucher!", 2), byeThen }) }, // TODO: More dialogue after Rogue Trader is added
+                        { 2, new("So I see! Unfortunately, it seems to have expired yesterday! Nevermind.", new() { new DialogueChoice("But I only just got it!", 3), byeThen }) },
+                        { 3, new("I'm sorry, there's nothing I can do. Goodbye.", new() { byeThen }) }
+                    }));
+
+                    toAdd.Add(new("Karim", "desAlKharidKarim", new() { 
+                        { 0, new("Would you like to buy a nice kebab? Only five gold.", new() { new DialogueChoice("Yes please", -1), new DialogueChoice("I think I'll give it a miss.", -1), byeThen }) }, // TODO: More dialogue after Rogue Trader is added
+                    }));
+
+                    toAdd.Add(new("Ellis", "desAlKharidEllis", new() { 
+                        { 0, new("Greetings, friend. I am a manufacturer of leather.", new() { new DialogueChoice("Can I buy some leather then?", 1), new DialogueChoice("Leather is rather weak stuff.", 2), byeThen }) }, // TODO: More dialogue after Rogue Trader is added
+                        { 1, new("I make leather from animal hides. Bring some here, say some cowhide or snakeskin, and I'll tan them for you.", new() { byeThen }) }, 
+                        { 2, new("Normal leather may be quite weak, but it's very cheap and easy to work with.", new() { new DialogueChoice("(NEXT)", 3),byeThen }) },
+                        { 3, new("Alternatively you could try hard leather. It makes sturdier armor, and you get it by tanning soft leather again.", new() { new DialogueChoice("(NEXT)", 4), byeThen }) }, 
+                        { 4, new("I can also tan snake hides and dragonhides, suitable for crafting into the highest quality armour for rangers.", new() { byeThen }) },  
+                    }));
+                }
+            }
 
             for (int i = 0; i < toAdd.Count; i++) { 
                 NPCLib.Add(toAdd[i].ID, toAdd[i]);

@@ -22,8 +22,13 @@ namespace ZeroPlayersOnline.Managers {
             Point mousePos = new MouseScreenObjectState(mini.Con, GameHost.Instance.Mouse).CellPosition;
 
             mini.Con.DrawLine(new Point(55, 0), new Point(55, 34), 179);
+
+
              
-            if (LastHealedTick + 3000 < Helper.Time()) {
+            if ((player.PrayerActive("Rapid Heal") && LastHealedTick + 1500 < Helper.Time()) || (LastHealedTick + 3000 < Helper.Time())) {
+                if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp) && eqp != null && eqp.ID == "braceletRegen") {
+                    player.CurrentHP = Math.Clamp(player.CurrentHP + 1, 0, player.Skills["Constitution"].Level);
+                }
                 player.CurrentHP = Math.Clamp(player.CurrentHP + 1, 0, player.Skills["Constitution"].Level);
                 LastHealedTick = Helper.Time();
             }
@@ -104,7 +109,7 @@ namespace ZeroPlayersOnline.Managers {
 
                             if (spawnedCount < curr.ItemSpawns[i].SpawnCount) {
                                 if (GameLoop.ZPO.ItemLibrary.ContainsKey(curr.ItemSpawns[i].ItemID)) {
-                                    Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[curr.ItemSpawns[i].ItemID]);
+                                    Item spawn = new(GameLoop.ZPO.ItemLibrary[curr.ItemSpawns[i].ItemID]);
                                     GameLoop.ZPO.TryPlaceItem(curr.ID, new(spawn));
                                     curr.ItemSpawns[i].LastPickedUp = Helper.Time();
                                 }
@@ -169,6 +174,8 @@ namespace ZeroPlayersOnline.Managers {
 
                             if (inv.Name.Contains("potion") && player.Inventory[i].Charges != 0) {
                                 line += " (" + player.Inventory[i].Charges + " doses)";
+                            } else if (player.Inventory[i].Charges > 0 && !player.Inventory[i].ID.Contains("seed") && !player.Inventory[i].ID.Contains("plant")) { 
+                                line += " (" + player.Inventory[i].Charges + ")";
                             }
 
                             if (player.Inventory[i].Noted) {
@@ -201,7 +208,97 @@ namespace ZeroPlayersOnline.Managers {
 
                             bool dropped = false; 
 
-                            int px = 46;
+                            int px = 52;
+                            
+                            mini.Con.PrintClickable(54, 15 + i, new ColoredString("X", Color.Crimson, Color.Black), () => { dropped = player.TryDrop(i); });
+
+                            if (dropped)
+                                break;
+
+                             if (GameLoop.ZPO.SpellLibrary.TryGetValue("utilAlchemyHigh", out Spell? highAlch) && highAlch != null) { 
+                                if (player.CanCast(highAlch) == "") {
+                                    mini.Con.PrintClickable(px, 15 + i, new ColoredString(247.AsString() + " ", Color.Lime, Color.Black), () => {
+                                        if (player.Inventory[i].GetRef() is Item alched) {
+                                            if (alched.HighAlchVal() > 0) {  
+                                                highAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills); 
+                                                player.Inventory[i].Quantity -= 1;
+                                                player.HeldGold += alched.HighAlchVal();
+                                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast High Alchemy and convert the " + alched.Name + " into " + alched.HighAlchVal() + " gold.", Color.Goldenrod, Color.Black));
+                                            }
+                                        }
+                                    }); 
+                                    px -= 2;
+
+                                    if (player.Inventory[i].Quantity <= 0) {
+                                        player.Inventory.RemoveAt(i);
+                                        dropped = true;
+                                    }
+                                }
+                            }
+
+                            if (dropped)
+                                break;
+
+                            if (GameLoop.ZPO.SpellLibrary.TryGetValue("utilAlchemyLow", out Spell? lowAlch) && lowAlch != null) { 
+                                if (player.CanCast(lowAlch) == "") {
+                                    mini.Con.PrintClickable(px, 15 + i, new ColoredString("~ ", Color.Green, Color.Black), () => {
+                                        if (player.Inventory[i].GetRef() is Item alched) {
+                                            if (alched.LowAlchVal() > 0) {  
+                                                lowAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills); 
+                                                player.Inventory[i].Quantity -= 1;
+                                                player.HeldGold += alched.LowAlchVal();
+                                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast Low Alchemy and convert the " + alched.Name + " into " + alched.LowAlchVal() + " gold.", Color.DarkGoldenrod, Color.Black));
+                                            }
+                                        }
+                                    }); 
+                                    px -= 2;
+
+                                    if (player.Inventory[i].Quantity <= 0) {
+                                        player.Inventory.RemoveAt(i);
+                                        dropped = true;
+                                    }
+                                }
+                            } 
+
+                            if (dropped)
+                                break;
+
+                            mini.Con.PrintClickable(px, 15 + i, new ColoredString("? ", Color.MediumPurple, Color.Black), () => { 
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString(inv.ExamineText, Color.SandyBrown, Color.Black)); 
+
+                                foreach (var kv in GameLoop.ZPO.QuestLibrary) {
+                                    kv.Value.CheckProgress(player, "ExamineItem", player.Inventory[i].ID, 0);
+                                }
+                            });
+
+                            px -= 2;
+
+                            mini.Con.PrintClickable(px, 15 + i, new ColoredString("> ", Color.Turquoise, Color.Black), () => {
+                                if (SwapSlot == -1) {
+                                    SwapSlot = i;
+                                }
+                                else { 
+                                    ItemWrapper first = new(player.Inventory[SwapSlot]);
+                                    player.Inventory[SwapSlot] = new(player.Inventory[i]);
+                                    player.Inventory[i] = first;
+                                    SwapSlot = -1;
+                                }
+                            });
+
+                            px -= 2;
+
+                            if (!player.Inventory[i].Noted) {
+                                mini.Con.PrintClickable(px, 15 + i, new ColoredString("U ", ItemUseLogic.UsingSlot == i ? Color.Green : Color.Yellow, Color.Black), () => {
+                                    if (ItemUseLogic.UsingSlot != i && ItemUseLogic.TryCombineItems(player, i)) {
+                                        dropped = true;
+                                    }
+                                });
+                            } else { 
+                                mini.Con.Print(50, 15 + i, "  ");
+                            }
+                            px -= 2;
+                            if (dropped)
+                                break;
 
                             if (inv.UseString != "") {
                                 if (!player.Inventory[i].Noted) { 
@@ -239,46 +336,6 @@ namespace ZeroPlayersOnline.Managers {
 
                             if (dropped)
                                 break;
-
-                            mini.Con.PrintClickable(48, 15 + i, new ColoredString("> ", Color.Turquoise, Color.Black), () => {
-                                if (SwapSlot == -1) {
-                                    SwapSlot = i;
-                                }
-                                else { 
-                                    ItemWrapper first = Helper.Clone(player.Inventory[SwapSlot]);
-                                    player.Inventory[SwapSlot] = Helper.Clone(player.Inventory[i]);
-                                    player.Inventory[i] = first;
-                                    SwapSlot = -1;
-                                }
-                            });
-
-
-                            mini.Con.PrintClickable(54, 15 + i, new ColoredString("X", Color.Crimson, Color.Black), () => { dropped = player.TryDrop(i); });
-
-                            if (dropped)
-                                break;
-
-                            mini.Con.PrintClickable(52, 15 + i, new ColoredString("? ", Color.MediumPurple, Color.Black), () => { 
-                                GameLoop.ZPO.Log.AddMessage(new ColoredString(inv.ExamineText, Color.SandyBrown, Color.Black)); 
-
-                                foreach (var kv in GameLoop.ZPO.QuestLibrary) {
-                                    kv.Value.CheckProgress(player, "ExamineItem", player.Inventory[i].ID, 0);
-                                }
-                            });
-
-                            if (!player.Inventory[i].Noted) {
-                                mini.Con.PrintClickable(50, 15 + i, new ColoredString("U ", ItemUseLogic.UsingSlot == i ? Color.Green : Color.Yellow, Color.Black), () => {
-                                    if (ItemUseLogic.TryCombineItems(player, i)) {
-                                        dropped = true;
-                                    }
-                                });
-                            } else { 
-                                mini.Con.Print(50, 15 + i, "  ");
-                            }
-
-
-                            if (dropped)
-                                break;
                         }
                     }
                 }
@@ -313,7 +370,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|   Weapon: "); 
                     if (player.Equipment.TryGetValue("Weapon", out ItemWrapper? wepWrap) && wepWrap.GetRef() is Item wep) {
-                        string name = wep.Name + (player.Equipment["Weapon"].Quantity > 1 ? " x" + player.Equipment["Weapon"].Quantity : "");
+                        string name = wep.Name + (player.Equipment["Weapon"].Quantity > 1 ? " x" + player.Equipment["Weapon"].Quantity : "") + (wepWrap.Charges > 0 ? " (" + wepWrap.Charges + ")" : "");
                         mini.Con.PrintClickable(13, printY, new ColoredString(name, wep.GetColor(), wep.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Weapon"];
                             player.TryPickup(item, item.Quantity);
@@ -321,7 +378,7 @@ namespace ZeroPlayersOnline.Managers {
                         });
 
                         if (wep.UseString != "") {  
-                            mini.Con.PrintClickable(13 + wep.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(wepWrap, player);
 
                                 if (wep.ConsumedOnUse && success) {
@@ -339,14 +396,15 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "| Off-hand: ");
                     if (player.Equipment.TryGetValue("Offhand", out ItemWrapper? offWrap) && offWrap.GetRef() is Item off) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(off.Name, off.GetColor(), off.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = off.Name + (offWrap.Charges > 0 ? " (" + offWrap.Charges + ")" : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, off.GetColor(), off.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Offhand"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Offhand");
                         });
 
                         if (off.UseString != "") {  
-                            mini.Con.PrintClickable(13 + off.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(offWrap, player);
 
                                 if (off.ConsumedOnUse && success) {
@@ -364,14 +422,15 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Head: "); 
                     if (player.Equipment.TryGetValue("Head", out ItemWrapper? headWrap) && headWrap.GetRef() is Item head) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(head.Name, head.GetColor(), head.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = head.Name + (headWrap.Charges > 0 ? " (" + headWrap.Charges + ")" : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, head.GetColor(), head.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Head"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Head");
                         });
 
                         if (head.UseString != "") {  
-                            mini.Con.PrintClickable(13 + head.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(headWrap, player);
 
                                 if (head.ConsumedOnUse && success) {
@@ -389,14 +448,15 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Body: "); 
                     if (player.Equipment.TryGetValue("Body", out ItemWrapper? bodyWrap) && bodyWrap.GetRef() is Item body) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(body.Name, body.GetColor(), body.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = body.Name + (bodyWrap.Charges > 0 ? " (" + bodyWrap.Charges + ")" : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, body.GetColor(), body.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Body"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Body");
                         });
 
                         if (body.UseString != "") {  
-                            mini.Con.PrintClickable(13 + body.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(bodyWrap, player);
 
                                 if (body.ConsumedOnUse && success) {
@@ -414,14 +474,15 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Legs: "); 
                     if (player.Equipment.TryGetValue("Legs", out ItemWrapper? legWrap) && legWrap.GetRef() is Item legs) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(legs.Name, legs.GetColor(), legs.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = legs.Name + (legWrap.Charges > 0 ? " (" + legWrap.Charges + ")" : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, legs.GetColor(), legs.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Legs"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Legs");
                         });
 
                         if (legs.UseString != "") {  
-                            mini.Con.PrintClickable(13 + legs.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(legWrap, player);
 
                                 if (legs.ConsumedOnUse && success) {
@@ -439,14 +500,15 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|    Hands: ");
                     if (player.Equipment.TryGetValue("Hands", out ItemWrapper? handWrap) && handWrap.GetRef() is Item hands) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(hands.Name, hands.GetColor(), hands.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = hands.Name + (handWrap.Charges > 0 ? " (" + handWrap.Charges + ")" : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, hands.GetColor(), hands.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Hands"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Hands");
                         });
 
                         if (hands.UseString != "") {  
-                            mini.Con.PrintClickable(13 + hands.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(handWrap, player);
 
                                 if (hands.ConsumedOnUse && success) {
@@ -464,14 +526,15 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Feet: ");
                     if (player.Equipment.TryGetValue("Feet", out ItemWrapper? feetWrap) && feetWrap.GetRef() is Item feet) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(feet.Name, feet.GetColor(), feet.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = feet.Name + (feetWrap.Charges > 0 ? " (" + feetWrap.Charges + ")" : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, feet.GetColor(), feet.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Feet"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Feet");
                         });
 
                         if (feet.UseString != "") {  
-                            mini.Con.PrintClickable(13 + feet.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(feetWrap, player);
 
                                 if (feet.ConsumedOnUse && success) {
@@ -489,14 +552,15 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Cape: ");
                     if (player.Equipment.TryGetValue("Cape", out ItemWrapper? capeWrap) && capeWrap.GetRef() is Item cape) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(cape.Name, cape.GetColor(), cape.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = cape.Name + (capeWrap.Charges > 0 ? " (" + capeWrap.Charges + ")" : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, cape.GetColor(), cape.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Cape"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Cape");
                         });
 
                         if (cape.UseString != "") {  
-                            mini.Con.PrintClickable(13 + cape.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(capeWrap, player);
 
                                 if (cape.ConsumedOnUse && success) {
@@ -514,14 +578,15 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Ring: ");
                     if (player.Equipment.TryGetValue("Ring", out ItemWrapper? ringWrap) && ringWrap.GetRef() is Item ring) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(ring.Name, ring.GetColor(), ring.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = ring.Name + (ringWrap.Charges > 0 ? " (" + ringWrap.Charges + ")" : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, ring.GetColor(), ring.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Ring"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Ring");
                         });
 
                         if (ring.UseString != "") {  
-                            mini.Con.PrintClickable(13 + ring.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(ringWrap, player);
 
                                 if (ring.ConsumedOnUse && success) {
@@ -539,14 +604,15 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|   Amulet: ");
                     if (player.Equipment.TryGetValue("Amulet", out ItemWrapper? amuletWrap) && amuletWrap.GetRef() is Item amulet) {
-                        mini.Con.PrintClickable(13, printY, new ColoredString(amulet.Name, amulet.GetColor(), amulet.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        string name = amulet.Name + (amuletWrap.Charges > 0 ? " (" + amuletWrap.Charges + ")" : "");
+                        mini.Con.PrintClickable(13, printY, new ColoredString(name, amulet.GetColor(), amulet.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Amulet"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Amulet");
                         });
 
                         if (amulet.UseString != "") {  
-                            mini.Con.PrintClickable(13 + amulet.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(amuletWrap, player);
 
                                 if (amulet.ConsumedOnUse && success) {
@@ -564,7 +630,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|   Pocket: ");
                     if (player.Equipment.TryGetValue("Pocket", out ItemWrapper? pocketWrap) && pocketWrap.GetRef() is Item pocket) {
-                        string name = pocket.Name + (player.Equipment["Pocket"].Quantity > 1 ? " x" + player.Equipment["Pocket"].Quantity : "");
+                        string name = pocket.Name + (player.Equipment["Pocket"].Quantity > 1 ? " x" + player.Equipment["Pocket"].Quantity : "") + (pocketWrap.Charges > 0 ? " (" + pocketWrap.Charges + ")" : "");
                         mini.Con.PrintClickable(13, printY, new ColoredString(name, pocket.GetColor(), pocket.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Pocket"];
                             player.TryPickup(item, item.Quantity);
@@ -572,7 +638,7 @@ namespace ZeroPlayersOnline.Managers {
                         });
 
                         if (pocket.UseString != "") {  
-                            mini.Con.PrintClickable(13 + pocket.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(pocketWrap, player);
 
                                 if (pocket.ConsumedOnUse && success) {
@@ -590,7 +656,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Ammo: ");
                     if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? ammoWrap) && ammoWrap.GetRef() is Item ammo) {
-                        string name = ammo.Name + (player.Equipment["Ammo"].Quantity > 1 ? " x" + player.Equipment["Ammo"].Quantity : "");
+                        string name = ammo.Name + (player.Equipment["Ammo"].Quantity > 1 ? " x" + player.Equipment["Ammo"].Quantity : "") + (ammoWrap.Charges > 0 ? " (" + ammoWrap.Charges + ")" : "");
                         mini.Con.PrintClickable(13, printY, new ColoredString(name, ammo.GetColor(), ammo.ColorSum() < 60 ? Color.White : Color.Black), () => {
                             ItemWrapper item = player.Equipment["Ammo"];
                             player.TryPickup(item, item.Quantity);
@@ -598,7 +664,7 @@ namespace ZeroPlayersOnline.Managers {
                         });
 
                         if (ammo.UseString != "") {  
-                            mini.Con.PrintClickable(13 + ammo.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(ammoWrap, player);
 
                                 if (ammo.ConsumedOnUse && success) {
@@ -698,7 +764,7 @@ namespace ZeroPlayersOnline.Managers {
                     mini.Con.Print(23, 15, "Description");
                     mini.Con.DrawLine(new Point(0, 16), new Point(54, 16), 196);
 
-                    List<Prayer> prayers = player.Prayers.Values.ToList();
+                    List<Prayer> prayers = player.Prayers.Values.OrderBy(o => o.Level).ThenBy(o => o.Name).ToList();
                     int printLine = 17;
                     int skipped = 0;
 
@@ -836,9 +902,9 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (SidebarMenu == "Magic") { 
                     mini.Con.Print(1, 15, player.MagicBook + " Spellbook Spells");
                     
-                    mini.Con.PrintClickable(37, 15, new ColoredString("Combat", MagicTab == "Combat" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { MagicTab = "Combat"; });
-                    mini.Con.PrintClickable(44, 15, new ColoredString("Tele", MagicTab == "Tele" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { MagicTab = "Tele"; });
-                    mini.Con.PrintClickable(49, 15, new ColoredString("Skill", MagicTab == "Skill" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { MagicTab = "Skill"; });
+                    mini.Con.PrintClickable(38, 15, new ColoredString("Combat", MagicTab == "Combat" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { MagicTab = "Combat"; });
+                    mini.Con.PrintClickable(45, 15, new ColoredString("Tele", MagicTab == "Tele" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { MagicTab = "Tele"; });
+                    mini.Con.PrintClickable(50, 15, new ColoredString("Util", MagicTab == "Utility" ? Color.Lime : Color.DarkSlateGray, Color.Black), () => { MagicTab = "Utility"; });
 
                     mini.Con.DrawLine(new Point(0, 16), new Point(54, 16), 196);
 
@@ -853,7 +919,7 @@ namespace ZeroPlayersOnline.Managers {
                     for (int i = 0; i < spells.Count; i++) {
                         string cast = player.CanCast(spells[i]);
 
-                        mini.Con.PrintClickable(6, 17 + i, new ColoredString(spells[i].Name, player.CastingSpell == spells[i].ID ? Color.Lime : cast.Contains("runes") ? Color.Crimson : cast.Contains("Magic") ? Color.DarkSlateGray : cast.Contains("cooldown") ? Color.Yellow : Color.White, Color.Black), () => { 
+                        mini.Con.PrintClickable(6, 17 + i, new ColoredString(spells[i].Name, player.CastingSpell == spells[i].ID ? Color.Lime : cast.Contains("cooldown") ? Color.Yellow : cast.Contains("Magic") ? Color.DarkSlateGray : cast != "" ? Color.Crimson : Color.White, Color.Black), () => { 
                             if (cast == "") {
                                 if (MagicTab == "Combat") {
                                     player.CastingSpell = spells[i].ID;
@@ -867,12 +933,138 @@ namespace ZeroPlayersOnline.Managers {
                                         GameLoop.ZPO.Log.AddMessage("The pull of the island distorts your magic and you appear in the center of Tutorial Island.", Color.MediumPurple);
                                     } else {
                                         if (GameLoop.ZPO.Atlas.TryGetValue(spells[i].MiscString, out Location? dest)) {
-                                            player.ConsumeItems(spells[i].Runes);
-                                            player.NavLoc = spells[i].MiscString; // TODO: Check to make sure the player is allowed in that region
-                                            spells[i].TimeLastCast = Helper.Time();
+                                            spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
                                             GameLoop.ZPO.Log.AddMessage("You teleport to " + dest.DisplayName + ".", Color.MediumPurple);
                                         } else {
                                             GameLoop.ZPO.Log.AddMessage("Teleport destination does not exist.", Color.Crimson);
+                                        } 
+                                    }
+                                }
+
+                                if (MagicTab == "Utility") {
+                                    if (spells[i].ID == "utilBonesBananas") {
+                                        bool anyBones = false;
+                                        foreach (var kv in player.Inventory) {
+                                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "bonesAnimals", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
+                                                kv.ID = "fruitBanana";
+                                                anyBones = true;
+                                            }
+                                        }
+
+                                        if (anyBones) {
+                                            spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                            GameLoop.ZPO.Log.AddMessage("You cast Bones to Bananas and all your bones become bananas.", Color.MediumPurple);
+                                        } else {
+                                            GameLoop.ZPO.Log.AddMessage("You have no applicable bones to transmute.", Color.Crimson);
+                                        }
+                                    }
+
+                                    if (spells[i].ID == "utilBonesPeaches") {
+                                        bool anyBones = false;
+                                        foreach (var kv in player.Inventory) {
+                                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "bonesAnimals", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
+                                                kv.ID = "fruitPeach";
+                                                anyBones = true;
+                                            }
+                                        }
+
+                                        if (anyBones) {
+                                            spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                            GameLoop.ZPO.Log.AddMessage("You cast Bones to Peaches and all your bones become peaches.", Color.MediumPurple);
+                                        } else {
+                                            GameLoop.ZPO.Log.AddMessage("You have no applicable bones to transmute.", Color.Crimson);
+                                        }
+                                    }
+
+                                    if (spells[i].ID == "utilSuperheat") { 
+                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Furnace", out ProcessingStation? furnace) && furnace != null) {
+                                            furnace.LastWorked = "";
+                                            if (furnace.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
+                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                                GameLoop.ZPO.Log.AddMessage("You cast Superheat Item and smelt an ore mix into a bar.", Color.MediumPurple);
+                                            } else {
+                                                GameLoop.ZPO.Log.AddMessage("You have no ore mixes you have the smithing level to be able to smelt.", Color.Crimson);
+                                            }
+                                        } 
+                                    }
+
+                                    if (spells[i].ID == "utilAlchemyLow") {   
+                                        GameLoop.ZPO.Log.AddMessage("Cast this by clicking the ~ icon on an item line in your inventory.", Color.Crimson); 
+                                    }
+
+                                    if (spells[i].ID == "utilAlchemyHigh") {   
+                                        GameLoop.ZPO.Log.AddMessage("Cast this by clicking the " + 247.AsString() + " icon on an item line in your inventory.", Color.Crimson); 
+                                    }
+
+                                    if (spells[i].ID == "utilEnchant1") { 
+                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 1 Enchanter", out ProcessingStation? enchant) && enchant != null) {
+                                            enchant.LastWorked = "";
+                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
+                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of sapphire/opal jewellery.", Color.MediumPurple);
+                                            } else {
+                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted sapphire/opal jewellery to enchant.", Color.Crimson);
+                                            }
+                                        } 
+                                    }
+
+                                    if (spells[i].ID == "utilEnchant2") { 
+                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 2 Enchanter", out ProcessingStation? enchant) && enchant != null) {
+                                            enchant.LastWorked = "";
+                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
+                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of emerald/jade jewellery.", Color.MediumPurple);
+                                            } else {
+                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted emerald/jade jewellery to enchant.", Color.Crimson);
+                                            }
+                                        } 
+                                    }
+
+                                    if (spells[i].ID == "utilEnchant3") { 
+                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 3 Enchanter", out ProcessingStation? enchant) && enchant != null) {
+                                            enchant.LastWorked = "";
+                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
+                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of ruby/red topaz jewellery.", Color.MediumPurple);
+                                            } else {
+                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted ruby/red topaz jewellery to enchant.", Color.Crimson);
+                                            }
+                                        } 
+                                    }
+
+                                    if (spells[i].ID == "utilEnchant4") { 
+                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 4 Enchanter", out ProcessingStation? enchant) && enchant != null) {
+                                            enchant.LastWorked = "";
+                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
+                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of diamond topaz jewellery.", Color.MediumPurple);
+                                            } else {
+                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted diamond topaz jewellery to enchant.", Color.Crimson);
+                                            }
+                                        } 
+                                    }
+
+                                    if (spells[i].ID == "utilEnchant5") { 
+                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 5 Enchanter", out ProcessingStation? enchant) && enchant != null) {
+                                            enchant.LastWorked = "";
+                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
+                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of dragonstone jewellery.", Color.MediumPurple);
+                                            } else {
+                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted dragonstone jewellery to enchant.", Color.Crimson);
+                                            }
+                                        } 
+                                    }
+
+                                    if (spells[i].ID == "utilEnchant6") { 
+                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 6 Enchanter", out ProcessingStation? enchant) && enchant != null) {
+                                            enchant.LastWorked = "";
+                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
+                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of onyx jewellery.", Color.MediumPurple);
+                                            } else {
+                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted onyx jewellery to enchant.", Color.Crimson);
+                                            }
                                         } 
                                     }
                                 }

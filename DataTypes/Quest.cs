@@ -82,7 +82,7 @@ namespace ZeroPlayersOnline.DataTypes {
                         p.HeldGold += kv.MiscInt;
                     } else { 
                         if (GameLoop.ZPO.ItemLibrary.TryGetValue(kv.MiscString, out Item? reward) && reward != null) {
-                            Item pickup = Helper.Clone(reward);
+                            Item pickup = new(reward);
                             pickup.Quantity = kv.MiscInt;
                             p.TryPickup(pickup, pickup.Quantity);
                         }

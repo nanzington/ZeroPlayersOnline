@@ -29,8 +29,10 @@ Misthalin Mania
 - Quest: Prince Ali Rescue (needs varrock, al kharid, and draynor)
 - Quest: Dragon Slayer (need varrock/champions guild, edgeville, ice mountain, dwarven mine, rimmington, port sarim, crandor)
 
-Drop logs with multiple of the same entry at different rates can't actually be completed because all credits will go to the first in the list, fix or remove dupes 
 Go back and add more clues as Barbarian Village, Varrock, Draynor, Al Kharid, and Falador are added
+
+- Finish up areas in Al Kharid: Emir's Arena, Mage Training Arena, Shantay Pass, Giant's Foundry, Citharede Abbey, Palace
+- First real minigame/activity area, Mage Training Arena?
 
 Maybe expand a lil bit into Al Kharid and Port Sarim/Falador to open some more content relevant to Misthalin there?
 - Al Kharid for clue steps and the mine, just to the Shantay Pass and leave the actual desert for later
@@ -45,6 +47,7 @@ Optionally hide connections if requirements not met? Maybe default to visible re
 
 
 Immediately important stuff to get working:
+- Make it so that combination runes only take up one per either needed individual rune (ex, 1 steam rune covers 1 fire, 1 water, or 1 water AND 1 fire for a spell)
 - Start splitting stuff out of the ZPO file because it's getting ridiculous and it doesn't need to be that dense now
 - An achievement tracking thing where performing an action can check to see if doing it progresses an achievement/task, also have a screen to show all achieves with some sort options
 - Figure out how to convey how WorldState data is changed 

@@ -64,7 +64,11 @@ namespace ZeroPlayersOnline.DataTypes {
 
                     if (Requirements[i].CheckRequirement(p, false)) {
                         if (Requirements[i].RequirementType == "Item" && Requirements[i].ConsumeItem) {
-                            p.ConsumeItems([Requirements[i].MiscString + "," + Requirements[i].MiscInt], false, true);
+                            if (Requirements[i].MiscString == "Gold") {
+                                p.HeldGold -= Requirements[i].MiscInt;
+                            } else {
+                                p.ConsumeItems([Requirements[i].MiscString + "," + Requirements[i].MiscInt], false, true);
+                            }
                         }
 
                         passed = true;

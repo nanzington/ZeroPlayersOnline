@@ -5,7 +5,7 @@ namespace ZeroPlayersOnline.Hardcodes {
         public static void InitBosses(Dictionary<string, BossFight> BossLib) {
             List<BossFight> toAdd = new();
 
-            toAdd.Add(new("Huge Zombie", "bossZombie", 10, 20, "Slash", 0, 5, "1d3", "Melee", 2000, 3, 3, 10, false) { 
+            toAdd.Add(new("Huge Zombie", "bossZombie", 10, 20, "Slash", 0, 5, "1d3", "Melee", 2000, 3, 3, true) { 
                 Specials = new() {
                     new("The huge zombie roars and rears back, preparing to slam the huge club into the ground.", "1d6+2", "Melee", [ 1 ]),
                     new("The huge zombie groans angrily and prepares to swipe to either side.", "1d6+2", "Melee", [ 0, 2 ])
@@ -22,7 +22,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("arrowsBronze", 1, 4, 10, 20), 
                     new("fleshRotten", 1, 1, 1, 1),
                     new("bonesBig", 1, 1, 1, 1) 
-                } 
+                }
             });
             
 

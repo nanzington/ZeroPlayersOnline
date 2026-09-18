@@ -81,7 +81,7 @@ namespace ZeroPlayersOnline.Managers {
                     if (toIncrement >= stepsNeeded) {
                         if (GameLoop.ZPO.ItemLibrary.TryGetValue("casket" + tier, out Item? caskTut)) {
                             if (caskTut != null) {
-                                player.TryPickup(Helper.Clone(caskTut), 1);
+                                player.TryPickup(new Item(caskTut), 1);
                             }
                         }
                         toIncrement = 0;
@@ -89,7 +89,7 @@ namespace ZeroPlayersOnline.Managers {
                     } else {
                         if (GameLoop.ZPO.ItemLibrary.TryGetValue("clueScroll" + tier, out Item? scrollTut)) {
                             if (scrollTut != null) {
-                                player.TryPickup(Helper.Clone(scrollTut), 1);
+                                player.TryPickup(new Item(scrollTut), 1);
                             }
                         }
                         Log.AddMessage(new ColoredString("You found another clue scroll!", Color.Turquoise, Color.Black));

@@ -184,7 +184,7 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                 }
 
-                ItemWrapper clone = Helper.Clone(wrap);
+                ItemWrapper clone = new(wrap);
              
                 if (Inventory.Count < InventoryLimit) {
                     if (wrap.GetRef() is Item pickup && (pickup.Stackable || (pickup.Noteable && noted))) { 
@@ -197,7 +197,7 @@ namespace ZeroPlayersOnline.DataTypes {
                         Inventory.Add(clone);
                     } else {
                         for (int i = 0; i < qty; i++) { 
-                            ItemWrapper secondClone = Helper.Clone(clone);
+                            ItemWrapper secondClone = new(clone);
                             secondClone.Quantity = 1;
                             clone.Quantity--;
                             if (!shop)
@@ -256,7 +256,7 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                 }
 
-                Item clone = Helper.Clone(item);
+                Item clone = new(item);
              
                 if (Inventory.Count < InventoryLimit) {
                     if (item.Stackable || (item.Noteable && noted)) { 
@@ -269,7 +269,7 @@ namespace ZeroPlayersOnline.DataTypes {
                         Inventory.Add(new(clone));
                     } else {
                         for (int i = 0; i < qty; i++) { 
-                            Item secondClone = Helper.Clone(clone);
+                            Item secondClone = new(clone);
                             secondClone.Quantity = 1;
                             clone.Quantity--;
                             if (!shop)
@@ -342,7 +342,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 if (Inventory[i].GetRef() is Item toDrop) {
                     if (curr.IsBank && CanUseBanks) {
-                        ItemWrapper clone = Helper.Clone(Inventory[i]);
+                        ItemWrapper clone = new(Inventory[i]);
                         clone.Quantity = qty; 
                         BankItem(clone);
 
@@ -381,7 +381,7 @@ namespace ZeroPlayersOnline.DataTypes {
                                 }
 
                                 if (!found) {
-                                    Item clone = Helper.Clone(toDrop);
+                                    Item clone = new(toDrop);
                                     clone.Quantity = qty;
 
                                     curr.ItemsHere.Add(clone);
@@ -476,6 +476,27 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public bool TakeDamage(int amt, MessageLog log) {  
             CurrentHP -= amt;
+
+            if (CurrentHP > 0) {
+                int maxHP = GetEffectiveSkillLevel("Constitution");
+                
+                if (CurrentHP <  maxHP * 0.2) {
+                    if (Equipment.TryGetValue("Amulet", out ItemWrapper? eqp) && eqp != null && eqp.ID == "necklacePhoenix") { 
+                        CurrentHP = (int) Math.Clamp(CurrentHP + (maxHP * 0.3), CurrentHP, maxHP);
+                         
+                        log.AddMessage(new ColoredString("Your phoenix necklace restores you from low health, then shatters.", Color.White, Color.Black));
+                        Equipment.Remove("Amulet"); 
+                    }  
+                }
+
+                if (CurrentHP <  maxHP * 0.1) {
+                    if (Equipment.TryGetValue("Ring", out ItemWrapper? eqp) && eqp != null && eqp.ID == "ringLife") {  
+                        NavLoc = NavRespawn; 
+                        log.AddMessage(new ColoredString("Your ring of life teleports you away from danger, then shatters.", Color.White, Color.Black));
+                        Equipment.Remove("Ring"); 
+                    }  
+                }
+            }
 
             if (CurrentHP <= 0 || (NightmareMode && amt > 0)) {
                 Die(log);
@@ -614,6 +635,12 @@ namespace ZeroPlayersOnline.DataTypes {
                         }
                     }
 
+                    if (CurrentHP < Skills["Constitution"].Level / 2) {
+                        if (Equipment.TryGetValue("Amulet", out ItemWrapper? eqp) && eqp != null && eqp.ID == "necklaceFaith") {  
+                            level = (int) Math.Ceiling((double) level * 1.25);
+                        }
+                    }
+
                     return level;
                 }
             }
@@ -653,10 +680,10 @@ namespace ZeroPlayersOnline.DataTypes {
 
             ConsumeItems(craft.NeededItems); 
 
-            Item item = Helper.Clone(GameLoop.ZPO.ItemLibrary[craft.OutputItem]);
+            Item item = new(GameLoop.ZPO.ItemLibrary[craft.OutputItem]);
             if (item.Stackable) {
                 for (int i = 0; i < craft.OutputQty; i++) {
-                    Item clone = Helper.Clone(item);
+                    Item clone = new(item);
                     TryPickup(clone, 1);
                 }
             } else {
@@ -666,7 +693,7 @@ namespace ZeroPlayersOnline.DataTypes {
             TryGrantExp(craft.Skill, craft.ExpGranted, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
         }
 
-        public bool HasAllItems(List<string> items, bool notedOkay = false, bool equippedOkay = false) { 
+        public bool HasAllItems(List<string> items, bool notedOkay = false, bool equippedOkay = false, bool ONLYequipped = false) { 
             foreach (var itemString in items) {
                 string item = itemString;
                 int qty = 1;
@@ -682,6 +709,7 @@ namespace ZeroPlayersOnline.DataTypes {
                     item = split[0];
                 }
 
+                if (!ONLYequipped) {
                 // Check for items that count as the item but aren't the item (for example, elemental staves)
                 for (int i = 0; i < Inventory.Count; i++) {
                     if (Inventory[i].GetRef() is Item comp && comp.MiscString == "CountsAs" && comp.UseString2 == item && !comp.MustBeEquipped) {
@@ -693,6 +721,7 @@ namespace ZeroPlayersOnline.DataTypes {
                             } 
                         }
                     }
+                }
                 }
 
                 if (equippedOkay) {
@@ -708,11 +737,13 @@ namespace ZeroPlayersOnline.DataTypes {
                 } 
 
 
-                // Check for actual copies of the item
-                for (int i = 0; i < Inventory.Count; i++) {
-                    if (Inventory[i].ID == item) {
-                        if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
-                            countHeld += Inventory[i].Quantity;
+                if (!ONLYequipped) {
+                    // Check for actual copies of the item
+                    for (int i = 0; i < Inventory.Count; i++) {
+                        if (Inventory[i].ID == item) {
+                            if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                                countHeld += Inventory[i].Quantity;
+                            }
                         }
                     }
                 }
@@ -947,6 +978,12 @@ namespace ZeroPlayersOnline.DataTypes {
                     return "On cooldown, " + minutes + "m " + seconds + "s remaining.";
                 } else {
                     return "On cooldown, " + timeLeft + " seconds remaining.";
+                }
+            }
+
+            for (int i = 0; i < spell.ToCast.Count; i++) {
+                if (!spell.ToCast[i].CheckRequirement(this, false)) {
+                    return "Missing Requirement: " + spell.ToCast[i].GetSummary();
                 }
             }
 

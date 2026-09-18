@@ -32,7 +32,8 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool SeeWithoutRequirements = true;
 
         public bool Inaccessible = false;
-        public bool CountsAsUndead = false;
+        public string SpecialCategory = "";
+        public string CountsAsSlayer = "";
 
         [JsonIgnore]
         public double TimeLastKilled = 0;
@@ -41,7 +42,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double TimeLastAttacked = 0;
 
-        public AreaMonster(string n, string id, int lv, int hp, int dr, int aggroLv, bool aggro, string ddice, string weakness, int respawn, string dtype, List<Requirement>? reqs = null, bool seeAnyways = true, bool inaccessible = false,bool undead = false) {
+        public AreaMonster(string n, string id, int lv, int hp, int dr, bool aggro, string ddice, string weakness, int respawn, string dtype, List<Requirement>? reqs = null, bool seeAnyways = true, bool inaccessible = false, string specialCat = "", string slayer = "") {
             Name = n;
             ID = id;
             Level = lv;
@@ -49,7 +50,9 @@ namespace ZeroPlayersOnline.DataTypes {
             CurrentHP = hp;
             DamageReduction = dr;
 
-            AggroLevel = aggroLv;
+            if (aggro)
+                AggroLevel = (lv * 2) + 1;
+            
             AlwaysAggro = aggro;
 
             DamageDice = ddice; 
@@ -58,7 +61,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
             RespawnTime = respawn;
             Inaccessible = inaccessible;
-            CountsAsUndead = undead;
+            SpecialCategory = specialCat;
+            CountsAsSlayer = slayer;
 
             if (reqs != null)
                 Requirements = reqs;
@@ -77,6 +81,24 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             return all;
+        }
+
+        public string GetSummary() {
+            string build = "";
+
+            build += Name + ": Deals " + DamageDice + " " + DamageType + " damage. Weak to " + WeakType + ".";
+
+            if (DamageReduction > 0)
+                build += " " + DamageReduction + " DR.";
+
+            if (CountsAsSlayer != "")
+                build += " Counts for " + GameLoop.ZPO.ResolveMonsterName(CountsAsSlayer) + " Slayer tasks.";
+
+            if (SpecialCategory != "") {
+                build += " Counts as " + SpecialCategory + ".";
+            }
+
+            return build;
         }
     }
 }

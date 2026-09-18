@@ -20,7 +20,7 @@
             return false;
         }
 
-        public bool NoRNGDrop(string itemID, int dropRate) {
+        public bool NoRNGDrop(int dropRate) {
             if (KillCount % dropRate == 0)
                 return true;
             return false;

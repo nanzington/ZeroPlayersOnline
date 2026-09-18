@@ -38,6 +38,17 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Needle", "Now to get a camel through eye of this thing...", "needle", 200, 200, 200, 1) { UseString = "Needle", ConsumedOnUse = false});
             itemsToAdd.Add(new Item("Feather", "I could probably make arrows with this. Or put one in my cap!", "feather", 255, 255, 255, 2, true)); 
             itemsToAdd.Add(new Item("Steel studs", "A set of studs for leather armour.", "studsSteel", ColorLib.Steel, 45)); 
+            itemsToAdd.Add(new Item("Shears", "Necessary to de-wool sheep.", "shears", 200, 200, 200, 1, misc: "Shears"));
+            itemsToAdd.Add(new Item("Papyrus", "Used for making notes.", "papyrus", Color.Khaki, 10));
+            itemsToAdd.Add(new Item("Waterskin (0)", "A completely empty waterskin - you'll need to fill it up.", "waterskin0", Color.Khaki, 15));
+            itemsToAdd.Add(new Item("Waterskin (1)", "A nearly empty waterskin with one portion of water.", "waterskin1", Color.Khaki, 18));
+            itemsToAdd.Add(new Item("Waterskin (2)", "A half empty waterskin with two portions of water.", "waterskin2", Color.Khaki, 24));
+            itemsToAdd.Add(new Item("Waterskin (3)", "A nearly full waterskin with three portions of water.", "waterskin3", Color.Khaki, 27));
+            itemsToAdd.Add(new Item("Waterskin (4)", "A full waterskin with four portions of water.", "waterskin4", Color.Khaki, 30));
+            itemsToAdd.Add(new Item("Rope", "A coil of rope.", "rope", Color.SaddleBrown, 18));
+             
+            itemsToAdd.Add(new Item("Mithril grapple (unf)", "An unfinished mithril grapple. Needs a rope to be useful.", "grappleUnf", ColorLib.Mithril, 1000)); 
+            itemsToAdd.Add(new Item("Mithril grapple", "A mithril grapple with a rope. Useful for some shortcuts.", "grapple", ColorLib.Mithril, 1500)); 
             
             itemsToAdd.Add(new Item("Bird snare", "Snares the leg of any bird that lands on it wrong.", "trapBird", 237, 202, 161, 5));
             
@@ -48,7 +59,6 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Fly fishing rod", "Like a fishing rod, but with cool glasses and a sick haircut.", "fishingRodFly", 139, 69, 19, 5, misc: "Fly fishing rod"));
             itemsToAdd.Add(new Item("Harpoon", "Useful for catching really big fish.", "fishingHarpoon", 139, 69, 19, 45, misc: "Harpoon"));
             itemsToAdd.Add(new Item("Lobster pot", "Useful for catching lobsters.", "fishingPotLobster", 139, 69, 19, 20, misc: "Lobster pot"));
-            itemsToAdd.Add(new Item("Shears", "Necessary to de-wool sheep.", "shears", 200, 200, 200, 1, misc: "Shears"));
 
             
             
@@ -141,7 +151,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Clue casket (tutorial)", "The treasure at the end of the hunt! What could be inside?", "casketTutorial", 218, 165, 32, 0, true, false) {
                     UseString = "Casket",
                     UseString2 = "Tutorial",
-                    UseInt = 100,
+                    UseInt = 10,
                     DropTable = {
                         new ItemDrop("clueCatEars", 1, 20, 1, 1),
                         new ItemDrop("clueCornyApron", 1, 20, 1, 1),
@@ -216,7 +226,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Clue casket (beginner)", "The treasure at the end of the hunt! What could be inside?", "casketBeginner", 218, 165, 32, 0, true, false) {
                     UseString = "Casket",
                     UseString2 = "Beginner",
-                    UseInt = 1000,
+                    UseInt = 100,
                     DropTable = {
                         new ItemDrop("clueFeetMole", 1, 360, 1, 1),
                         new ItemDrop("clueFeetFrog", 1, 360, 1, 1),
@@ -317,7 +327,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Clue casket (easy)", "The treasure at the end of the hunt! What could be inside?", "casketEasy", 218, 165, 32, 0, true, false) {
                     UseString = "Casket",
                     UseString2 = "Easy",
-                    UseInt = 10000,
+                    UseInt = 1000,
                     DropTable = {
                         new ItemDrop("compbowWillow", 1, 360, 1, 1),
                         new ItemDrop("clueAmuletMagicT", 1, 360, 1, 1),
@@ -539,7 +549,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Pantaloons", "Alas, someone has slashed my pantaloons.", "cluePantaloons", Color.Purple, 2000) { EquipSlot = "Legs", Cosmetic = true });
                 itemsToAdd.Add(new Item("Black cane", "A ruby topped cane.", "clueCaneBlack", Color.DimGray, 600) { EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush" });
                 itemsToAdd.Add(new Item("Staff of Bob the Cat", "A staff styled after the elusive cat.", "clueStaffBob", Color.DimGray, 600) { EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush" });
-                itemsToAdd.Add(new Item("Amulet of power (t)", "An enchanted diamond amulet of magic.", "clueAmuletPowerT", Color.White, 900) { EquipSlot = "Amulet", MiscString = "OffenseBoost", EquipTier = 2 });
+                itemsToAdd.Add(new Item("Amulet of power (t)", "An enchanted diamond amulet of magic.", "clueAmuletPowerT", Color.White, 7200) { EquipSlot = "Amulet", MiscString = "OffenseBoost", EquipTier = 2 });
                 itemsToAdd.Add(new Item("Ham joint", "A delicious joint of ham.", "clueHamJoint", Color.Pink, 1500) { EquipSlot = "Weapon",  EquipTier = 0, EquipSkill = "Attack", EquipLevel = 0, EquipDamageType = "Crush" });
                 itemsToAdd.Add(new Item("Rain bow", "Short but effective and very colorful.", "clueRainbow", Color.White, 500) {
                     EquipSlot = "Weapon",
@@ -637,6 +647,15 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Black wizard shirt", "I can do better magic in this.", "wizardBlackRobe", Color.DimGray, 15) { EquipSlot = "Body", EquipTier = 1, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseMagic" });
                 itemsToAdd.Add(new Item("Black wizard skirt", "I can do better magic in this.", "wizardBlackBottom", Color.DimGray, 15) { EquipSlot = "Legs", EquipTier = 1, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseMagic" });
                 
+                // Desert robes
+                itemsToAdd.Add(new Item("Fake beard", "Makes me itch.", "beardFake", Color.White, 1));
+                itemsToAdd.Add(new Item("Kharidian headpiece", "Wear it on your head.", "kharidianHeadpiece", Color.White, 1));
+                itemsToAdd.Add(new Item("Desert disguise", "A disguise suitable for the desert.", "desertDisguise", Color.White, 1) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Desert shirt", "A cool, light desert shirt.", "desertShirt", Color.White, 40) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Desert robe", "A cool, light desert robe.", "desertRobe", Color.White, 40) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Desert boots", "Comfortable desert shoes.", "desertBoots", Color.White, 20) { EquipSlot = "Feet", Cosmetic = true });
+                
+
                 // Splitbark
                 itemsToAdd.Add(new Item("Split-bark helm", "A wooden helmet.", "helmSplitbark", Color.Khaki, 10000) { EquipSlot = "Head", EquipTier = 4, EquipSkill = "Defense", EquipLevel = 40, MiscString = "DefenseMagic" });
                 itemsToAdd.Add(new Item("Split-bark body", "Provides good protection.", "bodySplitbark", Color.Khaki, 45000) { EquipSlot = "Body", EquipTier = 4, EquipSkill = "Defense", EquipLevel = 40, MiscString = "DefenseMagic" });
@@ -1159,7 +1178,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                         UseString = "PlantSeed", UseString2 = "Fruit Tree", UseString3 = "fruitBanana",
                         UseInt = 33 /* Level */,  UseInt2 = 550 /* Exp On Harvest */, UseInt3 = 57600 /* Growth time in seconds */, UseInt4 = 2400 /* Regrowth time in seconds */
                     });
-                    itemsToAdd.Add(new Item("Banana", "Mmm banana.", "fruitBanana", Color.Yellow, 10));
+                    itemsToAdd.Add(new Item("Banana", "Mmm banana.", "fruitBanana", Color.Yellow, 10) { UseString = "Heal", UseInt = 2 });
+                    itemsToAdd.Add(new Item("Sliced banana", "You swear you had more than three slices before.", "fruitBananaSlices", Color.Yellow, 10) { UseString = "Heal", UseInt = 2 });
+                    itemsToAdd.Add(new Item("Peach", "A tasty fruit.", "fruitPeach", Color.Yellow, 10) { UseString = "Heal", UseInt = 8 });
 
                     // Orange Tree
                     itemsToAdd.Add(new Item("Orange tree seed", "An orange tree seed - use on a plant pot to make a sapling. (39)", "seedTreeOrange", Color.AntiqueWhite, 30, true));
@@ -1167,7 +1188,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                         UseString = "PlantSeed", UseString2 = "Fruit Tree", UseString3 = "fruitOrange",
                         UseInt = 39 /* Level */,  UseInt2 = 600 /* Exp On Harvest */, UseInt3 = 57600 /* Growth time in seconds */, UseInt4 = 2400 /* Regrowth time in seconds */
                     });
-                    itemsToAdd.Add(new Item("Orange", "A common fruit.", "fruitOrange", Color.MonoGameOrange, 70));
+                    itemsToAdd.Add(new Item("Orange", "A common fruit.", "fruitOrange", Color.MonoGameOrange, 70) { UseString = "Heal", UseInt = 2 });
+                    itemsToAdd.Add(new Item("Orange slices", "Fresh orange slices.", "fruitOrangeSlices", Color.MonoGameOrange, 70) { UseString = "Heal", UseInt = 2 });
+                    itemsToAdd.Add(new Item("Orange chunks", "Fresh chunks of orange.", "fruitOrangeChunks", Color.MonoGameOrange, 70) { UseString = "Heal", UseInt = 2 });
 
                     // Curry Tree
                     itemsToAdd.Add(new Item("Curry tree seed", "A curry tree seed - use on a plant pot to make a sapling. (42)", "seedTreeCurry", Color.Orange, 40, true));
@@ -1184,6 +1207,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                         UseInt = 51 /* Level */,  UseInt2 = 700 /* Exp On Harvest */, UseInt3 = 57600 /* Growth time in seconds */, UseInt4 = 2400 /* Regrowth time in seconds */
                     });
                     itemsToAdd.Add(new Item("Pineapple", "It can be cut up into something more manageable with a knife.", "fruitPineapple", Color.Yellow, 20));
+                    itemsToAdd.Add(new Item("Pineapple chunks", "Fresh chunks of pineapple.", "fruitPineappleChunks", Color.Yellow, 5) { UseString = "Heal", UseInt = 2 });
+                    itemsToAdd.Add(new Item("Pineapple ring", "Exotic fruit.", "fruitPineappleRing", Color.Yellow, 5) { UseString = "Heal", UseInt = 2 });
 
                     // Papaya Tree
                     itemsToAdd.Add(new Item("Papaya tree seed", "A papaya tree seed - use on a plant pot to make a sapling. (57)", "seedTreePapaya", Color.DimGray, 120, true));
@@ -1191,7 +1216,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         UseString = "PlantSeed", UseString2 = "Fruit Tree", UseString3 = "fruitPapaya",
                         UseInt = 57 /* Level */,  UseInt2 = 750 /* Exp On Harvest */, UseInt3 = 57600 /* Growth time in seconds */, UseInt4 = 2400 /* Regrowth time in seconds */
                     });
-                    itemsToAdd.Add(new Item("Papaya", "Papaya, papaya, pa-paya-paya!", "fruitPapaya", Color.YellowGreen, 64));
+                    itemsToAdd.Add(new Item("Papaya", "Papaya, papaya, pa-paya-paya!", "fruitPapaya", Color.YellowGreen, 64) { UseString = "Heal", UseInt = 8 });
 
                     // Palm Tree
                     itemsToAdd.Add(new Item("Palm tree seed", "A palm tree seed - use on a plant pot to make a sapling. (68)", "seedTreePalm", Color.Wheat, 250, true));
@@ -1200,6 +1225,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                         UseInt = 68 /* Level */,  UseInt2 = 800 /* Exp On Harvest */, UseInt3 = 57600 /* Growth time in seconds */, UseInt4 = 2400 /* Regrowth time in seconds */
                     });
                     itemsToAdd.Add(new Item("Coconut", "It's a coconut.", "fruitCoconut", Color.SaddleBrown, 90));
+                    itemsToAdd.Add(new Item("Half coconut", "It's a coconut.", "fruitCoconutHalf", Color.SaddleBrown, 90));
+                    itemsToAdd.Add(new Item("Coconut milk", "A vial filled with coconut milk.", "fruitCoconutMilk", Color.White, 90));
+                    itemsToAdd.Add(new Item("Coconut shell", "All the milk has been removed.", "fruitCoconutShell", Color.SaddleBrown, 90));
                 }
 
                 // // Farming - Cactus
@@ -1255,6 +1283,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Wool", "Nice and fluffy.", "woolRaw", 255, 255, 255, 5));
                 itemsToAdd.Add(new Item("Bark", "Bark from a hollow tree.", "bark", Color.SaddleBrown, 50));
                 itemsToAdd.Add(new Item("Fine cloth", "Amazingly untouched by time.", "clothFine", Color.SaddleBrown, 500)); 
+                itemsToAdd.Add(new Item("Silk", "It's a sheet of silk.", "clothSilk", Color.AntiqueWhite, 30)); 
                 itemsToAdd.Add(new Item("Ball of wool", "Spun from wool.", "woolBall", 255, 255, 255, 7)); 
                 itemsToAdd.Add(new Item("Chisel", "Good for detailed crafting.", "chisel", Color.SaddleBrown, 14));
 
@@ -1279,34 +1308,78 @@ namespace ZeroPlayersOnline.Hardcodes {
 
                 // Jewellery Factory
                 List<MaterialDef> Jewels = new() {
-                    new("Gold", Color.Goldenrod, 0, 5, 400, "gold"),
-                    new("Opal", Color.AntiqueWhite, 1, 7, 350, "opal"),
-                    new("Jade", Color.PaleGreen, 1, 27, 400, "jade"),
-                    new("Red topaz", Color.Magenta, 1, 49, 450, "red topaz"),
-                    new("Sapphire", Color.DeepSkyBlue, 2, 7, 1000, "sapphire"),
-                    new("Emerald", Color.Lime, 3, 27, 1500, "emerald"),
-                    new("Ruby", Color.Crimson, 4, 49, 2200, "ruby"),
-                    new("Diamond", Color.White, 5, 57, 3500, "diamond"),
-                    new("Dragonstone", Color.Purple, 6, 68, 18000, "dragonstone"),
-                    new("Onyx", Color.DimGray, 7, 87, 1000000, "onyx"),
-                    new("Zenyte", Color.Orange, 8, 93, 15000000, "zenyte")
+                    new("Gold", Color.Goldenrod, 0, 5, 400, "Gold"),
+                    new("Opal", Color.AntiqueWhite, 1, 7, 350, "Opal"),
+                    new("Jade", Color.PaleGreen, 1, 27, 400, "Jade"),
+                    new("Red topaz", Color.Magenta, 1, 49, 450, "RedTopaz"),
+                    new("Sapphire", Color.DeepSkyBlue, 2, 7, 1000, "Sapphire"),
+                    new("Emerald", Color.Lime, 3, 27, 1500, "Emerald"),
+                    new("Ruby", Color.Crimson, 4, 49, 2200, "Ruby"),
+                    new("Diamond", Color.White, 5, 57, 3500, "Diamond"),
+                    new("Dragonstone", Color.Purple, 6, 68, 18000, "Dragonstone"),
+                    new("Onyx", Color.DimGray, 7, 87, 1000000, "Onyx"),
+                    new("Zenyte", Color.Orange, 8, 93, 15000000, "Zenyte")
                 };
 
                 foreach (var mat in Jewels) {
                     if (mat.Name != "Gold") {
-                        itemsToAdd.Add(new Item("Uncut " + mat.Name.ToLower(), "An uncut " + mat.Name.ToLower() + ". Used in Crafting (" + mat.Level + ").", "uncut" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier - 300));
-                        itemsToAdd.Add(new Item(mat.Name, "This looks valuable.", "cut" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier));
+                        itemsToAdd.Add(new Item("Uncut " + mat.Name.ToLower(), "An uncut " + mat.Name.ToLower() + ". Used in Crafting (" + mat.Level + ").", "uncut" + mat.Descriptor, mat.R, mat.G, mat.B, mat.CostMultiplier - 300));
+                        itemsToAdd.Add(new Item(mat.Name, "This looks valuable.", "cut" + mat.Descriptor, mat.R, mat.G, mat.B, mat.CostMultiplier));
                     }
-                    itemsToAdd.Add(new Item(mat.Name + " ring", "A ring made from " + mat.Descriptor + ".", "ring" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Ring" });
-                    itemsToAdd.Add(new Item(mat.Name + " amulet", "An amulet made from " + mat.Descriptor + ".", "amulet" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Amulet" });
-                    itemsToAdd.Add(new Item(mat.Name + " amulet (u)", "An unstrung amulet made from " + mat.Descriptor + ". Can be strung with wool.", "amulet" + mat.Name + "U", mat.R, mat.G, mat.B, mat.CostMultiplier));
-                    itemsToAdd.Add(new Item(mat.Name + " necklace", "A necklace made from " + mat.Descriptor + ".", "necklace" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Amulet" });
-                    itemsToAdd.Add(new Item(mat.Name + " bracelet", "A bracelet made from " + mat.Descriptor + ".", "bracelet" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Hands" });
+                    itemsToAdd.Add(new Item(mat.Name + " ring", "A ring made from " + mat.Name.ToLower() + ".", "ring" + mat.Descriptor, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Ring" });
+                    itemsToAdd.Add(new Item(mat.Name + " amulet", "An amulet made from " + mat.Name.ToLower() + ".", "amulet" + mat.Descriptor, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Amulet" });
+                    itemsToAdd.Add(new Item(mat.Name + " amulet (u)", "An unstrung amulet made from " + mat.Name.ToLower() + ". Can be strung with wool.", "amulet" + mat.Descriptor + "U", mat.R, mat.G, mat.B, mat.CostMultiplier));
+                    itemsToAdd.Add(new Item(mat.Name + " necklace", "A necklace made from " + mat.Name.ToLower() + ".", "necklace" + mat.Descriptor, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Amulet" });
+                    itemsToAdd.Add(new Item(mat.Name + " bracelet", "A bracelet made from " + mat.Name.ToLower() + ".", "bracelet" + mat.Descriptor, mat.R, mat.G, mat.B, mat.CostMultiplier) { EquipSlot = "Hands" });
                 }
 
                 itemsToAdd.Add(new Item("Brass necklace", "I'd prefer a gold one.", "necklaceBrass", ColorLib.Bronze.GetBright(), 30) { EquipSlot = "Amulet" });
                 itemsToAdd.Add(new Item("Amulet of accuracy", "It increases my aim.", "amuletAccuracy", Color.Orange, 100) { EquipSlot = "Amulet", MiscString = "HitChance", EquipTier = 10 });
-                itemsToAdd.Add(new Item("Amulet of magic", "An enchanted sapphire amulet of magic.", "amuletMagic", Color.DeepSkyBlue, 900) { EquipSlot = "Amulet", MiscString = "MagicBoost", EquipTier = 5 });
+                
+                itemsToAdd.Add(new Item("Amulet of magic", "An enchanted sapphire amulet of magic.", "amuletMagic", Color.DeepSkyBlue, 1100) { EquipSlot = "Amulet", MiscString = "MagicBoost", EquipTier = 5 });
+                itemsToAdd.Add(new Item("Ring of recoil", "Reflects part of damage taken back to the attacker.", "ringRecoil", Color.DeepSkyBlue, 1100) { EquipSlot = "Ring", UseInt4 = 40 });
+                itemsToAdd.Add(new Item("Games necklace", "An enchanted sapphire necklace.", "necklaceGames", Color.DeepSkyBlue, 1100) { EquipSlot = "Amulet", UseInt4 = 8, UseString = "TeleportMenuCost", TeleportLocations = ["ASG_Burthorpe", "KAN_BarbOutpost", "WILD_CorpLair", "MIST_TearsOfGuthix", "KOUR_WintertodtCamp", "DES_GiantsPlateau", "DES_MageTrainingArena", "KAN_CastleWarsLobby"] });
+                itemsToAdd.Add(new Item("Bracelet of clay", "Now I can become a potter.", "braceletClay", Color.DeepSkyBlue, 1100) { EquipSlot = "Hands", UseInt4 = 20 });
+                
+                itemsToAdd.Add(new Item("Amulet of bounty", "25% chance to not consume a seed when planting.", "amuletBounty", Color.AntiqueWhite, 450) { EquipSlot = "Amulet", UseInt4 = 10 });
+                itemsToAdd.Add(new Item("Ring of pursuit", "This ring increases your chance to catch hunter creatures in traps.", "ringPursuit", Color.AntiqueWhite, 450) { EquipSlot = "Ring", UseInt4 = 20 });
+                itemsToAdd.Add(new Item("Dodgy necklace", "25% chance to avoid damage from failed pickpocketing.", "necklaceDodgy", Color.AntiqueWhite, 450) { EquipSlot = "Amulet", UseInt4 = 10 });
+                itemsToAdd.Add(new Item("Expeditious bracelet", "25% chance for one slayer kill to count as two.", "braceletExpeditious", Color.AntiqueWhite, 450) { EquipSlot = "Hands", UseInt4 = 30 });
+                
+                itemsToAdd.Add(new Item("Amulet of defense", "An enchanted emerald amulet of defense.", "amuletDefense", Color.Lime, 1600) { EquipSlot = "Amulet", MiscString = "DefenseAll", EquipTier = 5 });
+                itemsToAdd.Add(new Item("Ring of dueling", "An enchanted emerald ring.", "ringDueling", Color.Lime, 1600) { EquipSlot = "Ring", UseInt4 = 8, UseString = "TeleportMenuCost", TeleportLocations = ["DES_AlKharidEmirsArena", "KAN_CastleWarsLobby", "WILD_FeroxEnclave", "VAR_FortisColosseum" ] });
+                itemsToAdd.Add(new Item("Binding necklace", "A necklace embedded with mystical power.", "necklaceBinding", Color.Lime, 1600) { EquipSlot = "Amulet", UseInt4 = 16 });
+                itemsToAdd.Add(new Item("Castle wars bracelet", "Must be worn as you enter the game to receive the bonus for that game.", "braceletCastleWars", Color.Lime, 1600) { EquipSlot = "Hands", UseInt4 = 3 }); // TODO: If Castle Wars ever gets implemented, make this work
+                
+                itemsToAdd.Add(new Item("Amulet of chemistry", "An enchanted emerald amulet of defense.", "amuletChemistry", Color.PaleGreen, 500) { EquipSlot = "Amulet", UseInt4 = 5 });
+                itemsToAdd.Add(new Item("Ring of returning", "This ring returns you to your spawn point.", "ringReturning", Color.PaleGreen, 500) { EquipSlot = "Ring", UseInt4 = 5, UseString = "TeleSpawn" });
+                itemsToAdd.Add(new Item("Necklace of passage", "This necklace can really take you places.", "necklacePassage", Color.PaleGreen, 500) { EquipSlot = "Amulet", UseInt4 = 5, UseString = "TeleportMenuCost", TeleportLocations = ["MIST_WizardTowerBridge", "KAN_Outpost", "DES_Eagles", "SEA_Wyrmscraig"] });
+                itemsToAdd.Add(new Item("Flaemtaer bracelet", "Helps when building the Shades of Mort'ton temple.", "braceletFlamtaer", Color.PaleGreen, 500) { EquipSlot = "Hands", UseInt4 = 80 }); // TODO: If Shades of Mort'ton ever gets implemented, make this work
+                
+                itemsToAdd.Add(new Item("Amulet of strength", "An enchanted ruby amulet of strength.", "amuletStrength", Color.Crimson, 2300) { EquipSlot = "Amulet", MiscString = "StrengthBoost", EquipTier = 5 });
+                itemsToAdd.Add(new Item("Ring of forging", "An enchanted ruby ring. Allows you to smelt primary ores directly into bars.", "ringForging", Color.Crimson, 2300) { EquipSlot = "Ring", UseInt4 = 140 });
+                itemsToAdd.Add(new Item("Digsite pendant", "Can teleport you to archaeologically significant areas.", "necklaceDigsite", Color.Crimson, 2300) { EquipSlot = "Amulet", UseInt4 = 5, UseString = "TeleportMenuCost", TeleportLocations = ["MIST_Digsite", "MIST_FossilIsland", "MIST_Lithkren"] });
+                itemsToAdd.Add(new Item("Inoculation bracelet", "It eases diseases!", "braceletInoculation", Color.Crimson, 2300) { EquipSlot = "Hands", UseInt4 = 275 }); // TODO: Once disease damage is implemented make this work, also should require Zogre Flesh Eaters completion to equip
+                
+                itemsToAdd.Add(new Item("Burning amulet", "Useful teleports around the wilderness.", "amuletBurning", Color.Magenta, 550) { EquipSlot = "Amulet", UseInt4 = 5, UseString = "TeleportMenuCost", TeleportLocations = ["WILD_ChaosTemple", "WILD_BanditCampEntrance", "WILD_LavaMazeEntrance"] });
+                itemsToAdd.Add(new Item("Efaritay's aid", "Aids the user against vampires.", "ringEfaritay", Color.Magenta, 550) { EquipSlot = "Ring", UseInt4 = 200 });
+                itemsToAdd.Add(new Item("Necklace of faith", "While worn, if you are below half health, boosts your effective Prayer level by 25%.", "necklaceFaith", Color.Magenta, 550) { EquipSlot = "Amulet" });
+                itemsToAdd.Add(new Item("Bracelet of slaughter", "Occasionally prevents slayer kill count being decremented.", "braceletSlaughter", Color.Magenta, 550) { EquipSlot = "Hands", UseInt4 = 30 });
+                
+                itemsToAdd.Add(new Item("Amulet of power", "An enchanted diamond amulet of magic.", "amuletPower", Color.White, 3600) { EquipSlot = "Amulet", MiscString = "OffenseBoost", EquipTier = 2 });
+                itemsToAdd.Add(new Item("Ring of life", "Aids the user against vampires.", "ringLife", Color.White, 3600) { EquipSlot = "Ring" });
+                itemsToAdd.Add(new Item("Phoenix necklace", "If you drop below 20% health, restores 30% of your max health.", "necklacePhoenix", Color.White, 3600) { EquipSlot = "Amulet" });
+                itemsToAdd.Add(new Item("Abyssal bracelet", "Makes using the Abyss just slightly safer.", "braceletAbyssal", Color.White, 3600) { EquipSlot = "Hands", UseInt4 = 30 }); // TODO: When the Abyss is implemented, make this teleport you to the inner ring on entry since the skulling thing is pointless
+                
+                itemsToAdd.Add(new Item("Amulet of glory", "A very powerful dragonstone amulet.", "amuletGlory", Color.Purple, 18100) { EquipSlot = "Amulet", MiscString = "OffenseBoost", EquipTier = 3, UseString = "TeleportMenuCost", TeleportLocations = ["MIST_Edgeville", "KAR_MusaPoint", "MIST_DraynorVillage", "DES_AlKharidPalace" ] });
+                itemsToAdd.Add(new Item("Ring of wealth", "An enchanted dragonstone ring that can teleport you.", "ringWealth", Color.Purple, 18100) { EquipSlot = "Ring", UseString = "TeleportMenuCost", TeleportLocations = ["FREM_Miscellania", "MIST_GrandExchange", "ASG_FaladorPark", "FREM_KeldagrimMineSouthwest" ] });
+                itemsToAdd.Add(new Item("Skills necklace", "This will help me travel.", "necklaceSkills", Color.Purple, 18100) { EquipSlot = "Amulet", UseString = "TeleportMenuCost", TeleportLocations = ["KAN_FishingGuildOutside", "ASG_MiningGuild", "ASG_CraftingGuild", "MIST_CooksGuild", "KOUR_WoodcuttingGuild", "KOUR_FarmingGuild" ] });
+                itemsToAdd.Add(new Item("Combat bracelet", "A handy way to get around.", "braceletCombat", Color.Purple, 18100) { EquipSlot = "Hands", MiscString = "OmniBoost", EquipTier = 1, UseString = "TeleportMenuCost", TeleportLocations = ["ASG_WarriorsGuild", "MIST_ChampionsGuild", "ASG_EdgevilleMonastery", "KAN_RangingGuild" ] });
+                
+                itemsToAdd.Add(new Item("Amulet of fury", "A very powerful onyx amulet.", "amuletFury", Color.DimGray, 1000100) { EquipSlot = "Amulet", MiscString = "OmniBoost", EquipTier = 4 });
+                itemsToAdd.Add(new Item("Ring of fortune", "A lucky ring that enhances your chance to receive rare drops.", "ringFortune", Color.DimGray, 1000100) { EquipSlot = "Ring", UseString = "TeleportMenuFree", TeleportLocations = ["FREM_Miscellania", "MIST_GrandExchange", "ASG_FaladorPark", "FREM_KeldagrimMineSouthwest" ] });
+                itemsToAdd.Add(new Item("Berserker necklace", "Makes obsidian weapons even stronger!", "necklaceBerserker", Color.DimGray, 1000100) { EquipSlot = "Amulet", MiscString = "DefenseAll", EquipTier = -2 }); // TODO: Make this actually make obsidian weapons stronger once they get added
+                itemsToAdd.Add(new Item("Regen bracelet", "Helps to restore health.", "braceletRegen", Color.DimGray, 1000100) { EquipSlot = "Hands" });
                 
                 
 
@@ -1416,19 +1489,28 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Nature talisman", "A mysterious power emanates from the talisman...", "talismanNature", Color.Green, 4)); 
             itemsToAdd.Add(new Item("Body talisman", "A mysterious power emanates from the talisman...", "talismanBody", Color.PowderBlue, 4)); 
             itemsToAdd.Add(new Item("Death talisman", "A mysterious power emanates from the talisman...", "talismanDeath", Color.White, 4)); 
-
-            itemsToAdd.Add(new Item("Pure essence", "An unimbued rune.", "pureEssence", 200, 200, 200, 4));
-            itemsToAdd.Add(new Item("Air rune", "One of the 4 basic elemental runes.", "runeAir", 200, 200, 200, 4, true, true));
-            itemsToAdd.Add(new Item("Earth rune", "One of the 4 basic elemental runes.", "runeEarth", 200, 200, 200, 4, true, true));
-            itemsToAdd.Add(new Item("Fire rune", "One of the 4 basic elemental runes.", "runeFire", 200, 200, 200, 4, true, true));
-            itemsToAdd.Add(new Item("Water rune", "One of the 4 basic elemental runes.", "runeWater", 200, 200, 200, 4, true, true));
-            itemsToAdd.Add(new Item("Mind rune", "Used for basic level missile spells.", "runeMind", 200, 200, 200, 3, true, true));
-            itemsToAdd.Add(new Item("Body rune", "Used for curse spells.", "runeBody", 200, 200, 200, 3, true, true));
-            itemsToAdd.Add(new Item("Nature rune", "Used for alchemy spells.", "runeNature", 200, 200, 200, 180, true, true));
-            itemsToAdd.Add(new Item("Chaos rune", "Used for low level missile spells.", "runeChaos", 200, 200, 200, 90, true, true));
-            itemsToAdd.Add(new Item("Law rune", "Used for teleport spells.", "runeLaw", 200, 200, 200, 240, true, true));
-            itemsToAdd.Add(new Item("Death rune", "Used for medium level missile spells.", "runeDeath", 200, 200, 200, 180, true, true));
-            itemsToAdd.Add(new Item("Blood rune", "Used for high level missile spells.", "runeBlood", 200, 200, 200, 400, true, true));
+            
+            itemsToAdd.Add(new Item("Rune essence", "An unimbued rune.", "runeEssence", Color.DarkGray, 2));
+            itemsToAdd.Add(new Item("Pure essence", "An unimbued rune.", "pureEssence", Color.LightGray, 4));
+            itemsToAdd.Add(new Item("Air rune", "One of the 4 basic elemental runes.", "runeAir", Color.LightGray, 4, true));
+            itemsToAdd.Add(new Item("Earth rune", "One of the 4 basic elemental runes.", "runeEarth", Color.LightGray, 4, true));
+            itemsToAdd.Add(new Item("Fire rune", "One of the 4 basic elemental runes.", "runeFire", Color.LightGray, 4, true));
+            itemsToAdd.Add(new Item("Water rune", "One of the 4 basic elemental runes.", "runeWater", Color.LightGray, 4, true));
+            itemsToAdd.Add(new Item("Mind rune", "Used for basic level missile spells.", "runeMind", Color.LightGray, 3, true));
+            itemsToAdd.Add(new Item("Body rune", "Used for curse spells.", "runeBody", Color.LightGray, 3, true));
+            itemsToAdd.Add(new Item("Nature rune", "Used for alchemy spells.", "runeNature", Color.LightGray, 180, true));
+            itemsToAdd.Add(new Item("Chaos rune", "Used for low level missile spells.", "runeChaos", Color.LightGray, 90, true));
+            itemsToAdd.Add(new Item("Law rune", "Used for teleport spells.", "runeLaw", Color.LightGray, 240, true));
+            itemsToAdd.Add(new Item("Death rune", "Used for medium level missile spells.", "runeDeath", Color.LightGray, 180, true));
+            itemsToAdd.Add(new Item("Blood rune", "Used for high level missile spells.", "runeBlood", Color.LightGray, 400, true));
+            itemsToAdd.Add(new Item("Cosmic rune", "Used for enchant spells.", "runeCosmic", Color.LightGray, 50, true));
+            itemsToAdd.Add(new Item("Soul rune", "Used for high level curse spells.", "runeSoul", Color.LightGray, 300, true));
+            itemsToAdd.Add(new Item("Mist rune", "A combined Air and Water Rune.", "runeMist", Color.LightGray, 20, true));
+            itemsToAdd.Add(new Item("Dust rune", "A combined Air and Earth Rune.", "runeDust", Color.LightGray, 20, true));
+            itemsToAdd.Add(new Item("Mud rune", "A combined Earth and Water Rune.", "runeMud", Color.LightGray, 20, true));
+            itemsToAdd.Add(new Item("Smoke rune", "A combined Air and Fire Rune.", "runeSmoke", Color.LightGray, 20, true));
+            itemsToAdd.Add(new Item("Steam rune", "A combined Water and Fire Rune.", "runeSteam", Color.LightGray, 20, true));
+            itemsToAdd.Add(new Item("Lava rune", "A combined Earth and Fire Rune.", "runeLava", Color.LightGray, 20, true));
 
 
             itemsToAdd.Add(new Item("Staff of air", "A magical staff. Provides unlimited air runes.", "staffAir", 255, 255, 255, 1500) {
@@ -1449,109 +1531,13 @@ namespace ZeroPlayersOnline.Hardcodes {
 
 
             // Pickpocket Loot
-            itemsToAdd.Add(new Item("Small coin pouch", "Has a few coins in it.", "coinPouchSmall", 111, 66, 33, 5, true, true) { UseString = "GetGold", UseInt = 5 });
-            itemsToAdd.Add(new Item("Medium coin pouch", "Has a few more coins in it.", "coinPouchMedium", 111, 66, 33, 5, true, true) { UseString = "GetGold", UseInt = 20 });
-
-            itemsToAdd.Add(new Item("Seed pouch (farmer)", "A small bag of seeds that a farmer had in his pocket.", "seedPouchFarmer", 111, 66, 33, 0, true, false) {
-                UseString = "SeedPouch",
-                DropTable = {
-                    new ItemDrop("seedBarley", 1, 25, 1, 4),
-                    new ItemDrop("seedHammerstone", 1, 26, 1, 4),
-                    new ItemDrop("seedPotato", 1, 28, 1, 3),
-                    new ItemDrop("seedOnion", 1, 32, 1, 3),
-                    new ItemDrop("seedAsgarnian", 1, 32, 1, 4),
-                    new ItemDrop("seedCabbage", 1, 35, 1, 3),
-                    new ItemDrop("seedYanillian", 1, 42, 1, 4),
-                    new ItemDrop("seedTomato", 1, 46, 1, 3),
-                    new ItemDrop("seedJute", 1, 46, 1, 3),
-                    new ItemDrop("seedSweetcorn", 1, 60, 1, 3),
-                    new ItemDrop("seedMarigold", 1, 60, 1, 1),
-                    new ItemDrop("seedKrandorian", 1, 60, 1, 4),
-                    new ItemDrop("seedStrawberry", 1, 70, 1, 3),
-                    new ItemDrop("seedTreePine", 1, 70, 1, 1),
-                    new ItemDrop("seedGuam", 1, 70, 1, 1),
-                    new ItemDrop("seedRedberry", 1, 84, 1, 1),
-                    new ItemDrop("seedRosemary", 1, 84, 1, 1),
-                    new ItemDrop("seedMarrentill", 1, 84, 1, 1),
-                    new ItemDrop("seedTarromin", 1, 84, 1, 1),
-                    new ItemDrop("seedWildblood", 1, 84, 1, 4),
-                    new ItemDrop("seedCadava", 1, 105, 1, 1),
-                    new ItemDrop("seedNasturtium", 1, 105, 1, 1),
-                    new ItemDrop("seedWoad", 1, 105, 1, 1),
-                    new ItemDrop("seedTreeOak", 1, 105, 1, 1),
-                    new ItemDrop("seedLimpwurt", 1, 139, 1, 1),
-                    new ItemDrop("seedTreeApple", 1, 139, 1, 1),
-                    new ItemDrop("seedHarralander", 1, 139, 1, 1),
-                    new ItemDrop("seedTreeWillow", 1, 139, 1, 1),
-                    new ItemDrop("seedDwellberry", 1, 209, 1, 1),
-                    new ItemDrop("seedTreeTeak", 1, 209, 1, 1),
-                    new ItemDrop("seedTreeBanana", 1, 209, 1, 1),
-                    new ItemDrop("seedRanarr", 1, 209, 1, 1), 
-                    new ItemDrop("seedTreeMaple", 1, 418, 1, 1),
-                    new ItemDrop("seedTreeOrange", 1, 418, 1, 1),
-                    new ItemDrop("seedSpiritweed", 1, 418, 1, 1),
-                    new ItemDrop("seedToadflax", 1, 418, 1, 1)
-                }
-            });
-
-            itemsToAdd.Add(new Item("Seed pouch (master farmer)", "A small bag of seeds that a master farmer had in his pocket.", "seedPouchFarmerMaster", 111, 66, 33, 0, true, false) {
-                UseString = "SeedPouch",
-                DropTable = {
-                    new ItemDrop("seedPotato", 1, 6, 1, 4),
-                    new ItemDrop("seedOnion", 1, 8, 1, 3),
-                    new ItemDrop("seedCabbage", 1, 14, 1, 3),
-                    new ItemDrop("seedTomato", 1, 16, 1, 2),
-                    new ItemDrop("seedSweetcorn", 1, 45, 1, 2),
-                    new ItemDrop("seedStrawberry", 1, 90, 1, 1),
-                    new ItemDrop("seedWatermelon", 1, 189, 1, 1),
-                    new ItemDrop("seedSnapegrass", 1, 260, 1, 1),
-                    new ItemDrop("seedBarley", 1, 18, 1, 12),
-                    new ItemDrop("seedHammerstone", 1, 18, 1, 9),
-                    new ItemDrop("seedAsgarnian", 1, 24, 1, 6),
-                    new ItemDrop("seedJute", 1, 24, 1, 9),
-                    new ItemDrop("seedYanillian", 1, 36, 1, 6),
-                    new ItemDrop("seedKrandorian", 1, 72, 1, 6),
-                    new ItemDrop("seedWildblood", 1, 142, 1, 3),
-                    new ItemDrop("seedMarigold", 1, 22, 1, 1),
-                    new ItemDrop("seedNasturtium", 1, 33, 1, 1),
-                    new ItemDrop("seedRosemary", 1, 51, 1, 1),
-                    new ItemDrop("seedWoad", 1, 69, 1, 1),
-                    new ItemDrop("seedLimpwurt", 1, 86, 1, 1),
-                    new ItemDrop("seedRedberry", 1, 26, 1, 1),
-                    new ItemDrop("seedCadava", 1, 37, 1, 1),
-                    new ItemDrop("seedDwellberry", 1, 52, 1, 1),
-                    new ItemDrop("seedJangerberry", 1, 129, 1, 1),
-                    new ItemDrop("seedWhiteberry", 1, 355, 1, 1),
-                    new ItemDrop("seedPoisonIvy", 1, 937, 1, 1),
-                    new ItemDrop("seedBittercap", 1, 492, 1, 1),
-                    new ItemDrop("seedBelladonna", 1, 820, 1, 1),
-                    new ItemDrop("seedCactus", 1, 1230, 1, 1),
-                    new ItemDrop("seedPotatoCactus", 1, 2460, 1, 1),
-                    new ItemDrop("seedGuam", 1, 58, 1, 1),
-                    new ItemDrop("seedMarrentill", 1, 96, 1, 1),
-                    new ItemDrop("seedTarromin", 1, 140, 1, 1),
-                    new ItemDrop("seedHarralander", 1, 206, 1, 1),
-                    new ItemDrop("seedRanarr", 1, 270, 1, 1),
-                    new ItemDrop("seedToadflax", 1, 443, 1, 1),
-                    new ItemDrop("seedIrit", 1, 651, 1, 1),
-                    new ItemDrop("seedAvantoe", 1, 947, 1, 1),
-                    new ItemDrop("seedKwuarm", 1, 1389, 1, 1),
-                    new ItemDrop("seedSnapdragon", 1, 1854, 1, 1),
-                    new ItemDrop("seedCadantine", 1, 2976, 1, 1),
-                    new ItemDrop("seedLantadyme", 1, 4167, 1, 1),
-                    new ItemDrop("seedDwarfweed", 1, 6944, 1, 1),
-                    new ItemDrop("seedTorstol", 1, 9272, 1, 1)
-                }
-            });
-
-
-
-
+            itemsToAdd.Add(new Item("Small coin pouch", "Has a few coins in it.", "coinPouchSmall", 111, 66, 33, 5, true, false) { UseString = "GetGold", UseInt = 5 });
+            itemsToAdd.Add(new Item("Medium coin pouch", "Has a few more coins in it.", "coinPouchMedium", 111, 66, 33, 5, true, false) { UseString = "GetGold", UseInt = 20 });
 
             itemsToAdd.Add(new Item("Slayer gem", "A pretty blue gem that can tell you your current slayer task.", "gemSlayer", 102, 205, 170, 1) { UseString = "SlayerGem", ConsumedOnUse = false });
             
-            itemsToAdd.Add(new Item("Bones", "The remains of some creature or person.", "bonesRegular", 255, 255, 255, 1) { UseString = "Bones", UseInt = 5 });
-            itemsToAdd.Add(new Item("Big bones", "The remains of some huge creature or person.", "bonesBig", 255, 255, 255, 1) { UseString = "Bones", UseInt = 15 });
+            itemsToAdd.Add(new Item("Bones", "The remains of some creature or person.", "bonesRegular", 255, 255, 255, 20) { UseString = "Bones", UseInt = 5 });
+            itemsToAdd.Add(new Item("Big bones", "The remains of some huge creature or person.", "bonesBig", 255, 255, 255, 100) { UseString = "Bones", UseInt = 15 });
             
             itemsToAdd.Add(new Item("Fiendish ashes", "A heap of ashes.", "ashesFiendish", 122, 104, 127, 1) { UseString = "Ashes", UseInt = 10 });
             itemsToAdd.Add(new Item("Vile ashes", "A heap of ashes.", "ashesVile", 122, 104, 127, 1) { UseString = "Ashes", UseInt = 25 });
@@ -1611,11 +1597,13 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Chocolate cake", "This looks very tasty.", "cakeChocolate", Color.Brown, 70) { UseString = "Heal", UseInt = 15 });
             itemsToAdd.Add(new Item("Chocolate cake (2/3)", "This looks very tasty.", "cakeChocolate1", Color.Brown, 45) { UseString = "Heal", UseInt = 10 });
             itemsToAdd.Add(new Item("Chocolate cake slice", "I'd rather have a full cake.", "cakeChocolate2", Color.Brown, 20) { UseString = "Heal", UseInt = 5 });
+            itemsToAdd.Add(new Item("Kebab", "A meaty kebab.", "kebab", Color.Lime, 5) { UseString = "Kebab"});
 
 
             itemsToAdd.Add(new Item("Empty bucket", "An empty bucket. Could probably hold something.", "bucketEmpty", 111, 66, 33, 2));
             itemsToAdd.Add(new Item("Bucket of water", "A bucket filled with water.", "bucketWater", 111, 66, 33, 2));
             itemsToAdd.Add(new Item("Bucket of milk", "A bucket filled with milk.", "bucketMilk", 111, 66, 33, 2));
+            itemsToAdd.Add(new Item("Bucket of compost", "Good for plants, helps them grow.", "bucketCompost", 111, 66, 33, 2) { UseString = "Compost", UseInt = 1 });
             itemsToAdd.Add(new Item("Pot of cream", "Fresh cream.", "cream", Color.White, 4));
             itemsToAdd.Add(new Item("Pat of butter", "A pat of freshly churned butter.", "butter", Color.LightYellow, 8));
             itemsToAdd.Add(new Item("Cheese", "Cheese, Gromit! Cheese!", "cheese", Color.Yellow, 12));

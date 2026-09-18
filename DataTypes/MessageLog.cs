@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline.DataTypes {
     public class MessageLog { 
@@ -30,8 +31,8 @@ namespace ZeroPlayersOnline.DataTypes {
             else {
                 Log.Add(new(msg));
             }
-
-            TopIndex = Math.Clamp(Log.Count - 12, 0, Log.Count);
+             
+            TopIndex = Log.Count - 1;
         }
     }
 }

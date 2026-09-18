@@ -59,6 +59,12 @@ namespace ZeroPlayersOnline.Managers {
         public static Window Clue;
         public static string CurrentClue = "";
 
+        public static Window Teleport; 
+        public static List<string> TeleportDests = new();
+        public static ItemWrapper? TeleWrap = null;
+        public static bool TeleCostsCharges = false;
+        public static bool TeleFairyRing = false;
+
         public static bool AnyVisible(string except = "") {
             if (CollectionLog.IsVisible && except != "Collection")
                 return true;
@@ -75,6 +81,8 @@ namespace ZeroPlayersOnline.Managers {
             if (Debug.IsVisible && except != "Debug")
                 return true;
             if (Clue.IsVisible && except != "Clue")
+                return true;
+            if (Teleport.IsVisible && except != "Teleport")
                 return true;
             
             return false;
@@ -104,7 +112,7 @@ namespace ZeroPlayersOnline.Managers {
 
             CraftingMenu = new(100, 30);
             CraftingMenu.CanDrag = true;
-            CraftingMenu.Position = new Point(25, 10);
+            CraftingMenu.Position = new Point(15, 10);
             CraftingMenu.Title = "Crafting Menu".Align(HorizontalAlignment.Center, 98);
 
             Map = new(50, 30);
@@ -131,6 +139,11 @@ namespace ZeroPlayersOnline.Managers {
             Clue.CanDrag = true;
             Clue.Position = new Point(40, 10);
             Clue.Title = "Clue Scroll".Align(HorizontalAlignment.Center, 68);
+
+            Teleport = new(50, 30);
+            Teleport.CanDrag = true;
+            Teleport.Position = new Point(25, 10);
+            Teleport.Title = "Teleports".Align(HorizontalAlignment.Center, 48);
         }
 
         public static void GuideDraw() {
@@ -336,6 +349,12 @@ namespace ZeroPlayersOnline.Managers {
                     foreach (var loot in kv.Value.DropTable) {
                         if (loot.ItemID != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.ItemID)) {
                             findings.Add(new("Item: " + kv.Value.ID + ": Drop Table (" + loot.ItemID + ")", "", "", "", "", 0));
+                        }
+                    }
+
+                    foreach (var tp in kv.Value.TeleportLocations) {
+                        if (tp != "" && !GameLoop.ZPO.Atlas.ContainsKey(tp)) {
+                            findings.Add(new("Item: " + kv.Value.ID + ": TeleLoc (" + tp + ")", "", "", "", "", 0));
                         }
                     }
                 }
@@ -1078,8 +1097,9 @@ namespace ZeroPlayersOnline.Managers {
                         Compendium.Print(32, monY++, "MaxHP: " + mon.MaxHP, Color.White);
                         monY++;
                         Compendium.Print(32, monY++, "Damage Reduction: " + mon.DamageReduction + "% (Weakness: " + mon.WeakType + ")", Color.White); 
-                        Compendium.Print(32, monY++, "Aggro: Lv" + mon.AggroLevel + " (Always Aggro: " + Helper.Checkmark(mon.AlwaysAggro) + new ColoredString(")")); 
+                        Compendium.Print(32, monY++, "Aggro: Lv" + mon.AggroLevel); 
                         Compendium.Print(32, monY++, "Damage: " + mon.DamageDice + " " + mon.DamageType, Color.White);
+                        Compendium.Print(32, monY++, "Category: " + mon.SpecialCategory + ", Counts As Slayer ID:" + mon.CountsAsSlayer, Color.White);
                         Compendium.Print(32, monY++, "Respawn: " + mon.RespawnTime + " seconds", Color.White);
 
                         monY++;
@@ -1823,6 +1843,7 @@ namespace ZeroPlayersOnline.Managers {
 
                         Compendium.Print(32, bossY++, "Level: " + boss.Level, Color.White);
                         Compendium.Print(32, bossY++, "MaxHP: " + boss.MaxHP, Color.White);
+                        Compendium.Print(32, bossY++, "Special Category: " + boss.SpecialCategory + ", Counts as Slayer ID: " + boss.CountsAsSlayer, Color.White); 
                         bossY++;
                         Compendium.Print(32, bossY++, "Damage Reduction: " + boss.DamageReduction + "% (Weakness: " + boss.WeakType + ")", Color.White); 
                         Compendium.Print(32, bossY++, "Aggro: Lv" + boss.AggroLevel + " (Always Aggro: " + Helper.Checkmark(boss.AlwaysAggro) + new ColoredString(")")); 
@@ -3094,6 +3115,45 @@ namespace ZeroPlayersOnline.Managers {
             
             Clue.Print(2, 18, "Find the map location with this description.", Color.DarkSlateGray); 
             Clue.PrintClickable(69, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Clue.IsVisible = false; });
+        }    
+    
+        
+        public static void TeleportDraw() {
+            Teleport.Clear();
+            Helper.DrawBox(Teleport, 0, 0, 48, 28);
+            Teleport.Print(2, 0, "[Teleport Options]");
+
+            for(int i = 0; i < TeleportDests.Count; i++) {
+                if (GameLoop.ZPO.Atlas.TryGetValue(TeleportDests[i], out Location? dest)) { 
+                    Teleport.PrintClickable(2, 1 + i, dest.DisplayName, () => { 
+                        Teleport.IsVisible = false; 
+                        GameLoop.ZPO.player.NavLoc = TeleportDests[i]; 
+                        GameLoop.ZPO.Log.AddMessage("You teleport to " + GameLoop.ZPO.ResolveLocationName(TeleportDests[i]) + ".");
+                        TeleportDests = new();
+
+                        if (TeleWrap != null && TeleCostsCharges) { 
+                            TeleWrap.Charges -= 1;  
+                            if (TeleWrap.Charges <= 0) {
+                                if (TeleWrap.GetRef() is Item unwrap && unwrap.ShattersAtZeroCharges) {
+                                    GameLoop.ZPO.Log.AddMessage("Your " + unwrap.Name + " runs out of charges and shatters.", Color.Crimson);
+                                    GameLoop.ZPO.player.Inventory.Remove(TeleWrap);
+                                    
+                                    if (unwrap.EquipSlot != "" && GameLoop.ZPO.player.Equipment.TryGetValue(unwrap.EquipSlot, out ItemWrapper? wrap) && wrap != null && wrap == TeleWrap) {
+                                        GameLoop.ZPO.player.Equipment.Remove(unwrap.EquipSlot);
+                                    }
+                                }
+                            }
+                        }
+
+                        TeleWrap = null; 
+                    });
+                } else {
+                    Teleport.Print(2, 1 + i, TeleportDests[i], Color.DarkSlateGray);
+                }
+            }
+             
+              
+            Teleport.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Teleport.IsVisible = false; });
         }    
     }
 }

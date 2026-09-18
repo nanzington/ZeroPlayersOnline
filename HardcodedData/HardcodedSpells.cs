@@ -36,7 +36,31 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("teleCamelot", "Camelot Teleport", "Standard", 45, 56, [ "runeAir,5", "runeLaw,1" ], "Teleport to your home.", "Tele", misc: "MIST_LumbridgeCastleBailey", cd: 250)); // TODO: Change this to teleport to camelot castle gates
             toAdd.Add(new("teleArdougne", "Ardougne Teleport", "Standard", 51, 61, [ "runeWater,2", "runeLaw,2" ], "Teleport to Ardougne market.", "Tele", misc: "MIST_LumbridgeCastleBailey", cd: 250)); // TODO: Change this to teleport to Ardougne, also make it require Plague City
             
+            // Utility Spells
+            toAdd.Add(new("utilBonesBananas", "Bones to Bananas", "Standard", 15, 25, [ "runeEarth,2", "runeWater,2", "runeNature,1" ], "Converts all normal bones in your inventory into bananas.", "Utility")); 
+            toAdd.Add(new("utilAlchemyLow", "Low Level Alchemy", "Standard", 21, 31, [ "runeFire,3", "runeNature,1" ], "Gives coins equal to 35% of the value of the item the spell was cast on.", "Utility")); 
+            toAdd.Add(new("utilSuperheat", "Superheat Item", "Standard", 21, 31, [ "runeFire,4", "runeNature,1" ], "Smelts the first ore mix in the inventory into the equivalent bar, as if using a furnace.", "Utility")); 
+            toAdd.Add(new("utilAlchemyHigh", "High Level Alchemy", "Standard", 55, 65, [ "runeFire,5", "runeNature,1" ], "Gives coins equal to 70%% of the value of the item the spell was cast on.", "Utility")); 
+            toAdd.Add(new("utilBonesPeaches", "Bones to Peaches", "Standard", 60, 36, [ "runeEarth,2", "runeWater,4", "runeNature,1" ], "Converts all normal bones in your inventory into peaches.", "Utility", reqs: new() { new("Data", 1, "UnlockedBonesToPeaches", misc3: "equals", summ: "Must be unlocked at the Mage Training Arena.")})); 
             
+            toAdd.Add(new("utilEnchant1", "Lvl 1 Enchant (Sapphire/Opal)", "Standard", 7, 18, [ "runeWater,1", "runeCosmic,1" ], "Enchants jewellery made from sapphire or opal.", "Utility"));
+            toAdd.Add(new("utilEnchant2", "Lvl 2 Enchant (Emerald/Jade)", "Standard", 27, 37, [ "runeAir,3", "runeCosmic,1" ], "Enchants jewellery made from emerald or jade.", "Utility")); 
+            toAdd.Add(new("utilEnchant3", "Lvl 3 Enchant (Ruby/Red Topaz)", "Standard", 49, 59, [ "runeFire,5", "runeCosmic,1" ], "Enchants jewellery made from ruby or red topaz.", "Utility")); 
+            toAdd.Add(new("utilEnchant4", "Lvl 4 Enchant (Diamond)", "Standard", 57, 67, [ "runeEarth,10", "runeCosmic,1" ], "Enchants jewellery made from diamond.", "Utility")); 
+            toAdd.Add(new("utilEnchant5", "Lvl 5 Enchant (Dragonstone)", "Standard", 68, 78, [ "runeEarth,15", "runeWater,15", "runeCosmic,1" ], "Enchants jewellery made from dragonstone.", "Utility")); 
+            toAdd.Add(new("utilEnchant6", "Lvl 6 Enchant (Onyx)", "Standard", 87, 97, [ "runeEarth,20", "runeFire,20", "runeCosmic,1" ], "Enchants jewellery made from onyx.", "Utility")); 
+            toAdd.Add(new("utilEnchant7", "Lvl 7 Enchant (Zenyte)", "Standard", 93, 110, [ "runeBlood,20", "runeCosmic,1", "runeSoul,20" ], "Enchants jewellery made from zenyte.", "Utility"));  
+            
+            toAdd.Add(new("utilTelegrab", "Telekinetic Grab", "Standard", 33, 43, [ "runeAir,1", "runeLaw,1" ], "Allows you to pick up otherwise inaccessible items.", "Utility"));  
+            toAdd.Add(new("utilMonsterInspect", "Monster Inspect", "Standard", 42, 31, [ "runeBody,2", "runeMind,2" ], "Displays information about the monster the spell is cast upon.", "Utility"));  
+            
+
+            /* Can't implement these really until the Taverly and Edgeville dungeons are added
+            toAdd.Add(new("utilOrbWater", "Charge Water Orb", "Standard", 56, 56, [ "runeWater,30", "runeCosmic,3" ], "Enchants an unpowered orb into a water orb when cast at the Obelisk of Water.")); // TODO: Make these only work if you're at the place where the obelisk is
+            toAdd.Add(new("utilOrbEarth", "Charge Earth Orb", "Standard", 56, 56, [ "runeEarth,30", "runeCosmic,3" ], "Enchants an unpowered orb into an earth orb when cast at the Obelisk of Earth.")); // TODO: Make these only work if you're at the place where the obelisk is
+            toAdd.Add(new("utilOrbFire", "Charge Fire Orb", "Standard", 56, 56, [ "runeFire,30", "runeCosmic,3" ], "Enchants an unpowered orb into a fire orb when cast at the Obelisk of Fire.")); // TODO: Make these only work if you're at the place where the obelisk is
+            toAdd.Add(new("utilOrbAir", "Charge Air Orb", "Standard", 56, 56, [ "runeAir,30", "runeCosmic,3" ], "Enchants an unpowered orb into an air orb when cast at the Obelisk of Air.")); // TODO: Make these only work if you're at the place where the obelisk is
+            */
 
             for (int i = 0; i < toAdd.Count; i++) { 
                 SpellLib.Add(toAdd[i].ID, toAdd[i]);

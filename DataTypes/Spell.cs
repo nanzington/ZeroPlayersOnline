@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline.DataTypes {
     public class Spell {
@@ -19,12 +20,14 @@ namespace ZeroPlayersOnline.DataTypes {
         
         public List<string> Runes = new();
 
+        public List<Requirement> ToCast = new();
+
         
         [JsonIgnore]
         public double TimeLastCast = 0;
 
 
-        public Spell(string id, string name, string book, int level, int exp, List<string> runes, string desc = "", string cat = "", int tier = 1, string misc = "", double cd = 0) {
+        public Spell(string id, string name, string book, int level, int exp, List<string> runes, string desc = "", string cat = "", int tier = 1, string misc = "", double cd = 0, List<Requirement>? reqs = null) {
             ID = id;
             Name = name;
             Book = book;
@@ -37,6 +40,18 @@ namespace ZeroPlayersOnline.DataTypes {
             Description = desc;
 
             CooldownInMS = cd;
+
+            if (reqs != null)
+                ToCast = reqs;
+        }
+
+        public void Cast(Player p, MessageLog Log, List<Skill> RecentlyTrained) {
+            p.ConsumeItems(Runes);
+            if (Category == "Tele" && MiscString != "" && GameLoop.ZPO.Atlas.ContainsKey(MiscString)) { 
+                p.NavLoc = MiscString; // TODO: Check to make sure the player is allowed in that region
+            } 
+            TimeLastCast = Helper.Time();
+            p.TryGrantExp("Magic", ExpOnCast, Log, RecentlyTrained);
         }
 
     }

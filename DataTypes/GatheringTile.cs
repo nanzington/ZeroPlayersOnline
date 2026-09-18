@@ -115,7 +115,22 @@ namespace ZeroPlayersOnline.DataTypes {
 
                     if (output != null) {
                         if (itemLibrary.ContainsKey(output.Item)) {
-                            Item receive = Helper.Clone(itemLibrary[output.Item]);
+                            Item receive = new(itemLibrary[output.Item]);
+
+                            if (receive.ID == "clayDust" && Skill == "Mining" && p.Equipment.TryGetValue("Hands", out ItemWrapper? bracelet) && bracelet != null && bracelet.ID == "braceletClay") {
+                                if (itemLibrary.ContainsKey("claySoft")) {
+                                    receive = new(itemLibrary["claySoft"]);
+
+                                    bracelet.Charges -= 1;
+
+                                    if (bracelet.Charges <= 0) {
+                                        log.AddMessage(new ColoredString("Your bracelet of clay runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                        p.Equipment.Remove("Hands");
+                                    }
+                                }
+                            }
+
+
                             if (p.TryPickup(receive, 1)) {
                                 log.AddMessage(new ColoredString("You get " + receive.Name.ToLower() + " from the " + Name + ".", Color.Green, Color.Black));
                             } else {
@@ -129,7 +144,7 @@ namespace ZeroPlayersOnline.DataTypes {
                             foreach (var invWrap in p.Inventory) {
                                 if (invWrap.GetRef() is Item inv) {
                                     if ((inv.MiscString == "Spirit" && inv.UseString2 == output.Item) || (Skill == "Fishing" && inv.ID == "spiritFish")) { 
-                                        Item dupe = Helper.Clone(itemLibrary[output.Item]);
+                                        Item dupe = new(itemLibrary[output.Item]);
                                         if (p.TryPickup(receive, 1)) {
                                             log.AddMessage(new ColoredString("A" + (Helper.VowelStart(inv.Name) ? "n ": " ") + inv.Name.ToLower() + " is released, and you receive an extra " + receive.Name.ToLower() + ".", Color.Green, Color.Black));
                                         } else {

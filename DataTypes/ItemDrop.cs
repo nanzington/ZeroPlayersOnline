@@ -38,9 +38,9 @@ namespace ZeroPlayersOnline.DataTypes {
         // So if DropX is 1 and InY is 10, then on a roll of 0-9, landing on a 0 is a successful drop, giving 10% chance to drop
 
 
-        public void RollDrop(Player player, CollectionLogEntry? log, bool inaccessible = false) {
+        public Item? RollDrop(Player player, CollectionLogEntry? log, bool inaccessible = false, bool justReturn = false) {
             if (Requirement != null && !Requirement.CheckRequirement(player, true))
-                return;
+                return null;
 
 
             if (log == null)
@@ -67,33 +67,52 @@ namespace ZeroPlayersOnline.DataTypes {
                     if (player.DropModifier != 2) {
                         int dropRoll = GameLoop.rand.Next(InY);
                         int dropRoll2 = GameLoop.rand.Next(InY);
+                        int dropRoll3 = GameLoop.rand.Next(InY);
+                        int dropRoll4 = GameLoop.rand.Next(InY);
 
-                        if (dropRoll < dropX || (player.PrayerActive("Good Fortune") && dropRoll2 < dropX) || (player.DropModifier == 1 && log.DryProtection(ItemID, (int) Math.Ceiling(InY / (double) dropX)))) {
+                        bool wealth = false;
+                        bool fortune = false;
+
+                        if (player.Equipment.TryGetValue("Ring", out ItemWrapper? eqp) && eqp != null && eqp.ID == "ringWealth") { wealth = true; }
+                        if (player.Equipment.TryGetValue("Ring", out ItemWrapper? eqp2) && eqp2 != null && eqp2.ID == "ringFortune") { wealth = true; fortune = true; }
+
+                        bool dryActive = log.DryProtection(ItemID, (int) Math.Ceiling(InY / (double) dropX));
+                        if (dropRoll < dropX || (player.PrayerActive("Good Fortune") && dropRoll2 < dropX) || (wealth && dropRoll3 < dropX) || (fortune && dropRoll4 < dropX) ||  (player.DropModifier == 1 && dryActive)) {
                             if (!log.DropsObtained.ContainsKey(ItemID))
                                 log.DropsObtained.Add(ItemID, 0);
-                            log.DropsObtained[ItemID] += 1;
+                            if (!justReturn)
+                                log.DropsObtained[ItemID] += 1;
 
                             if (GameLoop.ZPO.ItemLibrary.ContainsKey(ItemID)) {
-                                Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[ItemID]);
+                                Item spawn = new(GameLoop.ZPO.ItemLibrary[ItemID]);
 
                                 if (QuantityMin == QuantityMax)
                                     spawn.Quantity = QuantityMin;
                                 else {
                                     int amt = GameLoop.rand.Next(QuantityMax - QuantityMin) + QuantityMin;
                                     spawn.Quantity = amt;
+                                }
+
+                                if (justReturn) {
+                                    return new(spawn);
+                                }
+
+                                if (player.DropModifier == 1 && log.DropsObtained[ItemID] == 1 && dryActive && InY != 1) { 
+                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("Received " + GameLoop.ZPO.ResolveItemName(ItemID) + " due to Dry Protection.", Color.Green, Color.Black));
                                 }
 
                                 GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn, inaccessible)); 
                             }
                         }
                     } else {
-                        if (log.NoRNGDrop(ItemID, InY / (int) Math.Ceiling(InY / (double) dropX))) {
+                        if (log.NoRNGDrop((int) Math.Ceiling(InY / (double) dropX))) {
                             if (!log.DropsObtained.ContainsKey(ItemID))
                                 log.DropsObtained.Add(ItemID, 0);
-                            log.DropsObtained[ItemID] += 1;
+                            if (!justReturn)
+                                log.DropsObtained[ItemID] += 1;
 
                             if (GameLoop.ZPO.ItemLibrary.ContainsKey(ItemID)) {
-                                Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[ItemID]);
+                                Item spawn = new(GameLoop.ZPO.ItemLibrary[ItemID]);
 
                                 if (QuantityMin == QuantityMax)
                                     spawn.Quantity = QuantityMin;
@@ -101,6 +120,9 @@ namespace ZeroPlayersOnline.DataTypes {
                                     int amt = GameLoop.rand.Next(QuantityMax - QuantityMin) + QuantityMin;
                                     spawn.Quantity = amt;
                                 }
+
+                                if (justReturn)
+                                    return spawn;
 
                                 GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn, inaccessible));
                             }
@@ -108,56 +130,6 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                 }
             }
-        }
-
-        public Item? PickpocketRoll(Player player) {
-            if (Requirement != null && !Requirement.CheckRequirement(player, true))
-                return null;
-
-
-            if (player.DropMultiplier > 0 || EvenAt0x) {
-                int dropX = DropX;
-
-                dropX *= player.DropMultiplier;
-
-                if (EvenAt0x && dropX == 0)
-                    dropX = DropX;
-
-                if (dropX != 0) {
-                    if (player.DropModifier != 2) {
-                        int dropRoll = GameLoop.rand.Next(InY);
-                        int dropRoll2 = GameLoop.rand.Next(InY);
-
-                        if (dropRoll < dropX || (player.PrayerActive("Good Fortune") && dropRoll2 < dropX)) {
-                            if (GameLoop.ZPO.ItemLibrary.ContainsKey(ItemID)) {
-                                Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[ItemID]);
-
-                                if (QuantityMin == QuantityMax)
-                                    spawn.Quantity = QuantityMin;
-                                else {
-                                    int amt = GameLoop.rand.Next(QuantityMax - QuantityMin) + QuantityMin;
-                                    spawn.Quantity = amt;
-                                }
-
-                                return spawn;
-                            }
-                        }
-                    } else { 
-                        if (GameLoop.ZPO.ItemLibrary.ContainsKey(ItemID)) {
-                            Item spawn = Helper.Clone(GameLoop.ZPO.ItemLibrary[ItemID]);
-
-                            if (QuantityMin == QuantityMax) {
-                                spawn.Quantity = QuantityMin;
-                            } else {
-                                int amt = GameLoop.rand.Next(QuantityMax - QuantityMin) + QuantityMin;
-                                spawn.Quantity = amt;
-                            }
-
-                            return spawn;
-                        } 
-                    }
-                } 
-            } 
 
             return null;
         }

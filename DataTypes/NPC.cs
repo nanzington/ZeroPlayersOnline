@@ -39,12 +39,14 @@
 
                         if (PickpocketLoot != null && PickpocketLoot.Count > 0) {
                             List<Item> rolled = new();
-                            foreach (var item in PickpocketLoot) {
-                                Item? roll = item.PickpocketRoll(p);
+                            while (rolled.Count < 1) {
+                                foreach (var item in PickpocketLoot) {
+                                    Item? roll = item.RollDrop(p, null, false, true);
 
-                                if (roll != null) {
-                                    roll.UseInt3 = item.InY;
-                                    rolled.Add(roll);
+                                    if (roll != null) {
+                                        roll.UseInt3 = item.InY;
+                                        rolled.Add(roll);
+                                    }
                                 }
                             }
 
@@ -56,7 +58,18 @@
                         } 
                     } else { 
                         log.AddMessage(new ColoredString("Failed to pickpocket " + Name + ".", Color.Crimson, Color.Black));
-                        p.TakeDamage(PickpocketDamage, log);
+
+                        if (p.Equipment.TryGetValue("Amulet", out ItemWrapper? eqp) && eqp != null && eqp.ID == "necklaceDodgy" && GameLoop.rand.Next(4) == 0) {
+                            eqp.Charges -= 1; 
+                            log.AddMessage(new ColoredString("Your dodgy necklace lets you avoid damage.", Color.AntiqueWhite, Color.Black));
+
+                            if (eqp.Charges <= 0) { 
+                                log.AddMessage(new ColoredString("Your dodgy necklace runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                p.Equipment.Remove("Amulet");
+                            }
+                        } else {
+                            p.TakeDamage(PickpocketDamage, log);
+                        }
                     }
                 } else {
                     log.AddMessage(new ColoredString("You need " + PickpocketLevel + " Thieving to do that.", Color.Crimson, Color.Black));

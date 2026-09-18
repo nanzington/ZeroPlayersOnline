@@ -63,6 +63,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("boltsUnfSteel", "feather", "boltsSteel", 10, 10, 10, "Fletching", 20, 35)); 
             toAdd.Add(new("boltsUnfMithril", "feather", "boltsMithril", 10, 10, 10, "Fletching", 30, 50));
             toAdd.Add(new("boltsUnfAdamant", "feather", "boltsAdamant", 10, 10, 10, "Fletching", 40, 70));  
+             
+            toAdd.Add(new("grappleUnf", "rope", "grapple", 1, 1, 1, "Fletching", 20, 0));  
 
             // Herblore
             // // Unfinished Potions
@@ -138,23 +140,23 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             // Crafting
             List<MaterialDef> Jewels = new() {
-                new("Gold", Color.Goldenrod, 0, 5, 400, "gold"),
-                new("Opal", Color.AntiqueWhite, 1, 7, 15, "opal"),
-                new("Jade", Color.PaleGreen, 1, 27, 20, "jade"),
-                new("Red topaz", Color.Magenta, 1, 49, 25, "red topaz"),
-                new("Sapphire", Color.DeepSkyBlue, 2, 7, 50, "sapphire"),
-                new("Emerald", Color.Lime, 3, 27, 68, "emerald"),
-                new("Ruby", Color.Crimson, 4, 49, 85, "ruby"),
-                new("Diamond", Color.White, 5, 57, 108, "diamond"),
-                new("Dragonstone", Color.Purple, 6, 68, 138, "dragonstone"),
-                new("Onyx", Color.DimGray, 7, 87, 180, "onyx"),
-                new("Zenyte", Color.Orange, 8, 93, 200, "zenyte")
+                new("Gold", Color.Goldenrod, 0, 5, 400, "Gold"),
+                new("Opal", Color.AntiqueWhite, 1, 7, 15, "Opal"),
+                new("Jade", Color.PaleGreen, 1, 27, 20, "Jade"),
+                new("Red topaz", Color.Magenta, 1, 49, 25, "RedTopaz"),
+                new("Sapphire", Color.DeepSkyBlue, 2, 7, 50, "Sapphire"),
+                new("Emerald", Color.Lime, 3, 27, 68, "Emerald"),
+                new("Ruby", Color.Crimson, 4, 49, 85, "Ruby"),
+                new("Diamond", Color.White, 5, 57, 108, "Diamond"),
+                new("Dragonstone", Color.Purple, 6, 68, 138, "Dragonstone"),
+                new("Onyx", Color.DimGray, 7, 87, 180, "Onyx"),
+                new("Zenyte", Color.Orange, 8, 93, 200, "Zenyte")
             };
 
             foreach (var mat in Jewels) { 
-                toAdd.Add(new("amulet" + mat.Name + "U", "woolBall", "amulet" + mat.Name, 1, 1, 1, "Crafting", mat.Level, 4)); 
+                toAdd.Add(new("amulet" + mat.Descriptor + "U", "woolBall", "amulet" + mat.Descriptor, 1, 1, 1, "Crafting", mat.Level, 4)); 
                 if (mat.Name != "Gold") {
-                    toAdd.Add(new("uncut" + mat.Name, "chisel", "cut" + mat.Name, 1, 0, 1, "Crafting", mat.Level, mat.CostMultiplier)); 
+                    toAdd.Add(new("uncut" + mat.Descriptor, "chisel", "cut" + mat.Descriptor, 1, 0, 1, "Crafting", mat.Level, mat.CostMultiplier)); 
                 }
             }
              
@@ -165,7 +167,15 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("bootsHardleather", "studsSteel", "bootsStudded", 1, 1, 1, "Crafting", 20, 40)); 
 
 
-
+            
+            toAdd.Add(new("kharidianHeadpiece", "beardFake", "desertDisguise"));
+            toAdd.Add(new("knife", "fruitBanana", "fruitBananaSlices", 0));  
+            toAdd.Add(new("knife", "fruitOrange", "fruitOrangeSlices", 0)); 
+            toAdd.Add(new("knife", "fruitOrangeSlices", "fruitOrangeChunks", 0)); 
+            toAdd.Add(new("knife", "fruitPineapple", "fruitPineappleRing", 0, oQ: 4)); 
+            toAdd.Add(new("knife", "fruitPineappleRing", "fruitPineappleChunks", 0)); 
+            toAdd.Add(new("hammer", "fruitCoconut", "fruitCoconutHalf", 0)); 
+            toAdd.Add(new("vialEmpty", "fruitCoconutHalf", "fruitCoconutMilk", returns: ["fruitCoconutShell"]));    
 
             for (int i = 0; i < toAdd.Count; i++) {
                 TwoWayString ID = new(toAdd[i].FirstItem, toAdd[i].SecondItem);

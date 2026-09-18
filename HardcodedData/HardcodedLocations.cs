@@ -219,7 +219,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeCastleGatehouse", alt: "(Climb Ladder Down)"),
                             new Connection("MIST_LumbridgeCastleGatehouse3", alt: "(Climb Ladder Up)")
-                        }
+                        },
+                        GatheringSpots = { "clueCrates" }
                     });
             
                     locsToAdd.Add(new Location("MIST_LumbridgeCastleGatehouse3", "Lumbridge - Castle Gatehouse Roof", "Misthalin") {
@@ -253,7 +254,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeCastleFloor3")
                         },
                         NPCsHere = new() { "mistLumDukeHoracio", "mistLumSigmund" },
-                        ProcessingStations = new() { "Spinning Wheel" }
+                        ProcessingStations = new() { "Spinning Wheel" },
+                        GatheringSpots = new() { "clueChest" }
                     });
 
                     locsToAdd.Add(new Location("MIST_LumbridgeCastleFloor3", "Lumbridge - Castle Third Floor", "Misthalin") {
@@ -376,7 +378,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     locsToAdd.Add(new Location("MIST_LumbridgeNorth", "North Lumbridge", "Misthalin") {
                         Description = "The more active part of Lumbridge, north of the castle. The main town road extends through this section farther north to Farmer Fred's farm, and south past the castle. There is a market, general store, forge, fishing shop, and tavern here. ",
                         ConnectedLocations = new List<Connection>() {
-                            new Connection("MIST_Lumbridge"),
+                            new Connection("MIST_Lumbridge"), 
                             new Connection("MIST_LumbridgeTowardsDraynor"),
                             new Connection("MIST_LumbridgeFredsFarm"),
                             new Connection("MIST_LumbridgeGeneralStore"),
@@ -508,7 +510,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new ItemSpot("daggerIron", 1)
                         },
                         NPCsHere = new() { "desBorderGuard", "mistLumBarfyBill" },
-                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeDead", "treeDead", "treeDead" },
+                        GatheringSpots = new() { "clueBoxes", "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeDead", "treeDead", "treeDead" },
                         AreaMonsters = new() { "goblin", "goblin", "goblin", "goblin", "goblin", "spiderGiant", "spiderGiant" }
                     });
 
@@ -517,6 +519,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_VarrockCrossroadsSouth"),
                             new Connection("MIST_GroatsFarmCows"),
+                            new Connection("MIST_LumbridgeNorth"),
                             new Connection("MIST_LumbridgeAcrossLum")
                         },
                         ItemSpawns = new List<ItemSpot>() {
@@ -673,7 +676,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeGraveyard"),
-                            new Connection("DES_AlKharidBank"),
+                            new Connection("DES_AlKharidBank", new() { new("Item", 1, "grapple", false), new("Skill", 37, "Ranged"), new("Skill", 8, "Agility"), new("Skill", 19, "Strength") }, alt: "(Grapple Across River)"),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
@@ -837,7 +840,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. An ancient stone altar emits a mysterious blue light here, surrounded by some crumbling stone pillars.",
                         MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
                         ConnectedLocations = new List<Connection>() { 
-                            new Connection("RunecraftAltarWater", new() { new("Item", 1, "talismanWater") }),
+                            new Connection("RunecraftAltarWater", new() { new("Item", 1, "talismanWater", false) }),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
@@ -1110,7 +1113,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_VarrockOutskirtsSouth"),
                             new Connection("MIST_VarrockAbandonedFarm"),
                             new Connection("MIST_VarrockMineEast"),
-                            new Connection("DES_AlKharidMine"),
+                            new Connection("DES_AlKharidMineOutside"),
                             new Connection("MIST_GroatsFarm")
                         },
                         NPCsHere = new() { "mistVarBurgiss", "mistVarAliLeaflet" },
@@ -1135,7 +1138,187 @@ namespace ZeroPlayersOnline.Hardcodes {
             {
                 // Al Kharid / North of Shantay Pass
                 {
+                    locsToAdd.Add(new Location("DES_AlKharidBank", "Al Kharid Bank", "Desert") {
+                        Description = "A nice white stone building on the banks of the River Lum containing the Al Kharid bank. There are some palm trees and cacti outside the building, while the inside is crowded with bank booths, chairs, and a table. Behind the row of bank booths stand tellers ready to assist customers, plus a few desks covered in ledgers and scales.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwamp5", new() { new("Item", 1, "grapple", false), new("Skill", 37, "Ranged"), new("Skill", 8, "Agility"), new("Skill", 19, "Strength") }, alt: "(Grapple Across River)"),
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharidSouth")
+                        },
+                        IsBank = true
+                    });
 
+                    locsToAdd.Add(new Location("DES_AlKharid", "Al Kharid", "Desert") {
+                        Description = "A sort of plaza, relatively centrally located in front of the palace. There are a variety of useful stores and services offered here, in addition to a set of handholds to climb up onto the roofs to train agility. The ground here is fairly hard packed sand, with a more defined path leading from the palace through the plaza and off to the north. There are a few stalls offering goods, but they are being watched too closely to be stolen from.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharidOutskirts"),
+                            new Connection("DES_AlKharidBank"),
+                            new Connection("DES_AlKharidZeke"),
+                            new Connection("DES_AlKharidDommik"),
+                            new Connection("DES_AlKharidGeneralStore"),
+                            new Connection("DES_AlKharidLouie"),
+                            new Connection("DES_AlKharidRanael"),
+                            new Connection("DES_AlKharidKebab"),
+                            new Connection("DES_AlKharidAli1"),
+                            new Connection("DES_AlKharidTanner"),
+                            new Connection("DES_AlKharidHouse"),
+                            new Connection("DES_AlKharidTent"),
+                            new Connection("DES_AlKharidPalaceCourtyard"),
+                            new Connection("DES_AlKharidSouth")
+                        },
+                        NPCsHere = new() { "desAlKharidAyesha", "man", "man", "man", "man", "woman", "woman", "woman" },
+                        ShopItemsHere = new() { "bucketCompost", "plantPotEmpty", "uncutSapphire", "uncutEmerald", "uncutRuby", "uncutDiamond", "cutSapphire", "cutEmerald", "cutRuby", "cutDiamond", "clothSilk" }, 
+                        FarmingPatchesHere = new() { "DES_AlKharidCactus" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidZeke", "Zeke's Superior Scimitars", "Desert") {
+                        Description = "A cramped storefront owned and operated by Zeke. There are a few small rugs on the floor and some potted plants to make the place feel a little more inviting. Some crates are stacked against one wall, with a shelf holding boxes of scimitars against another wall. A table is placed a little off the center of the room but appears to be unused.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid")
+                        },
+                        NPCsHere = new() { "desAlKharidZeke" },
+                        ShopItemsHere = new() { "scimitarBronze", "scimitarIron", "scimitarSteel", "scimitarBlack", "scimitarMithril", "scimitarAdamant" },
+                        GatheringSpots = new() { "clueCrates" },
+                        ItemSpawns = new() { new("runeBody", 1) }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidDommik", "Dommik's Crafting Store", "Desert") {
+                        Description = "A cramped storefront owned and operated by Dommik. There are a few small rugs on the floor and some potted plants to make the place feel a little more inviting. Many shelves line the walls filled with various crafting bits and bobs. A table is placed a little off the center of the room and acts as both the store counter and a place for Dommik to work on projects.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid")
+                        },
+                        NPCsHere = new() { "desAlKharidDommik" },
+                        ShopItemsHere = new() { "chisel", "mouldRing", "mouldNecklace", "mouldAmulet", "needle", "mouldHoly", "mouldSickle", "mouldTiara", "mouldBolt", "mouldBracelet" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidGeneralStore", "Al Kharid General Store", "Desert") {
+                        Description = "A cramped storefront owned and operated by Dommik. There are a few small rugs on the floor and some potted plants to make the place feel a little more inviting. Many shelves line the walls filled with various goods and sundry. There are a few stacks of crates holding even more inventory. A table is placed a little off the center of the room and acts as the store counter.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid")
+                        },
+                        NPCsHere = new() { "desAlKharidShopkeeper" },
+                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "hammer" },
+                        GatheringSpots = new() { "clueCrates" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidLouie", "Louie's Armoured Legs Bazaar", "Desert") {
+                        Description = "There is nothing more than a few shelves and stacks of crates in this very small building. This operation seems... more than a little sketchy.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid")
+                        },
+                        NPCsHere = new() { "desAlKharidLouie" },
+                        ShopItemsHere = new() { "platelegsBronze", "platelegsIron", "platelegsSteel", "platelegsBlack", "platelegsMithril", "platelegsAdamant" },
+                        GatheringSpots = new() { "clueCrates" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidRanael", "Ranael's Super Skirt Store", "Desert") {
+                        Description = "This is a lovely little shop with the inside covered in greenery, and some nice statues outside the door. The floor is actual stone, and there are some benches for customers waiting to purchase from Ranael. There's a nice large rug in front of the stone table that serves as the counter for the store.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharidSouth")
+                        },
+                        NPCsHere = new() { "desAlKharidRanael" },
+                        ShopItemsHere = new() { "plateskirtBronze", "plateskirtIron", "plateskirtSteel", "plateskirtBlack", "plateskirtMithril", "plateskirtAdamant" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidKebab", "Kebab Shop", "Desert") {
+                        Description = "This shop is little more than a kitchen with barely enough room for Karim and yourself to stand in without being crowded. The kebabs he has on offer smell good, but some of them look a bit dodgy. You could probably use his range if you wanted.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid")
+                        },
+                        NPCsHere = new() { "desAlKharidKarim" },
+                        ProcessingStations = new() { "Range" },
+                        ShopItemsHere = new() { "kebab" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidTanner", "Al Kharid Tannery", "Desert") {
+                        Description = "The smell of the vats in here is absolutely dreadful. There are a few barrels, likely holding tanning chemicals, and some drying lines. Also a mangle, the vats, a table, and a chair in the corner of the room. There are some potted plants around the room in an attempt to lighten the place up but they're wilting in the miasma of the tanning process. ",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid")
+                        },
+                        NPCsHere = new() { "desAlKharidEllis" },
+                        ProcessingStations = new() { "Tannery" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidAli1", "Ali's Discount Wares", "Desert") {
+                        Description = "This is more of a stall than a dedicated storefront, but the way Ali Morrisane can draw and hold your attention with his rapid speech and sales tactics make the environment seem to fade away. He has a couple crates full of a variety of very different things of questionable use.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid")
+                        },
+                        NPCsHere = new() { "desAlKharidAli" },
+                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "waterskin3", "desertShirt", "desertBoots", "bucketEmpty", "beardFake", "kharidianHeadpiece", "papyrus", "knife", "tinderbox", "pickaxeBronze", "meatRawChicken" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidHouse", "A House in Al Kharid", "Desert") {
+                        Description = "A cozy little house with a bearskin rug on the floor. There are a few crates to store the man's belongings, along with a table and chairs to eat at. The only other things in the house are a range and a bedroll on the ground. There are a weirdly large number of windows opening to the outside. This building is not large enough to justify the eight windows it has.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid")
+                        },
+                        NPCsHere = new() { "man" },
+                        ProcessingStations = new() { "Range" },
+                        GatheringSpots = new() { "clueCrates" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidTent", "A Tent in Al Kharid", "Desert") {
+                        Description = "Seems to be some kind of storage tent for one of the nearby vendors, or possible a shared storage space. There are some crates, boxes, a small table with two stools, an a couple potted plants. Also for some reason there's a chaise lounge. Looks comfortable.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid")
+                        },
+                        GatheringSpots = new() { "clueCrates", "clueBoxes" },
+                        ItemSpawns = new() { new("bucketEmpty", 1) }
+                    });
+
+                     locsToAdd.Add(new Location("DES_AlKharidSouth", "Al Kharid South", "Desert") {
+                        Description = "Just south of the palace in Al Kharid. There's not a lot back here except sand, cacti, rocks, dead bushes, and more sand. ",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharidBank"),
+                            new Connection("DES_AlKharidRanael"),
+                            new Connection("DES_AlKharidSorceress"),
+                            new Connection("DES_GiantsPlateau"), // Should go to citharede abbey and emir's arena side entrance
+                            new Connection("DES_ShantayPass")
+                        },
+                        NPCsHere = new() { "desAlKharidFerrymanSathwood" }, // TODO: Make this dude when wanting to implement Tempeross
+                        AreaMonsters = new() { "scorpion" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidOutskirts", "Al Kharid Outskirts", "Desert") {
+                        Description = "Just north of the town of Al Kharid. There are a few small ponds with trees and rocks surrounding them, and some cacti and dead bushes scattered around. To the north is the Al Kharid mine, to the east is the Emir's Arena, to the west is the gate to Lumbridge.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("MIST_LumbridgeAcrossLum"),
+                            new Connection("DES_AlKharidMineOutside"),
+                            new Connection("DES_AlKharidEmirsArena")
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidMineOutside", "Outside the Al Kharid Mine", "Desert") {
+                        Description = "This is as close as you can safely get to the Al Kharid mine without potentially enraging the scorpions within. North from here is the crossroads just south of Varrock, while to the east is the Mage Training Arena. South leads to the outskirts of Al Kharid itself. There are many cacti, rocks, and dead bushes here. There's also a strange stone altar surrounded by crumbling pillars emitting a red light.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockCrossroadsSouth"),
+                            new Connection("DES_MageTrainingArena"),
+                            new Connection("DES_AlKharidMine"),
+                            new Connection("DES_AlKharidOutskirts"),
+                            new Connection("RunecraftAltarFire", new() { new("Item", 1, "talismanFire", false) })
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidMine", "Al Kharid Mine", "Desert") {
+                        Description = "This place is crawling with scorpions, but there are a wide variety of ores available here. If it was harder to get out of the mine to the surrounding area, some of the rockslides on the sides of the mine would make for convenient handholds to climb out. ",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharidMineOutside")
+                        },
+                        AreaMonsters = new() { "scorpion", "scorpion", "scorpion", "scorpion", "scorpion", "scorpion" },
+                        GatheringSpots = new() { "oreCopper", "oreCopper", "oreTin", "oreTin", "oreIron", "oreIron", "oreSilver", "oreSilver", "oreCoal", "oreCoal", "oreMithril", "oreMithril", "oreGold", "oreGold", "oreAdamant", "oreAdamant", "rockGemCommon", "rockGemCommon", "rockGemUncommon", "rockGemUncommon" },
+                        ItemSpawns = new() { new("runeWater", 1), new("runeFire", 1) }
+                    });
+
+                    locsToAdd.Add(new Location("DES_MageTrainingArena", "Mage Training Arena", "Desert") {
+                        Description = "This place certainly looks magical. There are a number of books and golems and brooms moving about the hall, and on the walls the paintings slowly move up and down. A huge white rug with an elaborate pattern covers much of the floor and there are some candelabras providing light. Staircases allow you to ascend to the second floor, where you can find the rewards trader. There are portals to the different training areas here.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharidMineOutside")
+                        }
+                    });
                 }
             }
 
@@ -1148,6 +1331,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new Connection("MIST_LumbridgeSwamp14")
                     },
                     ProcessingStations = new List<string>() { "Water Altar" }
+                });
+
+                locsToAdd.Add(new Location("RunecraftAltarFire", "Altar of Fire", "Elsewhere") { 
+                    Description = "This appears to be some kind of strange pocket dimension contained outside of the normal plane of existence. A series of small inaccessible bits of blasted rock fill the lava around the main island you're standing on, though the space appears to end not too far out from this main island. Four stone arches and four pillars with an orb emitting soft light circle a stone altar engraved with the symbol for fire.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("DES_AlKharidMineOutside")
+                    },
+                    ProcessingStations = new List<string>() { "Fire Altar" }
                 });
             }
 

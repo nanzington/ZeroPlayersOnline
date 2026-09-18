@@ -39,6 +39,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier * 3, ["bar" + Metals[i].Name + "," + 3], "kiteshield" + Metals[i].Name, tool: "hammer"));
             }
             
+            toAdd.Add(new("Anvil", "Smithing", 20, 50, ["barMithril" + "," + 1], "grappleUnf", tool: "hammer"));
             toAdd.Add(new("Anvil", "Smithing", 20, 75, ["barSteel" + "," + 1], "studsSteel", tool: "hammer"));
 
             List<MaterialDef> Leathers = new() {
@@ -113,17 +114,17 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             // Jewellery
             List<MaterialDef> Jewels = new() {
-                new("Gold", Color.Goldenrod, 0, 5, 34, "gold"),
-                new("Opal", Color.AntiqueWhite, 1, 7, 19, "opal"),
-                new("Jade", Color.PaleGreen, 1, 27, 24, "jade"),
-                new("Red topaz", Color.Magenta, 1, 49, 34, "red topaz"),
-                new("Sapphire", Color.DeepSkyBlue, 2, 7, 69, "sapphire"),
-                new("Emerald", Color.Lime, 3, 27, 74, "emerald"),
-                new("Ruby", Color.Crimson, 4, 49, 89, "ruby"),
-                new("Diamond", Color.White, 5, 57, 104, "diamond"),
-                new("Dragonstone", Color.Purple, 6, 68, 154, "dragonstone"),
-                new("Onyx", Color.DimGray, 7, 87, 169, "onyx"),
-                new("Zenyte", Color.Orange, 8, 93, 200, "zenyte")
+                new("Gold", Color.Goldenrod, 0, 5, 34, "Gold"),
+                new("Opal", Color.AntiqueWhite, 1, 7, 19, "Opal"),
+                new("Jade", Color.PaleGreen, 1, 27, 24, "Jade"),
+                new("Red topaz", Color.Magenta, 1, 49, 34, "RedTopaz"),
+                new("Sapphire", Color.DeepSkyBlue, 2, 7, 69, "Sapphire"),
+                new("Emerald", Color.Lime, 3, 27, 74, "Emerald"),
+                new("Ruby", Color.Crimson, 4, 49, 89, "Ruby"),
+                new("Diamond", Color.White, 5, 57, 104, "Diamond"),
+                new("Dragonstone", Color.Purple, 6, 68, 154, "Dragonstone"),
+                new("Onyx", Color.DimGray, 7, 87, 169, "Onyx"),
+                new("Zenyte", Color.Orange, 8, 93, 200, "Zenyte")
             };
 
             foreach (var mat in Jewels) {
@@ -135,14 +136,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
 
                 if (mat.Name != "Gold") {
-                    mats.Add("cut" + mat.Name + ",1");
+                    mats.Add("cut" + mat.Descriptor + ",1");
                 }
 
                 
-                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "amulet" + mat.Name + "U", 1, "mouldAmulet")); 
-                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "ring" + mat.Name, 1, "mouldRing")); 
-                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "bracelet" + mat.Name, 1, "mouldBracelet")); 
-                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "necklace" + mat.Name, 1, "mouldNecklace")); 
+                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "amulet" + mat.Descriptor + "U", 1, "mouldAmulet")); 
+                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "ring" + mat.Descriptor, 1, "mouldRing")); 
+                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "bracelet" + mat.Descriptor, 1, "mouldBracelet")); 
+                toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "necklace" + mat.Descriptor, 1, "mouldNecklace")); 
             }
 
 

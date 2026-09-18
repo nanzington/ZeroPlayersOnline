@@ -116,10 +116,33 @@
                 }
             }
 
+            if (RequirementType == "NotSkill") {
+                if (MiscString == "All") {
+                    foreach (var kv in p.Skills) {
+                        if (kv.Value.Level > MiscInt) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else {
+                    if (p.Skills.ContainsKey(MiscString)) {
+                        if (p.Skills[MiscString].Level < MiscInt) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
             if (RequirementType == "QuestAt") {
                 if (p.QuestLog.TryGetValue(MiscString, out QuestStatus? quest)) {
                     if (quest.CurrentStage == MiscInt) {
                         return true;
+                    }
+                } else {
+                    if (MiscInt == -1) {
+                        return true;
+                    } else {
+                        return false;
                     }
                 }
             }
@@ -128,6 +151,12 @@
                 if (p.QuestLog.TryGetValue(MiscString, out QuestStatus? quest)) {
                     if (quest.CurrentStage < MiscInt) {
                         return true;
+                    }
+                } else {
+                    if (MiscInt > -1) {
+                        return true;
+                    } else {
+                        return false;
                     }
                 }
             }

@@ -28,8 +28,11 @@ namespace ZeroPlayersOnline.Hardcodes {
             tiles.Add(new GatheringTile("treeMagic", "Magic Tree", "Chop", 100, 40, 50, "Woodcutting", 80, 365, 0, neededTool: "Hatchet", items: new() { new("logMagic", 1) }));
             tiles.Add(new GatheringTile("treeElder", "Elder Tree", "Chop", 100, 30, 60, "Woodcutting", 90, 425, 0, neededTool: "Hatchet", items: new() { new("logElder", 1) }));
 
-            tiles.Add(new GatheringTile("rockEssence", "Essence Rock", "Mine", 100, 10, 10, "Mining", 1, 5, neededTool: "Pickaxe", items: new() { new("pureEssence", 1) })); 
+            tiles.Add(new GatheringTile("rockEssence", "Essence Rock", "Mine", 100, 10, 10, "Mining", 1, 5, neededTool: "Pickaxe", items: new() { new("runeEssence", 1, reqs: new() { new("NotSkill", 30, "Mining") }), new("pureEssence", 1, "Mining", 30, 5) }));
+            tiles.Add(new GatheringTile("rockEssencePillar", "Essence Pillar", "Mine", 100, 0, 0, "Mining", 1, 5, neededTool: "Pickaxe", items: new() { new("runeEssence", 1, reqs: new() { new("NotSkill", 30, "Mining") }), new("pureEssence", 1, "Mining", 30, 5) }));  
             tiles.Add(new GatheringTile("rockClay", "Clay Deposit", "Mine", 100, 20, 10, "Mining", 1, 5, neededTool: "Pickaxe", items: new() { new("clayDust", 1) }) ); 
+            tiles.Add(new GatheringTile("rockGemCommon", "Gem Rock (Common)", "Mine", 100, 100, 15, "Mining", 1, 15, neededTool: "Pickaxe", items: new() { new("uncutOpal", 3), new("uncutJade", 2, "Mining", 13, 20), new("uncutRedTopaz", 1, "Mining", 16, 25) }));
+            tiles.Add(new GatheringTile("rockGemUncommon", "Gem Rock (Uncommon)", "Mine", 100, 100, 15, "Mining", 20, 40, neededTool: "Pickaxe", items: new() { new("uncutSapphire", 3), new("uncutEmerald", 2, "Mining", 27, 50), new("uncutRuby", 1, "Mining", 34, 70) }));
             tiles.Add(new GatheringTile("oreCopper", "Copper Ore", "Mine", 100, 100, 15, "Mining", 1, 7, neededTool: "Pickaxe", items: new() { new("oreCopper", 1) })); 
             tiles.Add(new GatheringTile("oreTin", "Tin Ore", "Mine", 100, 100, 15, "Mining", 1, 8, neededTool: "Pickaxe", items: new() { new("oreTin", 1) }));
             tiles.Add(new GatheringTile("oreIron", "Iron Ore", "Mine", 100, 100, 15, "Mining", 10, 20, neededTool: "Pickaxe", items: new() { new("oreIron", 1) }));
@@ -54,6 +57,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             tiles.Add(new GatheringTile("sheep", "Sheep", "Shear", 100, 100, 5, "Farming", 0, 0, 0, 0, false, "Shears", "", new() { new("woolRaw", 1) }));
             tiles.Add(new GatheringTile("clueCrates", "Crates", "Search", 100, 100, 5));
+            tiles.Add(new GatheringTile("clueBoxes", "Boxes", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("clueBookcase", "Bookcase", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("clueChest", "Chest", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("bookshelfWizard", "Bookshelves", "Search", 100, 100, 0));

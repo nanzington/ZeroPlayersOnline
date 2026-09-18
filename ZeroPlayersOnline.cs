@@ -30,6 +30,7 @@ namespace ZeroPlayersOnline {
         public Dictionary<string, Quest> QuestLibrary = new();
 
         public MessageLog Log = new();
+        public int LastPrinted = 0;
 
 
         public int CurrDialogueStage = -1;
@@ -270,7 +271,11 @@ namespace ZeroPlayersOnline {
                             boss.TimeLastAttacked = Helper.Time();
 
                             int dmg = GoRogue.DiceNotation.Dice.Roll(bossDice);
+                            if (dmg < 0)
+                                dmg = 0;
+
                             int modified = dmg;
+                             
 
                             int hitChance = GameLoop.rand.Next(100);
 
@@ -301,7 +306,7 @@ namespace ZeroPlayersOnline {
 
                                     if ((player.PrayerActive("Protect from Magic") && bossType == "Magic") || (player.PrayerActive("Protect from Melee") && bossType == "Melee") || (player.PrayerActive("Protect from Range") && bossType == "Ranged")) {
                                         modified /= 2;
-                                    }
+                                    } 
                                          
                                     if (dmg != modified) {
                                         if (modified <= 0) {
@@ -312,14 +317,25 @@ namespace ZeroPlayersOnline {
                                     } else {
                                         Log.AddMessage(new ColoredString(boss.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
                                     }
+
+                                    if (modified > 0) {
+                                            if (player.Equipment.TryGetValue("Ring", out ItemWrapper? ring) && ring != null && ring.ID == "ringRecoil") {
+                                                int reflect = (modified / 10) + 1;
+
+                                                if (reflect > ring.Charges)
+                                                    reflect = ring.Charges;
+
+                                                ring.Charges -= reflect; 
+                                                Log.AddMessage(new ColoredString("Your ring of recoil reflected " + reflect + " damage back!", Color.DeepSkyBlue, Color.Black));
+
+                                                if (ring.Charges <= 0) { 
+                                                    Log.AddMessage(new ColoredString("Your ring of recoil runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                                    player.Equipment.Remove("Ring");
+                                                }
+                                            }
+                                        }
                                     
                                     bool died = modified > 0 ? player.TakeDamage(modified, Log) : false;
-
-                                    if (player.DefenseExpSplit > 0 && !reachedKillLimit)
-                                        player.TryGrantExp("Defense", dmg * player.DefenseExpSplit, Log, SidebarManager.RecentlyTrainedSkills);
-
-                                    if (player.DefenseExpSplit < 4 && !reachedKillLimit)
-                                        player.TryGrantExp("Constitution", dmg * (4 - player.DefenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
 
                                     if (died)
                                         return;
@@ -360,7 +376,7 @@ namespace ZeroPlayersOnline {
                         if (wepWrap != null && wepWrap.GetRef() is Item weapon) {
                             if (weapon.EquipAmmo == "Self") {
                                 wepWrap.Quantity -= 1;
-                                Item droppedAmmo = Helper.Clone(weapon);
+                                Item droppedAmmo = new(weapon);
                                 droppedAmmo.Quantity = 1;
                                 if (GameLoop.rand.Next(4) != 0)
                                     TryPlaceItem(player.NavLoc, new(droppedAmmo));
@@ -368,7 +384,7 @@ namespace ZeroPlayersOnline {
                             } else if (weapon.EquipAmmo == "RangedStandard") {
                                 if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? arrowWrap) && arrowWrap.GetRef() is Item arrow && arrow.EquipDamageType == "RangedStandard") {
                                     arrowWrap.Quantity -= 1;
-                                    Item droppedAmmo = Helper.Clone(arrow);
+                                    Item droppedAmmo = new(arrow);
                                     droppedAmmo.Quantity = 1;
                                     if (GameLoop.rand.Next(4) != 0)
                                         TryPlaceItem(player.NavLoc, new(droppedAmmo));
@@ -379,7 +395,7 @@ namespace ZeroPlayersOnline {
                             } else if (weapon.EquipAmmo == "RangedHeavy") {
                                 if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? boltWrap) && boltWrap.GetRef() is Item bolt && bolt.EquipDamageType == "RangedHeavy") {
                                     boltWrap.Quantity -= 1;
-                                    Item droppedAmmo = Helper.Clone(bolt);
+                                    Item droppedAmmo = new(bolt);
                                     droppedAmmo.Quantity = 1;
                                     if (GameLoop.rand.Next(4) != 0)
                                         TryPlaceItem(player.NavLoc, new(droppedAmmo));
@@ -409,6 +425,19 @@ namespace ZeroPlayersOnline {
                                 }
                             }
 
+                            bool efaritay = false;
+
+                            if (player.Equipment.TryGetValue("Ring", out ItemWrapper? ring) && ring != null && ring.ID == "ringEfaritay" && boss.SpecialCategory == "Vampiric") { 
+                                ring.Charges -= 1; 
+                                efaritay = true;
+                                eqpAccuracy += 10;
+
+                                if (ring.Charges <= 0) { 
+                                    Log.AddMessage(new ColoredString("Your Efaritay's aid runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                    player.Equipment.Remove("Ring");
+                                }
+                            }
+
                             if (hitChance > 25 + (player.GetEffectiveSkillLevel(whichSkill) / 2.0) + eqpAccuracy) {
                                 Log.AddMessage(new ColoredString("You tried to hit the " + boss.Name + " but missed!", Color.Crimson, Color.Black));
                             } else {
@@ -416,37 +445,46 @@ namespace ZeroPlayersOnline {
                                 bool crit = false;
 
                                 if (player.GetDamageType() == boss.WeakType) {
-                                    if (player.GetDamageType() == "Undead") {
+                                    if (player.GetDamageType() == boss.SpecialCategory) {
                                         pdmg = (int)Math.Ceiling(pdmg * 3f);
                                     } else {
                                         pdmg = (int)Math.Ceiling(pdmg * 1.5f);
                                     }
                                 }
 
-                                int critTarget = 20;
-
-                                if (player.PrayerActive("Improved Critical I"))
-                                    critTarget -= 1;
-                                if (player.PrayerActive("Improved Critical II"))
-                                    critTarget -= 2;
-                                if (player.PrayerActive("Improved Critical III"))
-                                    critTarget -= 3;
-
-                                int critRoll = GameLoop.rand.Next(20) + 1;
-
-                                if (critRoll >= critTarget) {
-                                    crit = true;
-                                    pdmg *= 2;
+                                if (efaritay) {
+                                    pdmg = (int) Math.Ceiling(pdmg * 1.2f);
                                 }
 
+                                if (player.GetDamageType() == "Undead" && boss.SpecialCategory != "Undead") {
+                                    pdmg = 0;    
+                                    Log.AddMessage(new ColoredString("That kind of attack only works against the " + player.GetDamageType().ToLower() + "!", Color.Crimson, Color.Black));
+                                } else { 
+                                    int critTarget = 20;
+
+                                    if (player.PrayerActive("Improved Critical I"))
+                                        critTarget -= 1;
+                                    if (player.PrayerActive("Improved Critical II"))
+                                        critTarget -= 2;
+                                    if (player.PrayerActive("Improved Critical III"))
+                                        critTarget -= 3;
+
+                                    int critRoll = GameLoop.rand.Next(20) + 1;
+
+                                    if (critRoll >= critTarget) {
+                                        crit = true;
+                                        pdmg *= 2;
+                                    }
 
 
-                                if (pdmg > boss.CurrentHP)
-                                    pdmg = boss.CurrentHP;
 
-                                boss.CurrentHP -= pdmg;
+                                    if (pdmg > boss.CurrentHP)
+                                        pdmg = boss.CurrentHP;
+
+                                    boss.CurrentHP -= pdmg;
                                      
-                                Log.AddMessage(new ColoredString("You hit the " + boss.Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
+                                    Log.AddMessage(new ColoredString("You hit the " + boss.Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
+                                }
 
                                 if (player.IsMaging()) {  
                                     player.TryGrantExp("Magic", (pdmg * 4), Log, SidebarManager.RecentlyTrainedSkills);
@@ -466,6 +504,12 @@ namespace ZeroPlayersOnline {
                                         player.TryGrantExp("Strength", pdmg * (4 - player.OffenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
                                 }
 
+                                if (player.DefenseExpSplit > 0 && !reachedKillLimit)
+                                    player.TryGrantExp("Defense", pdmg * player.DefenseExpSplit, Log, SidebarManager.RecentlyTrainedSkills);
+
+                                if (player.DefenseExpSplit < 4 && !reachedKillLimit)
+                                    player.TryGrantExp("Constitution", pdmg * (4 - player.DefenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
+
                                 if (boss.CurrentHP <= 0) {
                                     boss.TimeLastKilled = Helper.Time();
                                     boss.AttackingPlayer = false;
@@ -474,6 +518,36 @@ namespace ZeroPlayersOnline {
                                         player.CollectionLogBoss.Add(boss.ID, new(boss.ID));
 
                                     player.CollectionLogBoss[boss.ID].KillCount += 1;
+
+                                    if (boss.ID == player.SlayerTask || (boss.CountsAsSlayer != "" && boss.CountsAsSlayer == player.SlayerTask)) {
+                                        if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp) && eqp != null && eqp.ID == "braceletExpeditious" && GameLoop.rand.Next(4) == 0) { 
+                                            eqp.Charges -= 1; 
+                                            Log.AddMessage(new ColoredString("Your expeditious bracelet made that kill count double!", Color.AntiqueWhite, Color.Black));
+
+                                            if (eqp.Charges <= 0) { 
+                                                Log.AddMessage(new ColoredString("Your expeditious bracelet runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                                player.Equipment.Remove("Hands");
+                                            }
+                                            player.SlayerKillsRemaining -= 2;
+                                        } else if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp2) && eqp2 != null && eqp2.ID == "braceletSlaughter" && GameLoop.rand.Next(4) == 0) { 
+                                            eqp2.Charges -= 1; 
+                                            Log.AddMessage(new ColoredString("Your bracelet of slaughter made that kill count not count.", Color.Magenta, Color.Black));
+
+                                            if (eqp2.Charges <= 0) { 
+                                                Log.AddMessage(new ColoredString("Your bracelet of slaughter runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                                player.Equipment.Remove("Hands");
+                                            }
+                                        }  else { 
+                                            player.SlayerKillsRemaining--;
+                                        }
+
+                                        if (player.SlayerKillsRemaining <= 0) {
+                                            Log.AddMessage("You have finished your Slayer task and should go get another.", Color.MediumPurple);
+                                            player.SlayerTask = "";
+                                            player.SlayerKillsRemaining = 0;
+                                            // TODO: Add slayer points if from a real slayer master
+                                        }
+                                    }
 
                                     if (player.KillLimit != -1 && player.CollectionLogBoss[boss.ID].KillCount == player.KillLimit) {
                                         Log.AddMessage(new ColoredString("You've killed " + player.KillLimit + " " + boss.Name + "s and will no longer receive drops or exp from them."));
@@ -579,6 +653,8 @@ namespace ZeroPlayersOnline {
                                 thisOne.TimeLastAttacked = Helper.Time();
 
                                 int dmg = GoRogue.DiceNotation.Dice.Roll(thisOne.DamageDice);
+                                if (dmg < 0)
+                                    dmg = 0;
                                 int modified = dmg;
 
                                 int hitChance = GameLoop.rand.Next(100);
@@ -609,7 +685,7 @@ namespace ZeroPlayersOnline {
 
                                         if ((player.PrayerActive("Protect from Magic") && thisOne.DamageType == "Magic") || (player.PrayerActive("Protect from Melee") && thisOne.DamageType == "Melee") || (player.PrayerActive("Protect from Range") && thisOne.DamageType == "Ranged")) {
                                             modified /= 2;
-                                        }
+                                        } 
                                          
                                         if (dmg != modified) {
                                             if (modified <= 0) {
@@ -621,13 +697,24 @@ namespace ZeroPlayersOnline {
                                             Log.AddMessage(new ColoredString(thisOne.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
                                         }
 
-                                        bool died = modified > 0 ? player.TakeDamage(modified, Log) : false;
+                                        if (modified > 0) {
+                                            if (player.Equipment.TryGetValue("Ring", out ItemWrapper? ring) && ring != null && ring.ID == "ringRecoil") {
+                                                int reflect = (modified / 10) + 1;
 
-                                        if (player.DefenseExpSplit > 0 && !reachedKillLimit)
-                                            player.TryGrantExp("Defense", dmg * player.DefenseExpSplit, Log, SidebarManager.RecentlyTrainedSkills);
+                                                if (reflect > ring.Charges)
+                                                    reflect = ring.Charges;
 
-                                        if (player.DefenseExpSplit < 4 && !reachedKillLimit)
-                                            player.TryGrantExp("Constitution", dmg * (4 - player.DefenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
+                                                ring.Charges -= reflect; 
+                                                Log.AddMessage(new ColoredString("Your ring of recoil reflected " + reflect + " damage back!", Color.DeepSkyBlue, Color.Black));
+
+                                                if (ring.Charges <= 0) { 
+                                                    Log.AddMessage(new ColoredString("Your ring of recoil runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                                    player.Equipment.Remove("Ring");
+                                                }
+                                            }
+                                        }
+
+                                        bool died = modified > 0 ? player.TakeDamage(modified, Log) : false; 
 
                                         if (died)
                                             break;
@@ -660,7 +747,7 @@ namespace ZeroPlayersOnline {
                             if (wepWrap != null && wepWrap.GetRef() is Item weapon) {
                                 if (weapon.EquipAmmo == "Self") {
                                     wepWrap.Quantity -= 1;
-                                    Item droppedAmmo = Helper.Clone(weapon);
+                                    Item droppedAmmo = new(weapon);
                                     droppedAmmo.Quantity = 1;
                                     if (GameLoop.rand.Next(4) != 0)
                                         TryPlaceItem(player.NavLoc, new(droppedAmmo, AttackingMonster.Inaccessible));
@@ -668,7 +755,7 @@ namespace ZeroPlayersOnline {
                                 } else if (weapon.EquipAmmo == "RangedStandard") {
                                     if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? arrowWrap) && arrowWrap.GetRef() is Item arrow && arrow.EquipDamageType == "RangedStandard") {
                                         arrowWrap.Quantity -= 1;
-                                        Item droppedAmmo = Helper.Clone(arrow);
+                                        Item droppedAmmo = new(arrow);
                                         droppedAmmo.Quantity = 1;
                                         if (GameLoop.rand.Next(4) != 0)
                                             TryPlaceItem(player.NavLoc, new(droppedAmmo, AttackingMonster.Inaccessible));
@@ -679,7 +766,7 @@ namespace ZeroPlayersOnline {
                                 } else if (weapon.EquipAmmo == "RangedHeavy") {
                                     if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? boltWrap) && boltWrap.GetRef() is Item bolt && bolt.EquipDamageType == "RangedHeavy") {
                                         boltWrap.Quantity -= 1;
-                                        Item droppedAmmo = Helper.Clone(bolt);
+                                        Item droppedAmmo = new(bolt);
                                         droppedAmmo.Quantity = 1;
                                         if (GameLoop.rand.Next(4) != 0)
                                             TryPlaceItem(player.NavLoc, new(droppedAmmo, AttackingMonster.Inaccessible));
@@ -709,7 +796,20 @@ namespace ZeroPlayersOnline {
                                     }
                                 }
 
-                                if (thisOne.Inaccessible && whichSkill == "Attack") {
+                                bool efaritay = false;
+
+                                if (player.Equipment.TryGetValue("Ring", out ItemWrapper? ring) && ring != null && ring.ID == "ringEfaritay" && AttackingMonster.SpecialCategory == "Vampiric") { 
+                                    ring.Charges -= 1; 
+                                    efaritay = true;
+                                    eqpAccuracy += 10;
+
+                                    if (ring.Charges <= 0) { 
+                                        Log.AddMessage(new ColoredString("Your Efaritay's aid runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                        player.Equipment.Remove("Ring");
+                                    }
+                                }
+
+                                if (AttackingMonster.Inaccessible && (player.GetDamageType() == "Crush" || player.GetDamageType() == "Stab" || player.GetDamageType() == "Slash")) {
                                     Log.AddMessage(new ColoredString("You can't reach this enemy with melee attacks. Try ranged or magic instead.", Color.Crimson, Color.Black));
                                 } else {
                                     if (hitChance > 25 + (player.GetEffectiveSkillLevel(whichSkill) / 2.0) + eqpAccuracy) {
@@ -719,37 +819,46 @@ namespace ZeroPlayersOnline {
                                         bool crit = false;
 
                                         if (player.GetDamageType() == AttackingMonster.WeakType) {
-                                            if (player.GetDamageType() == "Undead") {
+                                            if (player.GetDamageType() == AttackingMonster.SpecialCategory) { // Mostly for Crumble Undead, but open to similar spells for Demons, Vamps, etc
                                                 pdmg = (int)Math.Ceiling(pdmg * 3f);
                                             } else {
                                                 pdmg = (int)Math.Ceiling(pdmg * 1.5f);
                                             }
                                         }
 
-                                        int critTarget = 20;
-
-                                        if (player.PrayerActive("Improved Critical I"))
-                                            critTarget -= 1;
-                                        if (player.PrayerActive("Improved Critical II"))
-                                            critTarget -= 2;
-                                        if (player.PrayerActive("Improved Critical III"))
-                                            critTarget -= 3;
-
-                                        int critRoll = GameLoop.rand.Next(20) + 1;
-
-                                        if (critRoll >= critTarget) {
-                                            crit = true;
-                                            pdmg *= 2;
+                                        if (efaritay) {
+                                            pdmg = (int) Math.Ceiling(pdmg * 1.2f);
                                         }
 
+                                        if (player.GetDamageType() == "Undead" && AttackingMonster.SpecialCategory != "Undead") {
+                                            pdmg = 0;
+                                            Log.AddMessage(new ColoredString("That kind of attack only works against the " + player.GetDamageType().ToLower() + "!", Color.Crimson, Color.Black));
+                                        } else { 
+                                            int critTarget = 20;
+
+                                            if (player.PrayerActive("Improved Critical I"))
+                                                critTarget -= 1;
+                                            if (player.PrayerActive("Improved Critical II"))
+                                                critTarget -= 2;
+                                            if (player.PrayerActive("Improved Critical III"))
+                                                critTarget -= 3;
+
+                                            int critRoll = GameLoop.rand.Next(20) + 1;
+
+                                            if (critRoll >= critTarget) {
+                                                crit = true;
+                                                pdmg *= 2;
+                                            }
 
 
-                                        if (pdmg > AttackingMonster.CurrentHP)
-                                            pdmg = AttackingMonster.CurrentHP;
 
-                                        AttackingMonster.CurrentHP -= pdmg;
+                                            if (pdmg > AttackingMonster.CurrentHP)
+                                                pdmg = AttackingMonster.CurrentHP;
+
+                                            AttackingMonster.CurrentHP -= pdmg;
                                      
-                                        Log.AddMessage(new ColoredString("You hit the " + AttackingMonster.Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
+                                            Log.AddMessage(new ColoredString("You hit the " + AttackingMonster.Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
+                                        }
 
                                         if (player.IsMaging()) {  
                                             player.TryGrantExp("Magic", (pdmg * 4), Log, SidebarManager.RecentlyTrainedSkills);
@@ -769,6 +878,12 @@ namespace ZeroPlayersOnline {
                                                 player.TryGrantExp("Strength", pdmg * (4 - player.OffenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
                                         }
 
+                                        if (player.DefenseExpSplit > 0 && !reachedKillLimit)
+                                            player.TryGrantExp("Defense", pdmg * player.DefenseExpSplit, Log, SidebarManager.RecentlyTrainedSkills);
+
+                                        if (player.DefenseExpSplit < 4 && !reachedKillLimit)
+                                            player.TryGrantExp("Constitution", pdmg * (4 - player.DefenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
+
                                         if (AttackingMonster.ID == player.SlayerTask) {
                                             player.TryGrantExp("Slayer", pdmg * 4, Log, SidebarManager.RecentlyTrainedSkills);
                                         }
@@ -777,8 +892,27 @@ namespace ZeroPlayersOnline {
                                             AttackingMonster.TimeLastKilled = Helper.Time();
                                             AttackingMonster.AttackingPlayer = false;
 
-                                            if (AttackingMonster.ID == player.SlayerTask) {
-                                                player.SlayerKillsRemaining--;
+                                            if (AttackingMonster.ID == player.SlayerTask || (AttackingMonster.CountsAsSlayer != "" && AttackingMonster.CountsAsSlayer == player.SlayerTask)) {
+                                                if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp) && eqp != null && eqp.ID == "braceletExpeditious" && GameLoop.rand.Next(4) == 0) { 
+                                                    eqp.Charges -= 1; 
+                                                    Log.AddMessage(new ColoredString("Your expeditious bracelet made that kill count double!", Color.AntiqueWhite, Color.Black));
+
+                                                    if (eqp.Charges <= 0) { 
+                                                        Log.AddMessage(new ColoredString("Your expeditious bracelet runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                                        player.Equipment.Remove("Hands");
+                                                    }
+                                                    player.SlayerKillsRemaining -= 2;
+                                                } else if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp2) && eqp2 != null && eqp2.ID == "braceletSlaughter" && GameLoop.rand.Next(4) == 0) { 
+                                                    eqp2.Charges -= 1; 
+                                                    Log.AddMessage(new ColoredString("Your bracelet of slaughter made that kill count not count.", Color.Magenta, Color.Black));
+
+                                                    if (eqp2.Charges <= 0) { 
+                                                        Log.AddMessage(new ColoredString("Your bracelet of slaughter runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                                        player.Equipment.Remove("Hands");
+                                                    }
+                                                } else { 
+                                                    player.SlayerKillsRemaining--;
+                                                }
 
                                                 if (player.SlayerKillsRemaining <= 0) {
                                                     Log.AddMessage("You have finished your Slayer task and should go get another.", Color.MediumPurple);
@@ -817,15 +951,26 @@ namespace ZeroPlayersOnline {
                             thisOne.TimeLastAttacked = Helper.Time();
                             thisOne.AttackingPlayer = false;
                         } 
+
                         mini.Con.Print(57, printY, "|");
-                        mini.Con.PrintClickable(59, printY, new ColoredString(curr.MonstersHere[i].Name, nameCol, Color.Black), () => { AttackingMonster = thisOne; });
+
+                        if (SpellLibrary.TryGetValue("utilMonsterInspect", out Spell? inspect) && inspect != null) { 
+                            if (player.CanCast(inspect) == "") {
+                                mini.Con.PrintClickable(57, printY, new ColoredString("?", Color.MediumPurple, Color.Black), () => {
+                                    Log.AddMessage("You cast monster inspect on the " + curr.MonstersHere[i].Name + ".", Color.MediumPurple);
+                                    Log.AddMessage(curr.MonstersHere[i].GetSummary(), Color.Yellow);  
+                                    inspect.Cast(player, Log, SidebarManager.RecentlyTrainedSkills);  
+                                });  
+                            }
+                        }
 
 
-                        mini.Con.Print(80, printY, "(" + thisOne.CurrentHP + "/" + thisOne.MaxHP + " hp)");
+                        mini.Con.PrintClickable(59, printY, new ColoredString(curr.MonstersHere[i].Name, nameCol, Color.Black), () => { AttackingMonster = thisOne; }); 
+                        mini.Con.Print(80, printY, "(" + curr.MonstersHere[i].CurrentHP + "/" + curr.MonstersHere[i].MaxHP + " hp)");
 
                         mini.Con.PrintClickable(106, printY++, "Log", () => {
                             ExtraWindows.CollectionLog.IsVisible = true;
-                            ExtraWindows.CollectionID = thisOne.ID;
+                            ExtraWindows.CollectionID = curr.MonstersHere[i].ID;
                             ExtraWindows.CollectionDropTop = 0;
                             ExtraWindows.CollectionCat = "Monster";
                         });
@@ -1037,6 +1182,42 @@ namespace ZeroPlayersOnline {
                                 bool picked = false;
                                  
                                 mini.Con.Print(resourceX + 2, resourceY, (item.Inaccessible ? "X" : "|"));
+
+                                if (SpellLibrary.TryGetValue("utilTelegrab", out Spell? telegrab) && telegrab != null) { 
+                                    if (player.CanCast(telegrab) == "") {
+                                        mini.Con.PrintClickable(resourceX + 2, resourceY, new ColoredString("~", Color.MediumPurple, Color.Black), () => { 
+                                            int qty = 1;
+
+                                            if (Helper.EitherShift())
+                                                qty *= 5;
+                                            if (Helper.EitherControl())
+                                                qty *= 10;
+
+                                            if (qty >= item.Quantity || Helper.EitherAlt())
+                                                qty = item.Quantity;
+                                                 
+                                            if (player.TryPickup(item, qty, item.Noted, fromGround: true)) {  
+                                                if (item.Quantity <= 0) {
+                                                    curr.ItemsHere.RemoveAt(i); 
+                                                    picked = true;
+
+                                                    for (int ground = 0; ground < curr.ItemSpawns.Count; ground++) {
+                                                        if (curr.ItemSpawns[ground].ItemID == item.ID) {
+                                                            curr.ItemSpawns[ground].LastPickedUp = Helper.Time();
+                                                        }
+                                                    }
+                                                }
+
+                                                Log.AddMessage("You cast telekinetic grab and pick up the " + item.Name + ".", Color.MediumPurple); 
+                                                telegrab.Cast(player, Log, SidebarManager.RecentlyTrainedSkills); 
+                                            }  
+                                        }); 
+
+                                        if (picked)
+                                            break; 
+                                    }
+                                }
+
                                 mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(name, item.GetColor(), item.ColorSum() < 50 ? Color.White : Color.Black), () => { 
                                     int qty = 1;
 
@@ -1127,7 +1308,7 @@ namespace ZeroPlayersOnline {
                             if (station.TimeLeft != -1) {
                                 if (station.TimeMade + (station.TimeLeft * 60000) <= Helper.Time()) {
                                     if (ItemLibrary.ContainsKey(station.ItemOnExpire)) {
-                                        TryPlaceItem(player.NavLoc, new(Helper.Clone(ItemLibrary[station.ItemOnExpire])));
+                                        TryPlaceItem(player.NavLoc, new(new(ItemLibrary[station.ItemOnExpire])));
                                     }
 
                                     curr.TempStations.RemoveAt(i); 
@@ -1261,20 +1442,20 @@ namespace ZeroPlayersOnline {
                                                             } else {
                                                                 if (ItemLibrary.TryGetValue(split[0], out Item? give)) {
                                                                     if (give != null) {
-                                                                        Item actualGive = Helper.Clone(give);
+                                                                        Item actualGive = new(give);
 
                                                                         if (int.TryParse(split[1], out int qty)) {
                                                                             actualGive.Quantity = qty;
                                                                         }
 
-                                                                        player.TryPickup(Helper.Clone(actualGive), actualGive.Quantity);
+                                                                        player.TryPickup(new Item(actualGive), actualGive.Quantity);
                                                                     }
                                                                 }
                                                             }
                                                         } else {
                                                             if (ItemLibrary.TryGetValue(newDia.ItemsGiven[i], out Item? give)) {
                                                                 if (give != null) {
-                                                                    player.TryPickup(Helper.Clone(give), give.Quantity);
+                                                                    player.TryPickup(new Item(give), give.Quantity);
                                                                 }
                                                             }
                                                         }
@@ -1345,7 +1526,7 @@ namespace ZeroPlayersOnline {
                     if (curr.ShopItemsHere.Count > 0) {
                         for (int i = 0; i < curr.ShopItemsHere.Count; i++) {
                             if (ItemLibrary.ContainsKey(curr.ShopItemsHere[i])) {
-                                Item shop = Helper.Clone(ItemLibrary[curr.ShopItemsHere[i]]);
+                                Item shop = new(ItemLibrary[curr.ShopItemsHere[i]]);
 
                                 mini.Con.Print(resourceX + 2, resourceY, "|");
                                 mini.Con.Print(resourceX + 4, resourceY, new ColoredString(shop.Name, shop.GetColor(), shop.ColorSum() < 50 ? Color.White : Color.Black) + new ColoredString(" (" + shop.Value + "gp)"));
@@ -1449,7 +1630,11 @@ namespace ZeroPlayersOnline {
                                             mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(ResolveItemName(patch.SeedPlanted) + " [" + patch.RegrowTimeLeft / player.FarmGrowthIncrement + "]", Color.Lime, Color.Black), () => {
                                                 Item? seed = ResolveItem(patch.SeedPlanted);
                                                 if (seed != null) {
-                                                    Item? output = Helper.Clone(ResolveItem(seed.UseString3));
+                                                    Item? temp = ResolveItem(seed.UseString3);
+                                                    Item? output = null;
+                                                    if (temp != null)
+                                                        output = new(temp);
+
                                                     if (output != null) {
                                                         int qty = 1 + patch.Compost;
                                                         patch.Regrown--;
@@ -1470,7 +1655,7 @@ namespace ZeroPlayersOnline {
                                                                     player.TryGrantExp("Woodcutting", (seed.UseInt2 / 4), Log, SidebarManager.RecentlyTrainedSkills); 
                                                                 }
 
-                                                                Item clone = Helper.Clone(output);
+                                                                Item clone = new(output);
                                                                 clone.Quantity = 1;
 
                                                                 output.Quantity--;
@@ -1496,7 +1681,10 @@ namespace ZeroPlayersOnline {
                                             mini.Con.PrintClickable(resourceX + 4, resourceY, new ColoredString(ResolveItemName(patch.SeedPlanted) + " [" + patch.TimeLeft + "]", Color.Lime, Color.Black), () => {
                                                 Item? seed = ResolveItem(patch.SeedPlanted);
                                                 if (seed != null) {
-                                                    Item? output = Helper.Clone(ResolveItem(seed.UseString3));
+                                                    Item? temp = Helper.Clone(ResolveItem(seed.UseString3));
+                                                    Item? output = null;
+                                                    if (temp != null)
+                                                        output = new(temp);
                                                     if (output != null) {
                                                         int qty = 5 + (int) Math.Floor((player.Skills["Farming"].Level - seed.UseInt) / 5.0) + patch.Compost;
 
@@ -1519,7 +1707,7 @@ namespace ZeroPlayersOnline {
                                                                     player.TryGrantExp("Woodcutting", seed.UseInt2 / 4, Log, SidebarManager.RecentlyTrainedSkills); 
                                                                 }
 
-                                                                Item clone = Helper.Clone(output);
+                                                                Item clone = new(output);
                                                                 clone.Quantity = 1;
 
                                                                 output.Quantity--;
@@ -1640,6 +1828,17 @@ namespace ZeroPlayersOnline {
                                             if (player.GetEffectiveSkillLevel("Hunter") >= curr.CreaturesHere[j].CatchLevel) {
                                                 int skillMod = player.GetEffectiveSkillLevel("Hunter") - curr.CreaturesHere[j].CatchLevel;
 
+                                                if (player.Equipment.TryGetValue("Ring", out ItemWrapper? eqp) && eqp != null && eqp.ID == "ringPursuit" && GameLoop.rand.Next(4) == 0) {
+                                                    eqp.Charges -= 1; 
+                                                    Log.AddMessage(new ColoredString("Your ring of pursuit empowered the trap!", Color.AntiqueWhite, Color.Black));
+
+                                                    if (eqp.Charges <= 0) { 
+                                                        Log.AddMessage(new ColoredString("Your ring of pursuit runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                                        player.Equipment.Remove("Ring");
+                                                    }
+                                                    skillMod += 25;
+                                                }
+
                                                 int roll = GameLoop.rand.Next(100);
 
                                                 if (roll < 50 + skillMod) {
@@ -1653,7 +1852,7 @@ namespace ZeroPlayersOnline {
                                                 }
 
                                                 if (ItemLibrary.TryGetValue(trapID, out Item? trap) && trap != null) {
-                                                    player.TryPickup(Helper.Clone(trap), 1);
+                                                    player.TryPickup(new Item(trap), 1);
                                                 }
 
                                                 curr.TrapsDown[curr.CreaturesHere[j].CurrentLane] = "";
@@ -1687,7 +1886,7 @@ namespace ZeroPlayersOnline {
                             } else {
                                 mini.Con.PrintClickable(resourceX + 2, resourceY++, line, () => {
                                     if (ItemLibrary.TryGetValue(curr.TrapsDown[i], out Item? trap) && trap != null) {
-                                        player.TryPickup(Helper.Clone(trap), 1);
+                                        player.TryPickup(new Item(trap), 1);
                                     }
 
                                     curr.TrapsDown[i] = "";
@@ -1771,13 +1970,37 @@ namespace ZeroPlayersOnline {
         }
 
         public void LogDraw(UI_EmbeddedMini mini) {
-            mini.Con.DrawLine(new Point(0, 35), new Point(148, 35), 196);
-            int printY = 36;
-            for (int i = Log.TopIndex; i < Log.Log.Count && printY < 49; i++) {
+            Point mousePos = new MouseScreenObjectState(mini.Con, GameHost.Instance.Mouse).CellPosition; 
+            mini.Con.DrawLine(new Point(0, 35), new Point(148, 35), 196); 
+
+            int printY = 47;
+            for (int i = Log.TopIndex; i >= 0 && printY > 34; i--) {
+                if (Log.Log[i].Message.Length >= 148) {
+                    printY -= (Log.Log[i].Message.Length / 148);
+
+                    if (printY <= 34)
+                        break;
+                } 
+
                 if (Log.Log[i].Count == 1)
-                    printY = mini.Con.PrintMultiLine(0, printY, Log.Log[i].Message, 148);
+                    mini.Con.PrintMultiLine(0, printY, Log.Log[i].Message, 148);
                 else
-                    printY = mini.Con.PrintMultiLine(0, printY, Log.Log[i].Message + " (x" + Log.Log[i].Count.ToString() + ")", 148);
+                    mini.Con.PrintMultiLine(0, printY, Log.Log[i].Message + " (x" + Log.Log[i].Count.ToString() + ")", 148);
+                  
+                printY -= 1; 
+            } 
+            
+            mini.Con.DrawLine(new Point(0, 35), new Point(148, 35), 196, Color.White);
+
+            int qty = 1;
+            if (Helper.EitherShift())
+                qty *= 5;
+            if (Helper.EitherControl())
+                qty *= 10;
+
+            if (mousePos.Y > 34 && !ExtraWindows.AnyVisible()) {
+                if (Helper.ScrolledUp()) { Log.TopIndex = Math.Clamp(Log.TopIndex + qty, 0, Log.Log.Count - 1); }
+                if (Helper.ScrolledDown()) { Log.TopIndex = Math.Clamp(Log.TopIndex - qty, 0, Log.Log.Count - 1); }
             }
         }
 
@@ -1819,6 +2042,9 @@ namespace ZeroPlayersOnline {
             if (ExtraWindows.Clue.IsVisible)
                 ExtraWindows.ClueDraw();
 
+            if (ExtraWindows.Teleport.IsVisible)
+                ExtraWindows.TeleportDraw();
+
             if (TimeLastTicked + 1000 < Helper.Time()) {
                 TickTime();
             } 
@@ -1835,11 +2061,6 @@ namespace ZeroPlayersOnline {
                 }
 
                 Close(mini);
-            }
-
-            if (mousePos.Y > 34 && !ExtraWindows.AnyVisible()) {
-                if (Helper.ScrolledUp()) { Log.TopIndex = Math.Clamp(Log.TopIndex - 1, 0, Log.Log.Count); }
-                if (Helper.ScrolledDown()) { Log.TopIndex = Math.Clamp(Log.TopIndex + 1, 0, Log.Log.Count); }
             }
 
             if (SidebarManager.SidebarRect.Contains(mousePos) && !ExtraWindows.AnyVisible()) {
@@ -1973,17 +2194,25 @@ namespace ZeroPlayersOnline {
             if (GameHost.Instance.Mouse.RightClicked) {
                 // Leaving this here just in case
                 //player.HeldGold += 1000;  
-                //Item knives = Helper.Clone(ItemLibrary["knivesBronze"]);
+                //Item knives = new Item(ItemLibrary["knivesBronze"]);
                 //knives.Quantity = 500;
-                //player.TryPickup(Helper.Clone(ItemLibrary["potionRestore"]), 1);
-                //player.TryPickup(Helper.Clone(ItemLibrary["fleshRotten"]), 5);
-                //player.TryPickup(Helper.Clone(ItemLibrary["beadYellow"]), 1);
-                //player.TryPickup(Helper.Clone(ItemLibrary["beadBlack"]), 1);
-                //player.TryPickup(Helper.Clone(ItemLibrary["hatchetBronze"]), 1);
-                //player.TryPickup(Helper.Clone(ItemLibrary["casketTutorial"]), 1);
-                //player.TryPickup(Helper.Clone(ItemLibrary["casketBeginner"]), 1); 
-                //player.TryPickup(Helper.Clone(ItemLibrary["casketEasy"]), 1); 
+                //player.TryPickup(new Item(ItemLibrary["potionRestore"]), 1);
+                //player.TryPickup(new Item(ItemLibrary["fleshRotten"]), 5);
+                //player.TryPickup(new Item(ItemLibrary["beadYellow"]), 1);
+                //player.TryPickup(new Item(ItemLibrary["beadBlack"]), 1);
+                //player.TryPickup(new Item(ItemLibrary["hatchetBronze"]), 1);
+                //player.TryPickup(new Item(ItemLibrary["casketTutorial"]), 1);
+                //player.TryPickup(new Item(ItemLibrary["casketEasy"]), 50);  
                 
+                //player.TryPickup(new Item(ItemLibrary["oreIron"]), 2);
+                //player.TryPickup(new Item(ItemLibrary["uncutRuby"]), 1);
+                //player.TryPickup(new Item(ItemLibrary["barGold"]), 1);
+               // player.TryPickup(new Item(ItemLibrary["tiaraWater"]), 1);   
+                //player.TryPickup(new Item(ItemLibrary["woolBall"]), 1);   
+               // player.TryGrantExp("Runecrafting", 10000, Log, SidebarManager.RecentlyTrainedSkills);
+
+                //player.TryGrantExp("Crafting", 1000000, Log, SidebarManager.RecentlyTrainedSkills);
+
                 /*if (ItemLibrary.TryGetValue("casketEasy", out Item? cask) && cask != null) {
                     int totalCycles = 0;
                     double simCount = 100;
@@ -2090,7 +2319,7 @@ namespace ZeroPlayersOnline {
                 bool found = false;
                 foreach (var kv in UseRecipes) {
                     if (player.HasAllItems(new() { kv.Value.FirstItem + "," + kv.Value.FirstQty, kv.Value.SecondItem + "," + kv.Value.SecondQty})) {
-                        SidebarManager.LastFoundRecipe = Helper.Clone(kv.Key); 
+                        SidebarManager.LastFoundRecipe = new(kv.Key.first, kv.Key.second); 
                         found = true;
                         break;
                     }

@@ -26,6 +26,8 @@ namespace ZeroPlayersOnline.HardcodedData {
             toAdd.Add(new Prayer("Attack III", "Normal", 20, "Boosts Attack by 10 levels.", "Attack"));
             toAdd.Add(new Prayer("Ranged III", "Normal", 20, "Boosts Ranged by 10 levels.", "Ranged"));
             toAdd.Add(new Prayer("Magic III", "Normal", 20, "Boosts Magic by 10 levels.", "Magic"));
+            
+            toAdd.Add(new Prayer("Rapid Heal", "Normal", 22, "Recover health twice as fast.")); 
              
             toAdd.Add(new Prayer("Improved Crit III", "Normal", 30, "Critical Chance+++ (stacks).")); 
 
