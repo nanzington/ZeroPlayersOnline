@@ -42,18 +42,21 @@ Maybe expand a lil bit into Al Kharid and Port Sarim/Falador to open some more c
 
  
 Weapon poison, maybe a poison equipment slot that applies to any melee or ranged attack?
-Lumbridge Swamp Caves, make it so maps can require a light source, add some light sources, then fill out the cave
 Optionally hide connections if requirements not met? Maybe default to visible regardless since it'd mostly be for sneaky map copies
 
+TODO For Mage Training Arena
+- Make the rewards shop
 
-Immediately important stuff to get working:
-- Make it so that combination runes only take up one per either needed individual rune (ex, 1 steam rune covers 1 fire, 1 water, or 1 water AND 1 fire for a spell)
+
+
+Immediately important stuff to get working: 
 - Start splitting stuff out of the ZPO file because it's getting ridiculous and it doesn't need to be that dense now
 - An achievement tracking thing where performing an action can check to see if doing it progresses an achievement/task, also have a screen to show all achieves with some sort options
 - Figure out how to convey how WorldState data is changed 
 
 
 Less immediate but still important:
+- Add poison mechanic to bosses when there's a boss that can inflict poison
 - Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
 - Dungeoneering areas that are actual random layout dungeons, reset layout somehow (on reload, if player is in a dungeon then reset their loc to the entrance, or if they reach the end crystal tp back to start and give set exp) 
 - Bank preset options somehow

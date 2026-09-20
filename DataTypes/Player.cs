@@ -103,6 +103,13 @@ namespace ZeroPlayersOnline.DataTypes {
         public int ArtisanPoints = 0;
 
         public int SecondsPlayed = 0;
+        public int PoisonStatus = 0; 
+
+        public int PizazzEnchantment = 0;
+        public int PizazzGraveyard = 0;
+        public int PizazzTelekinetic = 0;
+        public int PizazzAlchemist = 0;
+
 
         public Dictionary<string, int> WorldState = new();
 
@@ -125,10 +132,13 @@ namespace ZeroPlayersOnline.DataTypes {
             int weaponTier = 1;
             bool maging = IsMaging();
 
+            string style = "Melee";
+
             if (Equipment.TryGetValue("Weapon", out ItemWrapper? eqpWrap) && eqpWrap.GetRef() is Item eqp) {
                 weaponTier = eqp.EquipTier + 1;
 
                 if (eqp.EquipSkill == "Ranged") {
+                    style = "Ranged";
                     if (eqp.EquipAmmo == "Arrow" || eqp.EquipAmmo == "Bolt") { // Only other option currently is Self, where we don't need to change weaponTier
                         if (Equipment.TryGetValue("Ammo", out ItemWrapper? ammoWrap) && ammoWrap.GetRef() is Item ammo) {
                             if (ammo.EquipLevel <= eqp.EquipLevel) {
@@ -149,16 +159,44 @@ namespace ZeroPlayersOnline.DataTypes {
             int strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10); 
 
             if (maging) { 
+                style = "Magic";
                 strength = GameLoop.ZPO.SpellLibrary[CastingSpell].Tier * 2;
             }
 
+            double partialBoost = 0;
             foreach (var kv in Equipment) {
                 if (kv.Value.GetRef() is Item item) {
                     if (item.MiscString == "OmniBoost" || item.MiscString == "OffenseBoost") {
                         strength += item.EquipTier;
                     }
+
+                    if (item.MiscString == "PowerMelee" && style == "Melee") {
+                        partialBoost += item.EquipTier / 5.0;
+                    }
+
+                    if (item.MiscString == "PowerRange" && style == "Ranged") {
+                        partialBoost += item.EquipTier / 5.0;
+                    }
+
+                    if (item.MiscString == "PowerMagic" && style == "Magic") {
+                        partialBoost += item.EquipTier / 5.0;
+                    }
+
+                    if (item.MiscString == "OffenseBoostMelee" && style == "Melee") {
+                        partialBoost += item.EquipTier;
+                    }
+                    
+                    if (item.MiscString == "OffenseBoostRange" && style == "Ranged") {
+                        partialBoost += item.EquipTier;
+                    }
+
+                    if (item.MiscString == "OffenseBoostMagic" && style == "Magic") {
+                        partialBoost += item.EquipTier;
+                    }
                 } 
             }
+
+            strength += (int) Math.Floor(partialBoost);
 
             return weaponTier + "d" + strength;
         }
@@ -249,28 +287,26 @@ namespace ZeroPlayersOnline.DataTypes {
             if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
                 for (int i = 0; i < Inventory.Count; i++) { 
                     if (Inventory[i].GetRef() is Item wrap && wrap.ID == item.ID && (wrap.Stackable || (noted && Inventory[i].Noted))) {
-                        Inventory[i].Quantity += qty; 
+                        Inventory[i].Quantity += qty;
                         if (!shop)
                             item.Quantity -= qty;
                         return true; 
                     }
                 }
 
-                Item clone = new(item);
+                Item clone = new(item) { Quantity = qty };
+                
              
                 if (Inventory.Count < InventoryLimit) {
                     if (item.Stackable || (item.Noteable && noted)) { 
                         if (noted)
                             clone.Noted = true;
-
-                        clone.Quantity = qty;
                         if (!shop)
                             item.Quantity -= qty;
                         Inventory.Add(new(clone));
                     } else {
                         for (int i = 0; i < qty; i++) { 
-                            Item secondClone = new(clone);
-                            secondClone.Quantity = 1;
+                            Item secondClone = new(clone) { Quantity = 1 }; 
                             clone.Quantity--;
                             if (!shop)
                                 item.Quantity--;
@@ -283,7 +319,7 @@ namespace ZeroPlayersOnline.DataTypes {
                                     return true;
                                 } else {
                                     GameLoop.ZPO.TryPlaceItem(NavLoc, new(secondClone));
-                                    return true;
+                                    return false;
                                 }
                             }
                         }
@@ -384,24 +420,34 @@ namespace ZeroPlayersOnline.DataTypes {
                                     Item clone = new(toDrop);
                                     clone.Quantity = qty;
 
+                                    if (Inventory[i].Containing.Count > 0) {
+                                        foreach (var con in Inventory[i].Containing) {
+                                            clone.Containing.Add(new(con));
+                                        }
+                                    }
+
                                     curr.ItemsHere.Add(clone);
                                     Inventory[i].Quantity -= qty;
                                 }
                             }
                         }
                         else {
-                            int sellValue = toDrop.Value;
+                            if (Inventory[i].Containing.Count > 0) {
+                                GameLoop.ZPO.Log.AddMessage("You probably don't want to sell that, and should remove all items from it first if you do.", Color.Crimson);
+                            } else {
+                                int sellValue = toDrop.Value;
 
-                            if (Inventory[i].Charges != 0 && toDrop.UseString == "Potion") {
-                                sellValue *= Inventory[i].Charges;
-                            } 
+                                if (Inventory[i].Charges != 0 && toDrop.UseString == "Potion") {
+                                    sellValue *= Inventory[i].Charges;
+                                } 
                                         
-                            if (!ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(Inventory[i].ID)) {
-                                sellValue = (int) (Math.Floor(sellValue / 2.0));
-                            }
+                                if (!ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(Inventory[i].ID)) {
+                                    sellValue = (int) (Math.Floor(sellValue / 2.0));
+                                }
 
-                            HeldGold += sellValue * qty;
-                            Inventory[i].Quantity -= qty;
+                                HeldGold += sellValue * qty;
+                                Inventory[i].Quantity -= qty;
+                            }
                         }
                     }
                 }
@@ -546,6 +592,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
             NavLoc = NavRespawn;
             CurrentHP = Skills["Constitution"].Level;
+            PoisonStatus = 0;
         }
 
 
@@ -710,27 +757,63 @@ namespace ZeroPlayersOnline.DataTypes {
                 }
 
                 if (!ONLYequipped) {
-                // Check for items that count as the item but aren't the item (for example, elemental staves)
-                for (int i = 0; i < Inventory.Count; i++) {
-                    if (Inventory[i].GetRef() is Item comp && comp.MiscString == "CountsAs" && comp.UseString2 == item && !comp.MustBeEquipped) {
-                        if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
-                            if (Inventory[i].Charges == -1) {
-                                countHeld = qty;
-                            } else { 
-                                countHeld += comp.UseInt;
-                            } 
+                    // Check for items that count as the item but aren't the item (for example, elemental staves)
+                    for (int i = 0; i < Inventory.Count; i++) {
+                        if (Inventory[i].GetRef() is Item comp && comp.CountsAsIDs.Contains(item) && !comp.MustBeEquipped) {
+                            if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                                if (Inventory[i].Charges == -1) {
+                                    countHeld = qty;
+                                } else { 
+                                    if (comp.Stackable) { 
+                                        countHeld += Inventory[i].Quantity;
+                                    } else {
+                                        countHeld += Inventory[i].Charges;
+                                    }
+                                } 
+                            }
+                        }
+
+                        for (int con = 0; con < Inventory[i].Containing.Count; con++) {
+                            if (Inventory[i].Containing[con].GetRef() is Item conInv && conInv.CountsAsIDs.Contains(item)) {
+                                if (Inventory[i].Containing[con].Charges == -1) {
+                                    countHeld = qty;
+                                } else {
+                                    if (conInv.Stackable) {
+                                        countHeld += Inventory[i].Containing[con].Quantity;
+                                    } else {
+                                        countHeld += Inventory[i].Containing[con].Charges;
+                                    }
+                                }
+                            }
                         }
                     }
-                }
                 }
 
                 if (equippedOkay) {
                     foreach (var kv in Equipment) {
-                        if (kv.Value.GetRef() is Item eqp && eqp.MiscString == "CountsAs" && eqp.UseString2 == item) {
+                        if (kv.Value.GetRef() is Item eqp && eqp.CountsAsIDs.Contains(item)) {
                             if (kv.Value.Charges == -1) {
                                 countHeld = qty;
                             } else {
-                                countHeld += kv.Value.Charges;
+                                if (eqp.Stackable) {
+                                    countHeld += kv.Value.Quantity;
+                                } else {
+                                    countHeld += kv.Value.Charges;
+                                }
+                            }
+                        }
+
+                        for (int con = 0; con < kv.Value.Containing.Count; con++) {
+                            if (kv.Value.Containing[con].GetRef() is Item conEqp && conEqp.CountsAsIDs.Contains(item)) {
+                                if (kv.Value.Containing[con].Charges == -1) {
+                                    countHeld = qty;
+                                } else {
+                                    if (conEqp.Stackable) {
+                                        countHeld += kv.Value.Containing[con].Quantity;
+                                    } else {
+                                        countHeld += kv.Value.Containing[con].Charges;
+                                    }
+                                }
                             }
                         }
                     }
@@ -741,8 +824,14 @@ namespace ZeroPlayersOnline.DataTypes {
                     // Check for actual copies of the item
                     for (int i = 0; i < Inventory.Count; i++) {
                         if (Inventory[i].ID == item) {
-                            if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                            if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) { 
                                 countHeld += Inventory[i].Quantity;
+                            }
+                        }
+
+                        for (int con = 0; con < Inventory[i].Containing.Count; con++) {
+                            if (Inventory[i].Containing[con].ID == item) { 
+                                countHeld += Inventory[i].Containing[con].Quantity; 
                             }
                         }
                     }
@@ -752,6 +841,12 @@ namespace ZeroPlayersOnline.DataTypes {
                     foreach (var kv in Equipment) {
                         if (kv.Value.ID == item) {
                             countHeld += kv.Value.Quantity;
+                        }
+
+                        for (int con = 0; con < kv.Value.Containing.Count; con++) {
+                            if (kv.Value.Containing[con].GetRef() is Item conEqp && conEqp.ID == item) { 
+                                countHeld += kv.Value.Containing[con].Quantity; 
+                            }
                         }
                     }
                 }
@@ -764,6 +859,7 @@ namespace ZeroPlayersOnline.DataTypes {
         }
 
         public void ConsumeItems(List<string> items, bool notedOkay = false, bool equippedOkay = false) {
+            Dictionary<string, int> CountsLeft = new();
             foreach (var itemString in items) {
                 string item = itemString;
                 int qty = 1;
@@ -781,93 +877,392 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 countNeeded = qty;
 
-                // Check for items that count as the item but aren't the item (for example, elemental staves)
-                for (int i = 0; i < Inventory.Count; i++) {
-                    if (Inventory[i].GetRef() is Item comp && comp.MiscString == "CountsAs" && comp.UseString2 == item && !comp.MustBeEquipped) {
-                        if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
-                            if (Inventory[i].Charges == -1) {
-                                countNeeded = 0;
-                            } else { 
-                                if (Inventory[i].Charges > countNeeded) {
-                                    Inventory[i].Charges -= countNeeded;
-                                    countNeeded = 0; 
-                                } else {
-                                    countNeeded -= Inventory[i].Charges;
-                                    Inventory[i].Charges = 0;
-                                }
-                            } 
-                        }
-                    }
-                }
+                CountsLeft.Add(item, countNeeded);
+            } 
 
-                if (equippedOkay) {
-                    foreach (var kv in Equipment) {
-                        if (kv.Value.GetRef() is Item eqp && eqp.MiscString == "CountsAs" && eqp.UseString2 == item) {
-                            if (kv.Value.Charges == -1) {
-                                countNeeded = 0;
-                            } else {
-                                if (kv.Value.Charges > countNeeded) {
-                                    kv.Value.Charges -= countNeeded;
-                                    countNeeded = 0; 
-                                } else {
-                                    countNeeded -= kv.Value.Charges;
-                                    kv.Value.Charges = 0;
+            List<string> EquipClear = new();
+
+            // Check for items that count as the item but aren't the item (for example, elemental staves) and have infinite charge
+            for (int i = 0; i < Inventory.Count; i++) {
+                if (Inventory[i].GetRef() is Item comp && !comp.MustBeEquipped) {
+                    for (int j = 0; j < comp.CountsAsIDs.Count; j++) {
+                        if (CountsLeft.ContainsKey(comp.CountsAsIDs[j])) {
+                            if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                                if (Inventory[i].Charges == -1) {
+                                    CountsLeft[comp.CountsAsIDs[j]] = 0;
                                 }
                             }
                         }
                     }
-                } 
 
-                if (countNeeded <= 0)
-                    continue;
-
-
-                // Check for the actual item matches
-                for (int i = Inventory.Count - 1; i >= 0; i--) {
-                    if (Inventory[i].ID == item) {
+                    if (CountsLeft.ContainsKey(Inventory[i].ID)) {
                         if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
-                            if (countNeeded > Inventory[i].Quantity) {
-                                countNeeded -= Inventory[i].Quantity;
-                                Inventory.RemoveAt(i); 
-                            } else { 
-                                Inventory[i].Quantity -= countNeeded;
-                                countNeeded = 0;
-
-                                if (Inventory[i].Quantity <= 0) {
-                                    Inventory.RemoveAt(i); 
-                                }
-                            } 
-
-                            if (countNeeded == 0)
-                                break;
+                            if (Inventory[i].Charges == -1) {
+                                CountsLeft[Inventory[i].ID] = 0;
+                            }
                         }
                     }
                 }
 
-                List<string> EquipClear = new();
+                for (int con = 0; con < Inventory[i].Containing.Count; con++) { // Can any applicable item even be stored in a container? I have no idea
+                    if (CountsLeft.ContainsKey(Inventory[i].Containing[con].ID)) {
+                        if (!Inventory[i].Containing[con].Noted || (Inventory[i].Containing[con].Noted && notedOkay)) {
+                            if (Inventory[i].Containing[con].Charges == -1) {
+                                CountsLeft[Inventory[i].Containing[con].ID] = 0;
+                            }
+                        }
+                    } 
+                }
+            }  
 
-                if (equippedOkay && countNeeded > 0) {
-                    foreach (var kv in Equipment) {
-                        if (kv.Value.ID == item) {
-                            if (countNeeded > kv.Value.Quantity) {
-                                countNeeded -= kv.Value.Quantity;
-                                EquipClear.Add(kv.Key);
+            if (equippedOkay) {
+                foreach (var kv in Equipment) {
+                    if (kv.Value.GetRef() is Item eqp) {
+                        for (int j = 0; j < eqp.CountsAsIDs.Count; j++) {
+                            if (CountsLeft.ContainsKey(eqp.CountsAsIDs[j])) {
+                                if (!kv.Value.Noted || (kv.Value.Noted && notedOkay)) {
+                                    if (kv.Value.Charges == -1) {
+                                        CountsLeft[eqp.CountsAsIDs[j]] = 0;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (CountsLeft.ContainsKey(kv.Value.ID)) {
+                            if (!kv.Value.Noted || (kv.Value.Noted && notedOkay)) {
+                                if (kv.Value.Charges == -1) {
+                                    CountsLeft[kv.Value.ID] = 0;
+                                }
+                            }
+                        }
+                    }
+
+                    for (int con = 0; con < kv.Value.Containing.Count; con++) { // Can any applicable item even be stored in a container? I have no idea
+                        if (CountsLeft.ContainsKey(kv.Value.Containing[con].ID)) {
+                            if (!kv.Value.Containing[con].Noted || (kv.Value.Containing[con].Noted && notedOkay)) {
+                                if (kv.Value.Containing[con].Charges == -1) {
+                                    CountsLeft[kv.Value.Containing[con].ID] = 0;
+                                }
+                            }
+                        } 
+                    }
+                }
+            } 
+
+            // Check for items that count as the item but aren't the item (for example, elemental staves)
+            for (int i = Inventory.Count - 1; i >= 0; i--) {
+                if (Inventory[i].GetRef() is Item comp && !comp.MustBeEquipped) {
+                    int highestUsed = 0;
+                    for (int j = 0; j < comp.CountsAsIDs.Count; j++) {
+                        if (CountsLeft.ContainsKey(comp.CountsAsIDs[j])) {
+                            if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                                if (Inventory[i].Charges == -1) {
+                                    CountsLeft[comp.CountsAsIDs[j]] = 0;
+                                } else {
+                                    if (comp.Stackable) {
+                                        if (Inventory[i].Quantity > CountsLeft[comp.CountsAsIDs[j]]) {
+                                            highestUsed = Math.Max(highestUsed, CountsLeft[comp.CountsAsIDs[j]]);
+                                            CountsLeft[comp.CountsAsIDs[j]] = 0; 
+                                        } else {
+                                            CountsLeft[comp.CountsAsIDs[j]] -= Inventory[i].Quantity;
+                                            highestUsed = Math.Max(highestUsed, Inventory[i].Quantity); 
+                                        }
+                                    } else {
+                                        if (Inventory[i].Charges > CountsLeft[comp.CountsAsIDs[j]]) {
+                                            highestUsed = Math.Max(highestUsed, CountsLeft[comp.CountsAsIDs[j]]);
+                                            CountsLeft[comp.CountsAsIDs[j]] = 0; 
+                                        } else {
+                                            CountsLeft[comp.CountsAsIDs[j]] -= Inventory[i].Charges;
+                                            highestUsed = Math.Max(highestUsed, Inventory[i].Charges);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (highestUsed > 0) {
+                        if (comp.Stackable) {
+                            Inventory[i].Quantity -= highestUsed;
+                            if (Inventory[i].Quantity <= 0) {
+                                Inventory.RemoveAt(i); 
+                                continue;
+                            }
+                        } else {
+                            Inventory[i].Charges -= highestUsed;
+                            if (Inventory[i].Charges <= 0 && comp.ShattersAtZeroCharges) {
+                                Inventory.RemoveAt(i); 
+                                continue;
+                            } 
+                        }
+                    }
+
+                    if (CountsLeft.ContainsKey(Inventory[i].ID)) {
+                        if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                            if (Inventory[i].Charges == -1) {
+                                CountsLeft[Inventory[i].ID] = 0;
                             } else {
-                                kv.Value.Quantity -= countNeeded;
-                                countNeeded = 0;
+                                if (comp.Stackable) {
+                                    if (Inventory[i].Quantity > CountsLeft[Inventory[i].ID]) {
+                                        Inventory[i].Quantity -= CountsLeft[Inventory[i].ID];
+                                        CountsLeft[Inventory[i].ID] = 0; 
+                                    } else {
+                                        CountsLeft[Inventory[i].ID] -= Inventory[i].Quantity;
+                                        Inventory[i].Quantity = 0;
+                                        Inventory.RemoveAt(i);
+                                        continue; 
+                                    }
+                                } else {
+                                    if (Inventory[i].Charges > CountsLeft[Inventory[i].ID]) {
+                                        Inventory[i].Charges -= CountsLeft[Inventory[i].ID];
+                                        CountsLeft[Inventory[i].ID] = 0; 
+                                    } else {
+                                        CountsLeft[Inventory[i].ID] -= Inventory[i].Charges;
+                                        Inventory[i].Charges = 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
+                if (Inventory[i].Containing.Count > 0) {
+                    for (int condex = Inventory[i].Containing.Count - 1; condex >= 0; condex--) {
+                        ItemWrapper con = Inventory[i].Containing[condex];
+                        if (CountsLeft.ContainsKey(con.ID) && con.GetRef() is Item comp2) {
+                            if (!con.Noted || (con.Noted && notedOkay)) {
+                                if (con.Charges == -1) {
+                                    CountsLeft[con.ID] = 0;
+                                } else {
+                                    if (comp2.Stackable) {
+                                        if (con.Quantity > CountsLeft[con.ID]) {
+                                            con.Quantity -= CountsLeft[con.ID];
+                                            CountsLeft[con.ID] = 0; 
+                                        } else {
+                                            CountsLeft[con.ID] -= con.Quantity;
+                                            con.Quantity = 0;
+                                            Inventory[i].Containing.RemoveAt(condex);
+                                            continue; 
+                                        }
+                                    } else {
+                                        if (con.Charges > CountsLeft[con.ID]) {
+                                            con.Charges -= CountsLeft[con.ID];
+                                            CountsLeft[con.ID] = 0; 
+                                        } else {
+                                            CountsLeft[con.ID] -= con.Charges;
+                                            con.Charges = 0;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }  
+
+            if (equippedOkay) {
+                foreach (var kv in Equipment) {
+                    if (kv.Value.GetRef() is Item eqp) {
+                        int highestUsed = 0;
+
+                        for (int j = 0; j < eqp.CountsAsIDs.Count; j++) {
+                            if (CountsLeft.ContainsKey(eqp.CountsAsIDs[j])) {
+                                if (!kv.Value.Noted || (kv.Value.Noted && notedOkay)) {
+                                    if (kv.Value.Charges == -1) {
+                                        CountsLeft[eqp.CountsAsIDs[j]] = 0;
+                                    } else {
+                                        if (eqp.Stackable) {
+                                            if (kv.Value.Quantity > CountsLeft[eqp.CountsAsIDs[j]]) {
+                                                highestUsed = Math.Max(highestUsed, CountsLeft[eqp.CountsAsIDs[j]]);
+                                                CountsLeft[eqp.CountsAsIDs[j]] = 0; 
+                                            } else {
+                                                CountsLeft[eqp.CountsAsIDs[j]] -= kv.Value.Quantity;
+                                                highestUsed = Math.Max(highestUsed, kv.Value.Quantity);
+                                                EquipClear.Add(kv.Key);
+                                            }
+                                        } else {
+                                            if (kv.Value.Charges > CountsLeft[eqp.CountsAsIDs[j]]) {
+                                                highestUsed = Math.Max(highestUsed, CountsLeft[eqp.CountsAsIDs[j]]);
+                                                CountsLeft[eqp.CountsAsIDs[j]] = 0; 
+                                            } else {
+                                                CountsLeft[eqp.CountsAsIDs[j]] -= kv.Value.Charges;
+                                                highestUsed = Math.Max(highestUsed, kv.Value.Charges);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (highestUsed > 0) {
+                            if (eqp.Stackable) {
+                                kv.Value.Quantity -= highestUsed;
                                 if (kv.Value.Quantity <= 0) {
                                     EquipClear.Add(kv.Key);
                                 }
-                            } 
+                            } else {
+                                kv.Value.Charges -= highestUsed;
+                                if (kv.Value.Charges <= 0 && eqp.ShattersAtZeroCharges) {
+                                    EquipClear.Add(kv.Key);
+                                } 
+                            }
+                        }
+
+                        if (CountsLeft.ContainsKey(kv.Value.ID)) {
+                            if (!kv.Value.Noted || (kv.Value.Noted && notedOkay)) {
+                                if (kv.Value.Charges == -1) {
+                                    CountsLeft[kv.Value.ID] = 0;
+                                } else {
+                                    if (eqp.Stackable) {
+                                        if (kv.Value.Quantity > CountsLeft[kv.Value.ID]) {
+                                            kv.Value.Quantity -= CountsLeft[kv.Value.ID];
+                                            CountsLeft[kv.Value.ID] = 0; 
+                                        } else {
+                                            CountsLeft[kv.Value.ID] -= kv.Value.Quantity;
+                                            kv.Value.Quantity = 0;
+                                            EquipClear.Add(kv.Key);
+                                        }
+                                    } else {
+                                        if (kv.Value.Charges > CountsLeft[kv.Value.ID]) {
+                                            kv.Value.Charges -= CountsLeft[kv.Value.ID];
+                                            CountsLeft[kv.Value.ID] = 0; 
+                                        } else {
+                                            CountsLeft[kv.Value.ID] -= kv.Value.Charges;
+                                            kv.Value.Charges = 0;
+
+                                            if (eqp.ShattersAtZeroCharges)
+                                                EquipClear.Add(kv.Key);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (kv.Value.Containing.Count > 0) {
+                        for (int condex = kv.Value.Containing.Count - 1; condex >= 0; condex--) {
+                            ItemWrapper con = kv.Value.Containing[condex];
+                            if (CountsLeft.ContainsKey(con.ID) && con.GetRef() is Item comp2) {
+                                if (!con.Noted || (con.Noted && notedOkay)) {
+                                    if (con.Charges == -1) {
+                                        CountsLeft[con.ID] = 0;
+                                    } else {
+                                        if (comp2.Stackable) {
+                                            if (con.Quantity > CountsLeft[con.ID]) {
+                                                con.Quantity -= CountsLeft[con.ID];
+                                                CountsLeft[con.ID] = 0; 
+                                            } else {
+                                                CountsLeft[con.ID] -= con.Quantity;
+                                                con.Quantity = 0;
+                                                kv.Value.Containing.RemoveAt(condex); 
+                                                continue;
+                                            }
+                                        } else {
+                                            if (con.Charges > CountsLeft[con.ID]) {
+                                                con.Charges -= CountsLeft[con.ID];
+                                                CountsLeft[con.ID] = 0; 
+                                            } else {
+                                                CountsLeft[con.ID] -= con.Charges;
+                                                con.Charges = 0;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Check for the actual item matches
+            for (int i = Inventory.Count - 1; i >= 0; i--) {
+                if (CountsLeft.ContainsKey(Inventory[i].ID)) {
+                    if (!Inventory[i].Noted || (Inventory[i].Noted && notedOkay)) {
+                        if (CountsLeft[Inventory[i].ID] > Inventory[i].Quantity) {
+                            CountsLeft[Inventory[i].ID] -= Inventory[i].Quantity;
+                            Inventory.RemoveAt(i); 
+                            continue;
+                        } else { 
+                            Inventory[i].Quantity -= CountsLeft[Inventory[i].ID];
+                            CountsLeft[Inventory[i].ID] = 0;
+
+                            if (Inventory[i].Quantity <= 0) {
+                                Inventory.RemoveAt(i); 
+                                continue;
+                            }
                         }
                     }
                 }
 
-                foreach (var kv in EquipClear) {
-                    Equipment.Remove(kv);
+                if (Inventory[i].Containing.Count > 0) {
+                    for (int condex = Inventory[i].Containing.Count - 1; condex >= 0; condex--) {
+                        ItemWrapper con = Inventory[i].Containing[condex];
+
+                        if (CountsLeft.ContainsKey(con.ID)) {
+                            if (!con.Noted || (con.Noted && notedOkay)) {
+                                if (CountsLeft[con.ID] > con.Quantity) {
+                                    CountsLeft[con.ID] -= con.Quantity;
+                                    Inventory[i].Containing.RemoveAt(condex);
+                                    continue;
+                                } else {
+                                    con.Quantity -= CountsLeft[con.ID];
+                                    CountsLeft[con.ID] = 0;
+
+                                    if (con.Quantity <= 0) {
+                                        Inventory[i].Containing.RemoveAt(condex);
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } 
+
+            if (equippedOkay) {
+                foreach (var kv in Equipment) {
+                    if (CountsLeft.ContainsKey(kv.Value.ID)) {
+                        if (CountsLeft[kv.Value.ID] > kv.Value.Quantity) {
+                            CountsLeft[kv.Value.ID] -= kv.Value.Quantity;
+                            EquipClear.Add(kv.Key);
+                        } else {
+                            kv.Value.Quantity -= CountsLeft[kv.Value.ID];
+                            CountsLeft[kv.Value.ID] = 0;
+
+                            if (kv.Value.Quantity <= 0) {
+                                EquipClear.Add(kv.Key);
+                            }
+                        } 
+                    }
+
+                    if (kv.Value.Containing.Count > 0) {
+                        for (int condex = kv.Value.Containing.Count - 1; condex >= 0; condex--) {
+                            ItemWrapper con = kv.Value.Containing[condex];
+
+                            if (CountsLeft.ContainsKey(con.ID)) {
+                                if (!con.Noted || (con.Noted && notedOkay)) {
+                                    if (CountsLeft[con.ID] > con.Quantity) {
+                                        CountsLeft[con.ID] -= con.Quantity;
+                                        kv.Value.Containing.RemoveAt(condex);
+                                    } else {
+                                        con.Quantity -= CountsLeft[con.ID];
+                                        CountsLeft[con.ID] = 0;
+
+                                        if (con.Quantity <= 0) {
+                                            kv.Value.Containing.RemoveAt(condex);
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
+
+            foreach (var kv in EquipClear) {
+                Equipment.Remove(kv);
+            } 
         }
 
 
@@ -885,14 +1280,22 @@ namespace ZeroPlayersOnline.DataTypes {
                             if (against == "Magic") {
                                 num = (int)Math.Floor(num / 2.0);
                             }
+
+                            if (eqp.MiscString == "PowerMelee") {
+                                num = Math.Floor(num * 0.8);
+                            }
                         }
 
-                        if (eqp.MiscString == "DefenseMagic") {
+                        if (eqp.MiscString == "DefenseMagic" || eqp.MiscString == "PowerMagic") {
                             if (against == "Melee") {
                                 num *= 2;
                             }
                             if (against == "Ranged") {
                                 num = Math.Floor(num / 2.0);
+                            }
+
+                            if (eqp.MiscString == "PowerMagic") {
+                                num = Math.Floor(num * 0.8);
                             }
                         }
 
@@ -902,6 +1305,10 @@ namespace ZeroPlayersOnline.DataTypes {
                             }
                             if (against == "Melee") {
                                 num = Math.Floor(num / 2.0);
+                            }
+
+                            if (eqp.MiscString == "PowerRange") {
+                                num = Math.Floor(num * 0.8);
                             }
                         }
 
@@ -1007,6 +1414,53 @@ namespace ZeroPlayersOnline.DataTypes {
             }
             if (!found)
                 ActivePotions.Add(new(stat, change));
+        }
+
+        public bool HasLightSource() {
+            foreach (var kv in Inventory) {
+                if (kv.GetRef() is Item item) {
+                    if (item.ProvidesLight) { return true; }
+                }
+            }
+
+            foreach (var kv in Equipment) {
+                if (kv.Value.GetRef() is Item eqp) {
+                    if (eqp.ProvidesLight) { return true; }
+                }
+            }
+
+            return false;
+        }
+
+        public bool HasOpenFlame() {
+            foreach (var kv in Inventory) {
+                if (kv.GetRef() is Item item) {
+                    if (item.ExposedFlame) { return true; }
+                }
+            }
+
+            foreach (var kv in Equipment) {
+                if (kv.Value.GetRef() is Item eqp) {
+                    if (eqp.ExposedFlame) { return true; }
+                }
+            }
+
+            return false;
+        }
+
+        public void ExtinguishLights(bool coveredToo) {
+            foreach (var kv in Inventory) {
+                if (kv.GetRef() is Item item) {
+                    if (item.Name.Contains("(lit)") && (item.ExposedFlame || (!item.ExposedFlame && coveredToo)) && item.UseString != "" && GameLoop.ZPO.ItemLibrary.ContainsKey(item.UseString2)) {
+                        kv.ID = item.UseString2;
+                        GameLoop.ZPO.Log.AddMessage("Your " + GameLoop.ZPO.ResolveItemName(kv.ID) + " is extinguished!");
+                    }
+                }
+            }
+        }
+
+        public bool HasMinigameItem() { // TODO: Placeholder, Implement this when there are things you carry around that need to display minigame info, like construction contracts
+            return false;
         }
     }
 }

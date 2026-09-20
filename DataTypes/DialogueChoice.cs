@@ -24,7 +24,7 @@
         public bool CanClick() {
             if (ClickReqs != null && ClickReqs.Count > 0) {
                 for (int i = 0; i < ClickReqs.Count; i++) {
-                    if (!ClickReqs[i].CheckRequirement(GameLoop.ZPO.player, true)) {
+                    if (!ClickReqs[i].CheckRequirement(GameLoop.ZPO.player, true, true)) {
                         return false;
                     }
                 } 
@@ -44,6 +44,13 @@
                                 p.ConsumeItems(new() { ClickReqs[i].MiscString + "," + ClickReqs[i].MiscInt}, true, true);
                             }
                         }
+                    }
+
+                    if (ClickReqs[i].RequirementType == "Pizazz") {
+                        if (ClickReqs[i].MiscString == "Telekinetic") { p.PizazzTelekinetic -= ClickReqs[i].MiscInt; }
+                        if (ClickReqs[i].MiscString == "Enchantment") { p.PizazzEnchantment -= ClickReqs[i].MiscInt; }
+                        if (ClickReqs[i].MiscString == "Alchemist") { p.PizazzAlchemist -= ClickReqs[i].MiscInt; }
+                        if (ClickReqs[i].MiscString == "Graveyard") { p.PizazzGraveyard -= ClickReqs[i].MiscInt; }
                     }
                 }
             }

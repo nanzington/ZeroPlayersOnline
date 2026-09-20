@@ -14,6 +14,9 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public bool SkillCheck = false;
         public int Level = 1;
+        public string WorldStateChange = "";
+        public string WorldStateID = "";
+        public int WorldStateNum = 0;
 
         public Connection(string dest, List<Requirement>? req = null, bool onlyOne = false, int exp = 0, string skill = "", string alt = "", bool check = false, int lv = 1, string checkFailDest = "") { 
             Destination = dest;
@@ -44,7 +47,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
             if (Requirements != null) {
                 for (int i = 0; i < Requirements.Count; i++) {
-                    if (!Requirements[i].CheckRequirement(p, false)) {
+                    if (!Requirements[i].CheckRequirement(p, false, true)) {
                         allPassed = false;
                     } else {
                         anyPassed = true;
@@ -62,7 +65,7 @@ namespace ZeroPlayersOnline.DataTypes {
                 for (int i = 0; i < Requirements.Count; i++) {
                     bool passed = false;
 
-                    if (Requirements[i].CheckRequirement(p, false)) {
+                    if (Requirements[i].CheckRequirement(p, false, true)) {
                         if (Requirements[i].RequirementType == "Item" && Requirements[i].ConsumeItem) {
                             if (Requirements[i].MiscString == "Gold") {
                                 p.HeldGold -= Requirements[i].MiscInt;
@@ -95,6 +98,9 @@ namespace ZeroPlayersOnline.DataTypes {
                 }
             }
 
+            if (WorldStateChange != "" && WorldStateID != "") {
+                Helper.AlterWorldState(WorldStateID, WorldStateChange, WorldStateNum);
+            }
 
             if (ExpTo != "")
                 p.TryGrantExp(ExpTo, ExpGranted, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills, false); 

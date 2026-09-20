@@ -7,6 +7,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Furnace") {
                 Recipes = new() {
+                    new ProcessingRecipe("bucketSand", "glassMolten", "Crafting", 1, 20, secondaryIn: "ashSoda", secondaryOut: "bucketEmpty"),
                     new ProcessingRecipe("oreMixBronze", "barBronze", "Smithing", 1, 7),
                     new ProcessingRecipe("oreCopper", "barBronze", "Smithing", 1, 7, tertiaryIn: "ringForging"),
                     new ProcessingRecipe("oreTin", "barBronze", "Smithing", 1, 7, tertiaryIn: "ringForging"),
@@ -17,7 +18,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("oreMixMithril", "barMithril", "Smithing", 30, 60),
                     new ProcessingRecipe("oreMithril", "barMithril", "Smithing", 30, 60, tertiaryIn: "ringForging"),
                     new ProcessingRecipe("oreMixAdamant", "barAdamant", "Smithing", 40, 85),
-                    new ProcessingRecipe("oreAdamant", "barAdamant", "Smithing", 40, 85, tertiaryIn: "ringForging")
+                    new ProcessingRecipe("oreAdamant", "barAdamant", "Smithing", 40, 85, tertiaryIn: "ringForging"),
+                    new ProcessingRecipe("oreMixSilver", "barSilver", "Smithing", 20, 14),
+                    new ProcessingRecipe("oreSilver", "barSilver", "Smithing", 20, 14, tertiaryIn: "ringForging"),
+                    new ProcessingRecipe("oreMixGold", "barGold", "Smithing", 20, 23),
+                    new ProcessingRecipe("oreGold", "barGold", "Smithing", 20, 23, tertiaryIn: "ringForging")
                 }
             });
 
@@ -51,6 +56,8 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Range") {
                 Recipes = new() {
+                    new ProcessingRecipe("seaweed", "ashSoda"),
+                    new ProcessingRecipe("weedSwamp", "ashSoda"),
                     new ProcessingRecipe("meatRawNewt", "meatCookedNewt", "Cooking", 1, 15),
                     new ProcessingRecipe("meatRawBeef", "meatCookedBeef", "Cooking", 1, 15),
                     new ProcessingRecipe("meatRawRat", "meatCookedBeef", "Cooking", 1, 15),
@@ -71,6 +78,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("fishRawLobster", "fishCookedLobster", "Cooking", 40, 120),
                     new ProcessingRecipe("fishRawBass", "fishCookedBass", "Cooking", 43, 130),
                     new ProcessingRecipe("fishRawSwordfish", "fishCookedSwordfish", "Cooking", 45, 140),
+                    new ProcessingRecipe("fishRawEelSlimy", "fishCookedEelSlimy", "Cooking", 28, 95),
+                    new ProcessingRecipe("fishRawEelCave", "fishCookedEelCave", "Cooking", 28, 95),
                     new ProcessingRecipe("doughBread", "bread", "Cooking", 1, 30),
                     new ProcessingRecipe("potato", "potatoBaked", "Cooking", 7, 15),
                     new ProcessingRecipe("tinCakeBatter", "cake", "Cooking", 40, 180, secondaryOut: "tinCakeEmpty")
@@ -103,8 +112,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
+            toAdd.Add(new("Sand") { Recipes = new() { new ProcessingRecipe("bucketEmpty", "bucketSand") } });
+
             toAdd.Add(new("Air Altar") {
                 Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraAir", "Runecrafting", 1, 25, "", true, "talismanAir"),
                     new ProcessingRecipe("runeWater", "runeMist", "Runecrafting", 6, 5, "", true, "pureEssence", "", "talismanWater"),
                     new ProcessingRecipe("runeEarth", "runeDust", "Runecrafting", 10, 5, "", true, "pureEssence", "", "talismanEarth"),
                     new ProcessingRecipe("runeFire", "runeSmoke", "Runecrafting", 15, 5, "", true, "pureEssence", "", "talismanFire"),
@@ -113,8 +125,17 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
+            toAdd.Add(new("Mind Altar") {
+                Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraMind", "Runecrafting", 1, 28, "", true, "talismanMind"), 
+                    new ProcessingRecipe("runeEssence", "runeMind", "Runecrafting", 2, 6),
+                    new ProcessingRecipe("pureEssence", "runeMind", "Runecrafting", 2, 6, extra: true)
+                }
+            });
+
             toAdd.Add(new("Water Altar") {
                 Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraWater", "Runecrafting", 1, 30, "", true, "talismanWater"),
                     new ProcessingRecipe("runeAir", "runeMist", "Runecrafting", 6, 6, "", true, "pureEssence", "", "talismanAir"),
                     new ProcessingRecipe("runeEarth", "runeMud", "Runecrafting", 13, 6, "", true, "pureEssence", "", "talismanEarth"),
                     new ProcessingRecipe("runeFire", "runeSteam", "Runecrafting", 19, 6, "", true, "pureEssence", "", "talismanFire"),
@@ -125,6 +146,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Earth Altar") {
                 Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraEarth", "Runecrafting", 1, 33, "", true, "talismanEarth"),
                     new ProcessingRecipe("runeAir", "runeDust", "Runecrafting", 10, 7, "", true, "pureEssence", "", "talismanAir"),
                     new ProcessingRecipe("runeFire", "runeLava", "Runecrafting", 23, 7, "", true, "pureEssence", "", "talismanFire"),
                     new ProcessingRecipe("runeWater", "runeMud", "Runecrafting", 13, 7, "", true, "pureEssence", "", "talismanWater"),
@@ -135,6 +157,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Fire Altar") {
                 Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraFire", "Runecrafting", 1, 35, "", true, "talismanFire"),
                     new ProcessingRecipe("runeAir", "runeSmoke", "Runecrafting", 15, 8, "", true, "pureEssence", "", "talismanAir"),
                     new ProcessingRecipe("runeEarth", "runeLava", "Runecrafting", 23, 8, "", true, "pureEssence", "", "talismanEarth"),
                     new ProcessingRecipe("runeWater", "runeSteam", "Runecrafting", 19, 8, "", true, "pureEssence", "", "talismanWater"),
@@ -142,6 +165,70 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("pureEssence", "runeFire", "Runecrafting", 14, 8, extra: true)
                 }
             });
+
+            toAdd.Add(new("Body Altar") {
+                Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraBody", "Runecrafting", 1, 38, "", true, "talismanBody"), 
+                    new ProcessingRecipe("runeEssence", "runeBody", "Runecrafting", 20, 8),
+                    new ProcessingRecipe("pureEssence", "runeBody", "Runecrafting", 20, 8, extra: true)
+                }
+            });
+
+            toAdd.Add(new("Cosmic Altar") {
+                Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraCosmic", "Runecrafting", 1, 40, "", true, "talismanCosmic"), 
+                    new ProcessingRecipe("pureEssence", "runeCosmic", "Runecrafting", 27, 8, extra: true)
+                }
+            });
+
+            toAdd.Add(new("Chaos Altar") {
+                Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraChaos", "Runecrafting", 1, 43, "", true, "talismanChaos"), 
+                    new ProcessingRecipe("pureEssence", "runeChaos", "Runecrafting", 35, 9, extra: true)
+                }
+            });
+
+            toAdd.Add(new("Astral Altar") {
+                Recipes = new() { 
+                    new ProcessingRecipe("pureEssence", "runeAstral", "Runecrafting", 40, 9, extra: true)
+                }
+            });
+
+            toAdd.Add(new("Nature Altar") {
+                Recipes = new() { 
+                    new ProcessingRecipe("tiara", "tiaraNature", "Runecrafting", 1, 45, "", true, "talismanNature"), 
+                    new ProcessingRecipe("pureEssence", "runeNature", "Runecrafting", 44, 9, extra: true)
+                }
+            });
+
+            toAdd.Add(new("Law Altar") {
+                Recipes = new() { 
+                    new ProcessingRecipe("tiara", "tiaraLaw", "Runecrafting", 1, 48, "", true, "talismanLaw"), 
+                    new ProcessingRecipe("pureEssence", "runeLaw", "Runecrafting", 54, 10, extra: true)
+                }
+            });
+
+            toAdd.Add(new("Death Altar") {
+                Recipes = new() { 
+                    new ProcessingRecipe("tiara", "tiaraDeath", "Runecrafting", 1, 50, "", true, "talismanDeath"), 
+                    new ProcessingRecipe("pureEssence", "runeDeath", "Runecrafting", 65, 10, extra: true)
+                }
+            }); 
+
+            toAdd.Add(new("Blood Altar") {
+                Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraBlood", "Runecrafting", 1, 53, "", true, "talismanBlood"),
+                    new ProcessingRecipe("pureEssence", "runeBlood", "Runecrafting", 77, 11, extra: true)
+                }
+            });
+
+            toAdd.Add(new("Soul Altar") {
+                Recipes = new() {  
+                    new ProcessingRecipe("pureEssence", "runeSoul", "Runecrafting", 90, 30, extra: true)
+                }
+            });
+
+
 
             toAdd.Add(new("Spinning Wheel") {
                 Recipes = new() {
@@ -164,7 +251,12 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             toAdd.Add(new("Level 1 Enchanter") {
-                Recipes = new() {
+                Recipes = new() { 
+                    new ProcessingRecipe("mtaIcosahedron", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCube", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaPentamid", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCylinder", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaDragonstone", "mtaOrb", minigameAct: "mtaPizazz"),
                     new ProcessingRecipe("amuletSapphire", "amuletMagic"),
                     new ProcessingRecipe("ringSapphire", "ringRecoil"),
                     new ProcessingRecipe("necklaceSapphire", "necklaceGames"),
@@ -178,6 +270,11 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Level 2 Enchanter") {
                 Recipes = new() {
+                    new ProcessingRecipe("mtaIcosahedron", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCube", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaPentamid", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCylinder", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaDragonstone", "mtaOrb", minigameAct: "mtaPizazz"),
                     new ProcessingRecipe("amuletEmerald", "amuletDefense"),
                     new ProcessingRecipe("ringEmerald", "ringDueling"),
                     new ProcessingRecipe("necklaceEmerald", "necklaceBinding"),
@@ -191,6 +288,11 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Level 3 Enchanter") {
                 Recipes = new() {
+                    new ProcessingRecipe("mtaIcosahedron", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCube", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaPentamid", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCylinder", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaDragonstone", "mtaOrb", minigameAct: "mtaPizazz"),
                     new ProcessingRecipe("amuletRuby", "amuletStrength"),
                     new ProcessingRecipe("ringRuby", "ringForging"),
                     new ProcessingRecipe("necklaceRuby", "necklaceDigsite"),
@@ -204,6 +306,11 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Level 4 Enchanter") {
                 Recipes = new() {
+                    new ProcessingRecipe("mtaIcosahedron", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCube", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaPentamid", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCylinder", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaDragonstone", "mtaOrb", minigameAct: "mtaPizazz"),
                     new ProcessingRecipe("amuletDiamond", "amuletPower"),
                     new ProcessingRecipe("ringDiamond", "ringLife"),
                     new ProcessingRecipe("necklaceDiamond", "necklacePhoenix"),
@@ -213,6 +320,11 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Level 5 Enchanter") {
                 Recipes = new() {
+                    new ProcessingRecipe("mtaIcosahedron", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCube", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaPentamid", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCylinder", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaDragonstone", "mtaOrb", minigameAct: "mtaPizazz"),
                     new ProcessingRecipe("amuletDragonstone", "amuletGlory"),
                     new ProcessingRecipe("ringDragonstone", "ringWealth"),
                     new ProcessingRecipe("necklaceDragonstone", "necklaceSkills"),
@@ -222,12 +334,22 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Level 6 Enchanter") {
                 Recipes = new() {
+                    new ProcessingRecipe("mtaIcosahedron", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCube", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaPentamid", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaCylinder", "mtaOrb", minigameAct: "mtaPizazz"),
+                    new ProcessingRecipe("mtaDragonstone", "mtaOrb", minigameAct: "mtaPizazz"),
                     new ProcessingRecipe("amuletOnyx", "amuletFury"),
-                    new ProcessingRecipe("ringOnyx", "ringStone"),
+                    new ProcessingRecipe("ringOnyx", "ringFortune"),
                     new ProcessingRecipe("necklaceOnyx", "necklaceBerserker"),
                     new ProcessingRecipe("braceletOnyx", "braceletRegen")
                 }
             });
+
+            toAdd.Add(new("Orb Depository") { Recipes = new() { new ProcessingRecipe("mtaOrb", "", "Magic", 1, 20, minigameAct: "mtaOrb") } });
+            toAdd.Add(new("Fruit Chute") { Recipes = new() { new ProcessingRecipe("fruitBanana", "", minigameAct: "mtaFruit"), new ProcessingRecipe("fruitPeach", "", minigameAct: "mtaFruit") } });
+            toAdd.Add(new("Coin Slot") { Recipes = new() { new ProcessingRecipe("mtaAlchCoin", "", minigameAct: "mtaCoin") } });
+
 
             for (int i = 0; i < toAdd.Count; i++) {
                 Stations.Add(toAdd[i].Name, toAdd[i]);

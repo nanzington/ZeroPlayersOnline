@@ -21,6 +21,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new ClueStep("B_SpeakHans", "Beginner", "Speak", "MIST_LumbridgeCastleBailey", "Always walking around the castle grounds and somehow knows everyones age.", "mistLumHans"));
             toAdd.Add(new ClueStep("B_SpeakCook", "Beginner", "Speak", "MIST_LumbridgeCastleKitchen", "In the place Duke Horacio calls home, talk to a man with a hat dropped by goblins.", "mistLumCook"));
             toAdd.Add(new ClueStep("B_EmoteBobs", "Beginner", "Emote", "MIST_LumbridgeBobsAxes", "Clap at Bob's Brilliant Axes. Equip a bronze hatchet and leather boots.", "Clap", "hatchetBronze", "bootsLeather"));
+            toAdd.Add(new ClueStep("B_EmoteAKMine", "Beginner", "Emote", "DES_AlKharidMine", "Panic at Al Kharid Mine.", "Panic"));
             toAdd.Add(new ClueStep("B_AnagramSedridor", "Beginner", "Anagram", "MIST_WizardTowerBasement", "The anagram reveals who to speak to next: CHAR GAME DISORDER", "mistWizSedridor"));
             toAdd.Add(new ClueStep("B_AnagramRanael", "Beginner", "Anagram", "DES_AlKharidRanael", "The anagram reveals who to speak to next: AN EARL", "desAlKharidRanael"));
             toAdd.Add(new ClueStep("B_MapWizardTowerIsland", "Beginner", "Map", "MIST_WizardTowerIsland", "Seems like you have to find the location that matches the description of the clue.", ""));

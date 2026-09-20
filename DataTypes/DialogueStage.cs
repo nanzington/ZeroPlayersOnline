@@ -10,6 +10,10 @@
         public List<string> ItemsGiven;
 
         public string ActionWhenChosen = "";
+
+        public string DataID = "";
+        public string DataHow = "";
+        public int DataNum = 0;
         
 
         public DialogueStage(string t, List<DialogueChoice> choices, string quest = "", int questStage = 0, List<string> items = null, string action = "") {

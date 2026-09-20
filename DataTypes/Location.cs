@@ -11,10 +11,14 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public string DigItem = "";
         public int DungeoneeringLevel = 0; // If above 0, you have to have at least this level of Dungeoneering to skill or combat here, but gain exp for doing so.
+        public bool Dark = false;
+        public string Hazard = "";
 
         public int MazeTile = -1;
         public string MazeMap = "";
         public bool MazeLandmark = false;
+
+        public string MinigameID = "";
 
         public List<Connection> ConnectedLocations = new();
 

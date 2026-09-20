@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline.DataTypes {
     public class ProcessingStation {
@@ -214,6 +215,73 @@ namespace ZeroPlayersOnline.DataTypes {
                             }
 
                             p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills);
+
+
+                            if (Recipes[j].MinigameAction != "") {
+                                if (Recipes[j].MinigameAction == "mtaPizazz") {
+                                    MinigameManager.MTA_Count++;
+
+                                    int reward = 1;
+                                    if (Name.Contains("2")) { reward = 2; }
+                                    if (Name.Contains("3")) { reward = 3; }
+                                    if (Name.Contains("4")) { reward = 4; }
+                                    if (Name.Contains("5")) { reward = 5; }
+                                    if (Name.Contains("6")) { reward = 6; }
+                                    if (Name.Contains("7")) { reward = 7; }
+                                    
+                                    if (Recipes[j].InputID == "mtaDragonstone") { reward *= 2; } 
+                                    if (MinigameManager.MTA_Count >= 10) { reward *= 2; MinigameManager.MTA_Count = 0; } 
+                                    if (Recipes[j].InputID.Contains(MinigameManager.MTA_Special)) { reward += 2; } 
+
+                                    int oldDiv = p.PizazzEnchantment / 100;
+                                    p.PizazzEnchantment += reward;
+                                    int newDiv = p.PizazzEnchantment / 100;
+                                    
+                                    if (oldDiv != newDiv) { log.AddMessage("You have passed " + (newDiv * 100) + " Enchantment Pizazz points.", Color.Lime); }
+                                }
+
+                                if (Recipes[j].MinigameAction == "mtaOrb") {
+                                    MinigameManager.MTA_Orbs++;
+                                    if (MinigameManager.MTA_Orbs >= 10) {
+                                        List<string> rewards = [ "runeBlood,3", "runeDeath,3", "runeCosmic,3" ];
+                                        string[] reward = rewards[GameLoop.rand.Next(3)].Split(",");
+                                        int.TryParse(reward[1], out int qty);
+
+                                        if (GameLoop.ZPO.ItemLibrary.TryGetValue(reward[0], out Item? rewardItem) && rewardItem != null) {
+                                            p.TryPickup(new Item(rewardItem), qty);
+                                            log.AddMessage("For depositing 10 orbs, you receive a reward of " + qty + " " + rewardItem.Name.ToLower() + "s.", Color.Lime);
+                                        } 
+                                        MinigameManager.MTA_Orbs = 0;
+                                    }
+                                }
+
+                                if (Recipes[j].MinigameAction == "mtaFruit") {
+                                    if (Recipes[j].InputID == "fruitBanana") { MinigameManager.MTA_FruitCount += 1;}
+                                    if (Recipes[j].InputID == "fruitPeach") { MinigameManager.MTA_FruitCount += 2;}
+                                    if (MinigameManager.MTA_FruitCount >= 16) { 
+                                        MinigameManager.MTA_FruitCount -= 16; 
+                                        p.PizazzGraveyard++; 
+
+                                        List<string> rewards = [ "runeWater,1", "runeEarth,1", "runeNature,1", "runeDeath,1", "runeBlood,1" ];
+                                        string[] reward = rewards[GameLoop.rand.Next(3)].Split(",");
+                                        int.TryParse(reward[1], out int qty);
+
+                                        if (GameLoop.ZPO.ItemLibrary.TryGetValue(reward[0], out Item? rewardItem) && rewardItem != null) {
+                                            p.TryPickup(new Item(rewardItem), qty);
+                                            log.AddMessage("For depositing 16 points of fruit, you receive a reward of one " + rewardItem.Name.ToLower() + ".", Color.Lime);
+                                        }
+                                    }
+                                }
+
+                                if (Recipes[j].MinigameAction == "mtaCoin") { 
+                                    MinigameManager.MTA_CoinCount++;
+                                    if (MinigameManager.MTA_CoinCount >= 100) { 
+                                        MinigameManager.MTA_CoinCount -= 100; 
+                                        p.PizazzAlchemist++; 
+                                    }
+                                }
+                            }
+
                             return true;
                         }
                     } 

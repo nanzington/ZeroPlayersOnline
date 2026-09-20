@@ -94,11 +94,29 @@
                 return "WorldState: " + MiscString + " " + MiscString2 + " " + MiscInt;
             }
 
+            if (RequirementType == "Pizazz") {
+                int have = 0;
+                if (MiscString == "Telekinetic") { have = GameLoop.ZPO.player.PizazzTelekinetic; }
+                if (MiscString == "Enchantment") { have = GameLoop.ZPO.player.PizazzEnchantment; }
+                if (MiscString == "Alchemist") { have = GameLoop.ZPO.player.PizazzAlchemist; }
+                if (MiscString == "Graveyard") { have = GameLoop.ZPO.player.PizazzGraveyard; }
+
+                return "Need " + MiscInt + " " + MiscString + " Pizazz points (have " + have + ").";
+            }
+
+            if (RequirementType == "ItemOwned") {
+                return GameLoop.ZPO.ResolveItemName(MiscString) + " in inventory, equipment, or bank.";
+            }
+            
+            if (RequirementType == "ItemNotOwned") {
+                return GameLoop.ZPO.ResolveItemName(MiscString) + " not in inventory, equipment, or bank.";
+            }
+
             return "";
         }
 
 
-        public bool CheckRequirement(Player p, bool itemsNotedOkay) {
+        public bool CheckRequirement(Player p, bool itemsNotedOkay, bool itemsEquippedOkay = false) {
             if (RequirementType == "Skill") {
                 if (MiscString == "All") {
                     foreach (var kv in p.Skills) {
@@ -174,24 +192,10 @@
                     if (p.HeldGold >= MiscInt) {
                         return true;
                     }
-                } else {
-                    int count = 0;
-                    for (int i = 0; i < p.Inventory.Count; i++) { 
-                        if (p.Inventory[i].ID == MiscString || (p.Inventory[i].GetRef() is Item item && item.MiscString == MiscString)) {
-                            if (!p.Inventory[i].Noted || itemsNotedOkay)
-                                count += p.Inventory[i].Quantity;
-                        }
-                    }
-
-                    foreach (var kv in p.Equipment) {
-                        if (kv.Value.ID == MiscString || (kv.Value.GetRef() is Item eqp && eqp.MiscString == MiscString)) {
-                            if (!kv.Value.Noted)
-                                count += kv.Value.Quantity;
-                        }
-                    }
-
-                    if (count >= MiscInt)
+                } else { 
+                    if (p.HasAllItems([MiscString+","+MiscInt], itemsNotedOkay, itemsEquippedOkay)) {
                         return true;
+                    }
                 }
             }
 
@@ -201,23 +205,9 @@
                         return true;
                     }
                 } else {
-                    int count = 0;
-                    for (int i = 0; i < p.Inventory.Count; i++) { 
-                        if (p.Inventory[i].ID == MiscString || (p.Inventory[i].GetRef() is Item item && item.MiscString == MiscString)) {
-                            if (!p.Inventory[i].Noted || itemsNotedOkay)
-                                count += p.Inventory[i].Quantity;
-                        }
-                    }
-
-                    foreach (var kv in p.Equipment) {
-                        if (kv.Value.ID == MiscString || (kv.Value.GetRef() is Item eqp && eqp.MiscString == MiscString)) {
-                            if (!kv.Value.Noted)
-                                count += kv.Value.Quantity;
-                        }
-                    }
-
-                    if (count < MiscInt)
+                    if (!p.HasAllItems([MiscString+","+MiscInt])) {
                         return true;
+                    } 
                 }
             }
 
@@ -301,6 +291,27 @@
 
             if (RequirementType == "Data") {
                 return Helper.CompareWorldState(MiscString, MiscString2, MiscInt);
+            }
+
+            if (RequirementType == "Pizazz") {
+                if (MiscString == "Telekinetic") { if (p.PizazzTelekinetic >= MiscInt) { return true; } }
+                if (MiscString == "Enchantment") { if (p.PizazzEnchantment >= MiscInt) { return true; } }
+                if (MiscString == "Alchemist") { if (p.PizazzAlchemist >= MiscInt) { return true; } }
+                if (MiscString == "Graveyard") { if (p.PizazzGraveyard >= MiscInt) { return true; } }
+            }
+
+            if (RequirementType == "ItemOwned") {
+                foreach (var kv in p.Inventory) { if (kv.ID == MiscString) { return true; } }
+                foreach (var kv in p.Equipment) { if (kv.Value.ID == MiscString) { return true; } }
+                foreach (var kv in p.BankedItems) { if (kv.ID == MiscString) { return true; } }
+            }
+
+            if (RequirementType == "ItemNotOwned") {
+                foreach (var kv in p.Inventory) { if (kv.ID == MiscString) { return false; } }
+                foreach (var kv in p.Equipment) { if (kv.Value.ID == MiscString) { return false; } }
+                foreach (var kv in p.BankedItems) { if (kv.ID == MiscString) { return false; } }
+
+                return true;
             }
 
             return false;

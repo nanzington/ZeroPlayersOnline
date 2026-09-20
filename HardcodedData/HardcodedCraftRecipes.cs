@@ -1,4 +1,5 @@
-﻿using ZeroPlayersOnline.DataTypes;
+﻿using GoRogue.GameFramework;
+using ZeroPlayersOnline.DataTypes;
 using ZeroPlayersOnline.HardcodedData;
 
 namespace ZeroPlayersOnline.Hardcodes {
@@ -41,6 +42,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             
             toAdd.Add(new("Anvil", "Smithing", 20, 50, ["barMithril" + "," + 1], "grappleUnf", tool: "hammer"));
             toAdd.Add(new("Anvil", "Smithing", 20, 75, ["barSteel" + "," + 1], "studsSteel", tool: "hammer"));
+            toAdd.Add(new("Anvil", "Smithing", 26, 25, ["barIron" + "," + 1], "oilLanternFrame", tool: "hammer"));
 
             List<MaterialDef> Leathers = new() {
                 new("Leather", 205, 127, 50, 255, 1, 1, 15, "leatherSoft"), 
@@ -110,6 +112,14 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Pottery Wheel", "Crafting", 8, 18, ["claySoft" + "," +  1], "unfiredBowl"));
             toAdd.Add(new("Pottery Wheel", "Crafting", 19, 20, ["claySoft" + "," +  1], "unfiredPlantPot"));
             toAdd.Add(new("Pottery Wheel", "Crafting", 25, 30, ["claySoft" + "," +  1], "unfiredPotLid")); 
+            
+            toAdd.Add(new("Glassblowing Pipe", "Crafting", 1, 18, ["glassMolten,1"], "beerGlass"));
+            toAdd.Add(new("Glassblowing Pipe", "Crafting", 4, 19, ["glassMolten,1"], "candleLanternEmpty"));
+            toAdd.Add(new("Glassblowing Pipe", "Crafting", 12, 25, ["glassMolten,1"], "oilLampEmpty"));
+            toAdd.Add(new("Glassblowing Pipe", "Crafting", 42, 43, ["glassMolten,1"], "fishbowlEmpty"));
+            toAdd.Add(new("Glassblowing Pipe", "Crafting", 49, 55, ["glassMolten,1"], "glassLens"));
+            toAdd.Add(new("Glassblowing Pipe", "Crafting", 46, 53, ["glassMolten,1"], "orbUnpowered"));
+            toAdd.Add(new("Glassblowing Pipe", "Crafting", 33, 35, ["glassMolten,1"], "vialEmpty"));
 
 
             // Jewellery
@@ -145,6 +155,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "bracelet" + mat.Descriptor, 1, "mouldBracelet")); 
                 toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "necklace" + mat.Descriptor, 1, "mouldNecklace")); 
             }
+             
+            toAdd.Add(new("Casting", "Crafting", 23, 53, ["barSilver,1"], "tiara", 1, "mouldTiara")); 
 
 
 

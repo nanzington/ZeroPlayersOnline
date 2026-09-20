@@ -160,6 +160,7 @@ namespace ZeroPlayersOnline.Managers {
                     }
                 } else if (item.UseString == "Dig") {
                     ClueLogic.GenericStep(player, GameLoop.ZPO.Log, "Dig");
+                    ClueLogic.GenericStep(player, GameLoop.ZPO.Log, "Map");
 
                     if (GameLoop.ZPO.Atlas.TryGetValue(player.NavLoc, out Location? curr)) {
                         if (curr != null) {
@@ -208,7 +209,6 @@ namespace ZeroPlayersOnline.Managers {
                                 } else if (player.DropModifier == 2) { // If it's on No RNG Drops the drops should only ever come back not null 
                                     guaranteedItems.Add(drop);
                                 } else {
-                                    GameLoop.ZPO.Log.AddMessage(prevObtained + "-" + ", " + log.KillCount + ", " + ((int) Math.Ceiling(drop.InY / (double) (drop.DropX * player.DropMultiplier))).ToString());
                                     rolledItems.Add(drop);
                                 }
                             }
@@ -294,6 +294,9 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "Knife") {
                     ExtraWindows.CraftingMenu.IsVisible = true;
                     ExtraWindows.CraftingType = "Knife";
+                } else if (item.UseString == "Glassblowing Pipe") {
+                    ExtraWindows.CraftingMenu.IsVisible = true;
+                    ExtraWindows.CraftingType = "Glassblowing Pipe";
                 } else if (item.UseString == "Map") {
                     ExtraWindows.Map.IsVisible = true;
                     ExtraWindows.MapViewing = item.UseString2;
@@ -353,6 +356,11 @@ namespace ZeroPlayersOnline.Managers {
 
                                 if (!found)
                                     player.ActivePotions.Add(new(item.Potion[i].Stat, item.Potion[i].Change)); 
+
+                                if (item.Potion[i].Stat == "Antipoison" && player.PoisonStatus > 0) {
+                                    player.PoisonStatus = 0;
+                                    GameLoop.ZPO.Log.AddMessage("The antipoison cures your poison.", Color.Lime);
+                                }
                             } 
                         }
 
@@ -360,6 +368,8 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (itemWrap.Charges > 0)
                             return false;
+                        if (item.UseString3 != "" && GameLoop.ZPO.ItemLibrary.TryGetValue(item.UseString3, out Item? returned) && returned != null)
+                            player.TryPickup(new Item(returned), 1);
                     }
                 } else if (item.UseString == "SlayerGem") {
                     if (player.SlayerTask != "") {
@@ -381,6 +391,19 @@ namespace ZeroPlayersOnline.Managers {
                         if (kv.Value.ID == "braceletCombat") { kv.Value.Charges = 4; }
                         if (kv.Value.ID == "necklaceSkills") { kv.Value.Charges = 4; } 
                     }
+                } else if (item.UseString == "Light") {
+                    if (player.HasAllItems(["tinderbox,1"])) {
+                        itemWrap.ID = item.UseString2;
+                        GameLoop.ZPO.Log.AddMessage("You light the " + item.Name + ".", Color.Yellow);
+                    } else { 
+                        GameLoop.ZPO.Log.AddMessage("You need something to actually light that with, to light it.", Color.Crimson);
+                    }
+                } else if (item.UseString == "Extinguish") {
+                    itemWrap.ID = item.UseString2;
+                    GameLoop.ZPO.Log.AddMessage("You extinguish the " + item.Name + ".", Color.Yellow);
+                } else if (item.UseString == "ViewInventory") {
+                    ExtraWindows.ConWrap = itemWrap;
+                    ExtraWindows.InventoryContainer.IsVisible = true;
                 }
 
                 return true;
@@ -410,12 +433,14 @@ namespace ZeroPlayersOnline.Managers {
 
 
         public static bool TryCombineItems(Player player, int i) {
-            if (UsingSlot == -1) {
+            if (UsingSlot == -1 || UsingSlot >= player.Inventory.Count) {
                 UsingSlot = i;
             }
             else {
                 string first = player.Inventory[UsingSlot].ID;
                 string second = player.Inventory[i].ID; 
+                int firstSlot = UsingSlot;
+                int secondSlot = i;
 
                 if (first.Contains("potion") && second.Contains("potion") && first == second) {
                     if (player.Inventory[i].Charges + player.Inventory[UsingSlot].Charges <= 4) {
@@ -435,125 +460,165 @@ namespace ZeroPlayersOnline.Managers {
                     }
 
                     UsingSlot = -1;
-                } else { 
-                    TwoWayString two = new TwoWayString(first, second);
-                    if (GameLoop.ZPO.UseRecipes.ContainsKey(two)) {
-                        SidebarManager.LastPerformedRecipe = two;
-                        Recipe rec = GameLoop.ZPO.UseRecipes[two];
-                        int firstSlot = UsingSlot;
-                        int secondSlot = i;
+                    return true;
+                } 
 
-                        if (rec.FirstItem == second) {
-                            firstSlot = i;
-                            secondSlot = UsingSlot;
+                if (GameLoop.ZPO.ResolveItem(first) is Item firstPouch && GameLoop.ZPO.ResolveItem(second) is Item secondPouch) {  
+                    if (secondPouch.ContainableIDs.Contains(first)) { 
+                        Item swapPouch = new(firstPouch);
+                        firstPouch = secondPouch;
+                        secondPouch = swapPouch;
+
+                        string swapStr = first;
+                        first = second;
+                        second = swapStr;
+
+                        int swapSlot = firstSlot;
+                        firstSlot = secondSlot;
+                        secondSlot = swapSlot;
+                    }
+
+                    ItemWrapper firstPouchWrap = player.Inventory[firstSlot];
+                    ItemWrapper secondPouchWrap = player.Inventory[secondSlot];
+
+                    if (firstPouch.ContainableIDs.Contains(second)) {  
+                        foreach (var conWrap in firstPouchWrap.Containing) {
+                            if (conWrap.ID == second && conWrap.GetRef() is Item con) {
+                                if (!conWrap.Noted && (con.Stackable || firstPouch.ContainerStacksUnstackable)) {
+                                    conWrap.Quantity += secondPouchWrap.Quantity;
+                                    player.Inventory.RemoveAt(secondSlot);
+                                    return true;
+                                }
+                            } 
                         }
 
-                        ItemWrapper firstWrap = player.Inventory[firstSlot];
-                        ItemWrapper secondWrap = player.Inventory[secondSlot];
+                        if (firstPouch.ContainerSlots > 0 && firstPouch.ContainerSlots > firstPouchWrap.Containing.Count) {
+                            firstPouchWrap.Containing.Add(secondPouchWrap);
+                            player.Inventory.RemoveAt(secondSlot);
+                            return true;
+                        } else { 
+                            GameLoop.ZPO.Log.AddMessage("Container is too full to hold any more items.");
+                        }
+                    } 
+                }
+                
+                 
+                TwoWayString two = new TwoWayString(first, second);
+                if (GameLoop.ZPO.UseRecipes.ContainsKey(two)) {
+                    SidebarManager.LastPerformedRecipe = two;
+                    Recipe rec = GameLoop.ZPO.UseRecipes[two];
 
-                        Item? firstItem = firstWrap.GetRef();
-                        Item? secondItem = secondWrap.GetRef();
+                    if (rec.FirstItem == second) {
+                        firstSlot = i;
+                        secondSlot = UsingSlot;
+                    }
 
-                        if (firstItem == null || secondItem == null)
-                            return false;
+                    ItemWrapper firstWrap = player.Inventory[firstSlot];
+                    ItemWrapper secondWrap = player.Inventory[secondSlot];
+
+                    Item? firstItem = firstWrap.GetRef();
+                    Item? secondItem = secondWrap.GetRef();
+
+                    if (firstItem == null || secondItem == null)
+                        return false;
                      
-                        UsingSlot = -1; 
+                    UsingSlot = -1; 
 
-                        if (!firstWrap.Noted && !secondWrap.Noted) { 
-                            if (firstWrap.Quantity < rec.FirstQty) {
-                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You need " + rec.FirstQty + " " + firstItem.Name + " to do that.", Color.Crimson, Color.Black));
-                                return false;
-                            }
+                    if (!firstWrap.Noted && !secondWrap.Noted) { 
+                        if (firstWrap.Quantity < rec.FirstQty) {
+                            GameLoop.ZPO.Log.AddMessage(new ColoredString("You need " + rec.FirstQty + " " + firstItem.Name + " to do that.", Color.Crimson, Color.Black));
+                            return false;
+                        }
 
-                            if (secondWrap.Quantity < rec.SecondQty) {
-                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You need " + rec.SecondQty + " " + secondItem.Name + " to do that.", Color.Crimson, Color.Black));
-                                return false;
-                            }
+                        if (secondWrap.Quantity < rec.SecondQty) {
+                            GameLoop.ZPO.Log.AddMessage(new ColoredString("You need " + rec.SecondQty + " " + secondItem.Name + " to do that.", Color.Crimson, Color.Black));
+                            return false;
+                        }
 
-                            firstWrap.Quantity -= rec.FirstQty;
-                            if (firstWrap.Quantity <= 0)
-                                player.Inventory.Remove(firstWrap);
+                        firstWrap.Quantity -= rec.FirstQty;
+                        if (firstWrap.Quantity <= 0)
+                            player.Inventory.Remove(firstWrap);
 
-                            secondWrap.Quantity -= rec.SecondQty;
-                            if (secondWrap.Quantity <= 0)
-                                player.Inventory.Remove(secondWrap);
+                        secondWrap.Quantity -= rec.SecondQty;
+                        if (secondWrap.Quantity <= 0)
+                            player.Inventory.Remove(secondWrap);
 
-                            if (rec.OutputItem[0] != '_') {
-                                if (GameLoop.ZPO.ItemLibrary.ContainsKey(rec.OutputItem)) {
-                                    Item made = new(GameLoop.ZPO.ItemLibrary[rec.OutputItem]);
-                                    made.Quantity = rec.OutputQty;
+                        if (rec.OutputItem[0] != '_') {
+                            if (GameLoop.ZPO.ItemLibrary.ContainsKey(rec.OutputItem)) {
+                                Item made = new(GameLoop.ZPO.ItemLibrary[rec.OutputItem]);
+                                made.Quantity = rec.OutputQty;
 
-                                    if (rec.SkillUsed == "Herblore" && made.UseInt4 > 0) {
-                                        foreach (var invWrap in player.Inventory) {
-                                            if (invWrap.GetRef() is Item inv) {
-                                                if (inv.ID == "spiritHerb") {   
-                                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("An herb spirit is released, and your vial fills with an extra dose of " + made.Name.ToLower() + ".", Color.Goldenrod, Color.Black));
-                                                    made.UseInt4 = 4;
-                                                    invWrap.Quantity -= 1;
+                                if (rec.SkillUsed == "Herblore" && made.UseInt4 > 0) {
+                                    foreach (var invWrap in player.Inventory) {
+                                        if (invWrap.GetRef() is Item inv) {
+                                            if (inv.ID == "spiritHerb") {   
+                                                GameLoop.ZPO.Log.AddMessage(new ColoredString("An herb spirit is released, and your vial fills with an extra dose of " + made.Name.ToLower() + ".", Color.Goldenrod, Color.Black));
+                                                made.UseInt4 = 4;
+                                                invWrap.Quantity -= 1;
 
-                                                    if (invWrap.Quantity <= 0) {
-                                                        player.Inventory.Remove(invWrap);
-                                                    }
-                                                    break;
+                                                if (invWrap.Quantity <= 0) {
+                                                    player.Inventory.Remove(invWrap);
                                                 }
+                                                break;
                                             }
                                         }
-
-                                        if (player.Equipment.TryGetValue("Amulet", out ItemWrapper? eqp) && eqp != null && eqp.ID == "amuletChemistry" && GameLoop.rand.Next(20) == 0) { 
-                                            eqp.Charges -= 1; 
-                                            GameLoop.ZPO.Log.AddMessage(new ColoredString("Your amulet of chemistry allows you to get an extra dose out of your ingredients.", Color.PaleGreen, Color.Black));
-                                            if (eqp.Charges <= 0) {
-                                                GameLoop.ZPO.Log.AddMessage(new ColoredString("Your amulet of chemistry runs out of charge and shatters.", Color.Crimson, Color.Black));
-                                                player.Equipment.Remove("Amulet");
-                                            } 
-                                        }
                                     }
+
+                                    if (player.Equipment.TryGetValue("Amulet", out ItemWrapper? eqp) && eqp != null && eqp.ID == "amuletChemistry" && GameLoop.rand.Next(20) == 0) { 
+                                        eqp.Charges -= 1; 
+                                        GameLoop.ZPO.Log.AddMessage(new ColoredString("Your amulet of chemistry allows you to get an extra dose out of your ingredients.", Color.PaleGreen, Color.Black));
+                                        if (eqp.Charges <= 0) {
+                                            GameLoop.ZPO.Log.AddMessage(new ColoredString("Your amulet of chemistry runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                            player.Equipment.Remove("Amulet");
+                                        } 
+                                    }
+                                }
+
+                                player.TryPickup(made, made.Quantity);
+                            } else {
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You get the feeling that should've resulted in " + rec.OutputItem + ", but that item doesn't exist.", Color.Crimson, Color.Black));
+                            }
+                        } else {
+                            if (rec.OutputItem == "_fire") {
+                                if (GameLoop.ZPO.Atlas.ContainsKey(player.NavLoc) && GameLoop.ZPO.ProcessingStations.ContainsKey("Range")) {
+                                    Location curr = GameLoop.ZPO.Atlas[player.NavLoc];
+                                                     
+                                    ProcessingStation fire = Helper.Clone(GameLoop.ZPO.ProcessingStations["Range"]);
+                                    fire.Name = "Fire";
+                                    fire.TimeLeft = rec.OutputQty;
+                                    fire.TimeMade = Helper.Time();
+                                    fire.ItemOnExpire = rec.MiscString;
+                                                     
+                                    curr.TempStations.Add(fire);
+                                }
+                                                
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You start a fire with the " + secondItem.Name + ".", Color.OrangeRed, Color.Black));
+                            }
+                        }
+
+                        if (rec.ReturnIDs.Count > 0) {
+                            for (int ret = 0; ret < rec.ReturnIDs.Count; ret++) {
+                                if (GameLoop.ZPO.ItemLibrary.ContainsKey(rec.ReturnIDs[ret])) {
+                                    Item made = new(GameLoop.ZPO.ItemLibrary[rec.ReturnIDs[ret]]);
+                                    made.Quantity = 1;
 
                                     player.TryPickup(made, made.Quantity);
                                 } else {
-                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("You get the feeling that should've resulted in " + rec.OutputItem + ", but that item doesn't exist.", Color.Crimson, Color.Black));
-                                }
-                            } else {
-                                if (rec.OutputItem == "_fire") {
-                                    if (GameLoop.ZPO.Atlas.ContainsKey(player.NavLoc) && GameLoop.ZPO.ProcessingStations.ContainsKey("Range")) {
-                                        Location curr = GameLoop.ZPO.Atlas[player.NavLoc];
-                                                     
-                                        ProcessingStation fire = Helper.Clone(GameLoop.ZPO.ProcessingStations["Range"]);
-                                        fire.Name = "Fire";
-                                        fire.TimeLeft = rec.OutputQty;
-                                        fire.TimeMade = Helper.Time();
-                                        fire.ItemOnExpire = rec.MiscString;
-                                                     
-                                        curr.TempStations.Add(fire);
-                                    }
-                                                
-                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("You start a fire with the " + secondItem.Name + ".", Color.OrangeRed, Color.Black));
+                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("You get the feeling that should've resulted in " + GameLoop.ZPO.ResolveItemName(rec.ReturnIDs[ret]) + ", but that item doesn't exist.", Color.Crimson, Color.Black));
                                 }
                             }
-
-                            if (rec.ReturnIDs.Count > 0) {
-                                for (int ret = 0; ret < rec.ReturnIDs.Count; ret++) {
-                                    if (GameLoop.ZPO.ItemLibrary.ContainsKey(rec.ReturnIDs[ret])) {
-                                        Item made = new(GameLoop.ZPO.ItemLibrary[rec.ReturnIDs[ret]]);
-                                        made.Quantity = 1;
-
-                                        player.TryPickup(made, made.Quantity);
-                                    } else {
-                                        GameLoop.ZPO.Log.AddMessage(new ColoredString("You get the feeling that should've resulted in " + GameLoop.ZPO.ResolveItemName(rec.ReturnIDs[ret]) + ", but that item doesn't exist.", Color.Crimson, Color.Black));
-                                    }
-                                }
-                            }
-
-                            player.TryGrantExp(rec.SkillUsed, rec.ExpGranted, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
-
-                            return true;
                         }
-                    }
-                    else {
-                        GameLoop.ZPO.Log.AddMessage(new ColoredString("Those two items don't combine like that.", Color.Crimson, Color.Black));
-                        UsingSlot = -1;
+
+                        player.TryGrantExp(rec.SkillUsed, rec.ExpGranted, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+
+                        return true;
                     }
                 }
+                else {
+                    GameLoop.ZPO.Log.AddMessage(new ColoredString("Those two items don't combine like that.", Color.Crimson, Color.Black));
+                    UsingSlot = -1;
+                }
+                
             }
 
             return false;
@@ -566,6 +631,7 @@ namespace ZeroPlayersOnline.Managers {
                 if (eqp.EquipSkill != "") {
                     if (player.Skills.ContainsKey(eqp.EquipSkill)) {
                         if (player.Skills[eqp.EquipSkill].Level < eqp.EquipLevel) {
+                            GameLoop.ZPO.Log.AddMessage("You need at least " + eqp.EquipLevel + " " + eqp.EquipSkill + " to equip that.", Color.Crimson);
                             canEquip = false;
                         }
                     }

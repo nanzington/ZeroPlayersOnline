@@ -6,178 +6,179 @@ namespace ZeroPlayersOnline.Hardcodes {
             List<Location> locsToAdd = new();
 
             // Tutorial Island locations
+            {
+                locsToAdd.Add(new Location("TI_Main", "Tutorial Island", "Tutorial Island") { 
+                    Description = "You stand on a small island in a bay. There are a few scattered buildings here, designed to help teach some basic activities. There is a bank, a temple, a building that new people appear in, a shack housing a ladder to the cavern below, and the home of a local wizard. There is a pond near the new player building at the center of the island, and the island itself is lightly forested with paths between the buildings.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_AirAltar"),
+                        new Connection("TI_AnimalPen"),
+                        new Connection("TI_Bank"),
+                        new Connection("TI_Cavern"),
+                        new Connection("TI_GeneralStore"),
+                        new Connection("TI_Kitchen"),
+                        new Connection("TI_Temple"),
+                        new Connection("TI_WizardHut")
+                    },
+                    GatheringSpots = new List<string>() { "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "fishNetSmall", "fishNetSmall" },
+                    NPCsHere = new List<string>() { "tutorFarming", "tutorFishing", "tutorSlayer", "man", "man", "man", "tiForlornGhost2" },
+                    FarmingPatchesHere = new List<string>() { "TI_allotment1", "TI_allotment2", "TI_allotment3" }, 
+                    DigItem = "clueScrollTutorial",
+                    ItemSpawns = new List<ItemSpot>() {
+                        new ItemSpot("TI_HI_CrumpledNote", 1, new("QuestAt", 10, "TI_HauntedIsland"))
+                    }
+                });
 
-            locsToAdd.Add(new Location("TI_Main", "Tutorial Island", "Tutorial Island") { 
-                Description = "You stand on a small island in a bay. There are a few scattered buildings here, designed to help teach some basic activities. There is a bank, a temple, a building that new people appear in, a shack housing a ladder to the cavern below, and the home of a local wizard. There is a pond near the new player building at the center of the island, and the island itself is lightly forested with paths between the buildings.",
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_AirAltar"),
-                    new Connection("TI_AnimalPen"),
-                    new Connection("TI_Bank"),
-                    new Connection("TI_Cavern"),
-                    new Connection("TI_GeneralStore"),
-                    new Connection("TI_Kitchen"),
-                    new Connection("TI_Temple"),
-                    new Connection("TI_WizardHut")
-                },
-                GatheringSpots = new List<string>() { "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "fishNetSmall", "fishNetSmall" },
-                NPCsHere = new List<string>() { "tutorFarming", "tutorFishing", "tutorSlayer", "man", "man", "man", "tiForlornGhost2" },
-                FarmingPatchesHere = new List<string>() { "TI_allotment1", "TI_allotment2", "TI_allotment3" }, 
-                DigItem = "clueScrollTutorial",
-                ItemSpawns = new List<ItemSpot>() {
-                    new ItemSpot("TI_HI_CrumpledNote", 1, new("QuestAt", 10, "TI_HauntedIsland"))
-                }
-            });
+                locsToAdd.Add(new Location("TI_AirAltar", "Air Altar", "Tutorial Island") { 
+                    Description = "In a small clearing off to one side of a path lies a cracked stone altar engraved with the symbol for Air. A few crumbling pillars circle the altar, and a soft light pulses from the cracks in the altar itself. Planted near the bases of the pillars are a few sprigs of wild flax.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_Main")
+                    },
+                    ProcessingStations = new List<string>() { "Air Altar" },
+                    NPCsHere = new() { "tutorRunecrafting" },
+                    GatheringSpots = new List<string>() { "plantFlax", "plantFlax", "plantFlax", "plantFlax" }
+                });
 
-            locsToAdd.Add(new Location("TI_AirAltar", "Air Altar", "Tutorial Island") { 
-                Description = "In a small clearing off to one side of a path lies a cracked stone altar engraved with the symbol for Air. A few crumbling pillars circle the altar, and a soft light pulses from the cracks in the altar itself. Planted near the bases of the pillars are a few sprigs of wild flax.",
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Main")
-                },
-                ProcessingStations = new List<string>() { "Air Altar" },
-                NPCsHere = new() { "tutorRunecrafting" },
-                GatheringSpots = new List<string>() { "plantFlax", "plantFlax", "plantFlax", "plantFlax" }
-            });
+                locsToAdd.Add(new Location("TI_Bank", "Bank", "Tutorial Island") {
+                    Description = "The floor in here is tiled, with a row of wooden bankstands dividing the room in two. Behind the counter stands a row of bank tellers in matching grey suits, ready to serve any patrons that enter.",
+                    ConnectedLocations = new List<Connection>() { 
+                        new Connection("TI_Main") 
+                    },
+                    NPCsHere = new List<string>() { "tutorBanking" },
+                    IsBank = true
+                });
 
-            locsToAdd.Add(new Location("TI_Bank", "Bank", "Tutorial Island") {
-                Description = "The floor in here is tiled, with a row of wooden bankstands dividing the room in two. Behind the counter stands a row of bank tellers in matching grey suits, ready to serve any patrons that enter.",
-                ConnectedLocations = new List<Connection>() { 
-                    new Connection("TI_Main") 
-                },
-                NPCsHere = new List<string>() { "tutorBanking" },
-                IsBank = true
-            });
+                locsToAdd.Add(new Location("TI_Temple", "Temple", "Tutorial Island") {
+                    Description = "Rows of wooden pews with red cushions line the room to either stand of the center path. A small altar is at the far end of the room, overlooked by a stained glass window depicting Saradomin, god of order.",
+                    ConnectedLocations = new List<Connection>() { 
+                        new Connection("TI_Main")
+                    },
+                    NPCsHere = new() { "tiFatherGuy" }
+                });
 
-            locsToAdd.Add(new Location("TI_Temple", "Temple", "Tutorial Island") {
-                Description = "Rows of wooden pews with red cushions line the room to either stand of the center path. A small altar is at the far end of the room, overlooked by a stained glass window depicting Saradomin, god of order.",
-                ConnectedLocations = new List<Connection>() { 
-                    new Connection("TI_Main")
-                },
-                NPCsHere = new() { "tiFatherGuy" }
-            });
+                locsToAdd.Add(new Location("TI_Cavern", "Cavern", "Tutorial Island") {
+                    Description = "The cramped cavern holds a small smithing area next to some copper and tin ore rocks, and a metal fenced area holding a few newts the size of golden retrievers. Their silence feels unnatural when compared to how quickly they dart about. It looks like there used to be a path off to another cavern, but at some point part of the ceiling collapsed and mostly blocked it. You could probably squeeze through the cracks to get through still.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_Main"),
+                        new Connection("TI_Newts"),
+                        new Connection("TI_DungeonEntrance", exp: 5, skill: "Agility") 
+                    },
+                    ProcessingStations = new List<string>() { "Furnace", "Anvil" },
+                    ItemSpawns = new List<ItemSpot>() {
+                        new ItemSpot("TI_HI_RustedSword", 1, new("QuestAt", 0, "TI_HauntedIsland"))
+                    },
+                    GatheringSpots = new List<string>() { "oreCopper", "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin", "oreTin", "rockEssence", "rockEssence", "rockEssence", "rockClay", "rockClay", "rockClay" },
+                    NPCsHere = new() { "tutorSmithing", "tutorCombat", "tiForlornGhost1" }
+                });
 
-            locsToAdd.Add(new Location("TI_Cavern", "Cavern", "Tutorial Island") {
-                Description = "The cramped cavern holds a small smithing area next to some copper and tin ore rocks, and a metal fenced area holding a few newts the size of golden retrievers. Their silence feels unnatural when compared to how quickly they dart about. It looks like there used to be a path off to another cavern, but at some point part of the ceiling collapsed and mostly blocked it. You could probably squeeze through the cracks to get through still.",
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Main"),
-                    new Connection("TI_Newts"),
-                    new Connection("TI_DungeonEntrance", exp: 5, skill: "Agility") 
-                },
-                ProcessingStations = new List<string>() { "Furnace", "Anvil" },
-                ItemSpawns = new List<ItemSpot>() {
-                    new ItemSpot("TI_HI_RustedSword", 1, new("QuestAt", 0, "TI_HauntedIsland"))
-                },
-                GatheringSpots = new List<string>() { "oreCopper", "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin", "oreTin", "rockEssence", "rockEssence", "rockEssence", "rockClay", "rockClay", "rockClay" },
-                NPCsHere = new() { "tutorSmithing", "tutorCombat", "tiForlornGhost1" }
-            });
+                locsToAdd.Add(new Location("TI_AnimalPen", "Animal Pen", "Tutorial Island") {
+                    Description = "Some cows and chickens wander around aimlessly in the pen, staring blankly off to the horizon when they aren't chewing on grass. There are some crimson swifts darting about in and around the pen that could be caught fairly easily with a bird snare.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_Main")
+                    },
+                    AreaMonsters = new() { "cow", "cow", "cow", "chicken", "chicken", "chicken" },
+                    HunterSpots = new() { "birdSwift", "birdSwift", "birdSwift", "birdSwift" },
+                    NPCsHere = new() { "tutorHunter" }
+                });
 
-            locsToAdd.Add(new Location("TI_AnimalPen", "Animal Pen", "Tutorial Island") {
-                Description = "Some cows and chickens wander around aimlessly in the pen, staring blankly off to the horizon when they aren't chewing on grass. There are some crimson swifts darting about in and around the pen that could be caught fairly easily with a bird snare.",
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Main")
-                },
-                AreaMonsters = new() { "cow", "cow", "cow", "chicken", "chicken", "chicken" },
-                HunterSpots = new() { "birdSwift", "birdSwift", "birdSwift", "birdSwift" },
-                NPCsHere = new() { "tutorHunter" }
-            });
+                locsToAdd.Add(new Location("TI_Newts", "Newt Cage", "Tutorial Island") {
+                    Description = "The newts scurry around you on the ground, largely ignoring your presence. A metal fence separates this area from the rest of the cavern, filled with mining and smithing supplies. The combat tutor stands outside the fence supervising you.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_Cavern") 
+                    },
+                    AreaMonsters = new() { "newt", "newt", "newt" }
+                });
 
-            locsToAdd.Add(new Location("TI_Newts", "Newt Cage", "Tutorial Island") {
-                Description = "The newts scurry around you on the ground, largely ignoring your presence. A metal fence separates this area from the rest of the cavern, filled with mining and smithing supplies. The combat tutor stands outside the fence supervising you.",
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Cavern") 
-                },
-                AreaMonsters = new() { "newt", "newt", "newt" }
-            });
+                locsToAdd.Add(new Location("TI_DungeonEntrance", "Old Agility Course - Entrance", "Tutorial Island") {
+                    Description = "The dimly lit cavern contains a rickety old agility course, along with overgrown vegetation and shambling hordes of zombies in the pit below. In the center of the pit is a tunnel that the zombies are coming out of. It seems like failing any of the obstacles will result in falling down to the zombies. The first bit of the course involves swinging across some monkey bars, but you could also simply jump down into the pit if you wanted.",
+                    DungeoneeringLevel = 1,
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_Cavern", exp: 5, skill: "Agility"),
+                        new Connection("TI_Agility1", exp: 5, skill: "Agility", alt: "(Cross Monkey Bars)"),
+                        new Connection("TI_AgilityPit", alt: "(Jump in Pit)") 
+                    }
+                });
 
-            locsToAdd.Add(new Location("TI_DungeonEntrance", "Old Agility Course - Entrance", "Tutorial Island") {
-                Description = "The dimly lit cavern contains a rickety old agility course, along with overgrown vegetation and shambling hordes of zombies in the pit below. In the center of the pit is a tunnel that the zombies are coming out of. It seems like failing any of the obstacles will result in falling down to the zombies. The first bit of the course involves swinging across some monkey bars, but you could also simply jump down into the pit if you wanted.",
-                DungeoneeringLevel = 1,
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Cavern", exp: 5, skill: "Agility"),
-                    new Connection("TI_Agility1", exp: 5, skill: "Agility", alt: "(Cross Monkey Bars)"),
-                    new Connection("TI_AgilityPit", alt: "(Jump in Pit)") 
-                }
-            });
+                locsToAdd.Add(new Location("TI_AgilityPit", "Old Agility Course - Pit", "Tutorial Island") {
+                    Description = "The pit has many zombies in it, any that happen to end up near you taking swipes in your direction. On one side of the pit are some grooves in the wall that you could use to climb back up to the entrance of the course. In the center is a tunnel that gives you an ominous feeling as you stand near it. Something powerful may be waiting inside.",
+                    DungeoneeringLevel = 1,
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_DungeonEntrance", alt: "(Climb to Entrance)"),
+                        new Connection("TI_BossCave", alt: "(Enter Ominous Tunnel)")
+                    },
+                    AreaMonsters = new() { "tiZombie", "tiZombie", "tiZombie", "tiZombie", "tiZombie", "tiZombie" }
+                });
 
-            locsToAdd.Add(new Location("TI_AgilityPit", "Old Agility Course - Pit", "Tutorial Island") {
-                Description = "The pit has many zombies in it, any that happen to end up near you taking swipes in your direction. On one side of the pit are some grooves in the wall that you could use to climb back up to the entrance of the course. In the center is a tunnel that gives you an ominous feeling as you stand near it. Something powerful may be waiting inside.",
-                DungeoneeringLevel = 1,
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_DungeonEntrance", alt: "(Climb to Entrance)"),
-                    new Connection("TI_BossCave", alt: "(Enter Ominous Tunnel)")
-                },
-                AreaMonsters = new() { "tiZombie", "tiZombie", "tiZombie", "tiZombie", "tiZombie", "tiZombie" }
-            });
+                locsToAdd.Add(new Location("TI_Agility1", "Old Agility Course - Past the Monkey Bars", "Tutorial Island") {
+                    Description = "A few small herb bushes cling to the wall, crowding the already thin walkway. The next obstacle is a series of small poles you must jump across the tops of to reach the next ledge.",
+                    DungeoneeringLevel = 1,
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_Agility2", exp: 5, skill: "Agility", alt: "(Hop Across Poles)"),
+                        new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
+                    },
+                    GatheringSpots = new List<string>() { "plantGuam", "plantGuam", "plantGuam" }
+                });
 
-            locsToAdd.Add(new Location("TI_Agility1", "Old Agility Course - Past the Monkey Bars", "Tutorial Island") {
-                Description = "A few small herb bushes cling to the wall, crowding the already thin walkway. The next obstacle is a series of small poles you must jump across the tops of to reach the next ledge.",
-                DungeoneeringLevel = 1,
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Agility2", exp: 5, skill: "Agility", alt: "(Hop Across Poles)"),
-                    new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
-                },
-                GatheringSpots = new List<string>() { "plantGuam", "plantGuam", "plantGuam" }
-            });
+                locsToAdd.Add(new Location("TI_Agility2", "Old Agility Course - Past the Poles", "Tutorial Island") {
+                    Description = "You are most of the way around the agility course now. This walkway is a little wider than the last, and uncrowded by vegetation. There are a few ore veins in the wall that you could mine. The obstacle leading to the next ledge is an old rotting balance beam.",
+                    DungeoneeringLevel = 1,
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_Agility3", exp: 5, skill: "Agility", alt: "(Cross Balance Beam)"),
+                        new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
+                    },
+                    GatheringSpots = new List<string>() { "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin" }
+                });
 
-            locsToAdd.Add(new Location("TI_Agility2", "Old Agility Course - Past the Poles", "Tutorial Island") {
-                Description = "You are most of the way around the agility course now. This walkway is a little wider than the last, and uncrowded by vegetation. There are a few ore veins in the wall that you could mine. The obstacle leading to the next ledge is an old rotting balance beam.",
-                DungeoneeringLevel = 1,
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Agility3", exp: 5, skill: "Agility", alt: "(Cross Balance Beam)"),
-                    new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
-                },
-                GatheringSpots = new List<string>() { "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin" }
-            });
+                locsToAdd.Add(new Location("TI_Agility3", "Old Agility Course - Past the Balance Beam", "Tutorial Island") {
+                    Description = "The end of the agility course is just up ahead, across a rolling log obstacle. Some roots from the trees above hang down from the ceiling here and could be chopped.",
+                    DungeoneeringLevel = 1,
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_DungeonEntrance", exp: 20, skill: "Agility", alt: "(Cross Rolling Log)"),
+                        new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
+                    },
+                    GatheringSpots = new List<string>() { "rootsPine", "rootsPine", "rootsPine" }
+                });
 
-            locsToAdd.Add(new Location("TI_Agility3", "Old Agility Course - Past the Balance Beam", "Tutorial Island") {
-                Description = "The end of the agility course is just up ahead, across a rolling log obstacle. Some roots from the trees above hang down from the ceiling here and could be chopped.",
-                DungeoneeringLevel = 1,
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_DungeonEntrance", exp: 20, skill: "Agility", alt: "(Cross Rolling Log)"),
-                    new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
-                },
-                GatheringSpots = new List<string>() { "rootsPine", "rootsPine", "rootsPine" }
-            });
+                locsToAdd.Add(new Location("TI_BossCave", "Old Agility Course - Zombie Lair", "Tutorial Island") {
+                    Description = "A short way into the tunnel it widens out into a small cavern. The smell of rotten flesh has grown overwhelming and you can finally see the source, a hulking zombie so large it can barely fit in this small cavern. It definitely could not fit through the tunnel to get out to the Agility Course. The huge zombie seems like it won't attack you until you approach, it's just walking in small circles dragging its huge club along the ground.",
+                    DungeoneeringLevel = 1,
+                    BossHere = "bossZombie",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_AgilityPit")
+                    }
+                }); 
 
-            locsToAdd.Add(new Location("TI_BossCave", "Old Agility Course - Zombie Lair", "Tutorial Island") {
-                Description = "A short way into the tunnel it widens out into a small cavern. The smell of rotten flesh has grown overwhelming and you can finally see the source, a hulking zombie so large it can barely fit in this small cavern. It definitely could not fit through the tunnel to get out to the Agility Course. The huge zombie seems like it won't attack you until you approach, it's just walking in small circles dragging its huge club along the ground.",
-                DungeoneeringLevel = 1,
-                BossHere = "bossZombie",
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_AgilityPit")
-                }
-            }); 
+                locsToAdd.Add(new Location("TI_Kitchen", "Kitchen", "Tutorial Island") {
+                    Description = "The small building holds little more than a cooking range and a sink. The floor is checkered tiles, and some cooking implements hang from the walls. There's a bucket next to the sink.",
+                    ConnectedLocations = new List<Connection>() { 
+                        new Connection("TI_Main") 
+                    },
+                    ProcessingStations = new List<string>() { "Range", "Sink" },
+                    ItemSpawns = new List<ItemSpot>() {
+                        new ItemSpot("bucketEmpty", 1)
+                    },
+                    NPCsHere = new() { "tutorCooking" }
+                });
 
-            locsToAdd.Add(new Location("TI_Kitchen", "Kitchen", "Tutorial Island") {
-                Description = "The small building holds little more than a cooking range and a sink. The floor is checkered tiles, and some cooking implements hang from the walls. There's a bucket next to the sink.",
-                ConnectedLocations = new List<Connection>() { 
-                    new Connection("TI_Main") 
-                },
-                ProcessingStations = new List<string>() { "Range", "Sink" },
-                ItemSpawns = new List<ItemSpot>() {
-                    new ItemSpot("bucketEmpty", 1)
-                },
-                NPCsHere = new() { "tutorCooking" }
-            });
+                locsToAdd.Add(new Location("TI_GeneralStore", "General Store", "Tutorial Island") {
+                    Description = "An assortment of products one could almost mistake for knick-knacks line the shelves of this small building. Most of it doesn't appear to be too useful, but there are a few items of interest. There doesn't seem to be a shopkeeper around, but a jar on the counter indicates that the store is running on an honor system.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_Main")
+                    },
+                    ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "needle", "knife", "hatchetBronze", "pickaxeBronze", "fishingNetSmall", "vialEmpty", "trapBird", "runeAir", "runeEarth", "runeFire", "runeWater", "runeMind", "runeBody" },
+                    GatheringSpots = new List<string>() { "clueCrates" },
+                    ProcessingStations = new List<string>() { "Tannery", "Pottery Kiln", "Pottery Wheel" },
+                    NPCsHere = new() { "tiDrunkPirate" }
+                });
 
-            locsToAdd.Add(new Location("TI_GeneralStore", "General Store", "Tutorial Island") {
-                Description = "An assortment of products one could almost mistake for knick-knacks line the shelves of this small building. Most of it doesn't appear to be too useful, but there are a few items of interest. There doesn't seem to be a shopkeeper around, but a jar on the counter indicates that the store is running on an honor system.",
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Main")
-                },
-                ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "needle", "knife", "hatchetBronze", "pickaxeBronze", "fishingNetSmall", "vialEmpty", "trapBird", "runeAir", "runeEarth", "runeFire", "runeWater", "runeMind", "runeBody" },
-                GatheringSpots = new List<string>() { "clueCrates" },
-                ProcessingStations = new List<string>() { "Tannery", "Pottery Kiln", "Pottery Wheel" },
-                NPCsHere = new() { "tiDrunkPirate" }
-            });
-
-            locsToAdd.Add(new Location("TI_WizardHut", "Wizard Hut", "Tutorial Island") {
-                Description = "The inside of the shack is cramped and full of various knick-knacks and doodads. Some might call the mess 'homey' or 'cozy', but the most accurate descriptor might be 'eccentric'. Piles of books are placed haphazardly on the floor, leaving only narrow paths leading to each of the important spots in the room. An elderly wizard with a long flowing beard and classic blue robes sits at a small desk near a window, looking outside as he smokes from a pipe. A spinning wheel is tucked into a corner near the foot of the bed.",
-                ConnectedLocations = new List<Connection>() {
-                    new Connection("TI_Main")
-                },
-                NPCsHere = new() { "tiWizardTerrova", "tiForlornGhost3" },
-                ProcessingStations = new List<string>() { "Spinning Wheel" }
-            });
+                locsToAdd.Add(new Location("TI_WizardHut", "Wizard Hut", "Tutorial Island") {
+                    Description = "The inside of the shack is cramped and full of various knick-knacks and doodads. Some might call the mess 'homey' or 'cozy', but the most accurate descriptor might be 'eccentric'. Piles of books are placed haphazardly on the floor, leaving only narrow paths leading to each of the important spots in the room. An elderly wizard with a long flowing beard and classic blue robes sits at a small desk near a window, looking outside as he smokes from a pipe. A spinning wheel is tucked into a corner near the foot of the bed.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("TI_Main")
+                    },
+                    NPCsHere = new() { "tiWizardTerrova", "tiForlornGhost3" },
+                    ProcessingStations = new List<string>() { "Spinning Wheel" }
+                });
+            }
 
 
             // Misthalin Locations
@@ -425,7 +426,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeNorth")
                         },
-                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "knife", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "shovel", "hammer", "plantPotEmpty"  },
+                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "knife", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "shovel", "hammer", "plantPotEmpty", "rope", "candle" }, // TODO: Once actual places to get candle and rope exist, remove them from here
                         NPCsHere = new() { "man", "man" }
                     });
 
@@ -709,9 +710,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                     index = 7;
                     locsToAdd.Add(new Location("MIST_LumbridgeSwamp" + index, "Lumbridge Swamp", "Misthalin") {
                         Description = "The ground here is spongy and the footing unstable due to all the moisture. A constant shroud of fog and darkness hangs over this place, making it very hard to see where you're going. Puddles of stagnant water are everywhere and the trees press close. There is a tree here with a dark hole at the base. With a rope you could climb down, but you should probably also have a light of some kind.",
-                        MazeTile = index, MazeMap = "Lumbridge Swamp",
+                        MazeTile = index, MazeMap = "Lumbridge Swamp", MazeLandmark = true,
                         ConnectedLocations = new List<Connection>() {
-                            new Connection("MIST_LumbridgeSwampCave", new() { new("Item", 1, "rope") }),
+                            new Connection("MIST_LumbridgeSwampCaveEntrance", new() { new("Item", 1, "rope", true), new("Data", 1, "SwampCaveRope", false, "equals", "Already attached rope.") }, true) { WorldStateChange = "set", WorldStateID = "SwampCaveRope", WorldStateNum = 1 },
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, -1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 1, 0, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 0, 1, 6, 4)),
@@ -723,7 +724,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                         },
                         GatheringSpots = new() { "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead", "treeDead" }, 
                         AreaMonsters = new() { "ratGiant", "ratGiant", "frog", "frog", "frog" },
-                        ItemSpawns = new() { new("swampTar", 1, null, 3) }
+                        ItemSpawns = new() { new("swampTar", 1, null, 3) },
+                        NPCsHere = new() { "mistLumCandles" }
                     });
 
                     index = 8;
@@ -921,7 +923,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
                         },
-                        GatheringSpots = new() { "oreIron", "oreIron", "oreIron", "oreCoal", "oreCoal", "oreCoal", "oreMithril", "oreMithril", "oreAdamant", "oreAdamant" }
+                        GatheringSpots = new() { "oreIron", "oreIron", "oreIron", "oreCoal", "oreCoal", "oreCoal", "oreMithril", "oreMithril", "oreAdamant", "oreAdamant" },
+                        ItemSpawns = new() { new("seaweed", 1) }
                     });
 
                     index = 19;
@@ -937,7 +940,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                        }
+                        },
+                        ItemSpawns = new() { new("seaweed", 1) }
                     });
 
                     index = 20;
@@ -953,7 +957,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                        }
+                        },
+                        ItemSpawns = new() { new("seaweed", 1) }
                     });
 
                     index = 21;
@@ -970,7 +975,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, -1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
-                        }
+                        },
+                        ItemSpawns = new() { new("seaweed", 1) }
                     });
 
                     index = 22;
@@ -987,7 +993,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
                         }, 
-                        AreaMonsters = new() { "ratGiant", "ratGiant" }
+                        AreaMonsters = new() { "ratGiant", "ratGiant" },
+                        ItemSpawns = new() { new("seaweed", 1) }
                     });
                  
                     index = 23;
@@ -1004,7 +1011,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, 2, 1, 6, 4)),
                             new Connection("MIST_LumbridgeSwamp" + Helper.MapSpot(index, -2, 1, 6, 4)),
                         },
-                        GatheringSpots = new() { "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin", "rockClay", "rockClay" }
+                        GatheringSpots = new() { "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin", "rockClay", "rockClay" },
+                        ItemSpawns = new() { new("seaweed", 1) }
                     });
 
                     locsToAdd.Add(new Location("MIST_LumbridgeSwampUrhney", "Father Urhney's Shack", "Misthalin") {
@@ -1025,6 +1033,89 @@ namespace ZeroPlayersOnline.Hardcodes {
                         },
                         ItemSpawns = new() { new("shovel", 1) },
                         GatheringSpots = new() { "clueCrates" }
+                    });
+                }
+
+                // Lumbridge Swamp Cave
+                {
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampCaveEntrance", "Lumbridge Swamp Cave Entrance", "Misthalin") {
+                        Description = "A very dim and disgusting underground cave. There aren't any pools of muck or monsters here but you can already smell the swamp gas getting stronger. There's a narrow passage you can squeeze through to get into a larger cavern, and your rope is dangling down from the surface. The hole is so far up that what little light it provides isn't illuminating anything down here.",
+                        DungeoneeringLevel = 20, Dark = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwamp7"),
+                            new Connection("MIST_LumbridgeSwampCaveCavern") // TODO: Add wall beasts that hurt you if you aren't wearing a spiky helm or whatever
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampCaveCavern", "Lumbridge Swamp Cavern", "Misthalin") {
+                        Description = "This part of the cavern branches off with tunnels in a few directions, the monsters that reside here largely leaving eachothers territory alone. There are a few pools of stagnant muck you need to avoid falling in, for the good of your equipment. One passage leading off the cavern - little more than a crack - leads towards the entrance of the caves.",
+                        DungeoneeringLevel = 20, Dark = true, Hazard = "Gas",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwampCaveEntrance"),
+                            new Connection("MIST_LumbridgeSwampCaveFrog"),
+                            new Connection("MIST_LumbridgeSwampCaveBug"),
+                            new Connection("MIST_LumbridgeSwampCaveSlime"),
+                            new Connection("MIST_LumbridgeSwampCaveCrawler"),
+                            new Connection("MIST_LumbridgeSwampCaveSlug"),
+                            new Connection("MIST_LumbridgeSwampCaveSecondary")
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampCaveFrog", "Lumbridge Swamp Cave - Spawning Ground", "Misthalin") {
+                        Description = "A small dank part of the cavern system largely dominated by a large pond that the hordes of frogs here appear to be spawning in. Their croaks bounce off the walls and echo to create a deafening cacophany that is quite unpleasant.",
+                        DungeoneeringLevel = 20, Dark = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwampCaveCavern")
+                        },
+                        AreaMonsters = new() { "frog", "frog", "frogBig24", "frogBig24", "frogBig24", "frogBig24", "frogGiant99" },
+                        GatheringSpots = new() { "fishNetSmallCave", "fishNetSmallCave" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampCaveBug", "Lumbridge Swamp Cave - Bug Hive", "Misthalin") {
+                        Description = "This part of the cave is crawling with cave bugs roaming around on every surface, periodically coming out of or going into a big pile that looks sort of like an anthill. In addition to the passage leading back to the main cavern, there is a smaller passage leading to part of a mine.",
+                        DungeoneeringLevel = 20, Dark = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwampCaveCavern"),
+                            new Connection("MIST_DorgeshuunMine")
+                        },
+                        AreaMonsters = new() { "caveBug", "caveBug", "caveBug", "caveBug", "caveBug" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampCaveSlime", "Lumbridge Swamp Cave - Slime Pit", "Misthalin") {
+                        Description = "Less of a room or cavern or even a tunnel, this is more of a dent in the ground swarming with living blobs of slime oozing around. The smell of swamp gas is particularly strong here, giving you a feeling that these slimes may be at least partially responsible for the miasma.",
+                        DungeoneeringLevel = 20, Dark = true, Hazard = "Gas",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwampCaveCavern")
+                        },
+                        AreaMonsters = new() { "caveSlime", "caveSlime", "caveSlime", "caveSlime", "caveSlime" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampCaveCrawler", "Lumbridge Swamp Cave - Crawler Den", "Misthalin") {
+                        Description = "The cave crawlers appear to have laid claim to one of the larger ponds in the area, sliding in and out of it as they patrol their territory. Even without getting close you can see the poison dripping from their slavering maws, and the barbed spines coming from their backs seem like they'd hurt to get stuck with.",
+                        DungeoneeringLevel = 20, Dark = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwampCaveCavern")
+                        },
+                        AreaMonsters = new() { "caveBug", "caveBug", "caveBug" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampCaveSlug", "Lumbridge Swamp Cave - Crawler Den", "Misthalin") {
+                        Description = "This territory in the caves is at least slightly cleaner than the others, by virtue of a lack of water features and the resident monster being slugs composed mostly of rocks. You still can't fathom why Father Urhney would want to live anywhere near this, but it's a nice reprieve from how disgusting the rest of the cave has been. Besides the large passage leading to the main cavern, there is a smaller passage leading somewhere deeper in the caves.",
+                        DungeoneeringLevel = 20, Dark = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwampCaveCavern")
+                        },
+                        AreaMonsters = new() { "rockSlug", "rockSlug", "rockSlug" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_LumbridgeSwampCaveSecondary", "Lumbridge Swamp Cave - Secondary Cavern", "Misthalin") {
+                        Description = "This farther back section of the cave is quite distant from the exit at this point, and a cave goblin seems to be here minding a writhing pool of eels. The smell of swamp gas is quite strong back here.",
+                        DungeoneeringLevel = 20, Dark = true, Hazard = "Gas",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_LumbridgeSwampCaveCavern")
+                        },
+                        AreaMonsters = new() { "goblinCave", "caveSlime" },
+                        GatheringSpots = new() { "fishBaitLowCave", "fishBaitLowCave" }
                     });
                 }
 
@@ -1166,6 +1257,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("DES_AlKharidPalaceCourtyard"),
                             new Connection("DES_AlKharidSouth")
                         },
+                        ProcessingStations = new() { "Sand" },
                         NPCsHere = new() { "desAlKharidAyesha", "man", "man", "man", "man", "woman", "woman", "woman" },
                         ShopItemsHere = new() { "bucketCompost", "plantPotEmpty", "uncutSapphire", "uncutEmerald", "uncutRuby", "uncutDiamond", "cutSapphire", "cutEmerald", "cutRuby", "cutDiamond", "clothSilk" }, 
                         FarmingPatchesHere = new() { "DES_AlKharidCactus" }
@@ -1188,7 +1280,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("DES_AlKharid")
                         },
                         NPCsHere = new() { "desAlKharidDommik" },
-                        ShopItemsHere = new() { "chisel", "mouldRing", "mouldNecklace", "mouldAmulet", "needle", "mouldHoly", "mouldSickle", "mouldTiara", "mouldBolt", "mouldBracelet" }
+                        ShopItemsHere = new() { "glassblowingPipe", "chisel", "mouldRing", "mouldNecklace", "mouldAmulet", "needle", "mouldHoly", "mouldSickle", "mouldTiara", "mouldBolt", "mouldBracelet" }
                     });
 
                     locsToAdd.Add(new Location("DES_AlKharidGeneralStore", "Al Kharid General Store", "Desert") {
@@ -1246,6 +1338,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("DES_AlKharid")
                         },
                         NPCsHere = new() { "desAlKharidAli" },
+                        ProcessingStations = new() { "Sand" },
                         ShopItemsHere = new() { "potEmpty", "jugEmpty", "waterskin3", "desertShirt", "desertBoots", "bucketEmpty", "beardFake", "kharidianHeadpiece", "papyrus", "knife", "tinderbox", "pickaxeBronze", "meatRawChicken" }
                     });
 
@@ -1279,6 +1372,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("DES_ShantayPass")
                         },
                         NPCsHere = new() { "desAlKharidFerrymanSathwood" }, // TODO: Make this dude when wanting to implement Tempeross
+                        ProcessingStations = new() { "Sand" },
                         AreaMonsters = new() { "scorpion" }
                     });
 
@@ -1289,7 +1383,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeAcrossLum"),
                             new Connection("DES_AlKharidMineOutside"),
                             new Connection("DES_AlKharidEmirsArena")
-                        }
+                        },
+                        ProcessingStations = new() { "Sand" }
                     });
 
                     locsToAdd.Add(new Location("DES_AlKharidMineOutside", "Outside the Al Kharid Mine", "Desert") {
@@ -1300,7 +1395,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("DES_AlKharidMine"),
                             new Connection("DES_AlKharidOutskirts"),
                             new Connection("RunecraftAltarFire", new() { new("Item", 1, "talismanFire", false) })
-                        }
+                        },
+                        ProcessingStations = new() { "Sand" }
                     });
 
                     locsToAdd.Add(new Location("DES_AlKharidMine", "Al Kharid Mine", "Desert") {
@@ -1310,14 +1406,64 @@ namespace ZeroPlayersOnline.Hardcodes {
                         },
                         AreaMonsters = new() { "scorpion", "scorpion", "scorpion", "scorpion", "scorpion", "scorpion" },
                         GatheringSpots = new() { "oreCopper", "oreCopper", "oreTin", "oreTin", "oreIron", "oreIron", "oreSilver", "oreSilver", "oreCoal", "oreCoal", "oreMithril", "oreMithril", "oreGold", "oreGold", "oreAdamant", "oreAdamant", "rockGemCommon", "rockGemCommon", "rockGemUncommon", "rockGemUncommon" },
-                        ItemSpawns = new() { new("runeWater", 1), new("runeFire", 1) }
+                        ItemSpawns = new() { new("runeWater", 1), new("runeFire", 1) },
+                        ProcessingStations = new() { "Sand" }
                     });
 
                     locsToAdd.Add(new Location("DES_MageTrainingArena", "Mage Training Arena", "Desert") {
                         Description = "This place certainly looks magical. There are a number of books and golems and brooms moving about the hall, and on the walls the paintings slowly move up and down. A huge white rug with an elaborate pattern covers much of the floor and there are some candelabras providing light. Staircases allow you to ascend to the second floor, where you can find the rewards trader. There are portals to the different training areas here.",
                         ConnectedLocations = new List<Connection>() {
-                            new Connection("DES_AlKharidMineOutside")
-                        }
+                            new Connection("DES_AlKharidMineOutside"),
+                            new Connection("DES_MageTrainingArena2"),
+                            new Connection("DES_MageTrainingArenaTelekinetic"),
+                            new Connection("DES_MageTrainingArenaGraveyard"),
+                            new Connection("DES_MageTrainingArenaEnchanting"),
+                            new Connection("DES_MageTrainingArenaAlchemist")
+                        },
+                        NPCsHere = new() { "desMTAGuardianRewards" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_MageTrainingArenaTelekinetic", "Telekinetic Theater", "Desert") {
+                        Description = "The Telekinetic Theater is a large mostly empty room, with the center containing a fenced-in maze of walls. There is a statue you can cast Telekinetic Grab on to move in cardinal directions, and a clearly indicated tile that you need to move the statue onto. The Telekinetic Guardian stands observing the proceedings from opposite the portal.",
+                        MinigameID = "MageTelekinetic",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_MageTrainingArena")
+                        },
+                        NPCsHere = new() { "desMTAGuardianTelekinetic" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_MageTrainingArenaGraveyard", "Creature Graveyard", "Desert") {
+                        Description = "The Creature Graveyard has four piles of bones, one in each corner of the square room. Strange bones, odd bones, weird bones, and unusual bones. No matter how many bones you take from the piles there always seems to be more available. Every five seconds bones fall from the ceiling and will damage you. The Graveyard Guardian stands observing the proceedings from opposite the portal.",
+                        MinigameID = "MageGraveyard",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_MageTrainingArena", new() { new("NotItem", 1, "fruitBanana"), new("NotItem", 1, "fruitPeach"), new("NotItem", 1, "mtaBone1"), new("NotItem", 1, "mtaBone2"), new("NotItem", 1, "mtaBone3"), new("NotItem", 1, "mtaBone4") })
+                        },
+                        NPCsHere = new() { "desMTAGuardianGraveyard" },
+                        ProcessingStations = new() { "Fruit Chute" },
+                        GatheringSpots = new() { "mtaGraveyardStrange", "mtaGraveyardOdd", "mtaGraveyardWeird", "mtaGraveyardUnusual" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_MageTrainingArenaEnchanting", "Enchanting Chamber", "Desert") {
+                        Description = "The Enchanting Chamber has four piles of objects, one in each corner of the square room. Blue icosahedrons, yellow cubes, red pentamids, and green cylinders. No matter how many shapes you take from the piles there always seems to be more available. Every five seconds or so a dragonstone appears on the ground, or teleports to another place if you haven't picked it up. The Enchantment Guardian stands observing the proceedings from opposite the portal.",
+                        MinigameID = "MageEnchanting",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_MageTrainingArena")
+                        },
+                        NPCsHere = new() { "desMTAGuardianEnchanting" },
+                        ItemSpawns = new() { new("mtaDragonstone", 5) },
+                        ProcessingStations = new() { "Orb Depository" },
+                        GatheringSpots = new() { "mtaEnchantIcosahedron", "mtaEnchantCube", "mtaEnchantPentamid", "mtaEnchantCylinder" }
+                    });
+
+                    locsToAdd.Add(new Location("DES_MageTrainingArenaAlchemist", "Alchemist's Playground", "Desert") {
+                        Description = "The Alchemist's Playground has five shelves of items, arranged in a loose circle around the center of the room. Leather boots, adamant kiteshields, adamant helmets, emeralds, and rune swords. No matter how many items you take from the shelves there always seems to be more available. The feeling of value you get from each item seems to change periodically. The Alchemy Guardian stands observing the proceedings from opposite the portal.",
+                        MinigameID = "MageAlchemist",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_MageTrainingArena", new() { new("NotItem", 1, "mtaAlchCoin"), new("NotItem", 1, "mtaAlch1"), new("NotItem", 1, "mtaAlch2"), new("NotItem", 1, "mtaAlch3"), new("NotItem", 1, "mtaAlch4"), new("NotItem", 1, "mtaAlch5") })
+                        },
+                        NPCsHere = new() { "desMTAGuardianAlchemy" },
+                        ProcessingStations = new() { "Coin Slot" },
+                        GatheringSpots = new() { "mtaAlchemyBoots", "mtaAlchemyShield", "mtaAlchemyHelmet", "mtaAlchemyEmerald", "mtaAlchemySword" }
                     });
                 }
             }

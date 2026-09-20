@@ -39,7 +39,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
 
         public Item? RollDrop(Player player, CollectionLogEntry? log, bool inaccessible = false, bool justReturn = false) {
-            if (Requirement != null && !Requirement.CheckRequirement(player, true))
+            if (Requirement != null && !Requirement.CheckRequirement(player, true, true))
                 return null;
 
 

@@ -17,6 +17,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("oreAdamant", "oreLuminite", "oreMixAdamant", 1, 1, 1, "Smithing", 40, 32));
             toAdd.Add(new("oreSilver", "oreSilver", "oreMixSilver", 1, 1, 1, "Smithing", 20, 8));
             toAdd.Add(new("oreGold", "oreGold", "oreMixGold", 1, 1, 1, "Smithing", 40, 32));
+            
+            toAdd.Add(new("shieldLeftHalf", "shieldRightHalf", "sqShieldDragon", s: "Smithing", lv: 60, exp: 75));
 
             // Fletching
             toAdd.Add(new("bowstring", "shortbowPineU", "shortbowPine", 1, 1, 1, "Fletching", 1, 5));
@@ -166,7 +168,11 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("vambracesHardleather", "studsSteel", "vambracesStudded", 1, 1, 1, "Crafting", 20, 40)); 
             toAdd.Add(new("bootsHardleather", "studsSteel", "bootsStudded", 1, 1, 1, "Crafting", 20, 40)); 
 
-
+            
+            toAdd.Add(new("candle", "candleLanternEmpty", "candleLantern"));
+            toAdd.Add(new("candleLit", "candleLanternEmpty", "candleLanternLit")); 
+            toAdd.Add(new("oilLamp", "oilLanternFrame", "oilLantern", s: "Crafting", lv: 26, exp: 50));
+            toAdd.Add(new("oilLampLit", "oilLanternFrame", "oilLanternLit", s: "Crafting", lv: 26, exp: 50));
             
             toAdd.Add(new("kharidianHeadpiece", "beardFake", "desertDisguise"));
             toAdd.Add(new("knife", "fruitBanana", "fruitBananaSlices", 0));  

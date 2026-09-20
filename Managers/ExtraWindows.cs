@@ -65,6 +65,10 @@ namespace ZeroPlayersOnline.Managers {
         public static bool TeleCostsCharges = false;
         public static bool TeleFairyRing = false;
 
+        public static Window InventoryContainer;
+        public static ItemWrapper? ConWrap = null;
+
+
         public static bool AnyVisible(string except = "") {
             if (CollectionLog.IsVisible && except != "Collection")
                 return true;
@@ -84,6 +88,8 @@ namespace ZeroPlayersOnline.Managers {
                 return true;
             if (Teleport.IsVisible && except != "Teleport")
                 return true;
+            if (InventoryContainer.IsVisible && except != "InventoryContainer")
+                return true;
             
             return false;
         }
@@ -97,6 +103,8 @@ namespace ZeroPlayersOnline.Managers {
             Map.IsVisible = false;
             Debug.IsVisible = false;
             Clue.IsVisible = false;
+            Teleport.IsVisible = false;
+            InventoryContainer.IsVisible = false;
         }
 
         public static void SetupWindows() {
@@ -144,6 +152,11 @@ namespace ZeroPlayersOnline.Managers {
             Teleport.CanDrag = true;
             Teleport.Position = new Point(25, 10);
             Teleport.Title = "Teleports".Align(HorizontalAlignment.Center, 48);
+
+            InventoryContainer = new(50, 10);
+            InventoryContainer.CanDrag = true;
+            InventoryContainer.Position = new Point(25, 10);
+            InventoryContainer.Title = "Inventory Container".Align(HorizontalAlignment.Center, 48);
         }
 
         public static void GuideDraw() {
@@ -552,7 +565,7 @@ namespace ZeroPlayersOnline.Managers {
                 }
 
                 for(int i = CompendiumSidebarTop; i < items.Count && i < CompendiumSidebarTop + 24; i++) {
-                    Compendium.PrintClickable(1, sidebarY++, new ColoredString(items[i].Name, items[i].GetColor(), Color.Black), () => { CompendiumViewingID = items[i].ID; CompendiumShowSources = false; });
+                    Compendium.PrintClickable(1, sidebarY++, items[i].GetNameCS(1, 0), () => { CompendiumViewingID = items[i].ID; CompendiumShowSources = false; });
                 }
 
                 if (GameLoop.ZPO.ItemLibrary.TryGetValue(CompendiumViewingID, out Item? item)) {
@@ -560,7 +573,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     Compendium.Print(32, itemY++, "     ID: " + item.ID); 
                     Compendium.Print(71, 3, ("Color: r" + item.colR + " / g" + item.colG + " / b" + item.colB).Align(HorizontalAlignment.Right, 27));
-                    Compendium.Print(32, itemY++, "   Name: " + item.Name, item.GetColor());  
+                    Compendium.Print(32, itemY++, "   Name: " + item.GetNameCS(1));  
                     Compendium.PrintClickable(84, 4, "[Show Sources]", () => { CompendiumShowSources = !CompendiumShowSources; Sources = ItemSources(item.ID); });
 
                     if (!CompendiumShowSources) {
@@ -676,7 +689,7 @@ namespace ZeroPlayersOnline.Managers {
                     for (int i = CompendiumSidebarTop; i < recipes.Count && i < CompendiumSidebarTop + 18; i++) {
                         Item? output = GameLoop.ZPO.ResolveItem(recipes[i].OutputItem);
                         if (output != null) {
-                            Compendium.PrintClickable(1, sidebarY++, new ColoredString(output.Name, output.GetColor(), Color.Black), () => { CompendiumViewingID = recipes[i].FirstItem; CompendiumViewingID2 = recipes[i].SecondItem; });
+                            Compendium.PrintClickable(1, sidebarY++, output.GetNameCS(1), () => { CompendiumViewingID = recipes[i].FirstItem; CompendiumViewingID2 = recipes[i].SecondItem; });
                         } else {
                             Compendium.PrintClickable(1, sidebarY++, new ColoredString(GameLoop.ZPO.ResolveItemName(recipes[i].OutputItem)), () => { CompendiumViewingID = recipes[i].FirstItem; CompendiumViewingID2 = recipes[i].SecondItem; });
                         }
@@ -747,7 +760,7 @@ namespace ZeroPlayersOnline.Managers {
                                 Item? output = GameLoop.ZPO.ResolveItem(recipes[i].OutputItem);
 
                                 if (output != null) {
-                                    Compendium.PrintClickable(2, sidebarY++, new ColoredString(output.Name, output.GetColor(), Color.Black), () => { 
+                                    Compendium.PrintClickable(2, sidebarY++, output.GetNameCS(), () => { 
                                         for (int j = 0; j < masterRecipes.Count; j++) {
                                             if (masterRecipes[j] == recipes[i]) {
                                                 CompendiumViewingIndex = j;
@@ -844,7 +857,7 @@ namespace ZeroPlayersOnline.Managers {
                                 Item? output = GameLoop.ZPO.ResolveItem(recipes[i].OutputID);
 
                                 if (output != null) {
-                                    Compendium.PrintClickable(2, sidebarY++, new ColoredString(output.Name, output.GetColor(), Color.Black), () => { 
+                                    Compendium.PrintClickable(2, sidebarY++, output.GetNameCS(), () => { 
                                         for (int j = 0; j < masterRecipes.Count; j++) {
                                             if (masterRecipes[j] == recipes[i]) {
                                                 CompendiumViewingIndex = j;
@@ -3155,5 +3168,31 @@ namespace ZeroPlayersOnline.Managers {
               
             Teleport.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Teleport.IsVisible = false; });
         }    
+    
+        public static void InventoryContainerDraw() {
+            InventoryContainer.Clear();
+            Helper.DrawBox(InventoryContainer, 0, 0, 48, 8);
+            if (ConWrap != null && ConWrap.GetRef() is Item con) {
+                InventoryContainer.Print(2, 0, "[Inventory Container - " + con.Name + "]");
+
+                for (int i = ConWrap.Containing.Count - 1; i >= 0; i--) {
+                    if (ConWrap.Containing[i].GetRef() is Item contained) {
+                        InventoryContainer.PrintClickable(2, 1 + i, contained.GetNameCS(ConWrap.Containing[i].Quantity, 0, ConWrap.Containing[i].Charges, ConWrap.Containing[i].Noted), () => {
+                            int qty = 1;
+                            if (Helper.EitherShift()) { qty *= 5; }
+                            if (Helper.EitherControl()) { qty *= 10; }
+                            if (qty > ConWrap.Containing[i].Quantity || Helper.EitherAlt()) { qty = ConWrap.Containing[i].Quantity; }
+
+                            GameLoop.ZPO.player.TryPickup(ConWrap.Containing[i], qty);
+                             
+                            if (ConWrap.Containing[i].Quantity <= 0) {
+                                ConWrap.Containing.RemoveAt(i);
+                            }
+                        });
+                    }
+                }
+            }
+            InventoryContainer.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { InventoryContainer.IsVisible = false; ConWrap = null; });
+        }        
     }
 }

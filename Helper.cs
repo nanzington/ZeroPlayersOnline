@@ -1044,7 +1044,7 @@ namespace ZeroPlayersOnline {
                         if (item.Requirements != null && item.Requirements.Count > 0) {
                             bool canAdd = true;
                             for (int i = 0; i < item.Requirements.Count; i++) {
-                                if (!item.Requirements[i].CheckRequirement(GameLoop.ZPO.player, false)) {
+                                if (!item.Requirements[i].CheckRequirement(GameLoop.ZPO.player, false, true)) {
                                     canAdd = false;
                                     break;
                                 }
@@ -1061,7 +1061,7 @@ namespace ZeroPlayersOnline {
                     if (item.Requirements != null && item.Requirements.Count > 0) {
                         bool canAdd = true;
                         for (int i = 0; i < item.Requirements.Count; i++) {
-                            if (!item.Requirements[i].CheckRequirement(GameLoop.ZPO.player, false)) {
+                            if (!item.Requirements[i].CheckRequirement(GameLoop.ZPO.player, false, true)) {
                                 canAdd = false;
                                 break;
                             }
@@ -1089,7 +1089,7 @@ namespace ZeroPlayersOnline {
 
                 if (item.Requirements != null && item.Requirements.Count > 0) {
                     foreach (var req in item.Requirements) {
-                        if (!req.CheckRequirement(GameLoop.ZPO.player, false)) {
+                        if (!req.CheckRequirement(GameLoop.ZPO.player, false, true)) {
                             isValid = false;
                         }
                     }

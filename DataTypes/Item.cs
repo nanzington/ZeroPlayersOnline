@@ -54,8 +54,17 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public List<string> TeleportLocations = new();
         public bool ShattersAtZeroCharges = true;
+        public string CosmeticNote = "";
 
         public List<string> CountsAsIDs = new();
+
+        public bool ExposedFlame = false;
+        public bool ProvidesLight = false;
+
+        public int ContainerSlots = 0;
+        public bool ContainerStacksUnstackable = false;
+        public List<ItemWrapper> Containing = new();
+        public List<string> ContainableIDs = new(); 
 
         [JsonIgnore]
         public bool Inaccessible = false;
@@ -117,6 +126,8 @@ namespace ZeroPlayersOnline.DataTypes {
             UseInt2 = other.UseInt2;
             UseInt3 = other.UseInt3;
             UseInt4 = other.UseInt4; 
+            ExposedFlame = other.ExposedFlame;
+            ProvidesLight = other.ProvidesLight;
 
             MustBeEquipped = other.MustBeEquipped;
 
@@ -134,6 +145,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
             DestroyOnDrop = other.DestroyOnDrop;
             Cosmetic = other.Cosmetic;
+            CosmeticNote = other.CosmeticNote;
 
             if (other.PetBlurbs.Count > 0) {
                 for (int i = 0; i < other.PetBlurbs.Count; i++) {
@@ -159,6 +171,17 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             Inaccessible = other.Inaccessible; 
+
+            ContainerSlots = other.ContainerSlots;
+            ContainerStacksUnstackable = other.ContainerStacksUnstackable;
+
+            for (int i = 0; i < other.Containing.Count; i++) {
+                Containing.Add(new(other.Containing[i]));
+            }
+
+            for (int i = 0; i < other.ContainableIDs.Count; i++) {
+                ContainableIDs.Add(other.ContainableIDs[i]);
+            } 
         }
 
         public int ColorSum() {
@@ -183,6 +206,80 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             return true;
+        }
+
+        public ColoredString GetNameCS(int qty = 1, int shop = 0, int charges = 0, bool noted = false) {
+            ColoredString build = qty > 1 ? new ColoredString(qty + "x ") : new ColoredString("");
+            build += new ColoredString(Name, GetColor(), ColorSum() > 50 ? Color.Black : Color.White);
+             
+            if (Name.Contains("potion") && charges != 0) {
+                build += new ColoredString(" (" + charges + " doses)", Color.White, Color.Black);
+            } else if (charges > 0 && !ID.Contains("seed") && !ID.Contains("plant")) { 
+                build += new ColoredString(" (" + charges + ")", Color.White, Color.Black);
+            }
+
+            if (CosmeticNote != "") {
+                if (CosmeticNote == "t") { build += new ColoredString(" (t)", Color.White, Color.Black); } 
+                if (CosmeticNote == "g") { build += new ColoredString(" (g)", Color.Yellow, Color.Black); }
+                if (CosmeticNote == "h") { build += new ColoredString(" (h)", Color.Turquoise, Color.Black); }
+            }
+
+            if (noted) {
+                build += new ColoredString(" (n)", Color.Khaki, Color.Black);
+            }
+
+            if (shop > 0) { 
+                int sellValue = Value;
+
+                if (charges != 0 && UseString == "Potion") {
+                    sellValue *= charges;
+                }
+                                        
+                if (!GameLoop.ZPO.player.ShopsAlwaysFullPrice && shop == 1) {
+                    sellValue = (int) (Math.Floor(sellValue / 2.0));
+                }
+
+                build += new ColoredString(" [" + sellValue + " gp]", Color.Goldenrod, Color.Black);
+            }
+
+            return build;
+        }
+
+        public string GetName(int qty = 1, int shop = 0, int charges = 0, bool noted = false) {
+            string build = qty > 1 ? qty + "x " : "";
+            build += Name;
+             
+            if (Name.Contains("potion") && charges != 0) {
+                build += " (" + charges + " doses)";
+            } else if (charges > 0 && !ID.Contains("seed") && !ID.Contains("plant")) { 
+                build += " (" + charges + ")";
+            }
+
+            if (CosmeticNote != "") {
+                if (CosmeticNote == "t") { build += " (t)"; } 
+                if (CosmeticNote == "g") { build += " (g)"; }
+                if (CosmeticNote == "h") { build += " (h)"; }
+            }
+
+            if (noted) {
+                build += " (n)";
+            }
+
+            if (shop > 0) { 
+                int sellValue = Value;
+
+                if (charges != 0 && UseString == "Potion") {
+                    sellValue *= charges;
+                }
+                                        
+                if (!GameLoop.ZPO.player.ShopsAlwaysFullPrice && shop == 1) {
+                    sellValue = (int) (Math.Floor(sellValue / 2.0));
+                }
+
+                build += " [" + sellValue + " gp]";
+            }
+
+            return build;
         }
     }
 }

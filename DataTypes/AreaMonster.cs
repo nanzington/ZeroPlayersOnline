@@ -22,6 +22,9 @@ namespace ZeroPlayersOnline.DataTypes {
         public string DamageDice = "1d3"; 
         public string WeakType = "Slash";
         public string DamageType = "Typeless";
+        public double AttackSpeedSeconds = 2.4;
+        
+        public int PoisonSeverity = 0;
 
 
         public int RespawnTime = 1;
@@ -34,6 +37,8 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool Inaccessible = false;
         public string SpecialCategory = "";
         public string CountsAsSlayer = "";
+        public int SlayerReq = 0;
+        public string KillItem = "";
 
         [JsonIgnore]
         public double TimeLastKilled = 0;
@@ -42,7 +47,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double TimeLastAttacked = 0;
 
-        public AreaMonster(string n, string id, int lv, int hp, int dr, bool aggro, string ddice, string weakness, int respawn, string dtype, List<Requirement>? reqs = null, bool seeAnyways = true, bool inaccessible = false, string specialCat = "", string slayer = "") {
+        public AreaMonster(string n, string id, int lv, int hp, int dr, bool aggro, string ddice, string weakness, int respawn, string dtype, double atkSpeed = 2.4, List<Requirement>? reqs = null, bool seeAnyways = true, bool inaccessible = false, string specialCat = "", string slayer = "") {
             Name = n;
             ID = id;
             Level = lv;
@@ -58,6 +63,7 @@ namespace ZeroPlayersOnline.DataTypes {
             DamageDice = ddice; 
             WeakType = weakness;
             DamageType = dtype;
+            AttackSpeedSeconds = atkSpeed;
 
             RespawnTime = respawn;
             Inaccessible = inaccessible;
@@ -74,7 +80,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
             if (Requirements != null && Requirements.Count > 0) {
                 for (int i = 0; i < Requirements.Count; i++) {
-                    if (!Requirements[i].CheckRequirement(p, false)) {
+                    if (!Requirements[i].CheckRequirement(p, false, true)) {
                         all = false;
                     }
                 }

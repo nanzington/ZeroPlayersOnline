@@ -31,22 +31,25 @@ namespace ZeroPlayersOnline.Hardcodes {
             tiles.Add(new GatheringTile("rockEssence", "Essence Rock", "Mine", 100, 10, 10, "Mining", 1, 5, neededTool: "Pickaxe", items: new() { new("runeEssence", 1, reqs: new() { new("NotSkill", 30, "Mining") }), new("pureEssence", 1, "Mining", 30, 5) }));
             tiles.Add(new GatheringTile("rockEssencePillar", "Essence Pillar", "Mine", 100, 0, 0, "Mining", 1, 5, neededTool: "Pickaxe", items: new() { new("runeEssence", 1, reqs: new() { new("NotSkill", 30, "Mining") }), new("pureEssence", 1, "Mining", 30, 5) }));  
             tiles.Add(new GatheringTile("rockClay", "Clay Deposit", "Mine", 100, 20, 10, "Mining", 1, 5, neededTool: "Pickaxe", items: new() { new("clayDust", 1) }) ); 
-            tiles.Add(new GatheringTile("rockGemCommon", "Gem Rock (Common)", "Mine", 100, 100, 15, "Mining", 1, 15, neededTool: "Pickaxe", items: new() { new("uncutOpal", 3), new("uncutJade", 2, "Mining", 13, 20), new("uncutRedTopaz", 1, "Mining", 16, 25) }));
-            tiles.Add(new GatheringTile("rockGemUncommon", "Gem Rock (Uncommon)", "Mine", 100, 100, 15, "Mining", 20, 40, neededTool: "Pickaxe", items: new() { new("uncutSapphire", 3), new("uncutEmerald", 2, "Mining", 27, 50), new("uncutRuby", 1, "Mining", 34, 70) }));
-            tiles.Add(new GatheringTile("oreCopper", "Copper Ore", "Mine", 100, 100, 15, "Mining", 1, 7, neededTool: "Pickaxe", items: new() { new("oreCopper", 1) })); 
-            tiles.Add(new GatheringTile("oreTin", "Tin Ore", "Mine", 100, 100, 15, "Mining", 1, 8, neededTool: "Pickaxe", items: new() { new("oreTin", 1) }));
-            tiles.Add(new GatheringTile("oreIron", "Iron Ore", "Mine", 100, 100, 15, "Mining", 10, 20, neededTool: "Pickaxe", items: new() { new("oreIron", 1) }));
-            tiles.Add(new GatheringTile("oreSilver", "Silver Ore", "Mine", 100, 100, 15, "Mining", 20, 40, neededTool: "Pickaxe", items: new() { new("oreSilver", 1) }));
-            tiles.Add(new GatheringTile("oreCoal", "Coal", "Mine", 100, 100, 15, "Mining", 20, 55, neededTool: "Pickaxe", items: new() { new("oreCoal", 1) }));
-            tiles.Add(new GatheringTile("oreMithril", "Mithril Ore", "Mine", 100, 100, 15, "Mining", 30, 65, neededTool: "Pickaxe", items: new() { new("oreMithril", 1) }));
-            tiles.Add(new GatheringTile("oreLuminite", "Luminite", "Mine", 100, 100, 15, "Mining", 40, 80, neededTool: "Pickaxe", items: new() { new("oreLuminite", 1) }));
-            tiles.Add(new GatheringTile("oreGold", "Gold Ore", "Mine", 100, 100, 15, "Mining", 40, 70, neededTool: "Pickaxe", items: new() { new("oreGold", 1) }));
-            tiles.Add(new GatheringTile("oreAdamant", "Adamant Ore", "Mine", 100, 100, 15, "Mining", 40, 90, neededTool: "Pickaxe", items: new() { new("oreAdamant", 1) }));
+            tiles.Add(new GatheringTile("rockGemCommon", "Gem Rock (Common)", "Mine", 100, 100, 8, "Mining", 1, 15, neededTool: "Pickaxe", items: new() { new("uncutOpal", 3), new("uncutJade", 2, "Mining", 13, 20), new("uncutRedTopaz", 1, "Mining", 16, 25) }));
+            tiles.Add(new GatheringTile("rockGemUncommon", "Gem Rock (Uncommon)", "Mine", 100, 100, 8, "Mining", 20, 40, neededTool: "Pickaxe", items: new() { new("uncutSapphire", 3), new("uncutEmerald", 2, "Mining", 27, 50), new("uncutRuby", 1, "Mining", 34, 70) }));
+            tiles.Add(new GatheringTile("oreCopper", "Copper Ore", "Mine", 100, 100, 8, "Mining", 1, 7, neededTool: "Pickaxe", items: new() { new("oreCopper", 1) })); 
+            tiles.Add(new GatheringTile("oreTin", "Tin Ore", "Mine", 100, 100, 8, "Mining", 1, 8, neededTool: "Pickaxe", items: new() { new("oreTin", 1) }));
+            tiles.Add(new GatheringTile("oreIron", "Iron Ore", "Mine", 100, 100, 8, "Mining", 10, 20, neededTool: "Pickaxe", items: new() { new("oreIron", 1) }));
+            tiles.Add(new GatheringTile("oreSilver", "Silver Ore", "Mine", 100, 100, 8, "Mining", 20, 40, neededTool: "Pickaxe", items: new() { new("oreSilver", 1) }));
+            tiles.Add(new GatheringTile("oreCoal", "Coal", "Mine", 100, 100, 8, "Mining", 20, 55, neededTool: "Pickaxe", items: new() { new("oreCoal", 1) }));
+            tiles.Add(new GatheringTile("oreMithril", "Mithril Ore", "Mine", 100, 100, 8, "Mining", 30, 65, neededTool: "Pickaxe", items: new() { new("oreMithril", 1) }));
+            tiles.Add(new GatheringTile("oreLuminite", "Luminite", "Mine", 100, 100, 8, "Mining", 40, 80, neededTool: "Pickaxe", items: new() { new("oreLuminite", 1) }));
+            tiles.Add(new GatheringTile("oreGold", "Gold Ore", "Mine", 100, 100, 8, "Mining", 40, 70, neededTool: "Pickaxe", items: new() { new("oreGold", 1) }));
+            tiles.Add(new GatheringTile("oreAdamant", "Adamant Ore", "Mine", 100, 100, 8, "Mining", 40, 90, neededTool: "Pickaxe", items: new() { new("oreAdamant", 1) }));
 
             tiles.Add(new GatheringTile("fishNetSmall", "Small Net Spot", "Fish", 100, 10, 15, "Fishing", 1, 10, neededTool: "Small net", items: new() { new("fishRawShrimp", 3), new("fishRawAnchovies", 1, "Fishing", 5, 40) }));
             tiles.Add(new GatheringTile("fishNetBig", "Big Net Spot", "Fish", 100, 10, 15, "Fishing", 16, 20, neededTool: "Big net", items: new() { new("fishRawMackerel", 8), new("fishRawCod", 4, "Fishing", 23, 45), new("fishRawBass", 2, "Fishing", 46, 100) }));
             tiles.Add(new GatheringTile("fishBaitLow", "Bait Spot (Low)", "Fish", 100, 10, 15, "Fishing", 5, 20, neededTool: "Fishing rod", neededBait: "baitFish", items: new() { new("fishRawSardine", 5), new("fishRawHerring", 3, "Fishing", 10, 30), new("fishRawPike", 2, "Fishing", 25, 60) }));
             tiles.Add(new GatheringTile("fishLure", "Lure Spot", "Fish", 100, 10, 15, "Fishing", 20, 50, neededTool: "Fly fishing rod", neededBait: "feather", items: new() { new("fishRawTrout", 5), new("fishRawSalmon", 3, "Fishing", 30, 70) }));
+            
+            tiles.Add(new GatheringTile("fishNetSmallCave", "Small Net Spot", "Fish", 100, 10, 15, "Fishing", 33, 75, neededTool: "Small net", items: new() { new("frogSpawn", 1), new("weedSwamp", 1, "Fishing", 33, 1) }));
+            tiles.Add(new GatheringTile("fishBaitLowCave", "Bait Spot (Low)", "Fish", 100, 10, 15, "Fishing", 28, 80, neededTool: "Fishing rod", neededBait: "baitFish", items: new() { new("fishRawEelSlimy", 1), new("fishRawEelCave", 1) }));
             
             tiles.Add(new GatheringTile("stallVegetable", "Vegetable Stall", "Steal from", 100, 30, 10, "Thieving", 2, 10, items: new() { new("potato", 2), new("onion", 2), new("cabbage", 2), new("tomato", 2), new("garlic", 1) }));
             tiles.Add(new GatheringTile("stallBakery", "Bakery Stall", "Steal from", 100, 30, 10, "Thieving", 5, 16, items: new() { new("bread", 4), new("cake", 5), new("cakeChocolate2", 1) }));
@@ -68,7 +71,19 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             tiles.Add(new GatheringTile("lumbridgeFlag", "Lumbridge Flag", "Raise", 100, 100, 0)); // TODO: Make this tie into the task/achievement diary system, it's a Lumbridge task
 
-
+            tiles.Add(new GatheringTile("mtaEnchantIcosahedron", "Icosahedron Pile", "Take from", 100, 100, 0, items: new() { new("mtaIcosahedron", 31), new("mtaDragonstone", 1) }));
+            tiles.Add(new GatheringTile("mtaEnchantCube", "Cube Pile", "Take from", 100, 100, 0, items: new() { new("mtaCube", 31), new("mtaDragonstone", 1) }));
+            tiles.Add(new GatheringTile("mtaEnchantPentamid", "Pentamid Pile", "Take from", 100, 100, 0, items: new() { new("mtaPentamid", 31), new("mtaDragonstone", 1) }));
+            tiles.Add(new GatheringTile("mtaEnchantCylinder", "Cylinder Pile", "Take from", 100, 100, 0, items: new() { new("mtaCylinder", 31), new("mtaDragonstone", 1) }));
+            tiles.Add(new GatheringTile("mtaGraveyardStrange", "Strange Pile", "Take from", 100, 100, 0, items: new() { new("mtaBone1", 1) }));
+            tiles.Add(new GatheringTile("mtaGraveyardOdd", "Odd Pile", "Take from", 100, 100, 0, items: new() { new("mtaBone2", 1) }));
+            tiles.Add(new GatheringTile("mtaGraveyardWeird", "Weird Pile", "Take from", 100, 100, 0, items: new() { new("mtaBone3", 1) }));
+            tiles.Add(new GatheringTile("mtaGraveyardUnusual", "Unusual Pile", "Take from", 100, 100, 0, items: new() { new("mtaBone4", 1) }));
+            tiles.Add(new GatheringTile("mtaAlchemyBoots", "Boots Shelf", "Take from", 100, 100, 0, items: new() { new("mtaAlch1", 1) }));
+            tiles.Add(new GatheringTile("mtaAlchemyShield", "Shield Shelf", "Take from", 100, 100, 0, items: new() { new("mtaAlch2", 1) }));
+            tiles.Add(new GatheringTile("mtaAlchemyHelmet", "Helmet Shelf", "Take from", 100, 100, 0, items: new() { new("mtaAlch3", 1) }));
+            tiles.Add(new GatheringTile("mtaAlchemyEmerald", "Emerald Shelf", "Take from", 100, 100, 0, items: new() { new("mtaAlch4", 1) }));
+            tiles.Add(new GatheringTile("mtaAlchemySword", "Sword Shelf", "Take from", 100, 100, 0, items: new() { new("mtaAlch5", 1) }));
 
             for (int i = 0; i < tiles.Count; i++) {
                 GatherSpots.Add(tiles[i].ID, tiles[i]);

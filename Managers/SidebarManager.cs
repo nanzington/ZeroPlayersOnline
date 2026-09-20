@@ -9,6 +9,7 @@ namespace ZeroPlayersOnline.Managers {
         public static List<Skill> RecentlyTrainedSkills = new();
         
         public static double LastHealedTick = 0; 
+        public static double LastPoisonTick = 0; 
         public static int SidebarScrollTop = 0;
         public static Rectangle SidebarRect = new Rectangle(new Point(0, 15), new Point(54, 34));
         
@@ -22,15 +23,29 @@ namespace ZeroPlayersOnline.Managers {
             Point mousePos = new MouseScreenObjectState(mini.Con, GameHost.Instance.Mouse).CellPosition;
 
             mini.Con.DrawLine(new Point(55, 0), new Point(55, 34), 179);
-
-
              
+            
             if ((player.PrayerActive("Rapid Heal") && LastHealedTick + 1500 < Helper.Time()) || (LastHealedTick + 3000 < Helper.Time())) {
                 if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp) && eqp != null && eqp.ID == "braceletRegen") {
                     player.CurrentHP = Math.Clamp(player.CurrentHP + 1, 0, player.Skills["Constitution"].Level);
                 }
                 player.CurrentHP = Math.Clamp(player.CurrentHP + 1, 0, player.Skills["Constitution"].Level);
                 LastHealedTick = Helper.Time();
+            }
+
+            if (player.PoisonStatus > 0) {
+                if (LastPoisonTick + 15000 < Helper.Time()) {
+                    LastPoisonTick = Helper.Time();
+
+                    int poisonDamage = Math.Max(1, (int) Math.Floor((player.PoisonStatus + 4) / 5.0));
+                    GameLoop.ZPO.Log.AddMessage("You take " + poisonDamage + " damage from poison.", Color.Lime);
+                    player.TakeDamage(poisonDamage, GameLoop.ZPO.Log);
+
+                    player.PoisonStatus -= 1;
+                    if (player.PoisonStatus == 0) {
+                        GameLoop.ZPO.Log.AddMessage("You are no longer poisoned.", Color.Lime);
+                    }
+                }
             }
 
 
@@ -89,7 +104,7 @@ namespace ZeroPlayersOnline.Managers {
                         if (curr.ItemSpawns[i].LastPickedUp + (curr.ItemSpawns[i].RespawnTimer * 1000) < Helper.Time() || curr.ItemSpawns[i].LastPickedUp == 0) { 
                             int spawnedCount = 0;
 
-                            if (curr.ItemSpawns[i].ReqToSpawn != null && !curr.ItemSpawns[i].ReqToSpawn.CheckRequirement(player, true)) {
+                            if (curr.ItemSpawns[i].ReqToSpawn != null && !curr.ItemSpawns[i].ReqToSpawn.CheckRequirement(player, true, true)) {
                                 continue;
                             } 
                              
@@ -166,45 +181,10 @@ namespace ZeroPlayersOnline.Managers {
                         mini.Con.DrawLine(new Point(0, 15 + i), new Point(54, 15 + i), '-', Color.DarkSlateGray);
 
                         if (i < player.Inventory.Count && player.Inventory[i].GetRef() is Item inv) {
-                            string line = inv.Name;
+                            int shop = curr.ShopItemsHere.Contains(player.Inventory[i].ID) ? 2 : curr.ShopItemsHere.Count > 0 ? 1 : 0;
+                            ColoredString name = inv.GetNameCS(player.Inventory[i].Quantity, shop, player.Inventory[i].Charges, player.Inventory[i].Noted);
 
-                            if (player.Inventory[i].Quantity > 1) {
-                                line += " x" + player.Inventory[i].Quantity;
-                            }
-
-                            if (inv.Name.Contains("potion") && player.Inventory[i].Charges != 0) {
-                                line += " (" + player.Inventory[i].Charges + " doses)";
-                            } else if (player.Inventory[i].Charges > 0 && !player.Inventory[i].ID.Contains("seed") && !player.Inventory[i].ID.Contains("plant")) { 
-                                line += " (" + player.Inventory[i].Charges + ")";
-                            }
-
-                            if (player.Inventory[i].Noted) {
-                                line += " (n)";
-                            }
-
-                            
-
-                            if (curr.ShopItemsHere.Count > 0 && player.CanUseShops) {
-                                int sellValue = inv.Value;
-
-                                if (player.Inventory[i].Charges != 0 && inv.UseString == "Potion") {
-                                    sellValue *= player.Inventory[i].Charges;
-                                }
-                                        
-                                if (!player.ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(player.Inventory[i].ID)) {
-                                    sellValue = (int) (Math.Floor(sellValue / 2.0));
-                                }
-
-                                
-
-                                line += " [" + sellValue + " gp]";
-                            }
-
-                            int colorSum = inv.ColorSum();
-
-                            Color itemName = inv.GetColor();
-
-                            mini.Con.Print(0, 15 + i, line, (mousePos.X < 55 && mousePos.Y == 15 + i) ? itemName.GetDarker() : itemName, colorSum < 60 ? Color.White : Color.Black);
+                            mini.Con.Print(0, 15 + i, (mousePos.X < 55 && mousePos.Y == 15 + i) ? name.GetDarker() : name);
 
                             bool dropped = false; 
 
@@ -220,10 +200,30 @@ namespace ZeroPlayersOnline.Managers {
                                     mini.Con.PrintClickable(px, 15 + i, new ColoredString(247.AsString() + " ", Color.Lime, Color.Black), () => {
                                         if (player.Inventory[i].GetRef() is Item alched) {
                                             if (alched.HighAlchVal() > 0) {  
-                                                highAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills); 
-                                                player.Inventory[i].Quantity -= 1;
-                                                player.HeldGold += alched.HighAlchVal();
-                                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast High Alchemy and convert the " + alched.Name + " into " + alched.HighAlchVal() + " gold.", Color.Goldenrod, Color.Black));
+                                                player.Inventory[i].Quantity -= 1; 
+                                                if (!player.Inventory[i].ID.Contains("mtaAlch")) {
+                                                    highAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);  
+                                                    player.HeldGold += alched.HighAlchVal();
+                                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast High Alchemy and convert the " + alched.Name + " into " + alched.HighAlchVal() + " gold.", Color.Goldenrod, Color.Black));
+                                                } else {
+                                                    int val = 1;
+                                                    if (MinigameManager.MTA_Alchs[1] == alched.ID) { val = 5; }
+                                                    if (MinigameManager.MTA_Alchs[2] == alched.ID) { val = 8; }
+                                                    if (MinigameManager.MTA_Alchs[3] == alched.ID) { val = 15; }
+                                                    if (MinigameManager.MTA_Alchs[4] == alched.ID) { val = 30; }
+
+                                                    if (alched.ID != MinigameManager.MTA_Alchs[MinigameManager.MTA_FreeAlch]) { 
+                                                        highAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);  
+                                                    } else {
+                                                        player.TryGrantExp("Magic", highAlch.ExpOnCast, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                                    }
+                                                    
+                                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast High Alchemy and convert the " + alched.Name + " into " + val + " coins.", Color.DarkGoldenrod, Color.Black));
+
+                                                    if (GameLoop.ZPO.ItemLibrary.TryGetValue("mtaAlchCoin", out Item? coin) && coin != null) {
+                                                        player.TryPickup(new Item(coin), val);
+                                                    }
+                                                }
                                             }
                                         }
                                     }); 
@@ -244,10 +244,31 @@ namespace ZeroPlayersOnline.Managers {
                                     mini.Con.PrintClickable(px, 15 + i, new ColoredString("~ ", Color.Green, Color.Black), () => {
                                         if (player.Inventory[i].GetRef() is Item alched) {
                                             if (alched.LowAlchVal() > 0) {  
-                                                lowAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills); 
                                                 player.Inventory[i].Quantity -= 1;
-                                                player.HeldGold += alched.LowAlchVal();
-                                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast Low Alchemy and convert the " + alched.Name + " into " + alched.LowAlchVal() + " gold.", Color.DarkGoldenrod, Color.Black));
+
+                                                if (!alched.ID.Contains("mtaAlch")) {
+                                                    lowAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);  
+                                                    player.HeldGold += alched.LowAlchVal();
+                                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast Low Alchemy and convert the " + alched.Name + " into " + alched.LowAlchVal() + " gold.", Color.DarkGoldenrod, Color.Black));
+                                                } else {
+                                                    int val = 1;
+                                                    if (MinigameManager.MTA_Alchs[1] == alched.ID) { val = 5; }
+                                                    if (MinigameManager.MTA_Alchs[2] == alched.ID) { val = 8; }
+                                                    if (MinigameManager.MTA_Alchs[3] == alched.ID) { val = 15; }
+                                                    if (MinigameManager.MTA_Alchs[4] == alched.ID) { val = 30; }
+
+                                                    if (alched.ID != MinigameManager.MTA_Alchs[MinigameManager.MTA_FreeAlch]) { 
+                                                        lowAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);  
+                                                    } else {
+                                                        player.TryGrantExp("Magic", lowAlch.ExpOnCast, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                                    }
+
+                                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast Low Alchemy and convert the " + alched.Name + " into " + val + " coins.", Color.DarkGoldenrod, Color.Black));
+
+                                                    if (GameLoop.ZPO.ItemLibrary.TryGetValue("mtaAlchCoin", out Item? coin) && coin != null) {
+                                                        player.TryPickup(new Item(coin), val);
+                                                    }
+                                                }
                                             }
                                         }
                                     }); 
@@ -264,7 +285,17 @@ namespace ZeroPlayersOnline.Managers {
                                 break;
 
                             mini.Con.PrintClickable(px, 15 + i, new ColoredString("? ", Color.MediumPurple, Color.Black), () => { 
-                                GameLoop.ZPO.Log.AddMessage(new ColoredString(inv.ExamineText, Color.SandyBrown, Color.Black)); 
+                                if (player.Inventory[i].Containing.Count == 0) {
+                                    GameLoop.ZPO.Log.AddMessage(new ColoredString(inv.ExamineText, Color.SandyBrown, Color.Black)); 
+                                } else {
+                                    string build = inv.Name + ": ";
+
+                                    for (int con = 0; con < player.Inventory[i].Containing.Count; con++) {
+                                        build += (con != 0 ? ", " : "") + (player.Inventory[i].Containing[con].Quantity > 1 ? player.Inventory[i].Containing[con].Quantity + "x " : " ") + GameLoop.ZPO.ResolveItemName(player.Inventory[i].Containing[con].ID);
+                                    } 
+
+                                    GameLoop.ZPO.Log.AddMessage(build, Color.SandyBrown); 
+                                }
 
                                 foreach (var kv in GameLoop.ZPO.QuestLibrary) {
                                     kv.Value.CheckProgress(player, "ExamineItem", player.Inventory[i].ID, 0);
@@ -370,8 +401,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|   Weapon: "); 
                     if (player.Equipment.TryGetValue("Weapon", out ItemWrapper? wepWrap) && wepWrap.GetRef() is Item wep) {
-                        string name = wep.Name + (player.Equipment["Weapon"].Quantity > 1 ? " x" + player.Equipment["Weapon"].Quantity : "") + (wepWrap.Charges > 0 ? " (" + wepWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, wep.GetColor(), wep.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = wep.GetNameCS(wepWrap.Quantity, 0, wepWrap.Charges, wepWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Weapon"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Weapon");
@@ -396,8 +427,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "| Off-hand: ");
                     if (player.Equipment.TryGetValue("Offhand", out ItemWrapper? offWrap) && offWrap.GetRef() is Item off) {
-                        string name = off.Name + (offWrap.Charges > 0 ? " (" + offWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, off.GetColor(), off.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = off.GetNameCS(offWrap.Quantity, 0, offWrap.Charges, offWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Offhand"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Offhand");
@@ -422,8 +453,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Head: "); 
                     if (player.Equipment.TryGetValue("Head", out ItemWrapper? headWrap) && headWrap.GetRef() is Item head) {
-                        string name = head.Name + (headWrap.Charges > 0 ? " (" + headWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, head.GetColor(), head.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = head.GetNameCS(headWrap.Quantity, 0, headWrap.Charges, headWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Head"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Head");
@@ -447,9 +478,9 @@ namespace ZeroPlayersOnline.Managers {
                     printY++;
 
                     mini.Con.Print(1, printY, "|     Body: "); 
-                    if (player.Equipment.TryGetValue("Body", out ItemWrapper? bodyWrap) && bodyWrap.GetRef() is Item body) {
-                        string name = body.Name + (bodyWrap.Charges > 0 ? " (" + bodyWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, body.GetColor(), body.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                    if (player.Equipment.TryGetValue("Body", out ItemWrapper? bodyWrap) && bodyWrap.GetRef() is Item body) { 
+                        ColoredString name = body.GetNameCS(bodyWrap.Quantity, 0, bodyWrap.Charges, bodyWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Body"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Body");
@@ -474,8 +505,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Legs: "); 
                     if (player.Equipment.TryGetValue("Legs", out ItemWrapper? legWrap) && legWrap.GetRef() is Item legs) {
-                        string name = legs.Name + (legWrap.Charges > 0 ? " (" + legWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, legs.GetColor(), legs.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = legs.GetNameCS(legWrap.Quantity, 0, legWrap.Charges, legWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Legs"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Legs");
@@ -500,8 +531,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|    Hands: ");
                     if (player.Equipment.TryGetValue("Hands", out ItemWrapper? handWrap) && handWrap.GetRef() is Item hands) {
-                        string name = hands.Name + (handWrap.Charges > 0 ? " (" + handWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, hands.GetColor(), hands.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = hands.GetNameCS(handWrap.Quantity, 0, handWrap.Charges, handWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Hands"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Hands");
@@ -526,8 +557,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Feet: ");
                     if (player.Equipment.TryGetValue("Feet", out ItemWrapper? feetWrap) && feetWrap.GetRef() is Item feet) {
-                        string name = feet.Name + (feetWrap.Charges > 0 ? " (" + feetWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, feet.GetColor(), feet.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = feet.GetNameCS(feetWrap.Quantity, 0, feetWrap.Charges, feetWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Feet"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Feet");
@@ -552,8 +583,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Cape: ");
                     if (player.Equipment.TryGetValue("Cape", out ItemWrapper? capeWrap) && capeWrap.GetRef() is Item cape) {
-                        string name = cape.Name + (capeWrap.Charges > 0 ? " (" + capeWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, cape.GetColor(), cape.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = cape.GetNameCS(capeWrap.Quantity, 0, capeWrap.Charges, capeWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Cape"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Cape");
@@ -578,8 +609,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|     Ring: ");
                     if (player.Equipment.TryGetValue("Ring", out ItemWrapper? ringWrap) && ringWrap.GetRef() is Item ring) {
-                        string name = ring.Name + (ringWrap.Charges > 0 ? " (" + ringWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, ring.GetColor(), ring.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = ring.GetNameCS(ringWrap.Quantity, 0, ringWrap.Charges, ringWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Ring"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Ring");
@@ -604,8 +635,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|   Amulet: ");
                     if (player.Equipment.TryGetValue("Amulet", out ItemWrapper? amuletWrap) && amuletWrap.GetRef() is Item amulet) {
-                        string name = amulet.Name + (amuletWrap.Charges > 0 ? " (" + amuletWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, amulet.GetColor(), amulet.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = amulet.GetNameCS(amuletWrap.Quantity, 0, amuletWrap.Charges, amuletWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Amulet"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Amulet");
@@ -630,8 +661,8 @@ namespace ZeroPlayersOnline.Managers {
 
                     mini.Con.Print(1, printY, "|   Pocket: ");
                     if (player.Equipment.TryGetValue("Pocket", out ItemWrapper? pocketWrap) && pocketWrap.GetRef() is Item pocket) {
-                        string name = pocket.Name + (player.Equipment["Pocket"].Quantity > 1 ? " x" + player.Equipment["Pocket"].Quantity : "") + (pocketWrap.Charges > 0 ? " (" + pocketWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, pocket.GetColor(), pocket.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                        ColoredString name = pocket.GetNameCS(pocketWrap.Quantity, 0, pocketWrap.Charges, pocketWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Pocket"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Pocket");
@@ -655,9 +686,9 @@ namespace ZeroPlayersOnline.Managers {
                     printY++;
 
                     mini.Con.Print(1, printY, "|     Ammo: ");
-                    if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? ammoWrap) && ammoWrap.GetRef() is Item ammo) {
-                        string name = ammo.Name + (player.Equipment["Ammo"].Quantity > 1 ? " x" + player.Equipment["Ammo"].Quantity : "") + (ammoWrap.Charges > 0 ? " (" + ammoWrap.Charges + ")" : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, ammo.GetColor(), ammo.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                    if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? ammoWrap) && ammoWrap.GetRef() is Item ammo) { 
+                        ColoredString name = ammo.GetNameCS(ammoWrap.Quantity, 0, ammoWrap.Charges, ammoWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Ammo"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Ammo");
@@ -681,9 +712,9 @@ namespace ZeroPlayersOnline.Managers {
                     printY++;
 
                     mini.Con.Print(1, printY, "|      Pet: ");
-                    if (player.Equipment.TryGetValue("Pet", out ItemWrapper? petWrap) && petWrap.GetRef() is Item pet) {
-                        string name = pet.Name + (player.Equipment["Pet"].Quantity > 1 ? " x" + player.Equipment["Pet"].Quantity : "");
-                        mini.Con.PrintClickable(13, printY, new ColoredString(name, pet.GetColor(), pet.ColorSum() < 60 ? Color.White : Color.Black), () => {
+                    if (player.Equipment.TryGetValue("Pet", out ItemWrapper? petWrap) && petWrap.GetRef() is Item pet) { 
+                        ColoredString name = pet.GetNameCS(petWrap.Quantity, 0, petWrap.Charges, petWrap.Noted);
+                        mini.Con.PrintClickable(13, printY, name, () => {
                             ItemWrapper item = player.Equipment["Pet"];
                             player.TryPickup(item, item.Quantity);
                             player.Equipment.Remove("Pet");
@@ -944,10 +975,25 @@ namespace ZeroPlayersOnline.Managers {
                                 if (MagicTab == "Utility") {
                                     if (spells[i].ID == "utilBonesBananas") {
                                         bool anyBones = false;
+                                        int extras = 0;
                                         foreach (var kv in player.Inventory) {
-                                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "bonesAnimals", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
+                                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "mtaBone1", "mtaBone2", "mtaBone3", "mtaBone4", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
+                                                if (kv.ID.Contains("mtaBone")) {
+                                                    int qty = 0;
+                                                    if (MinigameManager.MTA_Bones[1] == kv.ID) { qty = 1; }
+                                                    if (MinigameManager.MTA_Bones[2] == kv.ID) { qty = 2; }
+                                                    if (MinigameManager.MTA_Bones[3] == kv.ID) { qty = 3; }
+                                                    
+                                                    extras += qty;
+                                                }
                                                 kv.ID = "fruitBanana";
-                                                anyBones = true;
+                                                anyBones = true; 
+                                            }
+                                        }
+
+                                        if (extras > 0) {
+                                            if (GameLoop.ZPO.ItemLibrary.TryGetValue("fruitBanana", out Item? banan) && banan != null) {
+                                                player.TryPickup(new Item(banan), extras);
                                             }
                                         }
 
@@ -961,10 +1007,26 @@ namespace ZeroPlayersOnline.Managers {
 
                                     if (spells[i].ID == "utilBonesPeaches") {
                                         bool anyBones = false;
+                                        int extras = 0;
                                         foreach (var kv in player.Inventory) {
-                                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "bonesAnimals", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
+                                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "mtaBone1", "mtaBone2", "mtaBone3", "mtaBone4", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
+                                                if (kv.ID.Contains("mtaBone")) {
+                                                    int qty = 0;
+                                                    if (MinigameManager.MTA_Bones[1] == kv.ID) { qty = 1; }
+                                                    if (MinigameManager.MTA_Bones[2] == kv.ID) { qty = 2; }
+                                                    if (MinigameManager.MTA_Bones[3] == kv.ID) { qty = 3; }
+                                                     
+                                                    extras += qty;
+                                                }
+
                                                 kv.ID = "fruitPeach";
                                                 anyBones = true;
+                                            }
+                                        }
+
+                                        if (extras > 0) {
+                                            if (GameLoop.ZPO.ItemLibrary.TryGetValue("fruitPeach", out Item? peach) && peach != null) {
+                                                player.TryPickup(new Item(peach), extras);
                                             }
                                         }
 

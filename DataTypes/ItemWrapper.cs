@@ -10,6 +10,9 @@ namespace ZeroPlayersOnline.DataTypes {
         public int Charges = 1;
         public bool Noted = false; 
 
+        public List<ItemWrapper> Containing = new();
+        public bool AutoAddingContainer = false;
+
         [JsonIgnore]
         public Item? Library = null; 
 
@@ -26,7 +29,13 @@ namespace ZeroPlayersOnline.DataTypes {
 
             Noted = wrap.Noted;
 
-            Inaccessible = inaccessible;
+            Inaccessible = inaccessible; 
+
+            if (wrap.Containing.Count > 0) {
+                foreach (var con in wrap.Containing) {
+                    Containing.Add(new(con));
+                }
+            }
         }
 
         public ItemWrapper(string id, int qty, bool note = false, int chg = 1) {
@@ -43,6 +52,10 @@ namespace ZeroPlayersOnline.DataTypes {
             Noted = other.Noted;
             Inaccessible = other.Inaccessible;
             Library = other.Library;
+
+            for (int i = 0; i < other.Containing.Count; i++) {
+                Containing.Add(other.Containing[i]);
+            }
         }
 
 
