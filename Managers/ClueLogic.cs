@@ -125,6 +125,29 @@ namespace ZeroPlayersOnline.Managers {
             if (GameLoop.ZPO.ClueStepLibrary.TryGetValue(clueID, out ClueStep? clue) && clue != null) { 
                 if (clue.ClueType != "Map") { 
                     Log.AddMessage(new ColoredString("Clue: " + clue.HintText, Color.SandyBrown, Color.Black));
+
+                    if (clue.ClueType == "HotCold") {
+                        List<HotColdResult> maps = new();
+                        
+                        if (GameLoop.ZPO.Atlas.TryGetValue(player.NavLoc, out Location? curr)) {
+                            curr.HotColdSearch(maps, 0, clue.SolveLoc);
+                        }
+
+                        int shortest = 99;
+                        foreach (var map in maps) {
+                            if (map.MapID == clue.SolveLoc) {
+                                shortest = Math.Min(shortest, map.Depth);
+                            }
+                        }
+
+                        if (shortest == 0) { Log.AddMessage("Burning hot! Dig for the treasure here!", Color.Red); }
+                        else if (shortest == 1) { Log.AddMessage("Burning hot! The treasure is only one map away!", Color.Red); }
+                        else if (shortest <= 3) { Log.AddMessage("Very hot!", Color.Crimson); }
+                        else if (shortest <= 5) { Log.AddMessage("Hot!", Color.Orange); }
+                        else if (shortest <= 7) { Log.AddMessage("Warm.", Color.Yellow); }
+                        else if (shortest <= 10) { Log.AddMessage("Cold", Color.Turquoise); }
+                        else { Log.AddMessage("Very cold. The treasure is more than ten map connections away.", Color.CadetBlue); }
+                    }
                 } else {
                     ExtraWindows.Clue.IsVisible = true;
                     ExtraWindows.CurrentClue = clue.ID;

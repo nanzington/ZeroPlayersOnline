@@ -236,8 +236,13 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             if (NeededBait != "") {
-                if (!p.HasAllItems([NeededBait + ",1"]))
-                    return "a " + GameLoop.ZPO.ResolveItemName(NeededBait).ToLower();
+                if (NeededBait != "keyClue") {
+                    if (!p.HasAllItems([NeededBait + ",1"])) {
+                        return "a " + GameLoop.ZPO.ResolveItemName(NeededBait).ToLower(); 
+                    }
+                } else {
+                    return "a clue key, likely dropped by a nearby monster.";
+                }
             }
 
             return "";

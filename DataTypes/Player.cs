@@ -19,7 +19,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public int GrandExchangeMode = 1; // 0 = full, 1 = limited/bronze, 2 = none/iron
         public int DeathMode = 1; // 0 = no death penalty, 1 = drop items, 2 = reset character
-        public bool NightmareMode = false; // if true, any damage taken will kill the player
+        public bool NightmareMode = false; // if true, any damage taken will kill the player 
 
         public int ExpMultiplier = 1; // Multiply all gained exp by this amount
         public int PayToWin = 0; // If 0, experience is earned normally. Otherwise this is the cost in GP to get 1 exp (before the above multiplier is applied).
@@ -51,6 +51,10 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool ShopsAlwaysFullPrice = false;
         public bool CanUseBanks = true;
         public int FarmGrowthIncrement = 60;
+
+        // Quality of Life options
+        public bool CoinPouch = true; // aka HeldGold allowed to be used, or force player to use the coins item
+        public bool CoinPouchDeath = false; // Drops the contents of your coin pouch when you die
 
         // End of Difficulty Settings
 
@@ -363,7 +367,7 @@ namespace ZeroPlayersOnline.DataTypes {
             BankedItems.Add(item);
         }
 
-        public bool TryDrop(int i) {
+        public bool TryDrop(int i, int qtyOverride = -1) {
             if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr) && curr != null) {
                 int qty = 1;
                                 
@@ -372,9 +376,11 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (Helper.EitherControl())
                     qty *= 10;
 
-                if (qty > Inventory[i].Quantity || Helper.EitherAlt())
-                    qty = Inventory[i].Quantity;
+                if (qtyOverride != -1)
+                    qty = qtyOverride;
 
+                if (qty > Inventory[i].Quantity || Helper.EitherAlt())
+                    qty = Inventory[i].Quantity; 
 
                 if (Inventory[i].GetRef() is Item toDrop) {
                     if (curr.IsBank && CanUseBanks) {
@@ -435,18 +441,22 @@ namespace ZeroPlayersOnline.DataTypes {
                             if (Inventory[i].Containing.Count > 0) {
                                 GameLoop.ZPO.Log.AddMessage("You probably don't want to sell that, and should remove all items from it first if you do.", Color.Crimson);
                             } else {
-                                int sellValue = toDrop.Value;
+                                if (Inventory[i].ID == "coins") { 
+                                    GameLoop.ZPO.Log.AddMessage("It is inadvisable to sell coins, as you're unlikely to get the better end of that deal.", Color.Crimson);
+                                } else {
+                                    int sellValue = toDrop.Value;
 
-                                if (Inventory[i].Charges != 0 && toDrop.UseString == "Potion") {
-                                    sellValue *= Inventory[i].Charges;
-                                } 
+                                    if (Inventory[i].Charges != 0 && toDrop.UseString == "Potion") {
+                                        sellValue *= Inventory[i].Charges;
+                                    } 
                                         
-                                if (!ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(Inventory[i].ID)) {
-                                    sellValue = (int) (Math.Floor(sellValue / 2.0));
-                                }
+                                    if (!ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(Inventory[i].ID)) {
+                                        sellValue = (int) (Math.Floor(sellValue / 2.0));
+                                    }
 
-                                HeldGold += sellValue * qty;
-                                Inventory[i].Quantity -= qty;
+                                    GiveGold(sellValue * qty);
+                                    Inventory[i].Quantity -= qty;
+                                }
                             }
                         }
                     }
@@ -480,8 +490,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 if (PayToWin > 0 && buying) { 
 
-                    if (HeldGold >= (PayToWin * amount)) {
-                        HeldGold -= PayToWin * amount;
+                    if (GoldTotal() >= (PayToWin * amount)) {
+                        TakeGold(PayToWin * amount); 
                         log.AddMessage(new ColoredString("Paid " + String.Format($"{PayToWin * amount:n0}") + " for " + (amount * ExpMultiplier) + " " + which + " experience.", Color.Goldenrod, Color.Black));
                     } else {
                         log.AddMessage(new ColoredString("Sorry, " + Name + "! I can't give credit. Come back when you're a little... mmmm... richer! (Need " + String.Format($"{PayToWin * amount:n0}") + "gp)", Color.Crimson, Color.Black));
@@ -557,28 +567,21 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? deathSpot)) {
                     if (deathSpot != null) {
                         for (int i = Inventory.Count - 1; i >= 0; i--) {
-                            if (Inventory[i].GetRef() is Item drop) {
-                                bool found = false;
-                                for (int j = 0; j < deathSpot.ItemsHere.Count; j++) {
-                                    if (deathSpot.ItemsHere[j].ID == Inventory[i].ID && drop.Stackable) {
-                                        deathSpot.ItemsHere[j].Quantity += Inventory[i].Quantity;
-                                        found = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!found) {
-                                    deathSpot.ItemsHere.Add(drop);
-                                }
-
-                                Inventory.RemoveAt(i);
-                            }
+                            TryDrop(i, Inventory[i].Quantity);
                         }
                         
                         foreach (var kv in Equipment) { 
                             GameLoop.ZPO.TryPlaceItem(NavLoc, kv.Value); 
                         } 
                         Equipment.Clear();
+
+                        if (HeldGold > 0 && CoinPouchDeath) {
+                            if (GameLoop.ZPO.ResolveItem("coins") is Item coin) {
+                                coin.Quantity = HeldGold;
+                                GameLoop.ZPO.TryPlaceItem(NavLoc, new(coin));
+                                HeldGold = 0;
+                            }
+                        }
                     }
                 }
             }
@@ -1461,6 +1464,48 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public bool HasMinigameItem() { // TODO: Placeholder, Implement this when there are things you carry around that need to display minigame info, like construction contracts
             return false;
+        }
+
+        public void TakeGold(int amount) {
+            int qtyLeft = amount;
+            if (CoinPouch && HeldGold >= qtyLeft) { HeldGold -= qtyLeft; qtyLeft = 0; } 
+            if (qtyLeft > 0 && CoinPouch) { qtyLeft -= HeldGold; HeldGold = 0; } 
+            if (qtyLeft > 0) { ConsumeItems(["coins," + qtyLeft]); }
+        }
+
+        public void GiveGold(int amount) {
+            if (CoinPouch) { HeldGold += amount; }
+            else {
+                if (GameLoop.ZPO.ResolveItem("coins") is Item coin) {
+                    TryPickup(new Item(coin), amount);
+                }
+            }
+        }
+
+        public int GoldTotal() {
+            int total = 0;
+
+            if (CoinPouch) { total += HeldGold; }
+
+            foreach (var kv in Inventory) {
+                if (kv.ID == "coins") { total += kv.Quantity; }
+                if (kv.Containing.Count > 0) {
+                    foreach (var con in kv.Containing) {
+                        if (con.ID == "coins") { total += con.Quantity; }
+                    }
+                }
+            }
+
+            foreach (var kv in Equipment) {
+                if (kv.Value.ID == "coins") { total += kv.Value.Quantity; }
+                if (kv.Value.Containing.Count > 0) {
+                    foreach (var con in kv.Value.Containing) {
+                        if (con.ID == "coins") { total += con.Quantity; }
+                    }
+                }
+            }
+
+            return total;
         }
     }
 }

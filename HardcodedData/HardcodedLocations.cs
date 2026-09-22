@@ -389,7 +389,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeCommunalForge"),
                             new Connection("MIST_GroatsFarm")
                         },
-                        NPCsHere = new() { "man", "man", "man", "man" },
+                        NPCsHere = new() { "mistLumDoomsayer", "man", "man", "man", "man" },
                         GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeWillow", "treeWillow", "fishBaitLow", "fishBaitLow", "fishBaitLow", "fishLure", "fishLure", "fishLure" }
                     }); 
 
@@ -505,12 +505,17 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_GroatsFarm"),
                             new Connection("DES_AlKharidOutskirts", new() { new("QuestAt", 100, "DES_PrinceAliRescue"), new("Item", 10, "Gold", true) }, true), // TODO: When Prince Ali Rescue is implemented, update this to the actual complete stage
-                            new Connection("MIST_Lumbridge")
+                            new Connection("MIST_Lumbridge"),
+                            new Connection("MIST_VarrockMineWest", null, false, 30, "Woodcutting", "(Canoe to the Champion's Guild)", false, 12),
+                            new Connection("MIST_BarbarianVillage", null, false, 60, "Woodcutting", "(Canoe to Barbarian Village)", false, 27),
+                            new Connection("MIST_Edgeville", null, false, 90, "Woodcutting", "(Canoe to Edgeville)", false, 42),
+                            new Connection("WILD_FeroxEnclave", null, false, 150, "Woodcutting", "(Canoe to Ferox Enclave)", false, 57),
+                            new Connection("WILD_WildernessPond", null, false, 150, "Woodcutting", "(Canoe to Wilderness Pond)", false, 57)
                         },
                         ItemSpawns = new List<ItemSpot>() {
                             new ItemSpot("daggerIron", 1)
                         },
-                        NPCsHere = new() { "desBorderGuard", "mistLumBarfyBill" },
+                        NPCsHere = new() { "desBorderGuard" },
                         GatheringSpots = new() { "clueBoxes", "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeDead", "treeDead", "treeDead" },
                         AreaMonsters = new() { "goblin", "goblin", "goblin", "goblin", "goblin", "spiderGiant", "spiderGiant" }
                     });
@@ -1202,8 +1207,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                         Description = "A crossroads leading between Varrock, Lumbridge, Al Kharid, and the Digsite. There's a broken cart of a traveling trader here, but it seems to contain suspiciously little of value for a traveling trader. A few tables are placed haphazardly near the crossroads for some reason but there is otherwise little here besides some trees and grass.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_VarrockOutskirtsSouth"),
-                            new Connection("MIST_VarrockAbandonedFarm"),
+                            new Connection("MIST_VarrockGowerFarm"),
                             new Connection("MIST_VarrockMineEast"),
+                            new Connection("MIST_VarrockCrossroadsEast"),
                             new Connection("DES_AlKharidMineOutside"),
                             new Connection("MIST_GroatsFarm")
                         },
@@ -1212,14 +1218,172 @@ namespace ZeroPlayersOnline.Hardcodes {
                         GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treePine", "treePine" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_VarrockAbandonedFarm", "Varrock - Abandoned Farm", "Misthalin") {
-                        Description = "This is a small fenced in area with some sheep and a pond with some swans in it. There are a handful of empty troughs placed around the pen, and some crumbling stone walls are all that remains of a shack.",
+                    locsToAdd.Add(new Location("MIST_VarrockGowerFarm", "Varrock - Gower Farm", "Misthalin") {
+                        Description = "This is a small fenced in farmstead with a... giant rat pen? And a pond with some swans in it. There are a handful of troughs placed around the pen and a small grove of trees growing on the north side of the farmhouse. A path up the side of the farm leads to the Varrock East Mine.",
                         ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockMineEast"),
+                            new Connection("MIST_VarrockOutskirtsSouth"),
                             new Connection("MIST_VarrockCrossroadsSouth")
                         },
                         NPCsHere = new() { "farmerMaster" },
-                        AreaMonsters = new() { "ram", "ram" },
-                        GatheringSpots = new() { "sheep", "sheep", "sheep", "sheep" }
+                        AreaMonsters = new() { "ratGiant", "ratGiant", "ratGiant", "ratGiant" },
+                        GatheringSpots = new() { "treeWillow", "treeWillow", "treeMaple", "treeMaple", "treeMaple", "treeMaple", "treeYew", "treeElder", "plantCabbage", "plantCabbage" },
+                        ProcessingStations = new() { "Sink", "Spinning Wheel", "Dairy Churn" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockMineEast", "Varrock - East Mine", "Misthalin") {
+                        Description = "A small divot in the ground fenced in on three sides by a wooden fence. There are a few types of ores available here, plus a giant rat and a black bear wandering around a little outside the fence. A path passes by one side leading south to the Varrock South Crossroads and north to the Varrock East Crossroads.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockOutskirtsSouth"),
+                            new Connection("MIST_VarrockCrossroadsEast"),
+                            new Connection("MIST_VarrockGowerFarm"),
+                            new Connection("MIST_VarrockCrossroadsSouth")
+                        }, 
+                        AreaMonsters = new() { "ratGiant", "bearBlack" },
+                        GatheringSpots = new() { "oreCopper", "oreCopper", "oreTin", "oreTin", "oreIron", "oreIron", "oreMithril", "oreMithril", "oreMithril", "oreAdamant" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockOutskirtsSouth", "Varrock - Outskirts South", "Misthalin") {
+                        Description = "Just outside the southern gates into the city of Varrock. For some reason some dark wizards are allowed to congregate at a small ritual stite, consisting of some stone pillars around a low table that might be a sacrificial altar. The stone walls surrounding the city are imposing, giving a feeling of security and civilization. You could enter through the gate, or skirt up around the west side of the city walls by passing through the mine.",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_VarrockMineWest"),
+                            new Connection("MIST_VarrockMineEast"),
+                            new Connection("MIST_VarrockGuildChampions"),
+                            new Connection("MIST_VarrockGowerFarm"),
+                            new Connection("MIST_VarrockCrossroadsSouth")
+                        }, 
+                        NPCsHere = new() { "guard", "guard", "guard" },
+                        AreaMonsters = new() { "guard", "guard", "guard", "wizardDark7", "wizardDark7", "wizardDark7", "wizardDark20", "wizardDark20" },
+                        GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine", "treeOak", "treeOak", "plantNettles" }
+                    }); 
+
+                    locsToAdd.Add(new Location("MIST_VarrockMineWest", "Varrock - West Mine", "Misthalin") {
+                        Description = "A small mine dug into the side of a hill, exposing some ores. There's a canoe station here to travel up and down the River Lum, the Champion's Guild, and a patch to grow bushes in. You could skirt up around the west side of the city walls.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockCrossroadsWest"), 
+                            new Connection("MIST_VarrockGuildChampions"),
+                            new Connection("MIST_VarrockOutskirtsSouth"),
+                            new Connection("MIST_LumbridgeAcrossLum", null, false, 30, "Woodcutting", "(Canoe to Lumbridge)", false, 12),
+                            new Connection("MIST_BarbarianVillage", null, false, 30, "Woodcutting", "(Canoe to Barbarian Village)", false, 12),
+                            new Connection("MIST_Edgeville", null, false, 60, "Woodcutting", "(Canoe to Edgeville)", false, 27),
+                            new Connection("WILD_FeroxEnclave", null, false, 150, "Woodcutting", "(Canoe to Ferox Enclave)", false, 57),
+                            new Connection("WILD_WildernessPond", null, false, 150, "Woodcutting", "(Canoe to Wilderness Pond)", false, 57)
+                        }, 
+                        FarmingPatchesHere = new() { "MIST_VarBush" },
+                        GatheringSpots = new() { "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreIron", "oreIron", "oreIron", "oreIron", "oreMithril", "oreMithril", "oreMithril" }
+                    }); 
+
+                    locsToAdd.Add(new Location("MIST_VarrockCrossroadsWest", "Varrock - West Crossroads", "Misthalin") {
+                        Description = "Just outside the western gates into the city of Varrock. There are a variety of buildings outside the walls here, including the Cook's Guild and a path to the Grand Exchange. Gertrude also lives here, across the road from the Leptoc Mansion, and there's a small locked shack. A bridge to the west leads to Barbarian Village. You could also pass through the gates into Varrock proper.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockWest"),
+                            new Connection("MIST_VarrockGuildCooks", new() { new("Wearing", 1, "chefHat", false), new("Skill", 32, "Cooking") }),
+                            new Connection("MIST_VarrockGrandExchange"),
+                            new Connection("MIST_VarrockGertrude"),
+                            new Connection("MIST_VarrockLeptocMansion"),
+                            new Connection("MIST_VarrockGiantShack", new() { new("Item", 1, "keyVarrockShack", false) }),
+                            new Connection("MIST_VarrockOutlawCamp"),
+                            new Connection("MIST_BarbarianVillage"),
+                            new Connection("MIST_VarrockMineWest")
+                            // TODO: There can be a portal to Puro Puro in the wheat field here, add that later when Puro Puro is added
+                        }, 
+                        NPCsHere = new() { "guard", "guard", "guard", "dogStray" },
+                        AreaMonsters = new() { "guard", "guard", "guard" },
+                        GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine", "treeOak", "treeOak", "plantGrain", "plantGrain" }
+                    });  
+
+                    locsToAdd.Add(new Location("MIST_VarrockGuildCooks", "Cook's Guild", "Misthalin") {
+                        Description = "A guild for master chefs... or at least chefs with a proper hat. The upper floors extend up to a windmill gearing system, allowing you to grind grain to flour inside the building. There are numerous free items for chefs to use, and some facilities to help with the cooking process. Romily Weaklax offers a selection of pies in his shop, and the Head Chef could sell you the Cooking Cape of Accomplishment if you have truly mastered the art of cooking.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockGuildCooksVIP", new() { new("Skill", 99, "Cooking"), new("DiaryComplete", 1, "Varrock", misc3: "Hard") }, true),
+                            new Connection("MIST_VarrockCrossroadsWest")
+                        },
+                        ItemSpawns = new() { new("chocolateBar", 5), new("pieEmpty", 1), new("tinCakeEmpty", 1), new("bowlEmpty", 1), new("fruitApple", 3, count: 3), new("grapes", 5), new("potEmpty", 1), new("jugEmpty", 1) },
+                        ProcessingStations = new() { "Windmill", "Sink", "Dairy Churn" },
+                        NPCsHere = new() { "mistVarRomily", "mistVarHeadChef" },
+                        ShopItemsHere = new() { "bookRecipesPie", "pieRedberry", "pieMeat", "pieMud", "pieApple", "pieGarden", "pieFish", "pieAdmiral", "pieWild", "pieSummer" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockGuildCooksVIP", "Cook's Guild - VIP Area", "Misthalin") {
+                        Description = "A luxury VIP area for true master chefs, or anyone to have earned the privilege by completing many tasks around Varrock. Okay it's not actually that luxurious, this is really just a small extra room off the main Guild room where there's a range and a bank.",
+                        IsBank = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockGuildCooks")
+                        },
+                        ProcessingStations = new() { "Range" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockCrossroadsEast", "Varrock - East Crossroads", "Misthalin") {
+                        Description = "Just outside the eastern gates into the city of Varrock. There are a variety of buildings outside the walls here, including the Cook's Guild and a path to the Grand Exchange. Gertrude also lives here, across the road from the Leptoc Mansion, and there's a small locked shack. A bridge to the west leads to Barbarian Village. You could also pass through the gates into Varrock proper.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockEast"),
+                            new Connection("MIST_VarrockJollyBoar"),
+                            new Connection("MIST_VarrockLumberyard"),
+                            new Connection("RunecraftAltarEarth", new() { new("Item", 1, "talismanEarth", false) }),
+                            new Connection("MIST_VarrockChaosTunnel", new() { new("Quest", 10, "MI_WhatLiesBelow", false) }),
+                            new Connection("MIST_Silvarea"),
+                            new Connection("MIST_Digsite"),
+                            new Connection("MIST_VarrockMineEast"),
+                            new Connection("MIST_VarrockCrossroadsSouth")
+                        }, 
+                        NPCsHere = new() { "mistVarAnnaJones", "guard", "guard", "guard" },
+                        AreaMonsters = new() { "guard", "guard", "guard", "imp" },
+                        GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine", "treeOak", "treeOak", "treeYew", "treeYew" }
+                    });
+                }
+
+                // Barbarian Village and Stronghold of Security
+                {
+                    locsToAdd.Add(new Location("MIST_BarbarianVillage", "Barbarian Village", "Misthalin") {
+                        Description = "Sometimes also called Grunnarsgrunn, or Gunnar's Ground, this is a village inhabited by barbarians just south of Edgeville and west of Varrock on the River Lum. Outside the crude palisade is a lookout tower, and a perpetual fire next to the fishing spots on the river. Inside the walls are a few buildings, including a helmet shop, a pottery studio, a storage hut, and a longhall. Surrounded by ore rocks in the center of the village is a hole leading down into the Stronghold of Security.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_BetweenEdgevilleBarbarian"),
+                            new Connection("MIST_BarbarianLonghall"),
+                            new Connection("MIST_BarbarianPeksa"),
+                            new Connection("MIST_BarbarianLookout"),
+                            new Connection("MIST_StrongholdSecurity1Entrance"),
+                            new Connection("MIST_VarrockCrossroadsWest"),
+                            new Connection("MIST_BetweenBarbarianDraynor"),
+                            new Connection("MIST_LumbridgeAcrossLum", null, false, 60, "Woodcutting", "(Canoe to Lumbridge)", false, 27),
+                            new Connection("MIST_VarrockMineWest", null, false, 30, "Woodcutting", "(Canoe to the Champion's Guild)", false, 12),
+                            new Connection("MIST_Edgeville", null, false, 30, "Woodcutting", "(Canoe to Edgeville)", false, 12),
+                            new Connection("WILD_FeroxEnclave", null, false, 150, "Woodcutting", "(Canoe to Ferox Enclave)", false, 57),
+                            new Connection("WILD_WildernessPond", null, false, 150, "Woodcutting", "(Canoe to Wilderness Pond)", false, 57)
+                        }, 
+                        ItemSpawns = new() { new("pickaxeBronze", 1) },
+                        AreaMonsters = new() { "barbarian9", "barbarian9", "barbarian9", "barbarian10", "barbarian10", "unicorn" },
+                        ProcessingStations = new() { "Spinning Wheel", "Pottery Wheel", "Pottery Kiln" },
+                        GatheringSpots = new() { "clueChest", "treePine", "treePine", "treeOak", "oreTin", "oreTin", "oreCoal", "oreCoal", "fishBaitLow", "fishBaitLow", "fishLure", "fishLure" }
+                    }); 
+
+                    locsToAdd.Add(new Location("MIST_BarbarianPeksa", "Peksa's Helmet Shop", "Misthalin") {
+                        Description = "A small storefront with a variety of helmets on sale, some of them hanging on the wall for display. There's a fire burning in the middle of the room, plus some shelves and tables stacked with goods against the walls. There are a couple crates stacked in one corner.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_BarbarianVillage")
+                        }, 
+                        ShopItemsHere = new() { "helmBronze", "helmIron", "helmSteel", "helmMithril", "helmAdamant" },
+                        ItemSpawns = new() { new("potEmpty", 1) },
+                        ProcessingStations = new() { "Fire" },
+                        NPCsHere = new() { "mistBarbPeksa" },
+                        GatheringSpots = new() { "clueCrates" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_BarbarianLonghall", "The Long Hall", "Misthalin") {
+                        Description = "A longhall - or maybe a tavern called 'The Long Hall'? - filled with barbarians. There are two long rows of tables with some stools placed haphazardly next to them. At the very back of the hall are two fires you could cook with, and some crates in one corner. Some unattended bits of meat and beer are on the tables. A stuffed bull's head hangs above the fires, and there's a keg full of beer in another corner of the hall.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_BarbarianVillage")
+                        },  
+                        AreaMonsters = new() { "barbarian15", "barbarian15", "barbarian15", "barbarian17", "barbarian17", "barbarianGunthor" },
+                        ItemSpawns = new() { new("beer", 3, count: 3), new("meatCookedBeef", 3, count: 2) },
+                        ProcessingStations = new() { "Fire", "Beer Keg" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_BarbarianLookout", "Barbarian Village - Lookout Tower", "Misthalin") {
+                        Description = "The view from up here is excellent, allowing you to see Edgeville in the north, Varrock in the east, Draynor manor and village in the south, and Falador distantly in the west. Inside the tower are a bunch of crates and a few ominous jail cells, plus some chests behind a locked grate.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_BarbarianVillage")
+                        },
+                        NPCsHere = new() { "mistBarbHunding" }
                     });
                 }
             }
@@ -1243,6 +1407,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         Description = "A sort of plaza, relatively centrally located in front of the palace. There are a variety of useful stores and services offered here, in addition to a set of handholds to climb up onto the roofs to train agility. The ground here is fairly hard packed sand, with a more defined path leading from the palace through the plaza and off to the north. There are a few stalls offering goods, but they are being watched too closely to be stolen from.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("DES_AlKharidOutskirts"),
+                            new Connection("DES_AlKharidAgility1", new() { new("Skill", 20, "Agility") }, false, 12, "Agility"),
                             new Connection("DES_AlKharidBank"),
                             new Connection("DES_AlKharidZeke"),
                             new Connection("DES_AlKharidDommik"),
@@ -1253,7 +1418,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("DES_AlKharidAli1"),
                             new Connection("DES_AlKharidTanner"),
                             new Connection("DES_AlKharidHouse"),
-                            new Connection("DES_AlKharidTent"),
+                            new Connection("DES_AlKharidTent"), 
                             new Connection("DES_AlKharidPalaceCourtyard"),
                             new Connection("DES_AlKharidSouth")
                         },
@@ -1361,7 +1526,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ItemSpawns = new() { new("bucketEmpty", 1) }
                     });
 
-                     locsToAdd.Add(new Location("DES_AlKharidSouth", "Al Kharid South", "Desert") {
+                    locsToAdd.Add(new Location("DES_AlKharidSouth", "Al Kharid South", "Desert") {
                         Description = "Just south of the palace in Al Kharid. There's not a lot back here except sand, cacti, rocks, dead bushes, and more sand. ",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("DES_AlKharid"),
@@ -1410,11 +1575,66 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ProcessingStations = new() { "Sand" }
                     });
 
+                    locsToAdd.Add(new Location("DES_AlKharidAgility1", "Al Kharid - Rooftop Agility Start", "Desert") {
+                        Description = "The start of the Al Kharid Rooftop Agility Course, on top of the tannery. There is a tightrope leading over to the roof of the bank but it looks a little sketchy. If you fall off you could get hurt.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharidAgility2", null, false, 36, "Agility", "(Walk Tightrope)", true, 20, "DES_AlKharid", 1, 5)
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidAgility2", "Al Kharid - Bank Roof", "Desert") {
+                        Description = "Atop the Al Kharid bank. The view here is somewhat nice, overlooking the town of Al Kharid but also across the Lum into the swamp. There is a dubious looking rope swing that is supposed to somehow get you over to the roof of the palace.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharidAgility3", null, false, 48, "Agility", "(Swing Rope)")
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidAgility3", "Al Kharid - Palace Roof", "Desert") {
+                        Description = "Atop the Al Kharid palace. You get the feeling that you are probably not supposed to be up here, for the security of the Emir. On the other side of the building from where you landed with the rope swing is a zip line down to the roof of Ranael's Super Skirt Store.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharidAgility4", null, false, 48, "Agility", "(Slide Down Zip Line)", true, 20, "DES_AlKharid", 1, 5)
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidAgility4", "Al Kharid - Ranael's Roof", "Desert") {
+                        Description = "That zip line did *not* feel like it's been checked for safety by some kind of health inspector. You're on top of Ranael's Super Skirt Store right now, and there's yet another suspicious agility obstacle ahead. A palm tree with fronds that you hope are strong enough to swing across to Louie's Legs.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharidAgility5", null, false, 12, "Agility", "(Tarzan It)")
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidAgility5", "Al Kharid - Louie's Roof", "Desert") {
+                        Description = "Okay, that was actually pretty cool. You wonder for a second if anyone saw, but then remember nobody else is online. There are some beams sticking out of the adjoining roof to get up onto the General Store's part of the building.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharidAgility6", null, false, 12, "Agility", "(Climb Beams)")
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidAgility6", "Al Kharid - General Store Roof", "Desert") {
+                        Description = "Not quite as exciting as the other bits of the course, but the end is in sight. There's a tightrope across to the roof of a residential home. This one looks significantly safer than the earlier tightrope.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharidAgility7", null, false, 18, "Agility", "(Walk Tightrope)")
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("DES_AlKharidAgility7", "Al Kharid - House Roof", "Desert") {
+                        Description = "The finish line! There's a small arrow-shaped sign here at the edge of the roof pointing down to the ground, indicating a spot near Zeke's Superior Scimitars as the landing spot.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("DES_AlKharid"),
+                            new Connection("DES_AlKharid", null, false, 36, "Agility", "(Hop Down)")
+                        }
+                    });
+
                     locsToAdd.Add(new Location("DES_MageTrainingArena", "Mage Training Arena", "Desert") {
-                        Description = "This place certainly looks magical. There are a number of books and golems and brooms moving about the hall, and on the walls the paintings slowly move up and down. A huge white rug with an elaborate pattern covers much of the floor and there are some candelabras providing light. Staircases allow you to ascend to the second floor, where you can find the rewards trader. There are portals to the different training areas here.",
+                        Description = "This place certainly looks magical. There are a number of books and golems and brooms moving about the hall, and on the walls the paintings slowly move up and down. A huge white rug with an elaborate pattern covers much of the floor and there are some candelabras providing light. There are portals to the different training areas here.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("DES_AlKharidMineOutside"),
-                            new Connection("DES_MageTrainingArena2"),
                             new Connection("DES_MageTrainingArenaTelekinetic"),
                             new Connection("DES_MageTrainingArenaGraveyard"),
                             new Connection("DES_MageTrainingArenaEnchanting"),
@@ -1485,6 +1705,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new Connection("DES_AlKharidMineOutside")
                     },
                     ProcessingStations = new List<string>() { "Fire Altar" }
+                });
+
+                locsToAdd.Add(new Location("RunecraftAltarEarth", "Altar of Earth", "Elsewhere") { 
+                    Description = "This appears to be some kind of strange pocket dimension contained outside of the normal plane of existence. It takes the form of a moderately sized cavern full of rocks of various shapes and sizes. Four stone arches and four pillars with an orb emitting soft light circle a stone altar engraved with the symbol for earth.",
+                    ConnectedLocations = new List<Connection>() {
+                        new Connection("MIST_VarrockCrossroadsEast")
+                    },
+                    ProcessingStations = new List<string>() { "Earth Altar" }
                 });
             }
 

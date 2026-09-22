@@ -625,6 +625,7 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
                 || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
                 || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
+                || (ExtraWindows.Book.IsVisible && instance != ExtraWindows.Book)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return;
             }
@@ -795,6 +796,7 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
                 || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
                 || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
+                || (ExtraWindows.Book.IsVisible && instance != ExtraWindows.Book)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return y;
             }

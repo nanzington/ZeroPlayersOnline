@@ -5,6 +5,8 @@ namespace ZeroPlayersOnline.DataTypes {
         public string Destination = "";
         public string CheckFailDest = "";
         public string AltName = "";
+        public int MinimumFailDamage = 0;
+        public int MaximumFailDamage = 0;
 
         public List<Requirement>? Requirements = new();
         public bool OnlyNeedOneReq = false;
@@ -18,7 +20,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public string WorldStateID = "";
         public int WorldStateNum = 0;
 
-        public Connection(string dest, List<Requirement>? req = null, bool onlyOne = false, int exp = 0, string skill = "", string alt = "", bool check = false, int lv = 1, string checkFailDest = "") { 
+        public Connection(string dest, List<Requirement>? req = null, bool onlyOne = false, int exp = 0, string skill = "", string alt = "", bool check = false, int lv = 1, string checkFailDest = "", int minFailDmg = 0, int maxFailDmg = 0) { 
             Destination = dest;
 
             if (req != null)
@@ -34,6 +36,9 @@ namespace ZeroPlayersOnline.DataTypes {
             SkillCheck = check;
             Level = lv;
             CheckFailDest = checkFailDest;
+
+            MinimumFailDamage = minFailDmg;
+            MaximumFailDamage = maxFailDmg;
         }
 
 
@@ -68,7 +73,7 @@ namespace ZeroPlayersOnline.DataTypes {
                     if (Requirements[i].CheckRequirement(p, false, true)) {
                         if (Requirements[i].RequirementType == "Item" && Requirements[i].ConsumeItem) {
                             if (Requirements[i].MiscString == "Gold") {
-                                p.HeldGold -= Requirements[i].MiscInt;
+                                p.TakeGold(Requirements[i].MiscInt);
                             } else {
                                 p.ConsumeItems([Requirements[i].MiscString + "," + Requirements[i].MiscInt], false, true);
                             }
@@ -87,11 +92,24 @@ namespace ZeroPlayersOnline.DataTypes {
                 int toBeat = 50 + (p.GetEffectiveSkillLevel(ExpTo) - Level);
 
                 if (GameLoop.rand.Next(100) > toBeat) {
-                    if (CheckFailDest != "") {
+                    if (CheckFailDest != "" && GameLoop.ZPO.Atlas.ContainsKey(CheckFailDest)) {
                         GameLoop.ZPO.Log.AddMessage("You fail the " + ExpTo + " check and end up somewhere else.", Color.Crimson);
                         p.NavLoc = CheckFailDest;
                     } else {
                         GameLoop.ZPO.Log.AddMessage("You fail the " + ExpTo + " check and gain no experience.", Color.Crimson);
+                    }
+
+                    if (MaximumFailDamage > 0) {
+                        int dmgRoll = MinimumFailDamage;
+
+                        if (MaximumFailDamage > MinimumFailDamage) {
+                            dmgRoll = GameLoop.rand.Next(MaximumFailDamage - MinimumFailDamage) + MinimumFailDamage;
+                        }
+
+                        if (dmgRoll > 0) {
+                            p.TakeDamage(dmgRoll, GameLoop.ZPO.Log);
+                            GameLoop.ZPO.Log.AddMessage("You take " + dmgRoll + " damage from failing.", Color.Crimson);
+                        }
                     }
 
                     return;

@@ -13,6 +13,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             // Misthalin
             toAdd.Add(new FarmingPatch("MIST_LumbTree", "Tree"));
             toAdd.Add(new FarmingPatch("MIST_LumbHops", "Hops"));
+            toAdd.Add(new FarmingPatch("MIST_VarBush", "Bush"));
 
             // Desert 
             toAdd.Add(new FarmingPatch("DES_AlKharidCactus", "Cactus"));

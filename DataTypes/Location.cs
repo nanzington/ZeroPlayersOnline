@@ -53,5 +53,24 @@ namespace ZeroPlayersOnline.DataTypes {
             DisplayName = name;
             Region = region;
         }
+
+
+        public void HotColdSearch(List<HotColdResult> results, int depth, string target) {
+            if (ID == target)
+                results.Add(new(ID, depth));
+
+            for (int i = 0; i < results.Count; i++) {
+                if (results[i].MapID == target && depth > results[i].Depth) {
+                    return;
+                }
+            }
+
+            if (depth < 10 && ID != target) {
+                foreach (var kv in ConnectedLocations) {
+                    if (GameLoop.ZPO.Atlas.TryGetValue(kv.Destination, out Location? dest)) { dest.HotColdSearch(results, depth + 1, target); }
+                    if (kv.CheckFailDest != "" && GameLoop.ZPO.Atlas.TryGetValue(kv.CheckFailDest, out Location? failDest)) { failDest.HotColdSearch(results, depth + 1, target); }
+                }
+            }
+        }
     }
 }

@@ -17,7 +17,11 @@
         public string SoundPlayed = "";
         public string MiscString = "";
 
-        public Recipe(string fI, string sI, string oI, int fQ = 1, int sQ = 1, int oQ = 1, string s = "", int lv = 1, int exp = 0, string sound = "", string miscStr = "", List<string>? returns = null) {
+        public string NeededTool = "";
+        public string FailID = "";
+        public int StopFailLevel = 0;
+
+        public Recipe(string fI, string sI, string oI, int fQ = 1, int sQ = 1, int oQ = 1, string s = "", int lv = 1, int exp = 0, string sound = "", string miscStr = "", string tool = "", List<string>? returns = null) {
             FirstItem = fI;
             SecondItem = sI;
             OutputItem = oI;
@@ -32,6 +36,7 @@
 
             SoundPlayed = sound;
             MiscString = miscStr;
+            NeededTool = tool;
 
             if (returns != null)
                 ReturnIDs = returns;

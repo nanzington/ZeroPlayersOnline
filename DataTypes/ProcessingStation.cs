@@ -194,16 +194,55 @@ namespace ZeroPlayersOnline.DataTypes {
 
                             int extra = 0;
 
-                            if (ItemLibrary.ContainsKey(Recipes[j].OutputID)) {
-                                Item item = new(ItemLibrary[Recipes[j].OutputID]);
+                            if (Recipes[j].FailOutput != "" && p.GetEffectiveSkillLevel(Recipes[j].SkillUsed) < Recipes[j].StopFailingLevel) {
+                                int failRoll = GameLoop.rand.Next(100);  
+                                // TODO: Make cooking gauntlets lower fail level after Family Crest is implemented
 
-                                if (Recipes[j].HighSkillExtraOutputs) {
-                                    int skillDiff = p.Skills[Recipes[j].SkillUsed].Level - Recipes[j].SkillLevel;
-                                    extra = (int) Math.Floor(skillDiff / 10.0);
-                                    item.Quantity += extra;
+                                int skillForRoll = 50 + (p.GetEffectiveSkillLevel(Recipes[j].SkillUsed) - Recipes[j].SkillLevel);
+
+                                if (failRoll <= skillForRoll || (p.Equipment.TryGetValue("Cape", out ItemWrapper? cape) && cape != null && cape.ID == "capeSkillCooking")) {
+                                    if (ItemLibrary.ContainsKey(Recipes[j].OutputID)) {
+                                        Item item = new(ItemLibrary[Recipes[j].OutputID]);
+
+                                        if (Recipes[j].HighSkillExtraOutputs) {
+                                            int skillDiff = p.Skills[Recipes[j].SkillUsed].Level - Recipes[j].SkillLevel;
+                                            extra = (int) Math.Floor(skillDiff / 10.0);
+                                            item.Quantity += extra;
+                                        }
+
+                                        p.TryPickup(item, item.Quantity);
+                                    }
+                                
+                                    p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills);
+                                } else {
+                                    if (ItemLibrary.ContainsKey(Recipes[j].FailOutput)) {
+                                        Item item = new(ItemLibrary[Recipes[j].FailOutput]);
+
+                                        if (Recipes[j].HighSkillExtraOutputs) {
+                                            int skillDiff = p.Skills[Recipes[j].SkillUsed].Level - Recipes[j].SkillLevel;
+                                            extra = (int) Math.Floor(skillDiff / 10.0);
+                                            item.Quantity += extra;
+                                        }
+
+                                        p.TryPickup(item, item.Quantity);
+                                    }
+                                
+                                    p.TryGrantExp(Recipes[j].SkillUsed, 1 * (1 + extra), log, RecentSkills);
                                 }
+                            } else { 
+                                if (ItemLibrary.ContainsKey(Recipes[j].OutputID)) {
+                                    Item item = new(ItemLibrary[Recipes[j].OutputID]);
 
-                                p.TryPickup(item, item.Quantity);
+                                    if (Recipes[j].HighSkillExtraOutputs) {
+                                        int skillDiff = p.Skills[Recipes[j].SkillUsed].Level - Recipes[j].SkillLevel;
+                                        extra = (int) Math.Floor(skillDiff / 10.0);
+                                        item.Quantity += extra;
+                                    }
+
+                                    p.TryPickup(item, item.Quantity);
+                                }
+                                
+                                p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills);
                             }
 
                             if (Recipes[j].SecondaryOut != "") {
@@ -212,9 +251,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
                                     p.TryPickup(item, item.Quantity);
                                 }
-                            }
-
-                            p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills);
+                            } 
 
 
                             if (Recipes[j].MinigameAction != "") {

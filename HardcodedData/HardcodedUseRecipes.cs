@@ -8,6 +8,26 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             // Firemaking
             toAdd.Add(new("tinderbox", "logPine", "_fire", 0, 1, 1, "Firemaking", 1, 40, miscStr: "ashes")); 
+            toAdd.Add(new("tinderbox", "logOak", "_fire", 0, 1, 1, "Firemaking", 10, 60, miscStr: "ashes")); 
+            toAdd.Add(new("tinderbox", "logWillow", "_fire", 0, 1, 1, "Firemaking", 20, 90, miscStr: "ashes")); 
+            toAdd.Add(new("tinderbox", "logTeak", "_fire", 0, 1, 1, "Firemaking", 30, 105, miscStr: "ashes")); 
+            toAdd.Add(new("tinderbox", "logMaple", "_fire", 0, 1, 1, "Firemaking", 40, 136, miscStr: "ashes")); 
+            toAdd.Add(new("tinderbox", "logAcadia", "_fire", 0, 1, 1, "Firemaking", 50, 140, miscStr: "ashes")); 
+            toAdd.Add(new("tinderbox", "logMahogany", "_fire", 0, 1, 1, "Firemaking", 60, 158, miscStr: "ashes")); 
+            toAdd.Add(new("tinderbox", "logYew", "_fire", 0, 1, 1, "Firemaking", 70, 203, miscStr: "ashes")); 
+            toAdd.Add(new("tinderbox", "logMagic", "_fire", 0, 1, 1, "Firemaking", 80, 304, miscStr: "ashes")); 
+            toAdd.Add(new("tinderbox", "logElder", "_fire", 0, 1, 1, "Firemaking", 90, 450, miscStr: "ashes")); 
+            
+            toAdd.Add(new("gnomishFirelighter", "logPine", "_fire", 0, 1, 1, "Firemaking", 1, 40, miscStr: "ashes")); 
+            toAdd.Add(new("gnomishFirelighter", "logOak", "_fire", 0, 1, 1, "Firemaking", 10, 60, miscStr: "ashes")); 
+            toAdd.Add(new("gnomishFirelighter", "logWillow", "_fire", 0, 1, 1, "Firemaking", 20, 90, miscStr: "ashes")); 
+            toAdd.Add(new("gnomishFirelighter", "logTeak", "_fire", 0, 1, 1, "Firemaking", 30, 105, miscStr: "ashes")); 
+            toAdd.Add(new("gnomishFirelighter", "logMaple", "_fire", 0, 1, 1, "Firemaking", 40, 136, miscStr: "ashes")); 
+            toAdd.Add(new("gnomishFirelighter", "logAcadia", "_fire", 0, 1, 1, "Firemaking", 50, 140, miscStr: "ashes")); 
+            toAdd.Add(new("gnomishFirelighter", "logMahogany", "_fire", 0, 1, 1, "Firemaking", 60, 158, miscStr: "ashes")); 
+            toAdd.Add(new("gnomishFirelighter", "logYew", "_fire", 0, 1, 1, "Firemaking", 70, 203, miscStr: "ashes")); 
+            toAdd.Add(new("gnomishFirelighter", "logMagic", "_fire", 0, 1, 1, "Firemaking", 80, 304, miscStr: "ashes")); 
+            toAdd.Add(new("gnomishFirelighter", "logElder", "_fire", 0, 1, 1, "Firemaking", 90, 450, miscStr: "ashes")); 
 
             // Smithing, ore mixes
             toAdd.Add(new("oreCopper", "oreTin", "oreMixBronze", 1, 1, 1, "Smithing", 1, 2));
@@ -39,8 +59,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("stockMaple", "limbsAdamant", "crossbowMapleU", 1, 1, 1, "Fletching", 40, 45));
             toAdd.Add(new("stockAcadia", "limbsRune", "crossbowAcadiaU", 1, 1, 1, "Fletching", 50, 60));
             toAdd.Add(new("stockMahogany", "limbsOrichalcum", "crossbowMahoganyU", 1, 1, 1, "Fletching", 60, 75));
-            toAdd.Add(new("stockYew", "limbsNecrite", "crossbowYewU", 1, 1, 1, "Fletching", 70, 90));
-            toAdd.Add(new("stockMagic", "limbsBanite", "crossbowMagicU", 1, 1, 1, "Fletching", 80, 105));
+            toAdd.Add(new("stockYew", "limbsNecronium", "crossbowYewU", 1, 1, 1, "Fletching", 70, 90));
+            toAdd.Add(new("stockMagic", "limbsBane", "crossbowMagicU", 1, 1, 1, "Fletching", 80, 105));
             toAdd.Add(new("stockElder", "limbsElderRune", "crossbowElderU", 1, 1, 1, "Fletching", 90, 120));
              
             toAdd.Add(new("crossbowString", "crossbowPineU", "crossbowPine", 1, 1, 1, "Fletching", 1, 3));
@@ -60,11 +80,21 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("headlessShaft", "arrowheadsSteel", "arrowsSteel", 15, 15, 15, "Fletching", 20, 80)); 
             toAdd.Add(new("headlessShaft", "arrowheadsMithril", "arrowsMithril", 15, 15, 15, "Fletching", 30, 120)); 
             toAdd.Add(new("headlessShaft", "arrowheadsAdamant", "arrowsAdamant", 15, 15, 15, "Fletching", 40, 160)); 
+            toAdd.Add(new("headlessShaft", "arrowheadsRune", "arrowsRune", 15, 15, 15, "Fletching", 40, 188)); 
+            toAdd.Add(new("headlessShaft", "arrowheadsOrichalcum", "arrowsOrichalcum", 15, 15, 15, "Fletching", 40, 225)); 
+            toAdd.Add(new("headlessShaft", "arrowheadsNecronium", "arrowsNecronium", 15, 15, 15, "Fletching", 40, 243)); 
+            toAdd.Add(new("headlessShaft", "arrowheadsBane", "arrowsBane", 15, 15, 15, "Fletching", 40, 263)); 
+            toAdd.Add(new("headlessShaft", "arrowheadsElderRune", "arrowsElderRune", 15, 15, 15, "Fletching", 40, 280)); 
             toAdd.Add(new("boltsUnfBronze", "feather", "boltsBronze", 10, 10, 10, "Fletching", 1, 5)); 
             toAdd.Add(new("boltsUnfIron", "feather", "boltsIron", 10, 10, 10, "Fletching", 10, 15)); 
             toAdd.Add(new("boltsUnfSteel", "feather", "boltsSteel", 10, 10, 10, "Fletching", 20, 35)); 
             toAdd.Add(new("boltsUnfMithril", "feather", "boltsMithril", 10, 10, 10, "Fletching", 30, 50));
-            toAdd.Add(new("boltsUnfAdamant", "feather", "boltsAdamant", 10, 10, 10, "Fletching", 40, 70));  
+            toAdd.Add(new("boltsUnfAdamant", "feather", "boltsAdamant", 10, 10, 10, "Fletching", 40, 70)); 
+            toAdd.Add(new("boltsUnfRune", "feather", "boltsRune", 10, 10, 10, "Fletching", 50, 100));  
+            toAdd.Add(new("boltsUnfOrichalcum", "feather", "boltsOrichalcum", 10, 10, 10, "Fletching", 60, 112));  
+            toAdd.Add(new("boltsUnfNecronium", "feather", "boltsNecronium", 10, 10, 10, "Fletching", 70, 125));
+            toAdd.Add(new("boltsUnfBane", "feather", "boltsBane", 10, 10, 10, "Fletching", 80, 137));  
+            toAdd.Add(new("boltsUnfElderRune", "feather", "boltsElderRune", 10, 10, 10, "Fletching", 90, 150));     
              
             toAdd.Add(new("grappleUnf", "rope", "grapple", 1, 1, 1, "Fletching", 20, 0));  
 
@@ -115,11 +145,93 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("potFlour", "bucketWater", "doughBread", 1, 1, 1, "Cooking", 1, 0, returns: ["potEmpty", "bucketEmpty"]));
             toAdd.Add(new("potFlour", "jugWater", "doughBread", 1, 1, 1, "Cooking", 1, 0, returns: ["potEmpty", "jugEmpty"]));
             toAdd.Add(new("potFlour", "bowlWater", "doughBread", 1, 1, 1, "Cooking", 1, 0, returns: ["potEmpty", "bowlEmpty"]));
-            toAdd.Add(new("tinCakeEmpty", "eggChicken", "tinCakeEgg", 1, 1, 1, "Cooking", 1, 0)); 
-            toAdd.Add(new("tinCakeEgg", "potFlour", "tinCakeFlour", 1, 1, 1, "Cooking", 1, 0, returns: ["potEmpty"])); 
-            toAdd.Add(new("tinCakeFlour", "bucketMilk", "tinCakeBatter", 1, 1, 1, "Cooking", 1, 0, returns: ["bucketEmpty"])); 
             toAdd.Add(new("cakeChocolate2", "cakeChocolate2", "cakeChocolate1", 1, 1, 1, "Cooking", 1, 0)); 
-            toAdd.Add(new("cakeChocolate2", "cakeChocolate1", "cakeChocolate", 1, 1, 1, "Cooking", 1, 0)); 
+            toAdd.Add(new("cakeChocolate2", "cakeChocolate1", "cakeChocolate", 1, 1, 1, "Cooking", 1, 0));
+            
+            toAdd.Add(new("pieEmpty", "doughPastry", "pieShell", 1, 1, 1, "Cooking", 1, 0)); 
+            toAdd.Add(new("pieShell", "redberry", "pieRedberryUncooked", 1, 1, 1, "Cooking", 10, 0)); 
+            toAdd.Add(new("pieShell", "meatCookedBeef", "pieMeatUncooked", 1, 1, 1, "Cooking", 20, 0)); 
+            toAdd.Add(new("pieShell", "meatCookedChicken", "pieMeatUncooked", 1, 1, 1, "Cooking", 20, 0));
+            toAdd.Add(new("pieShell", "bucketCompost", "pieMudCompost", 1, 1, 1, "Cooking", 29, 0, returns: ["bucketEmpty"])); 
+            toAdd.Add(new("pieMudCompost", "bucketWater", "pieMudWater", 1, 1, 1, "Cooking", 29, 0, returns: ["bucketEmpty"]));
+            toAdd.Add(new("pieMudWater", "clayDust", "pieMudUncooked", 1, 1, 1, "Cooking", 29, 0));
+            toAdd.Add(new("pieShell", "fruitApple", "pieAppleUncooked", 1, 1, 1, "Cooking", 30, 0));
+            toAdd.Add(new("pieShell", "tomato", "pieGardenTomato", 1, 1, 1, "Cooking", 34, 0));
+            toAdd.Add(new("pieGardenTomato", "onion", "pieGardenOnion", 1, 1, 1, "Cooking", 34, 0));
+            toAdd.Add(new("pieGardenOnion", "cabbage", "pieGardenUncooked", 1, 1, 1, "Cooking", 34, 0)); 
+            toAdd.Add(new("pieShell", "fishCookedTrout", "pieFishTrout", 1, 1, 1, "Cooking", 47, 0));
+            toAdd.Add(new("pieFishTrout", "fishCookedCod", "pieFishCod", 1, 1, 1, "Cooking", 47, 0));
+            toAdd.Add(new("pieFishCod", "potato", "pieFishUncooked", 1, 1, 1, "Cooking", 47, 0)); 
+            toAdd.Add(new("pieShell", "fruitGolovanovaTop", "pieBotanicalUncooked", 1, 1, 1, "Cooking", 52, 0));
+            toAdd.Add(new("pieShell", "sulliuscepCap", "pieMushroomUncooked", 1, 1, 1, "Cooking", 60, 0)); 
+            toAdd.Add(new("pieShell", "fishCookedSalmon", "pieAdmiralSalmon", 1, 1, 1, "Cooking", 70, 0));
+            toAdd.Add(new("pieAdmiralSalmon", "fishCookedTuna", "pieAdmiralTuna", 1, 1, 1, "Cooking", 70, 0)); 
+            toAdd.Add(new("pieAdmiralTuna", "potato", "pieAdmiralUncooked", 1, 1, 1, "Cooking", 70, 0));
+            toAdd.Add(new("pieShell", "fruitDragonfruit", "pieDragonfruitUncooked", 1, 1, 1, "Cooking", 73, 0)); 
+            toAdd.Add(new("pieShell", "meatRawBear", "pieWildBear", 1, 1, 1, "Cooking", 85, 0)); 
+            toAdd.Add(new("pieWildBear", "meatRawChompy", "pieWildChompy", 1, 1, 1, "Cooking", 85, 0));
+            toAdd.Add(new("pieWildChompy", "meatRawRabbit", "pieWildUncooked", 1, 1, 1, "Cooking", 85, 0));
+            toAdd.Add(new("pieShell", "strawberry", "pieSummerStrawberry", 1, 1, 1, "Cooking", 95, 0)); 
+            toAdd.Add(new("pieSummerStrawberry", "watermelon", "pieSummerWatermelon", 1, 1, 1, "Cooking", 95, 0));
+            toAdd.Add(new("pieSummerWatermelon", "fruitApple", "pieSummerUncooked", 1, 1, 1, "Cooking", 95, 0)); 
+
+            toAdd.Add(new("bowlWater", "potato", "stewIncompletePotato", 1, 1, 1, "Cooking", 25, 0)); 
+            toAdd.Add(new("bowlWater", "meatCookedBeef", "stewIncompleteMeat", 1, 1, 1, "Cooking", 25, 0));
+            toAdd.Add(new("bowlWater", "meatCookedChicken", "stewIncompleteMeat", 1, 1, 1, "Cooking", 25, 0));
+            toAdd.Add(new("stewIncompletePotato", "meatCookedBeef", "stewUncooked", 1, 1, 1, "Cooking", 25, 0));
+            toAdd.Add(new("stewIncompleteMeat", "potato", "stewUncooked", 1, 1, 1, "Cooking", 25, 0));
+            toAdd.Add(new("stewUncooked", "curryLeaf", "curryUncooked", 1, 1, 1, "Cooking", 60, 0));
+            
+            toAdd.Add(new("doughPizza", "tomato", "pizzaIncomplete", 1, 1, 1, "Cooking", 35, 0));
+            toAdd.Add(new("pizzaIncomplete", "cheese", "pizzaUncooked", 1, 1, 1, "Cooking", 35, 0));
+            toAdd.Add(new("pizzaPlain", "meatCookedBeef", "pizzaMeat", 1, 1, 1, "Cooking", 45, 26)); 
+            toAdd.Add(new("pizzaPlain", "meatCookedChicken", "pizzaMeat", 1, 1, 1, "Cooking", 45, 26));
+            toAdd.Add(new("pizzaPlain", "fishCookedAnchovies", "pizzaAnchovy", 1, 1, 1, "Cooking", 55, 39)); 
+            toAdd.Add(new("pizzaPlain", "fruitPineappleChunks", "pizzaPineapple", 1, 1, 1, "Cooking", 65, 45));
+            toAdd.Add(new("pizzaPlain", "fruitPineappleRing", "pizzaPineapple", 1, 1, 1, "Cooking", 65, 45)); 
+            
+            toAdd.Add(new("tinCakeEmpty", "eggChicken", "tinCakeEgg", 1, 1, 1, "Cooking", 40, 0)); 
+            toAdd.Add(new("tinCakeEgg", "potFlour", "tinCakeFlour", 1, 1, 1, "Cooking", 40, 0, returns: ["potEmpty"])); 
+            toAdd.Add(new("tinCakeFlour", "bucketMilk", "tinCakeBatter", 1, 1, 1, "Cooking", 40, 0, returns: ["bucketEmpty"])); 
+            toAdd.Add(new("cake", "chocolateBar", "cakeChocolate", 1, 1, 1, "Cooking", 50, 30));
+            toAdd.Add(new("cake", "chocolateDust", "cakeChocolate", 1, 1, 1, "Cooking", 50, 30));
+
+            toAdd.Add(new("bowlWater", "nettles", "bowlNettleWater", 1, 1, 1, "Cooking", 20, 30)); 
+            toAdd.Add(new("bowlNettleTea", "bucketMilk", "bowlNettleTeaMilky", 1, 1, 1, "Cooking", 1, 0, returns: ["bucketEmpty"])); 
+            toAdd.Add(new("cupNettleTea", "bucketMilk", "cupNettleTeaMilky", 1, 1, 1, "Cooking", 1, 0, returns: ["bucketEmpty"])); 
+            toAdd.Add(new("bowlNettleTea", "cupEmpty", "cupNettleTea", 1, 1, 1, "Cooking", 1, 0, returns: ["bucketEmpty"]));   
+            
+            toAdd.Add(new("bowlEmpty", "onion", "bowlOnions", 1, 1, 1, "Cooking", 1, 0, tool: "knife")); 
+            toAdd.Add(new("bowlEmpty", "garlic", "bowlGarlic", 1, 1, 1, "Cooking", 1, 0, tool: "knife"));
+            toAdd.Add(new("bowlEmpty", "bittercap", "bowlMushrooms", 1, 1, 1, "Cooking", 1, 0, tool: "knife"));
+            toAdd.Add(new("bowlEmpty", "tomato", "bowlTomato", 1, 1, 1, "Cooking", 1, 0, tool: "knife"));
+            toAdd.Add(new("bowlEmpty", "fishCookedTuna", "bowlTuna", 1, 1, 1, "Cooking", 1, 0, tool: "knife"));
+            toAdd.Add(new("bowlEmpty", "sweetcornCooked", "bowlCorn", 1, 1, 1, "Cooking", 1, 0, tool: "knife"));
+            toAdd.Add(new("bowlTomato", "meatCookedUgthanki", "bowlUgthankiTomato", 1, 1, 1, "Cooking", 1, 0, tool: "knife"));
+            toAdd.Add(new("bowlOnions", "meatCookedUgthanki", "bowlUgthankiOnions", 1, 1, 1, "Cooking", 1, 0, tool: "knife"));
+            toAdd.Add(new("bowlOnions", "tomato", "bowlOnionTomato", 1, 1, 1, "Cooking", 1, 0, tool: "knife"));
+            toAdd.Add(new("bowlTomato", "onion", "bowlOnionTomato", 1, 1, 1, "Cooking", 1, 0, tool: "knife")); 
+            toAdd.Add(new("bowlOnions", "bowlTomato", "bowlOnionTomato", 1, 1, 1, "Cooking", 1, 0, tool: "knife", returns: ["bowlEmpty"]));
+            toAdd.Add(new("bowlGarlic", "spiceGnome", "sauceSpicy", 1, 1, 1, "Cooking", 9, 25)); 
+            toAdd.Add(new("sauceSpicy", "meatCookedBeef", "chiliConCarne", 1, 1, 1, "Cooking", 11, 0));
+            toAdd.Add(new("eggChicken", "bowlEmpty", "bowlEggs", 1, 1, 1, "Cooking", 13, 0));
+            toAdd.Add(new("eggsScrambled", "tomato", "eggsTomato", 1, 1, 1, "Cooking", 23, 0)); 
+            toAdd.Add(new("potatoBaked", "butter", "potatoButter", 1, 1, 1, "Cooking", 39, 40)); 
+            toAdd.Add(new("potatoButter", "chiliConCarne", "potatoChili", 1, 1, 1, "Cooking", 41, 15, returns: ["bowlEmpty"]));  
+            toAdd.Add(new("potatoButter", "cheese", "potatoCheese", 1, 1, 1, "Cooking", 47, 40)); 
+            toAdd.Add(new("potatoButter", "eggsTomato", "potatoEgg", 1, 1, 1, "Cooking", 51, 45, returns: ["bowlEmpty"])); 
+            toAdd.Add(new("onionsFried", "mushroomsFried", "bowlMushroomOnion", 1, 1, 1, "Cooking", 57, 0, returns: ["bowlEmpty"]));  
+            toAdd.Add(new("potatoButter", "bowlMushroomOnion", "potatoMushroom", 1, 1, 1, "Cooking", 64, 55, returns: ["bowlEmpty"]));   
+            toAdd.Add(new("bowlTuna", "sweetcornCooked", "bowlTunaCorn", 1, 1, 1, "Cooking", 64, 0));   
+            toAdd.Add(new("bowlCorn", "fishCookedTuna", "bowlTunaCorn", 1, 1, 1, "Cooking", 64, 0));    
+            toAdd.Add(new("bowlCorn", "bowlTuna", "bowlTunaCorn", 1, 1, 1, "Cooking", 64, 0, returns: ["bowlEmpty"]));  
+            toAdd.Add(new("potatoButter", "bowlTunaCorn", "potatoTuna", 1, 1, 1, "Cooking", 68, 10, returns: ["bowlEmpty"]));
+            toAdd.Add(new("meatCookedUgthanki", "bowlOnionTomato", "bowlKebabMix", 1, 1, 1, "Cooking", 1, 0));
+            toAdd.Add(new("bowlUgthankiTomato", "onion", "bowlKebabMix", 1, 1, 1, "Cooking", 1, 0));
+            toAdd.Add(new("bowlUgthankiOnions", "tomato", "bowlKebabMix", 1, 1, 1, "Cooking", 1, 0));
+            toAdd.Add(new("bowlUgthankiTomato", "bowlOnions", "bowlKebabMix", 1, 1, 1, "Cooking", 1, 0, returns: ["bowlEmpty"]));  
+            toAdd.Add(new("bowlUgthankiOnions", "bowlTomato", "bowlKebabMix", 1, 1, 1, "Cooking", 1, 0, returns: ["bowlEmpty"]));   
+            toAdd.Add(new("bowlKebabMix", "breadPitta", "kebabUgthanki", 1, 1, 1, "Cooking", 1, 0, returns: ["bowlEmpty"]) { FailID = "kebabUgthankiBad", StopFailLevel = 37 });       
              
             // Farming 
             toAdd.Add(new("plantPot", "seedTreePine", "plantPotPine", 1, 1, 1, "Farming", 1, 10)); 
@@ -182,6 +294,10 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("knife", "fruitPineappleRing", "fruitPineappleChunks", 0)); 
             toAdd.Add(new("hammer", "fruitCoconut", "fruitCoconutHalf", 0)); 
             toAdd.Add(new("vialEmpty", "fruitCoconutHalf", "fruitCoconutMilk", returns: ["fruitCoconutShell"]));    
+
+
+            
+            toAdd.Add(new("clueFeetMole", "clueSandalsHoly", "clueHolyMoleys")); 
 
             for (int i = 0; i < toAdd.Count; i++) {
                 TwoWayString ID = new(toAdd[i].FirstItem, toAdd[i].SecondItem);

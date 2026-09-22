@@ -112,6 +112,18 @@
                 return GameLoop.ZPO.ResolveItemName(MiscString) + " not in inventory, equipment, or bank.";
             }
 
+            if (RequirementType == "DiaryComplete") {
+                return "Must complete the " + MiscString + " " + MiscString2 + " Achievement Diary.";
+            }
+
+            if (RequirementType == "AnyEquipInSlot") {
+                return "Must be wearing any item in the " + MiscString + " slot.";
+            }
+
+            if (RequirementType == "ClueMedium") {
+                return "Only while a specific medium clue step is active. (" + MiscString + ")";
+            }
+
             return "";
         }
 
@@ -189,7 +201,7 @@
 
             if (RequirementType == "Item") {
                 if (MiscString == "Gold") {
-                    if (p.HeldGold >= MiscInt) {
+                    if (p.GoldTotal() >= MiscInt) {
                         return true;
                     }
                 } else { 
@@ -201,7 +213,7 @@
 
             if (RequirementType == "NotItem") {
                 if (MiscString == "Gold") {
-                    if (p.HeldGold < MiscInt) {
+                    if (p.GoldTotal() < MiscInt) {
                         return true;
                     }
                 } else {
@@ -313,6 +325,14 @@
 
                 return true;
             }
+
+            if (RequirementType == "AnyEquipInSlot") {
+                if (p.Equipment.ContainsKey(MiscString)) {
+                    return true;
+                }
+            }
+
+            if (RequirementType == "ClueMedium") { if (p.CurrentClueMedium == MiscString) { return true; } }
 
             return false;
         }

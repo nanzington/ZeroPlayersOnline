@@ -29,6 +29,10 @@ namespace ZeroPlayersOnline.DataTypes {
             return Equals((TwoWayString) obj);
         }
 
+        public override string ToString() {
+            return first + "," + second;
+        }
+
         public override int GetHashCode() {
             return 0;
         }

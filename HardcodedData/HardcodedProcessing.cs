@@ -19,6 +19,15 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("oreMithril", "barMithril", "Smithing", 30, 60, tertiaryIn: "ringForging"),
                     new ProcessingRecipe("oreMixAdamant", "barAdamant", "Smithing", 40, 85),
                     new ProcessingRecipe("oreAdamant", "barAdamant", "Smithing", 40, 85, tertiaryIn: "ringForging"),
+                    new ProcessingRecipe("oreMixRunite", "barRune", "Smithing", 50, 120),
+                    new ProcessingRecipe("oreRunite", "barRune", "Smithing", 50, 120, tertiaryIn: "ringForging"),
+                    new ProcessingRecipe("oreMixOrichalcum", "barOrichalcum", "Smithing", 60, 175),
+                    new ProcessingRecipe("oreOrichalcum", "barOrichalcum", "Smithing", 60, 175, tertiaryIn: "ringForging"),
+                    new ProcessingRecipe("oreMixNecrite", "barNecronium", "Smithing", 70, 250),
+                    new ProcessingRecipe("oreNecrite", "barNecronium", "Smithing", 70, 250, tertiaryIn: "ringForging"),
+                    new ProcessingRecipe("oreMixBanite", "barBane", "Smithing", 80, 350),
+                    new ProcessingRecipe("oreBanite", "barBane", "Smithing", 80, 350, tertiaryIn: "ringForging"),
+                    new ProcessingRecipe("barRune", "barElderRune", "Smithing", 90, 500, secondaryIn: "oreMixAnimica"),
                     new ProcessingRecipe("oreMixSilver", "barSilver", "Smithing", 20, 14),
                     new ProcessingRecipe("oreSilver", "barSilver", "Smithing", 20, 14, tertiaryIn: "ringForging"),
                     new ProcessingRecipe("oreMixGold", "barGold", "Smithing", 20, 23),
@@ -26,9 +35,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
-            toAdd.Add(new("Casting") {
-                OpensUI = true
-            });
+            toAdd.Add(new("Casting") { OpensUI = true });
 
             toAdd.Add(new("Dairy Churn") {
                 Recipes = new() {
@@ -50,45 +57,75 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
-            toAdd.Add(new("Anvil") {
-                OpensUI = true
-            });
+            toAdd.Add(new("Anvil") { OpensUI = true });
 
-            toAdd.Add(new("Range") {
+            ProcessingStation Range = new("Range") {
                 Recipes = new() {
                     new ProcessingRecipe("seaweed", "ashSoda"),
                     new ProcessingRecipe("weedSwamp", "ashSoda"),
-                    new ProcessingRecipe("meatRawNewt", "meatCookedNewt", "Cooking", 1, 15),
-                    new ProcessingRecipe("meatRawBeef", "meatCookedBeef", "Cooking", 1, 15),
-                    new ProcessingRecipe("meatRawRat", "meatCookedBeef", "Cooking", 1, 15),
-                    new ProcessingRecipe("meatRawBear", "meatCookedBeef", "Cooking", 1, 30),
-                    new ProcessingRecipe("meatCookedBeef", "sinew", "Cooking", 1, 3),
-                    new ProcessingRecipe("meatRawChicken", "meatCookedChicken", "Cooking", 1, 15),
-                    new ProcessingRecipe("meatRawBird", "meatCookedBird", "Cooking", 10, 50),
-                    new ProcessingRecipe("fishRawShrimp", "fishCookedShrimp", "Cooking", 1, 15),
-                    new ProcessingRecipe("fishRawAnchovies", "fishCookedAnchovies", "Cooking", 1, 30),
-                    new ProcessingRecipe("fishRawSardine", "fishCookedSardine", "Cooking", 1, 40),
-                    new ProcessingRecipe("fishRawHerring", "fishCookedHerring", "Cooking", 5, 50),
-                    new ProcessingRecipe("fishRawMackerel", "fishCookedMackerel", "Cooking", 10, 60),
-                    new ProcessingRecipe("fishRawTrout", "fishCookedTrout", "Cooking", 15, 70),
-                    new ProcessingRecipe("fishRawCod", "fishCookedCod", "Cooking", 18, 75),
-                    new ProcessingRecipe("fishRawPike", "fishCookedPike", "Cooking", 20, 80),
-                    new ProcessingRecipe("fishRawSalmon", "fishCookedSalmon", "Cooking", 25, 90),
-                    new ProcessingRecipe("fishRawTuna", "fishCookedTuna", "Cooking", 30, 100),
-                    new ProcessingRecipe("fishRawLobster", "fishCookedLobster", "Cooking", 40, 120),
-                    new ProcessingRecipe("fishRawBass", "fishCookedBass", "Cooking", 43, 130),
-                    new ProcessingRecipe("fishRawSwordfish", "fishCookedSwordfish", "Cooking", 45, 140),
-                    new ProcessingRecipe("fishRawEelSlimy", "fishCookedEelSlimy", "Cooking", 28, 95),
-                    new ProcessingRecipe("fishRawEelCave", "fishCookedEelCave", "Cooking", 28, 95),
-                    new ProcessingRecipe("doughBread", "bread", "Cooking", 1, 30),
-                    new ProcessingRecipe("potato", "potatoBaked", "Cooking", 7, 15),
-                    new ProcessingRecipe("tinCakeBatter", "cake", "Cooking", 40, 180, secondaryOut: "tinCakeEmpty")
+                    new ProcessingRecipe("meatRawNewt", "meatCookedBeef", "Cooking", 1, 30, failOutput: "burntMeat", failStop: 34),
+                    new ProcessingRecipe("meatRawBeef", "meatCookedBeef", "Cooking", 1, 30, failOutput: "burntMeat", failStop: 34),
+                    new ProcessingRecipe("meatRawRat", "meatCookedBeef", "Cooking", 1, 30, failOutput: "burntMeat", failStop: 34),
+                    new ProcessingRecipe("meatRawBear", "meatCookedBeef", "Cooking", 1, 30, failOutput: "burntMeat", failStop: 34),
+                    new ProcessingRecipe("meatCookedBeef", "burntMeat", "Cooking", 1, 3),
+                    new ProcessingRecipe("burntMeat", "sinew", "Cooking", 1, 3),
+                    new ProcessingRecipe("meatRawChicken", "meatCookedChicken", "Cooking", 1, 30, failOutput: "burntFood", failStop: 34),
+                    new ProcessingRecipe("meatRawBird", "meatCookedBird", "Cooking", 11, 60, failOutput: "burntFood", failStop: 99),
+                    new ProcessingRecipe("fishRawShrimp", "fishCookedShrimp", "Cooking", 1, 30, failOutput: "burntFood", failStop: 34),
+                    new ProcessingRecipe("fishRawAnchovies", "fishCookedAnchovies", "Cooking", 1, 30, failOutput: "burntFood", failStop: 34),
+                    new ProcessingRecipe("fishRawSardine", "fishCookedSardine", "Cooking", 1, 40, failOutput: "burntFood", failStop: 38),
+                    new ProcessingRecipe("fishRawHerring", "fishCookedHerring", "Cooking", 5, 50, failOutput: "burntFood", failStop: 41),
+                    new ProcessingRecipe("fishRawMackerel", "fishCookedMackerel", "Cooking", 10, 60, failOutput: "burntFood", failStop: 45),
+                    new ProcessingRecipe("fishRawTrout", "fishCookedTrout", "Cooking", 15, 70, failOutput: "burntFood", failStop: 49),
+                    new ProcessingRecipe("fishRawCod", "fishCookedCod", "Cooking", 18, 75, failOutput: "burntFood", failStop: 51),
+                    new ProcessingRecipe("fishRawPike", "fishCookedPike", "Cooking", 20, 80, failOutput: "burntFood", failStop: 54),
+                    new ProcessingRecipe("fishRawSalmon", "fishCookedSalmon", "Cooking", 25, 90, failOutput: "burntFood", failStop: 58),
+                    new ProcessingRecipe("fishRawTuna", "fishCookedTuna", "Cooking", 30, 100, failOutput: "burntFood", failStop: 63),
+                    new ProcessingRecipe("fishRawLobster", "fishCookedLobster", "Cooking", 40, 120, failOutput: "burntFood", failStop: 74),
+                    new ProcessingRecipe("fishRawBass", "fishCookedBass", "Cooking", 43, 130, failOutput: "burntFood", failStop: 79),
+                    new ProcessingRecipe("fishRawSwordfish", "fishCookedSwordfish", "Cooking", 45, 140, failOutput: "burntFood", failStop: 86),
+                    new ProcessingRecipe("fishRawEelSlimy", "fishCookedEelSlimy", "Cooking", 28, 95, failOutput: "burntFood", failStop: 61),
+                    new ProcessingRecipe("fishRawEelCave", "fishCookedEelCave", "Cooking", 28, 115, failOutput: "burntFood", failStop: 74),
+                    new ProcessingRecipe("doughBread", "bread", "Cooking", 1, 40, failOutput: "burntFood", failStop: 38),
+                    new ProcessingRecipe("doughPitta", "breadPitta", "Cooking", 58, 40),
+                    new ProcessingRecipe("pieRedberryUncooked", "pieRedberry", "Cooking", 10, 78, failOutput: "burntPie", failStop: 45),
+                    new ProcessingRecipe("pieMeatUncooked", "pieMeat", "Cooking", 20, 110, failOutput: "burntPie", failStop: 54),
+                    new ProcessingRecipe("pieAppleUncooked", "pieApple", "Cooking", 30, 130, failOutput: "burntPie", failStop: 63),
+                    new ProcessingRecipe("pieMudUncooked", "pieMud", "Cooking", 29, 128, failOutput: "burntPie", failStop: 63),
+                    new ProcessingRecipe("pizzaUncooked", "pizzaPlain", "Cooking", 35, 143, failOutput: "burntFood", failStop: 68),
+                    new ProcessingRecipe("pieGardenUncooked", "pieGarden", "Cooking", 34, 138, failOutput: "burntPie", failStop: 68),
+                    new ProcessingRecipe("pieFishUncooked", "pieFish", "Cooking", 47, 164, failOutput: "burntPie", failStop: 74),
+                    new ProcessingRecipe("pieBotanicalUncooked", "pieBotanical", "Cooking", 52, 180, failOutput: "burntPie", failStop: 84),
+                    new ProcessingRecipe("pieMushroomUncooked", "pieMushroom", "Cooking", 60, 200, failOutput: "burntPie", failStop: 89),
+                    new ProcessingRecipe("pieAdmiralUncooked", "pieAdmiral", "Cooking", 70, 210, failOutput: "burntPie", failStop: 94),
+                    new ProcessingRecipe("pieDragonfruitUncooked", "pieDragonfruit", "Cooking", 73, 220, failOutput: "burntPie", failStop: 100),
+                    new ProcessingRecipe("pieWildUncooked", "pieWild", "Cooking", 85, 240, failOutput: "burntPie", failStop: 100),
+                    new ProcessingRecipe("pieSummerUncooked", "pieSummer", "Cooking", 95, 260, failOutput: "burntPie", failStop: 100),
+                    new ProcessingRecipe("tinCakeBatter", "cake", "Cooking", 40, 180, secondaryOut: "tinCakeEmpty", failOutput: "burntFood", failStop: 74),
+                    new ProcessingRecipe("potato", "potatoBaked", "Cooking", 7, 15, failOutput: "burntFood", failStop: 41),
+                    new ProcessingRecipe("sweetcorn", "sweetcornCooked", "Cooking", 28, 104, failOutput: "burntFood", failStop: 41),
+                    new ProcessingRecipe("bowlEggs", "eggsScrambled", "Cooking", 13, 50, failOutput: "burntBowl", failStop: 48),
+                    new ProcessingRecipe("bowlNettleWater", "bowlNettleTea", "Cooking", 20, 52, failOutput: "bowlEmpty", failStop: 54),
+                    new ProcessingRecipe("stewUncooked", "stew", "Cooking", 25, 117, failOutput: "burntBowl", failStop: 58),
+                    new ProcessingRecipe("curryUncooked", "curry", "Cooking", 60, 280, failOutput: "burntBowl", failStop: 74),
+                    new ProcessingRecipe("bowlOnions", "onionsFried", "Cooking", 42, 60, failOutput: "burntBowl", failStop: 77),
+                    new ProcessingRecipe("bowlMushrooms", "mushroomsFried", "Cooking", 46, 60, failOutput: "burntBowl", failStop: 90)
                 }
-            });
+            };
 
-            toAdd.Add(new("Pottery Wheel") {
-                OpensUI = true
-            });
+            ProcessingStation Fire = Range.Clone();
+            Fire.Name = "Fire";
+
+            foreach (var rec in Fire.Recipes) {
+                if (rec.StopFailingLevel > 0) {
+                    rec.StopFailingLevel += 10;
+                }
+            }
+
+            toAdd.Add(Range);
+            toAdd.Add(Fire);
+
+            toAdd.Add(new("Pottery Wheel") { OpensUI = true });
 
             toAdd.Add(new("Pottery Kiln") {
                 Recipes = new() {
@@ -228,6 +265,13 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
+            toAdd.Add(new("Wrath Altar") {
+                Recipes = new() {
+                    new ProcessingRecipe("tiara", "tiaraWrath", "Runecrafting", 1, 53, "", true, "talismanWrath"),
+                    new ProcessingRecipe("pureEssence", "runeWrath", "Runecrafting", 95, 8, extra: true)
+                }
+            });
+
 
 
             toAdd.Add(new("Spinning Wheel") {
@@ -244,11 +288,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
-            toAdd.Add(new("Dairy Cow") {
-                Recipes = new() {
-                    new ProcessingRecipe("bucketEmpty", "bucketMilk")
-                }
-            });
+            toAdd.Add(new("Dairy Cow") { Recipes = new() { new ProcessingRecipe("bucketEmpty", "bucketMilk") } });
+            toAdd.Add(new("Beer Keg") { Recipes = new() { new ProcessingRecipe("beerGlass", "beer") } });
 
             toAdd.Add(new("Level 1 Enchanter") {
                 Recipes = new() { 

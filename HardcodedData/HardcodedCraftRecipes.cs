@@ -12,7 +12,12 @@ namespace ZeroPlayersOnline.Hardcodes {
                 new("Iron", ColorLib.Iron, 2, 10, 40, "slight"), 
                 new("Steel", ColorLib.Steel, 3, 20, 75, "adequate"), 
                 new("Mithril", ColorLib.Mithril, 4, 30, 120, "good"), 
-                new("Adamant", ColorLib.Adamant, 3, 40, 170, "great")
+                new("Adamant", ColorLib.Adamant, 5, 40, 170, "great"), 
+                new("Rune", ColorLib.Rune, 6, 50, 240, "proprietary"),
+                new("Orichalcum", Color.Crimson, 7, 60, 350, "excellent"), 
+                new("Necronium", Color.ForestGreen, 8, 70, 500, "incredible"), 
+                new("Bane", Color.MediumSlateBlue, 9, 80, 700, "amazing"),
+                new("ElderRune", ColorLib.Rune.GetBrighter(), 10, 90, 1000, "unbelievable")
             };
 
             for (int i = 0; i < Metals.Count; i++) {
@@ -36,8 +41,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                 toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "arrowheads" + Metals[i].Name, 15, "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "boltsUnf" + Metals[i].Name, 15, "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier, ["bar" + Metals[i].Name + "," + 1], "knives" + Metals[i].Name, 5, "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier * 3, ["bar" + Metals[i].Name + "," + 1], "limbs" + Metals[i].Name, tool: "hammer"));
                 toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier * 2, ["bar" + Metals[i].Name + "," + 2], "sqShield" + Metals[i].Name, tool: "hammer"));
-                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier * 3, ["bar" + Metals[i].Name + "," + 3], "kiteshield" + Metals[i].Name, tool: "hammer"));
+                toAdd.Add(new("Anvil", "Smithing", Metals[i].Level, Metals[i].CostMultiplier * 3, ["bar" + Metals[i].Name + "," + 3], "kiteshield" + Metals[i].Name, tool: "hammer")); 
             }
             
             toAdd.Add(new("Anvil", "Smithing", 20, 50, ["barMithril" + "," + 1], "grappleUnf", tool: "hammer"));
@@ -48,13 +54,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                 new("Leather", 205, 127, 50, 255, 1, 1, 15, "leatherSoft"), 
                 new("Hardleather", 175, 97, 20, 255, 2, 10, 25, "leatherHard"),
                 new("Snakeskin", Color.DarkOliveGreen, 4, 30, 30, "leatherSnakeskin"), 
-                new("Green dragonhide", Color.ForestGreen, 5, 40, 62, "leatherDragonGreen"),
-                new("Blue dragonhide", Color.CadetBlue, 6, 50, 70, "leatherDragonBlue"),
-                new("Red dragonhide", Color.Crimson, 6, 55, 78, "leatherDragonRed"),
-                new("Black dragonhide", Color.DimGray, 7, 60, 86, "leatherDragonBlack")
+                new("GreenDragonhide", Color.ForestGreen, 5, 40, 62, "leatherDragonGreen"),
+                new("BlueDragonhide", Color.CadetBlue, 6, 50, 70, "leatherDragonBlue"),
+                new("RedDragonhide", Color.Crimson, 6, 55, 78, "leatherDragonRed"),
+                new("BlackDragonhide", Color.DimGray, 7, 60, 86, "leatherDragonBlack")
             };
 
-            foreach (var leather in Leathers) {
+            foreach (var leather in Leathers) { 
+
                 toAdd.Add(new("Needle", "Crafting", leather.Level, leather.CostMultiplier, [leather.Descriptor + "," + 1], "coif" + leather.Name, tool: "needle"));
                 toAdd.Add(new("Needle", "Crafting", leather.Level, leather.CostMultiplier * 5, [leather.Descriptor + "," + 5], "body" + leather.Name, tool: "needle"));
                 toAdd.Add(new("Needle", "Crafting", leather.Level, leather.CostMultiplier * 3, [leather.Descriptor + "," + 3], "chaps" + leather.Name, tool: "needle"));
@@ -158,6 +165,19 @@ namespace ZeroPlayersOnline.Hardcodes {
              
             toAdd.Add(new("Casting", "Crafting", 23, 53, ["barSilver,1"], "tiara", 1, "mouldTiara")); 
 
+            
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughBread,1"], "doughPizza")); 
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughBread,1"], "doughPitta")); 
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughBread,1"], "doughPastry"));
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughPizza,1"], "doughBread")); 
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughPizza,1"], "doughPitta")); 
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughPizza,1"], "doughPastry"));
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughPitta,1"], "doughBread")); 
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughPitta,1"], "doughPizza")); 
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughPitta,1"], "doughPastry"));
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughPastry,1"], "doughBread")); 
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughPastry,1"], "doughPizza")); 
+            toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughPastry,1"], "doughPitta"));
 
 
             for (int i = 0; i < toAdd.Count; i++) {

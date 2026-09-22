@@ -10,12 +10,15 @@
         public int SkillLevel = 0;
         public int SkillEXP = 0;
 
+        public int StopFailingLevel = 0;
+        public string FailOutput = "";
+
         public string SoundPlayed = "";
         public bool HighSkillExtraOutputs = false;
 
         public string MinigameAction = "";
 
-        public ProcessingRecipe(string i, string o, string s = "", int l = 0, int exp = 0, string sound = "", bool extra = false, string secondaryIn = "", string secondaryOut = "", string tertiaryIn = "", string minigameAct = "") {
+        public ProcessingRecipe(string i, string o, string s = "", int l = 0, int exp = 0, string sound = "", bool extra = false, string secondaryIn = "", string secondaryOut = "", string tertiaryIn = "", string minigameAct = "", string failOutput = "", int failStop = 0) {
             InputID = i;
             OutputID = o;
             SkillUsed = s;
@@ -30,6 +33,9 @@
 
             TertiaryIn = tertiaryIn;
             MinigameAction = minigameAct;
+
+            FailOutput = failOutput;
+            StopFailingLevel = failStop;
         }
     }
 }

@@ -79,9 +79,20 @@ namespace ZeroPlayersOnline.Managers {
                 }
             }
 
+            if (player.CoinPouch) {
+                mini.Con.PrintClickable(0, 11, new ColoredString(("Gold: " + String.Format($"{player.HeldGold:n0}")).Align(HorizontalAlignment.Right, 19), Color.Goldenrod, Color.Black), () => {
+                    if (GameLoop.ZPO.ResolveItem("coins") is Item coin) {
+                        int qty = 1;
+                        if (Helper.EitherShift()) { qty *= 5; }
+                        if (Helper.EitherControl()) { qty *= 10; }
+                        if (Helper.KeyDown(Keys.Space)) { qty *= 1000; }
+                        if (qty > player.HeldGold || Helper.EitherAlt()) { qty = player.HeldGold; }
 
-            mini.Con.Print(0, 11, ("Gold: " + String.Format($"{player.HeldGold:n0}")).Align(HorizontalAlignment.Right, 19), Color.Goldenrod);
-
+                        player.HeldGold -= qty;
+                        player.TryPickup(coin, qty); 
+                    }
+                });
+            }
 
             mini.Con.DrawLine(new Point(20, 0), new Point(20, 11), 179);
             mini.Con.Print(21, 0, "Recently Trained Skills");
@@ -203,7 +214,7 @@ namespace ZeroPlayersOnline.Managers {
                                                 player.Inventory[i].Quantity -= 1; 
                                                 if (!player.Inventory[i].ID.Contains("mtaAlch")) {
                                                     highAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);  
-                                                    player.HeldGold += alched.HighAlchVal();
+                                                    player.GiveGold(alched.HighAlchVal()); 
                                                     GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast High Alchemy and convert the " + alched.Name + " into " + alched.HighAlchVal() + " gold.", Color.Goldenrod, Color.Black));
                                                 } else {
                                                     int val = 1;
@@ -248,7 +259,7 @@ namespace ZeroPlayersOnline.Managers {
 
                                                 if (!alched.ID.Contains("mtaAlch")) {
                                                     lowAlch.Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);  
-                                                    player.HeldGold += alched.LowAlchVal();
+                                                    player.GiveGold(alched.LowAlchVal()); 
                                                     GameLoop.ZPO.Log.AddMessage(new ColoredString("You cast Low Alchemy and convert the " + alched.Name + " into " + alched.LowAlchVal() + " gold.", Color.DarkGoldenrod, Color.Black));
                                                 } else {
                                                     int val = 1;
@@ -337,7 +348,7 @@ namespace ZeroPlayersOnline.Managers {
                                         bool success = ItemUseLogic.UseItem(player.Inventory[i], player);
 
                                         if (inv.ConsumedOnUse && success) {
-                                            if (player.PrayerActive("Cornucopia")) {
+                                            if (player.PrayerActive("Cornucopia") && inv.ID != "coins") {
                                                 if (GameLoop.rand.Next(5) != 0) { 
                                                     player.Inventory[i].Quantity -= 1;
                                                 } else { 
@@ -775,7 +786,7 @@ namespace ZeroPlayersOnline.Managers {
                         } else {
                             int actualExpNeeded = (int)Math.Ceiling((double) playerSkills[i].EXPNeeded() / (double) player.ExpMultiplier);
                             Color couldBuy = Color.Lime;
-                            if (player.HeldGold < player.PayToWin * actualExpNeeded) { couldBuy = Color.Crimson; }
+                            if (player.GoldTotal() < player.PayToWin * actualExpNeeded) { couldBuy = Color.Crimson; }
 
                             mini.Con.PrintClickable(31, printY, new ColoredString(playerSkills[i].EXPNeeded().ToString().PadLeft(8), mouseHovering ? couldBuy : Color.White, Color.Black), () => {
                                 player.TryGrantExp(playerSkills[i].Name, actualExpNeeded, GameLoop.ZPO.Log, RecentlyTrainedSkills, true);
@@ -1168,7 +1179,15 @@ namespace ZeroPlayersOnline.Managers {
                     else 
                         mini.Con.Print(1, 18, "|     Easy: ");
                      
-                    mini.Con.Print(1, 19, "|   Medium: ");
+                    if (!player.CollectionLogClues.ContainsKey("casketMedium")) {
+                        player.CollectionLogClues.Add("casketMedium", new("casketMedium"));
+                    }
+
+                    if (player.CollectionLogClues.TryGetValue("casketMedium", out CollectionLogEntry? mediumLog) && mediumLog != null)
+                        mini.Con.PrintClickable(1, 19, new ColoredString("|   Medium: " + mediumLog.ActualObtained().ToString().Align(HorizontalAlignment.Right, 3) + " / " + mediumLog.TryFindTotal().ToString().Align(HorizontalAlignment.Right, 3), mediumLog.LogComplete() ? Color.Lime : Color.White, Color.Black), () => { ExtraWindows.CollectionID = "casketMedium"; ExtraWindows.CollectionLog.IsVisible = true; ExtraWindows.CollectionDropTop = 0; ExtraWindows.CollectionCat = "Clue"; });
+                    else 
+                        mini.Con.Print(1, 19, "|   Medium: ");
+                     
                     mini.Con.Print(1, 20, "|     Hard: ");
                     mini.Con.Print(1, 21, "|    Elite: ");
                     mini.Con.Print(1, 22, "|   Master: ");

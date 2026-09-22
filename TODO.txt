@@ -7,7 +7,7 @@ Misthalin Mania
 - Barbarian Village locations filled out
 - Edgeville locations filled out
 - Zanaris locations filled out
-- Lumbridge underground (swamp caves, castle possibly all the way to Dorgesh-kaan? not necessary until the cave goblin quests can be added) locations filled out
+- Lumbridge underground (catacombs)
 - (DONE) Quest: Sheep Shearer
 - (DONE) Quest: Cook's Assistant
 - (DONE) Quest: The Restless Ghost
@@ -40,12 +40,18 @@ Maybe expand a lil bit into Al Kharid and Port Sarim/Falador to open some more c
 - Falador also for the mine
 - If Port Sarim and Falador added, might as well do Rimmington and the Crafting Guild since that's not much more. Taverly/Burthorpe can probably wait, might as well do ice mountain to tie into Barb Village and Edgeville
 
+- Can nearly begin adding task diaries
+- Implement lodestone network, make it so you have to reach and enable lodestones to teleport to them, maybe have a selective cooldown based on if you've charged it with law runes?
+- Grand Exchange is reachable now, time to implement that. Need a new window for it probably.
+- Implement hot/cold clue logic (search all connected map locations recursively out 10 steps, see if the target map is found and the shortest possible steps to it)
+- Implement food burning and then remove it again with the cooking skillcape equipped
+- Implement books, tie it to a UseString that opens the relevant book text in a window
+- Lock ruby necklace -> digsite pendant behind the museum cleaning thing
+- Make Shantay drop the scrumpled paper rarely on talk
+
  
 Weapon poison, maybe a poison equipment slot that applies to any melee or ranged attack?
 Optionally hide connections if requirements not met? Maybe default to visible regardless since it'd mostly be for sneaky map copies
-
-TODO For Mage Training Arena
-- Make the rewards shop
 
 
 

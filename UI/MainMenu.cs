@@ -220,6 +220,14 @@ namespace ZeroPlayersOnline.UI {
 
                 printY++;
 
+                mini.Con.Print(27, printY, "     Coin Pouch: "); 
+                mini.Con.PrintClickable(28 + 16, printY, new ColoredString("Off", !GameLoop.ZPO.player.CoinPouch ? Color.Crimson : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.CoinPouch = false; });
+                mini.Con.PrintClickable(28 + 20, printY, new ColoredString("On", GameLoop.ZPO.player.CoinPouch ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.CoinPouch = true; });
+                if (GameLoop.ZPO.player.CoinPouch)
+                    mini.Con.PrintClickable(28 + 23, printY, new ColoredString(GameLoop.ZPO.player.CoinPouchDeath ? "Drop on Death" : "Keep on Death", GameLoop.ZPO.player.CoinPouchDeath ? Color.Crimson : Color.White, Color.Black), () => { GameLoop.ZPO.player.CoinPouchDeath = !GameLoop.ZPO.player.CoinPouchDeath; });
+
+                printY++;
+
                 mini.Con.Print(27, printY, "GP to Buy 1 EXP:");
                 mini.Con.PrintClickable(28 + 16, printY, new ColoredString("0", GameLoop.ZPO.player.PayToWin == 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 0; });
                 mini.Con.PrintClickable(28 + 18, printY, new ColoredString("1", GameLoop.ZPO.player.PayToWin == 1 ? Color.DarkRed : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.PayToWin = 1; });

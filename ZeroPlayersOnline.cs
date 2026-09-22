@@ -28,6 +28,7 @@ namespace ZeroPlayersOnline {
 
         public Dictionary<string, ClueStep> ClueStepLibrary = new();
         public Dictionary<string, Quest> QuestLibrary = new();
+        public Dictionary<string, Book> BookLibrary = new();
 
         public MessageLog Log = new();
         public int LastPrinted = 0;
@@ -1530,7 +1531,7 @@ namespace ZeroPlayersOnline {
                                                             string[] split = newDia.ItemsGiven[i].Split(",");
                                                             if (split[0] == "Gold") {
                                                                 int.TryParse(split[1], out int qty);
-                                                                player.HeldGold += qty;
+                                                                player.GiveGold(qty); 
                                                             } else {
                                                                 if (ItemLibrary.TryGetValue(split[0], out Item? give)) {
                                                                     if (give != null) {
@@ -1632,8 +1633,8 @@ namespace ZeroPlayersOnline {
 
                                 mini.Con.PrintClickable(resourceX + 4, resourceY, shop.GetNameCS(1, 0, shop.UseInt4) + new ColoredString(("(" + shop.Value + "gp)").Align(HorizontalAlignment.Right, spaceAfterName)), () => {
                                     if (player.CanUseShops) {
-                                        if (player.HeldGold >= shop.Value * qty) {
-                                            player.HeldGold -= shop.Value * qty;
+                                        if (player.GoldTotal() >= shop.Value * qty) {
+                                            player.TakeGold(shop.Value * qty); 
 
                                             if (qty == 1)
                                                 Log.AddMessage("You purchased a" + (Helper.VowelStart(shop.Name.ToLower()) ? "n " : " ") + shop.Name + " for " + shop.Value + " gp.", Color.Goldenrod);
@@ -2185,6 +2186,9 @@ namespace ZeroPlayersOnline {
             if (ExtraWindows.InventoryContainer.IsVisible)
                 ExtraWindows.InventoryContainerDraw();
 
+            if (ExtraWindows.Book.IsVisible)
+                ExtraWindows.BookDraw();
+
             if (TimeLastTicked + 1000 < Helper.Time()) {
                 TickTime();
             } 
@@ -2356,16 +2360,17 @@ namespace ZeroPlayersOnline {
                // player.TryPickup(new Item(ItemLibrary["wizardBlueRobeG"]), 1); 
                  //player.TryGrantExp("Magic", 50000, Log, SidebarManager.RecentlyTrainedSkills);
 
-                //player.TryPickup(new Item(ItemLibrary["casketEasy"]), 50);  
+                //player.TryPickup(new Item(ItemLibrary["clueScrollBeginner"]), 1);  
+                //player.CurrentClueBeginner = "B_HotColdAlKharidMine";
                  
-                //player.TryPickup(new Item(ItemLibrary["oreIron"]), 2);
+                 //player.TryPickup(new Item(ItemLibrary["paperScrumpled"]), 1);
                 //player.TryPickup(new Item(ItemLibrary["uncutRuby"]), 1);
                 //player.TryPickup(new Item(ItemLibrary["barGold"]), 1);
                // player.TryPickup(new Item(ItemLibrary["tiaraWater"]), 1);   
                 //player.TryPickup(new Item(ItemLibrary["woolBall"]), 1);   
                // player.TryGrantExp("Runecrafting", 10000, Log, SidebarManager.RecentlyTrainedSkills);
 
-                //player.TryGrantExp("Crafting", 1000000, Log, SidebarManager.RecentlyTrainedSkills);
+                //player.TryGrantExp("Agility", 1000, Log, SidebarManager.RecentlyTrainedSkills);
 
                 /*if (ItemLibrary.TryGetValue("casketEasy", out Item? cask) && cask != null) {
                     int totalCycles = 0;
@@ -2473,9 +2478,11 @@ namespace ZeroPlayersOnline {
                 bool found = false;
                 foreach (var kv in UseRecipes) {
                     if (player.HasAllItems(new() { kv.Value.FirstItem + "," + Math.Max(1, kv.Value.FirstQty), kv.Value.SecondItem + "," + Math.Max(1, kv.Value.SecondQty)})) {
-                        SidebarManager.LastFoundRecipe = new(kv.Key.first, kv.Key.second); 
-                        found = true;
-                        break;
+                        if (kv.Value.NeededTool == "" || player.HasAllItems([kv.Value.NeededTool + ",1"])) {
+                            SidebarManager.LastFoundRecipe = new(kv.Key.first, kv.Key.second); 
+                            found = true;
+                            break;
+                        }
                     }
                 }
 
@@ -2577,6 +2584,7 @@ namespace ZeroPlayersOnline {
             SpellLibrary.Clear();
             BossLibrary.Clear();
             HunterLibrary.Clear();
+            BookLibrary.Clear();
 
             HardcodedItems.InitItems(ItemLibrary);
             HardcodedGathering.InitGathers(GatherSpots);
@@ -2593,17 +2601,18 @@ namespace ZeroPlayersOnline {
             HardcodedSpells.InitSpells(SpellLibrary);
             HardcodedBosses.InitBosses(BossLibrary);
             HardcodedHunter.InitHunter(HunterLibrary);
+            HardcodedBooks.InitBooks(BookLibrary);
         }
 
         public Item? ResolveItem(string ID) {
             if (player.RandomItems == 0) {
                 if (ItemLibrary.ContainsKey(ID)) {
-                    return ItemLibrary[ID];
+                    return new Item(ItemLibrary[ID]);
                 }
             } else {
                 if (player.ItemIDRemaps.ContainsKey(ID)) {
                     if (ItemLibrary.ContainsKey(player.ItemIDRemaps[ID])) {
-                        return ItemLibrary[player.ItemIDRemaps[ID]];
+                        return new Item(ItemLibrary[player.ItemIDRemaps[ID]]);
                     }
                 }
             } 
@@ -2664,15 +2673,28 @@ namespace ZeroPlayersOnline {
                 if (wrap.GetRef() is Item item) {
                     bool found = false;
                     for (int i = 0; i < curr.ItemsHere.Count; i++) {
-                        if (curr.ItemsHere[i].ID == item.ID && item.Noted == curr.ItemsHere[i].Noted && curr.ItemsHere[i].Inaccessible == wrap.Inaccessible) {
-                            curr.ItemsHere[i].Quantity += item.Quantity;
+                        if (curr.ItemsHere[i].ID == wrap.ID && wrap.Noted == curr.ItemsHere[i].Noted && curr.ItemsHere[i].Inaccessible == wrap.Inaccessible) {
+                            curr.ItemsHere[i].Quantity += wrap.Quantity;
                             found = true;
                             break;
                         }
-                    }
+                    } 
 
                     if (!found) {
                         item.Inaccessible = wrap.Inaccessible;
+
+                        foreach (var con in wrap.Containing) {
+                            item.Containing.Add(new(con));
+                        }
+
+                        item.Quantity = wrap.Quantity;
+                        
+                        if (wrap.Charges != 0) {
+                            item.UseInt4 = wrap.Charges;
+                        }
+
+                        item.Noted = wrap.Noted;
+
                         curr.ItemsHere.Add(item);
                     }
                 }

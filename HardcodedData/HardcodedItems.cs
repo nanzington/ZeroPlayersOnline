@@ -174,9 +174,17 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new ItemDrop("clueProgrammerSocks", 1, 20, 1, 1),
                         new ItemDrop("helmTutorial", 1, 20, 1, 1), 
                         new ItemDrop("platebodyTutorial", 1, 20, 1, 1), 
-                        new ItemDrop("platelegsTutorial", 1, 20, 1, 1), 
+                        new ItemDrop("chainmailTutorial", 1, 20, 1, 1),
+                        new ItemDrop("platelegsTutorial", 1, 20, 1, 1),
+                        new ItemDrop("plateskirtTutorial", 1, 20, 1, 1),  
                         new ItemDrop("gauntletsTutorial", 1, 20, 1, 1), 
                         new ItemDrop("swordTutorial", 1, 20, 1, 1), 
+                        new ItemDrop("spearTutorial", 1, 20, 1, 1),  
+                        new ItemDrop("battleaxeTutorial", 1, 20, 1, 1), 
+                        new ItemDrop("sword2hTutorial", 1, 20, 1, 1), 
+                        new ItemDrop("warhammerTutorial", 1, 20, 1, 1), 
+                        new ItemDrop("sqShieldTutorial", 1, 20, 1, 1), 
+                        new ItemDrop("kiteshieldTutorial", 1, 20, 1, 1),  
                         new ItemDrop("maceTutorial", 1, 20, 1, 1), 
                         new ItemDrop("daggerTutorial", 1, 20, 1, 1), 
                         new ItemDrop("scimitarTutorial", 1, 20, 1, 1), 
@@ -204,6 +212,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new ItemDrop("runeFire", 1, 4, 100, 200), 
                         new ItemDrop("arrowsBronze", 1, 4, 100, 200), 
                         new ItemDrop("arrowsTutorial", 1, 4, 50, 100),
+                        new ItemDrop("boltsTutorial", 1, 4, 50, 100),
                         new ItemDrop("knivesBronze", 1, 4, 200, 400),
                         new ItemDrop("knivesTutorial", 1, 4, 100, 200)
                     }
@@ -211,7 +220,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
                 // Clue (Tutorial) Uniques
                 itemsToAdd.Add(new Item("Cat ear headband", "A cute headband that makes you look like you have cat ears.", "clueCatEars", 255, 105, 180, 500) { EquipSlot = "Head", Cosmetic = true });
-                itemsToAdd.Add(new Item("Corny apron", "An apron reading 'Kiss the Cook'.", "clueCornyApron", 255, 255, 255, 500) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Corny apron", "An apron reading 'Kiss the Cook'.", "clueCornyApron", 255, 255, 255, 500) { EquipSlot = "Body", Cosmetic = true, CountsAsIDs = ["whiteApron"] });
                 itemsToAdd.Add(new Item("Kilt", "A bit breezy but quite comfortable.", "clueKilt", 34, 139, 34, 500) { EquipSlot = "Legs", Cosmetic = true });
                 itemsToAdd.Add(new Item("Power glove", "A gauntlet with a bunch of buttons on it. Seems wildly impractical.", "cluePowerGlove", 150, 150, 150, 500) { EquipSlot = "Hands", Cosmetic = true });
                 itemsToAdd.Add(new Item("Programmer socks", "Thigh-high socks with blue stripes.", "clueProgrammerSocks", 135, 206, 235, 500) { EquipSlot = "Feet", Cosmetic = true });
@@ -242,74 +251,32 @@ namespace ZeroPlayersOnline.Hardcodes {
                     UseString2 = "Beginner",
                     UseInt = 100,
                     DropTable = {
-                        new ItemDrop("clueFeetMole", 1, 360, 1, 1),
-                        new ItemDrop("clueFeetFrog", 1, 360, 1, 1),
-                        new ItemDrop("clueFeetBear", 1, 360, 1, 1),
-                        new ItemDrop("clueFeetDemon", 1, 360, 1, 1),
-                        new ItemDrop("clueCapeJester", 1, 360, 1, 1),
-                        new ItemDrop("clueCapeParrot", 1, 360, 1, 1),
-                        new ItemDrop("clueTopMonkT", 1, 360, 1, 1),
-                        new ItemDrop("clueBottomMonkT", 1, 360, 1, 1),
+                        new ItemDrop("clueFeetMole", 1, 360, 1, 1), new ItemDrop("clueFeetFrog", 1, 360, 1, 1), new ItemDrop("clueFeetBear", 1, 360, 1, 1), new ItemDrop("clueFeetDemon", 1, 360, 1, 1),
+                        new ItemDrop("clueCapeJester", 1, 360, 1, 1), new ItemDrop("clueCapeParrot", 1, 360, 1, 1),
+                        new ItemDrop("clueTopMonkT", 1, 360, 1, 1), new ItemDrop("clueBottomMonkT", 1, 360, 1, 1),
                         new ItemDrop("clueAmuletDefenseT", 1, 360, 1, 1),
-                        new ItemDrop("clueHeadSandwich", 1, 360, 1, 1),
-                        new ItemDrop("clueTopSandwich", 1, 360, 1, 1),
-                        new ItemDrop("clueBottomSandwich", 1, 360, 1, 1),
-                        new ItemDrop("clueOrnamentRuneScimG", 1, 360, 1, 1),
-                        new ItemDrop("clueOrnamentRuneScimS", 1, 360, 1, 1),
-                        new ItemDrop("clueOrnamentRuneScimZ", 1, 360, 1, 1),
-                        new ItemDrop("sword2hBlack", 1, 805, 1, 1),
-                        new ItemDrop("hatchetBlack", 1, 805, 1, 1),
-                        new ItemDrop("battleaxeBlack", 1, 805, 1, 1),
-                        new ItemDrop("chainmailBlack", 1, 805, 1, 1),
-                        new ItemDrop("daggerBlack", 1, 805, 1, 1),
-                        new ItemDrop("helmBlack", 1, 805, 1, 1),
-                        new ItemDrop("kiteshieldBlack", 1, 805, 1, 1),
-                        new ItemDrop("swordBlack", 1, 805, 1, 1),
-                        new ItemDrop("maceBlack", 1, 805, 1, 1),
-                        new ItemDrop("spearBlack", 1, 805, 1, 1),
-                        new ItemDrop("pickaxeBlack", 1, 805, 1, 1),
-                        new ItemDrop("platebodyBlack", 1, 805, 1, 1),
-                        new ItemDrop("platelegsBlack", 1, 805, 1, 1),
-                        new ItemDrop("plateskirtBlack", 1, 805, 1, 1),
-                        new ItemDrop("sqShieldBlack", 1, 805, 1, 1),
-                        new ItemDrop("scimitarBlack", 1, 805, 1, 1),
-                        new ItemDrop("warhammerBlack", 1, 805, 1, 1),
-                        new ItemDrop("shortbowPine", 1, 45, 1, 1),
-                        new ItemDrop("longbowPine", 1, 45, 1, 1),
-                        new ItemDrop("shortbowOak", 1, 45, 1, 1),
-                        new ItemDrop("longbowOak", 1, 45, 1, 1),
+                        new ItemDrop("clueHeadSandwich", 1, 360, 1, 1),  new ItemDrop("clueTopSandwich", 1, 360, 1, 1),  new ItemDrop("clueBottomSandwich", 1, 360, 1, 1),
+                        new ItemDrop("clueOrnamentRuneScimG", 1, 360, 1, 1), new ItemDrop("clueOrnamentRuneScimS", 1, 360, 1, 1), new ItemDrop("clueOrnamentRuneScimZ", 1, 360, 1, 1),
+                        new ItemDrop("sword2hBlack", 1, 805, 1, 1), new ItemDrop("hatchetBlack", 1, 805, 1, 1), new ItemDrop("battleaxeBlack", 1, 805, 1, 1),
+                        new ItemDrop("chainmailBlack", 1, 805, 1, 1), new ItemDrop("daggerBlack", 1, 805, 1, 1), new ItemDrop("helmBlack", 1, 805, 1, 1),
+                        new ItemDrop("kiteshieldBlack", 1, 805, 1, 1), new ItemDrop("swordBlack", 1, 805, 1, 1), new ItemDrop("maceBlack", 1, 805, 1, 1),
+                        new ItemDrop("spearBlack", 1, 805, 1, 1), new ItemDrop("pickaxeBlack", 1, 805, 1, 1), new ItemDrop("platebodyBlack", 1, 805, 1, 1),
+                        new ItemDrop("platelegsBlack", 1, 805, 1, 1), new ItemDrop("plateskirtBlack", 1, 805, 1, 1), new ItemDrop("sqShieldBlack", 1, 805, 1, 1),
+                        new ItemDrop("scimitarBlack", 1, 805, 1, 1), new ItemDrop("warhammerBlack", 1, 805, 1, 1),
+                        new ItemDrop("shortbowPine", 1, 45, 1, 1), new ItemDrop("longbowPine", 1, 45, 1, 1),
+                        new ItemDrop("shortbowOak", 1, 45, 1, 1), new ItemDrop("longbowOak", 1, 45, 1, 1),
                         new ItemDrop("pickaxeIron", 1, 45, 1, 1),
-                        new ItemDrop("staffAir", 1, 45, 1, 1),
-                        new ItemDrop("staffWater", 1, 45, 1, 1),
-                        new ItemDrop("staffEarth", 1, 45, 1, 1),
-                        new ItemDrop("staffFire", 1, 45, 1, 1),
-                        new ItemDrop("helmSteel", 1, 45, 1, 1),
-                        new ItemDrop("platebodySteel", 1, 45, 1, 1),
-                        new ItemDrop("platelegsSteel", 1, 45, 1, 1),
-                        new ItemDrop("swordSteel", 1, 45, 1, 1),
-                        new ItemDrop("daggerSteel", 1, 45, 1, 1),
-                        new ItemDrop("hatchetSteel", 1, 45, 1, 1),
+                        new ItemDrop("staffAir", 1, 45, 1, 1), new ItemDrop("staffWater", 1, 45, 1, 1), new ItemDrop("staffEarth", 1, 45, 1, 1), new ItemDrop("staffFire", 1, 45, 1, 1),
+                        new ItemDrop("helmSteel", 1, 45, 1, 1), new ItemDrop("platebodySteel", 1, 45, 1, 1), new ItemDrop("platelegsSteel", 1, 45, 1, 1),
+                        new ItemDrop("swordSteel", 1, 45, 1, 1), new ItemDrop("daggerSteel", 1, 45, 1, 1), new ItemDrop("hatchetSteel", 1, 45, 1, 1),
                         new ItemDrop("battleaxeSteel", 1, 45, 1, 1),
-                        new ItemDrop("coifLeather", 1, 45, 1, 1),
-                        new ItemDrop("bodyLeather", 1, 45, 1, 1),
-                        new ItemDrop("chapsLeather", 1, 45, 1, 1),
-                        new ItemDrop("vambracesLeather", 1, 45, 1, 1),
-                        new ItemDrop("bodyHardleather", 1, 45, 1, 1),
-                        new ItemDrop("wizardBlueHat", 1, 45, 1, 1),
-                        new ItemDrop("wizardBlueRobe", 1, 45, 1, 1),
-                        new ItemDrop("wizardBlackHat", 1, 45, 1, 1),
-                        new ItemDrop("wizardBlackRobe", 1, 45, 1, 1),
-                        new ItemDrop("runeAir", 1, 45, 15, 35),
-                        new ItemDrop("runeMind", 1, 45, 15, 35),
-                        new ItemDrop("runeWater", 1, 45, 15, 35),
-                        new ItemDrop("runeEarth", 1, 45, 15, 35),
-                        new ItemDrop("runeFire", 1, 45, 15, 35),
-                        new ItemDrop("runeBody", 1, 45, 15, 35),
-                        new ItemDrop("runeChaos", 1, 45, 2, 7),
-                        new ItemDrop("runeNature", 1, 45, 2, 7),
-                        new ItemDrop("runeLaw", 1, 45, 2, 7),
-                        new ItemDrop("arrowsBronze", 1, 45, 15, 30),
-                        new ItemDrop("arrowsIron", 1, 45, 7, 15)
+                        new ItemDrop("coifLeather", 1, 45, 1, 1), new ItemDrop("bodyLeather", 1, 45, 1, 1), new ItemDrop("chapsLeather", 1, 45, 1, 1),
+                        new ItemDrop("vambracesLeather", 1, 45, 1, 1), new ItemDrop("bodyHardleather", 1, 45, 1, 1),
+                        new ItemDrop("wizardBlueHat", 1, 45, 1, 1), new ItemDrop("wizardBlueRobe", 1, 45, 1, 1),
+                        new ItemDrop("wizardBlackHat", 1, 45, 1, 1), new ItemDrop("wizardBlackRobe", 1, 45, 1, 1),
+                        new ItemDrop("runeAir", 1, 45, 15, 35), new ItemDrop("runeMind", 1, 45, 15, 35), new ItemDrop("runeWater", 1, 45, 15, 35), new ItemDrop("runeEarth", 1, 45, 15, 35), new ItemDrop("runeFire", 1, 45, 15, 35),
+                        new ItemDrop("runeBody", 1, 45, 15, 35), new ItemDrop("runeChaos", 1, 45, 2, 7), new ItemDrop("runeNature", 1, 45, 2, 7), new ItemDrop("runeLaw", 1, 45, 2, 7),
+                        new ItemDrop("arrowsBronze", 1, 45, 15, 30), new ItemDrop("arrowsIron", 1, 45, 7, 15)
                     }
                 });
 
@@ -370,11 +337,21 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new ItemDrop("platelegsSteelG", 1, 1404, 1, 1),
                         new ItemDrop("plateskirtSteelG", 1, 1404, 1, 1),
                         new ItemDrop("kiteshieldSteelG", 1, 1404, 1, 1),
+                        new ItemDrop("helmSteelH", 1, 1404, 1, 1),
+                        new ItemDrop("platebodySteelH", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsSteelH", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtSteelH", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldSteelH", 1, 1404, 1, 1),
                         new ItemDrop("helmIronT", 1, 1404, 1, 1),
                         new ItemDrop("platebodyIronT", 1, 1404, 1, 1),
                         new ItemDrop("platelegsIronT", 1, 1404, 1, 1),
                         new ItemDrop("plateskirtIronT", 1, 1404, 1, 1),
                         new ItemDrop("kiteshieldIronT", 1, 1404, 1, 1),
+                        new ItemDrop("helmIronH", 1, 1404, 1, 1),
+                        new ItemDrop("platebodyIronH", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsIronH", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtIronH", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldIronH", 1, 1404, 1, 1),
                         new ItemDrop("helmIronG", 1, 1404, 1, 1),
                         new ItemDrop("platebodyIronG", 1, 1404, 1, 1),
                         new ItemDrop("platelegsIronG", 1, 1404, 1, 1),
@@ -385,6 +362,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                         new ItemDrop("platelegsBronzeT", 1, 1404, 1, 1),
                         new ItemDrop("plateskirtBronzeT", 1, 1404, 1, 1),
                         new ItemDrop("kiteshieldBronzeT", 1, 1404, 1, 1),
+                        new ItemDrop("helmBronzeH", 1, 1404, 1, 1),
+                        new ItemDrop("platebodyBronzeH", 1, 1404, 1, 1),
+                        new ItemDrop("platelegsBronzeH", 1, 1404, 1, 1),
+                        new ItemDrop("plateskirtBronzeH", 1, 1404, 1, 1),
+                        new ItemDrop("kiteshieldBronzeH", 1, 1404, 1, 1),
                         new ItemDrop("helmBronzeG", 1, 1404, 1, 1),
                         new ItemDrop("platebodyBronzeG", 1, 1404, 1, 1),
                         new ItemDrop("platelegsBronzeG", 1, 1404, 1, 1),
@@ -597,6 +579,188 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Monk's robe", "I feel the gods don't enjoy my materialistic obsessions.", "clueBottomMonkG", Color.SaddleBrown, 500) { CosmeticNote = "g", EquipSlot = "Legs", MiscString = "PrayerBoost", EquipTier = 2 });
                 
 
+                // Medium Clues
+                itemsToAdd.Add(new Item("Clue scroll (medium)", "Hopefully leads to treasure.", "clueScrollMedium", 207, 185, 151, 0, false, false) {
+                    UseString = "ClueMedium", 
+                    ConsumedOnUse = false,
+                    DestroyOnDrop = true
+                });
+
+                itemsToAdd.Add(new Item("Clue casket (medium)", "The treasure at the end of the hunt! What could be inside?", "casketMedium", 218, 165, 32, 0, true, false) {
+                    UseString = "Casket",
+                    UseString2 = "Medium",
+                    UseInt = 10000,
+                    DropTable = {
+                        new ItemDrop("gnomishFirelighter", 1, 341, 1, 1),
+                        new ItemDrop("compbowYew", 1, 341, 1, 1),
+                        new ItemDrop("clueAmuletStrengthT", 1, 341, 1, 1),
+                        new ItemDrop("clueBootsRanger", 1, 1133, 1, 1),
+                        new ItemDrop("clueBootsWizard", 1, 1133, 1, 1),
+                        new ItemDrop("clueSandalsHoly", 1, 1133, 1, 1),
+                        new ItemDrop("clueSpikedManacles", 1, 1133, 1, 1),
+                        new ItemDrop("clueBootsClimbingG", 1, 1133, 1, 1),
+                        new ItemDrop("helmAdamantT", 1, 1133, 1, 1), new ItemDrop("helmAdamantG", 1, 1133, 1, 1), new ItemDrop("helmAdamantH", 1, 1133, 1, 1),
+                        new ItemDrop("platebodyAdamantT", 1, 1133, 1, 1), new ItemDrop("kiteshieldAdamantT", 1, 1133, 1, 1),
+                        new ItemDrop("platelegsAdamantT", 1, 1133, 1, 1), new ItemDrop("plateskirtAdamantT", 1, 1133, 1, 1),  
+                        new ItemDrop("platebodyAdamantG", 1, 1133, 1, 1), new ItemDrop("kiteshieldAdamantG", 1, 1133, 1, 1),
+                        new ItemDrop("platelegsAdamantG", 1, 1133, 1, 1), new ItemDrop("plateskirtAdamantG", 1, 1133, 1, 1),  
+                        new ItemDrop("platebodyAdamantH", 1, 1133, 1, 1), new ItemDrop("kiteshieldAdamantH", 1, 1133, 1, 1), 
+                        new ItemDrop("platelegsAdamantH", 1, 1133, 1, 1), new ItemDrop("plateskirtAdamantH", 1, 1133, 1, 1),
+                        new ItemDrop("helmMithrilT", 1, 1133, 1, 1), new ItemDrop("helmMithrilG", 1, 1133, 1, 1), new ItemDrop("helmMithrilH", 1, 1133, 1, 1),
+                        new ItemDrop("platebodyMithrilT", 1, 1133, 1, 1), new ItemDrop("kiteshieldMithrilT", 1, 1133, 1, 1),
+                        new ItemDrop("platelegsMithrilT", 1, 1133, 1, 1), new ItemDrop("plateskirtMithrilT", 1, 1133, 1, 1),  
+                        new ItemDrop("platebodyMithrilG", 1, 1133, 1, 1), new ItemDrop("kiteshieldMithrilG", 1, 1133, 1, 1),
+                        new ItemDrop("platelegsMithrilG", 1, 1133, 1, 1), new ItemDrop("plateskirtMithrilG", 1, 1133, 1, 1),  
+                        new ItemDrop("platebodyMithrilH", 1, 1133, 1, 1), new ItemDrop("kiteshieldMithrilH", 1, 1133, 1, 1), 
+                        new ItemDrop("platelegsMithrilH", 1, 1133, 1, 1), new ItemDrop("plateskirtMithrilH", 1, 1133, 1, 1),
+                        new ItemDrop("bodyGreenDragonhideT", 1, 1133, 1, 1), new ItemDrop("chapsGreenDragonhideT", 1, 1133, 1, 1),
+                        new ItemDrop("bodyGreenDragonhideG", 1, 1133, 1, 1), new ItemDrop("chapsGreenDragonhideG", 1, 1133, 1, 1),
+                        new ItemDrop("clueSaradominMitre", 1, 1133, 1, 1), new ItemDrop("clueSaradominCloak", 1, 1133, 1, 1),
+                        new ItemDrop("clueGuthixMitre", 1, 1133, 1, 1), new ItemDrop("clueGuthixCloak", 1, 1133, 1, 1),
+                        new ItemDrop("clueZamorakMitre", 1, 1133, 1, 1), new ItemDrop("clueZamorakCloak", 1, 1133, 1, 1),
+                        new ItemDrop("clueAncientMitre", 1, 1133, 1, 1), new ItemDrop("clueAncientCloak", 1, 1133, 1, 1), new ItemDrop("clueAncientStole", 1, 1133, 1, 1), new ItemDrop("clueAncientCrozier", 1, 1133, 1, 1),
+                        new ItemDrop("clueArmadylMitre", 1, 1133, 1, 1), new ItemDrop("clueArmadylCloak", 1, 1133, 1, 1), new ItemDrop("clueArmadylStole", 1, 1133, 1, 1), new ItemDrop("clueArmadylCrozier", 1, 1133, 1, 1),
+                        new ItemDrop("clueBandosMitre", 1, 1133, 1, 1), new ItemDrop("clueBandosCloak", 1, 1133, 1, 1), new ItemDrop("clueBandosStole", 1, 1133, 1, 1), new ItemDrop("clueBandosCrozier", 1, 1133, 1, 1),
+                        new ItemDrop("clueBoaterRed", 1, 1133, 1, 1), new ItemDrop("clueBoaterGreen", 1, 1133, 1, 1), new ItemDrop("clueBoaterOrange", 1, 1133, 1, 1), new ItemDrop("clueBoaterBlack", 1, 1133, 1, 1),
+                        new ItemDrop("clueBoaterBlue", 1, 1133, 1, 1), new ItemDrop("clueBoaterPink", 1, 1133, 1, 1), new ItemDrop("clueBoaterPurple", 1, 1133, 1, 1), new ItemDrop("clueBoaterWhite", 1, 1133, 1, 1),
+                        new ItemDrop("clueHeadbandRed", 1, 1133, 1, 1), new ItemDrop("clueHeadbandGreen", 1, 1133, 1, 1), new ItemDrop("clueHeadbandOrange", 1, 1133, 1, 1), new ItemDrop("clueHeadbandBlack", 1, 1133, 1, 1),
+                        new ItemDrop("clueHeadbandBlue", 1, 1133, 1, 1), new ItemDrop("clueHeadbandPink", 1, 1133, 1, 1), new ItemDrop("clueHeadbandPurple", 1, 1133, 1, 1), new ItemDrop("clueHeadbandWhite", 1, 1133, 1, 1),
+                        new ItemDrop("clueCrierHat", 1, 1133, 1, 1), new ItemDrop("clueCrierCoat", 1, 1133, 1, 1), new ItemDrop("clueCrierBell", 1, 1133, 1, 1), new ItemDrop("clueCaneAdamant", 1, 1133, 1, 1),
+                        new ItemDrop("clueBannerArceuus", 1, 1133, 1, 1), new ItemDrop("clueBannerPiscarilius", 1, 1133, 1, 1), new ItemDrop("clueBannerHosidius", 1, 1133, 1, 1), new ItemDrop("clueBannerShayzien", 1, 1133, 1, 1), new ItemDrop("clueBannerLovakengj", 1, 1133, 1, 1),
+                        new ItemDrop("clueShieldCabbage", 1, 1133, 1, 1),
+                        new ItemDrop("clueMaskCat", 1, 1133, 1, 1), new ItemDrop("clueMaskPenguin", 1, 1133, 1, 1), new ItemDrop("clueMaskWolf", 1, 1133, 1, 1),
+                        new ItemDrop("clueHatLeprechaun", 1, 1133, 1, 1), new ItemDrop("clueHatLeprechaunBlack", 1, 1133, 1, 1), new ItemDrop("clueCloakWolf", 1, 1133, 1, 1),
+                        new ItemDrop("clueMaskUnicorn", 1, 2266, 1, 1), new ItemDrop("clueMaskUnicornBlack", 1, 2266, 1, 1), 
+                        new ItemDrop("clueElegantShirtPurple", 1, 2266, 1, 1), new ItemDrop("clueElegantBlousePurple", 1, 2266, 1, 1), new ItemDrop("clueElegantLegsPurple", 1, 2266, 1, 1), new ItemDrop("clueElegantSkirtPurple", 1, 2266, 1, 1),
+                        new ItemDrop("clueElegantShirtBlack", 1, 2266, 1, 1), new ItemDrop("clueElegantBlouseWhite", 1, 2266, 1, 1), new ItemDrop("clueElegantLegsBlack", 1, 2266, 1, 1), new ItemDrop("clueElegantSkirtWhite", 1, 2266, 1, 1),
+                        new ItemDrop("clueElegantShirtPink", 1, 2266, 1, 1), new ItemDrop("clueElegantBlousePink", 1, 2266, 1, 1), new ItemDrop("clueElegantLegsPink", 1, 2266, 1, 1), new ItemDrop("clueElegantSkirtPink", 1, 2808, 1, 1),
+                        new ItemDrop("clueElegantShirtGold", 1, 2266, 1, 1), new ItemDrop("clueElegantBlouseGold", 1, 2266, 1, 1), new ItemDrop("clueElegantLegsGold", 1, 2266, 1, 1), new ItemDrop("clueElegantSkirtGold", 1, 2808, 1, 1),
+                        new ItemDrop("helmAdamant", 1, 34, 1, 1), new ItemDrop("platebodyAdamant", 1, 34, 1, 1), new ItemDrop("platelegsAdamant", 1, 34, 1, 1), new ItemDrop("swordAdamant", 1, 34, 1, 1),
+                        new ItemDrop("daggerAdamant", 1, 34, 1, 1), new ItemDrop("battleaxeAdamant", 1, 34, 1, 1), new ItemDrop("hatchetAdamant", 1, 34, 1, 1), new ItemDrop("pickaxeAdamant", 1, 34, 1, 1),
+                        new ItemDrop("bodyGreenDragonhide", 1, 34, 1, 1), new ItemDrop("chapsGreenDragonhide", 1, 34, 1, 1),
+                        new ItemDrop("shortbowYew", 1, 34, 1, 1), new ItemDrop("battlestaffFire", 1, 34, 1, 1), new ItemDrop("longbowYew", 1, 38, 1, 1), new ItemDrop("amuletPower", 1, 38, 1, 1),
+                        new ItemDrop("runeAir", 1, 34, 50, 100), new ItemDrop("runeMind", 1, 34, 50, 100), new ItemDrop("runeWater", 1, 34, 50, 100), new ItemDrop("runeEarth", 1, 34, 50, 100), new ItemDrop("runeFire", 1, 34, 50, 100),
+                        new ItemDrop("runeChaos", 1, 34, 10, 20), new ItemDrop("runeNature", 1, 34, 10, 20), new ItemDrop("runeLaw", 1, 34, 10, 20), new ItemDrop("runeDeath", 1, 34, 10, 20),
+                        new ItemDrop("cluePurpleSweets", 1, 34, 2, 6, altlog: "General"),
+                        new ItemDrop("clueFirelighterRed", 1, 189, 3, 5, altlog: "General"),
+                        new ItemDrop("clueFirelighterGreen", 1, 189, 3, 5, altlog: "General"),
+                        new ItemDrop("clueFirelighterBlue", 1, 189, 3, 5, altlog: "General"),
+                        new ItemDrop("clueFirelighterPurple", 1, 189, 3, 5, altlog: "General"),
+                        new ItemDrop("clueFirelighterWhite", 1, 189, 3, 5, altlog: "General"),
+                        new ItemDrop("clueChargeDragonstoneScroll", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportNardah", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportMosLeHarmless", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportMortton", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportFeldipHills", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportLunar", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportDigsite", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportPiscatoris", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportPestControl", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportTaiBwoWannai", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportLumberyard", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueTeleportIorwerthCamp", 1, 429, 5, 15, altlog: "General"),
+                        new ItemDrop("clueMasterScrollBook", 1, 750, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageSaradomin1", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageSaradomin2", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageSaradomin3", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageSaradomin4", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageZamorak1", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageZamorak2", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageZamorak3", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageZamorak4", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageGuthix1", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageGuthix2", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageGuthix3", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageGuthix4", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageBandos1", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageBandos2", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageBandos3", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageBandos4", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageArmadyl1", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageArmadyl2", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageArmadyl3", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageArmadyl4", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageAncient1", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageAncient2", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageAncient3", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePageAncient4", 1, 818, 1, 1, altlog: "General"),
+                        new ItemDrop("clueHolyBlessing", 1, 682, 1, 1, altlog: "General"),
+                        new ItemDrop("clueUnholyBlessing", 1, 682, 1, 1, altlog: "General"),
+                        new ItemDrop("cluePeacefulBlessing", 1, 682, 1, 1, altlog: "General"),
+                        new ItemDrop("clueWarBlessing", 1, 682, 1, 1, altlog: "General"),
+                        new ItemDrop("clueHonourableBlessing", 1, 682, 1, 1, altlog: "General"),
+                        new ItemDrop("clueAncientBlessing", 1, 682, 1, 1, altlog: "General"),
+                        new ItemDrop("clueScrollMaster", 1, 30, 1, 1, altlog: "General")
+                    }
+                });
+
+                // Medium Uniques
+                itemsToAdd.Add(new Item("Gnomish firelighter", "A tinderbox of the highest gnomish craftsmanship.", "gnomishFirelighter", Color.SaddleBrown, 2000) { CountsAsIDs = ["tinderbox"] });
+                
+                itemsToAdd.Add(new Item("Purple elegant shirt", "A well made elegant men's purple shirt.", "clueElegantShirtPurple", Color.MediumPurple, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Purple elegant blouse", "A well made elegant ladies' purple blouse.", "clueElegantBlousePurple", Color.MediumPurple, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Purple elegant legs", "A rather elegant pair of men's purple pantaloons.", "clueElegantLegsPurple", Color.MediumPurple, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Purple elegant skirt", "A rather elegant purple skirt.", "clueElegantSkirtPurple", Color.MediumPurple, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Black elegant shirt", "A well made elegant men's black shirt.", "clueElegantShirtBlack", Color.DimGray, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("White elegant blouse", "A well made elegant ladies' white blouse.", "clueElegantBlouseWhite", Color.White, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Black elegant legs", "A rather elegant pair of men's black pantaloons.", "clueElegantLegsBlack", Color.DimGray, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("White elegant skirt", "A rather elegant white skirt.", "clueElegantSkirtWhite", Color.White, 2000) { EquipSlot = "Legs", Cosmetic = true }); 
+                itemsToAdd.Add(new Item("Pink elegant shirt", "A well made elegant men's pink shirt.", "clueElegantShirtPink", Color.HotPink, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Pink elegant blouse", "A well made elegant ladies' pink blouse.", "clueElegantBlousePink", Color.HotPink, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Pink elegant legs", "A rather elegant pair of men's pink pantaloons.", "clueElegantLegsPink", Color.HotPink, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Pink elegant skirt", "A rather elegant pink skirt.", "clueElegantSkirtPink", Color.HotPink, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Gold elegant shirt", "A well made elegant men's gold shirt.", "clueElegantShirtGold", Color.Goldenrod, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Gold elegant blouse", "A well made elegant ladies' gold blouse.", "clueElegantBlouseGold", Color.Goldenrod, 2000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Gold elegant legs", "A rather elegant pair of men's gold pantaloons.", "clueElegantLegsGold", Color.Goldenrod, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                itemsToAdd.Add(new Item("Gold elegant skirt", "A rather elegant gold skirt.", "clueElegantSkirtGold", Color.Goldenrod, 2000) { EquipSlot = "Legs", Cosmetic = true });
+                
+                itemsToAdd.Add(new Item("Ranger boots", "Lightweight boots ideal for rangers.", "clueBootsRanger", Color.ForestGreen, 1000000) { EquipSlot = "Feet", EquipSkill = "Ranged", EquipLevel = 40, EquipTier = 5, MiscString = "PowerRange" });
+                itemsToAdd.Add(new Item("Wizard boots", "Slightly magical boots.", "clueBootsWizard",  0, 157, 196, 1000000) { EquipSlot = "Feet", EquipSkill = "Magic", EquipLevel = 40, EquipTier = 5, MiscString = "PowerMagic" });
+                itemsToAdd.Add(new Item("Holy sandals", "Holy footwear!", "clueSandalsHoly",  Color.White, 1000000) { EquipSlot = "Feet", EquipSkill = "Prayer", EquipLevel = 31, EquipTier = 2, MiscString = "PrayerBoost" });
+                itemsToAdd.Add(new Item("Holy moleys", "The lesser spotted Talpidae Saradominus.", "clueHolyMoleys",  Color.SaddleBrown, 2000000) { EquipSlot = "Feet", EquipSkill = "Prayer", EquipLevel = 31, EquipTier = 2, MiscString = "PrayerBoost" });
+                itemsToAdd.Add(new Item("Spiked manacles", "Some very spiky metal bands, better make sure I don't cut myself while walking.", "clueSpikedManacles",  Color.DimGray, 1000000) { EquipSlot = "Feet", EquipTier = 4, MiscString = "StrengthBoost" });
+                itemsToAdd.Add(new Item("Climbing boots", "Boots made for climbing. Nice Trim!", "clueBootsClimbingG",  Color.Gray, 75000) { CosmeticNote = "g", EquipSlot = "Feet", EquipTier = 2, MiscString = "StrengthBoost" });
+                
+                itemsToAdd.Add(new Item("Red boater", "Stylish!", "clueBoaterRed",  Color.Crimson, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Green boater", "Stylish!", "clueBoaterGreen",  Color.Lime, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Orange boater", "Stylish!", "clueBoaterOrange",  Color.Orange, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Black boater", "Stylish!", "clueBoaterBlack",  Color.DimGray, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Blue boater", "Stylish!", "clueBoaterBlue",  Color.CadetBlue, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Pink boater", "Stylish!", "clueBoaterPink",  Color.HotPink, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Purple boater", "Stylish!", "clueBoaterPurple",  Color.Purple, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("White boater", "Stylish!", "clueBoaterWhite",  Color.White, 5000) { EquipSlot = "Head", Cosmetic = true });
+                
+                itemsToAdd.Add(new Item("Red headband", "Stylish!", "clueHeadbandRed",  Color.Crimson, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Green headband", "Stylish!", "clueHeadbandGreen",  Color.Lime, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Orange headband", "Stylish!", "clueHeadbandOrange",  Color.Orange, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Black headband", "Stylish!", "clueHeadbandBlack",  Color.DimGray, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Blue headband", "Stylish!", "clueHeadbandBlue",  Color.CadetBlue, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Pink headband", "Stylish!", "clueHeadbandPink",  Color.HotPink, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Purple headband", "Stylish!", "clueHeadbandPurple",  Color.Purple, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("White headband", "Stylish!", "clueHeadbandWhite",  Color.White, 5000) { EquipSlot = "Head", Cosmetic = true });
+                 
+                itemsToAdd.Add(new Item("Crier hat", "Hear ye! Hear ye!", "clueCrierHat",  Color.SkyBlue, 5000) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Crier coat", "Don't shoot the messenger!", "clueCrierCoat",  Color.SkyBlue, 5000) { EquipSlot = "Body", Cosmetic = true });
+                itemsToAdd.Add(new Item("Crier bell", "For whom?", "clueCrierBell",  Color.Goldenrod, 5000) { EquipSlot = "Weapon", Cosmetic = true, UseString = "Bell", ConsumedOnUse = false });
+                itemsToAdd.Add(new Item("Adamant cane", "A diamond topped cane.", "clueCaneAdamant", ColorLib.Adamant, 1440) { EquipSlot = "Weapon",  EquipTier = 5, EquipSkill = "Attack", EquipLevel = 40, EquipDamageType = "Crush" });
+                itemsToAdd.Add(new Item("Arceuus banner", "An ancient banner bearing the mark of the Arceuus Elders.", "clueBannerArceuus", Color.CadetBlue, 10000) { EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 1, EquipDamageType = "Crush" });
+                itemsToAdd.Add(new Item("Piscarilius banner", "A stained glass banner displaying the Piscarilius sigil.", "clueBannerPiscarilius", Color.Yellow, 10000) { EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 1, EquipDamageType = "Crush" });
+                itemsToAdd.Add(new Item("Hosidius banner", "A banned made of redwood bearing the Hosidius sigil.", "clueBannerHosidius", Color.Purple, 10000) { EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 1, EquipDamageType = "Crush" });
+                itemsToAdd.Add(new Item("Shayzien banner", "A war torn banner bearing the Shayzien sigil.", "clueBannerShayzien", Color.Crimson, 10000) { EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 1, EquipDamageType = "Crush" });
+                itemsToAdd.Add(new Item("Arceuus banner", "A lovekite banner bearing the Lovakengj sigil.", "clueBannerLovakengj", Color.Orange, 10000) { EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 1, EquipDamageType = "Crush" });
+                itemsToAdd.Add(new Item("Cabbage roung shield", "An adamant shield shaped like a cabbage.", "clueShieldCabbage",  Color.Lime, 5000) { EquipSlot = "Offhand", EquipTier = 5, EquipSkill = "Defense", EquipLevel = 40, MiscString = "DefenseMelee" });
+                itemsToAdd.Add(new Item("Cat mask", "Miaow!", "clueMaskCat", Color.DarkGray, 2400) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Penguin mask", "Thankfully this doesn't reset every week.", "clueMaskPenguin", Color.DimGray, 2400) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Leprechaun hat", "Top o' the morning!", "clueHatLeprechaun", Color.ForestGreen, 2400) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Black leprechaun hat", "Try as they will, and try as they might, who steals me gold won't live through the night.", "clueHatLeprechaunBlack", Color.DimGray, 2400) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Wolf mask", "Howwwallll!", "clueMaskWolf", Color.Gray, 2400) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Wolf cloak", "A very warm wolf cloak.", "clueCloakWolf", Color.Gray, 2400) { EquipSlot = "Cape", Cosmetic = true });
+                itemsToAdd.Add(new Item("Black unicorn mask", "Point shadows.", "clueMaskUnicornBlack", Color.DimGray, 2400) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Unicorn mask", "Point rainbows.", "clueMaskUnicorn", Color.DimGray, 2400) { EquipSlot = "Head", Cosmetic = true });
+                itemsToAdd.Add(new Item("Amulet of strength", "An enchanted ruby amulet of strength.", "clueAmuletStrengthT", Color.Crimson, 4600) { CosmeticNote = "t", EquipSlot = "Amulet", MiscString = "StrengthBoost", EquipTier = 5 });
+                
+                
+                
                 List<MaterialDef> Gods = new() {
                     new("Saradomin", Color.Turquoise, 3, 20, 5, "Holy"),
                     new("Guthix", Color.Green, 3, 10, 20, "Peaceful"),
@@ -651,7 +815,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             itemsToAdd.Add(new Item("Tutorial Island cape", "A cape signifying you completed all challenges on Tutorial Island. Congratulations!", "capeCompTI", 135, 206, 235, 0) { EquipSlot = "Cape", EquipTier = 1, MiscString = "OmniBoost" });
             itemsToAdd.Add(new Item("Defense skillcape", "The cape worn by masters of the art of Defense.", "capeSkillDefense", Color.CornflowerBlue, 0) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
-
+            itemsToAdd.Add(new Item("Cooking skillcape", "The cape worn by masters of the art of Cooking.", "capeSkillCooking", Color.Purple, 0) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
 
             {
                 // ordinary wizard
@@ -749,7 +913,6 @@ namespace ZeroPlayersOnline.Hardcodes {
 
                     });
                     itemsToAdd.Add(new Item("Potato", "A tuber most versatile.", "potato", 205, 127, 50, 5) { UseString = "Heal", UseInt = 1 });
-                    itemsToAdd.Add(new Item("Baked potato", "It'd taste even better with some toppings", "potatoBaked", 225, 147, 70, 10) { UseString = "Heal", UseInt = 4 });
 
                     itemsToAdd.Add(new Item("Onion seed", "An onion seed - plant in an allotment. (5)", "seedOnion", 240, 234, 214, 10, true) {
                         UseString = "PlantSeed", UseString2 = "Allotment", UseString3 = "onion",
@@ -1420,8 +1583,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 
                 itemsToAdd.Add(new Item("Amulet of glory", "A very powerful dragonstone amulet.", "amuletGlory", Color.Purple, 18100) { EquipSlot = "Amulet", MiscString = "OffenseBoost", EquipTier = 3, UseString = "TeleportMenuCost", TeleportLocations = ["MIST_Edgeville", "KAR_MusaPoint", "MIST_DraynorVillage", "DES_AlKharidPalace" ] });
                 itemsToAdd.Add(new Item("Ring of wealth", "An enchanted dragonstone ring that can teleport you.", "ringWealth", Color.Purple, 18100) { EquipSlot = "Ring", UseString = "TeleportMenuCost", TeleportLocations = ["FREM_Miscellania", "MIST_GrandExchange", "ASG_FaladorPark", "FREM_KeldagrimMineSouthwest" ] });
-                itemsToAdd.Add(new Item("Skills necklace", "This will help me travel.", "necklaceSkills", Color.Purple, 18100) { EquipSlot = "Amulet", UseString = "TeleportMenuCost", TeleportLocations = ["KAN_FishingGuildOutside", "ASG_MiningGuild", "ASG_CraftingGuild", "MIST_CooksGuild", "KOUR_WoodcuttingGuild", "KOUR_FarmingGuild" ] });
-                itemsToAdd.Add(new Item("Combat bracelet", "A handy way to get around.", "braceletCombat", Color.Purple, 18100) { EquipSlot = "Hands", MiscString = "OmniBoost", EquipTier = 1, UseString = "TeleportMenuCost", TeleportLocations = ["ASG_WarriorsGuild", "MIST_ChampionsGuild", "ASG_EdgevilleMonastery", "KAN_RangingGuild" ] });
+                itemsToAdd.Add(new Item("Skills necklace", "This will help me travel.", "necklaceSkills", Color.Purple, 18100) { EquipSlot = "Amulet", UseString = "TeleportMenuCost", TeleportLocations = ["KAN_FishingGuildOutside", "ASG_MiningGuild", "ASG_CraftingGuild", "MIST_VarrockGuildCooks", "KOUR_WoodcuttingGuild", "KOUR_FarmingGuild" ] });
+                itemsToAdd.Add(new Item("Combat bracelet", "A handy way to get around.", "braceletCombat", Color.Purple, 18100) { EquipSlot = "Hands", MiscString = "OmniBoost", EquipTier = 1, UseString = "TeleportMenuCost", TeleportLocations = ["ASG_WarriorsGuild", "MIST_VarrockMineEast", "ASG_EdgevilleMonastery", "KAN_RangingGuild" ] });
                 
                 itemsToAdd.Add(new Item("Amulet of fury", "A very powerful onyx amulet.", "amuletFury", Color.DimGray, 1000100) { EquipSlot = "Amulet", MiscString = "OmniBoost", EquipTier = 4 });
                 itemsToAdd.Add(new Item("Ring of fortune", "A lucky ring that enhances your chance to receive rare drops.", "ringFortune", Color.DimGray, 1000100) { EquipSlot = "Ring", UseString = "TeleportMenuFree", TeleportLocations = ["FREM_Miscellania", "MIST_GrandExchange", "ASG_FaladorPark", "FREM_KeldagrimMineSouthwest" ] });
@@ -1487,49 +1650,53 @@ namespace ZeroPlayersOnline.Hardcodes {
              for (int i = 0; i < Leathers.Count; i++) {
                 int fullMult = Leathers[i].CostMultiplier;
 
-                Item coif = new Item(Leathers[i].Name + " coif", "Provides " + Leathers[i].Descriptor + " ranged protection for the head.", "coif" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 2) {
+                string tempName = Leathers[i].Name;
+
+                if (tempName.Contains(" d")) { tempName = tempName.Replace(" d", "D"); }
+
+                Item coif = new Item(Leathers[i].Name + " coif", "Provides " + Leathers[i].Descriptor + " ranged protection for the head.", "coif" + tempName, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 2) {
                     EquipSlot = "Head",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
                 };
                 itemsToAdd.Add(coif);
 
-                Item body = new Item(Leathers[i].Name + " body", "Provides " + Leathers[i].Descriptor + " ranged protection for the torso.", "body" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 5) {
+                Item body = new Item(Leathers[i].Name + " body", "Provides " + Leathers[i].Descriptor + " ranged protection for the torso.", "body" + tempName, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 5) {
                     EquipSlot = "Body",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
                 };
                 itemsToAdd.Add(body);
 
-                Item chaps = new Item(Leathers[i].Name + " chaps", "Provides " + Leathers[i].Descriptor + " ranged protection for the legs.", "chaps" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 3) {
+                Item chaps = new Item(Leathers[i].Name + " chaps", "Provides " + Leathers[i].Descriptor + " ranged protection for the legs.", "chaps" + tempName, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 3) {
                     EquipSlot = "Legs",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
                 };
                 itemsToAdd.Add(chaps);
 
-                Item boots = new Item(Leathers[i].Name + " boots", "Provides " + Leathers[i].Descriptor + " ranged protection for the feet.", "boots" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult) {
+                Item boots = new Item(Leathers[i].Name + " boots", "Provides " + Leathers[i].Descriptor + " ranged protection for the feet.", "boots" + tempName, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult) {
                     EquipSlot = "Feet",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
                 };
                 itemsToAdd.Add(boots);
 
-                Item vambraces = new Item(Leathers[i].Name + " vambraces", "Provides " + Leathers[i].Descriptor + " ranged protection for the hands.", "vambraces" + Leathers[i].Name, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult) {
+                Item vambraces = new Item(Leathers[i].Name + " vambraces", "Provides " + Leathers[i].Descriptor + " ranged protection for the hands.", "vambraces" + tempName, Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult) {
                     EquipSlot = "Hands",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
                 };
                 itemsToAdd.Add(vambraces);
 
                 // Trimmed body and chaps
-                Item bodyT = new Item(Leathers[i].Name + " body", "Provides " + Leathers[i].Descriptor + " ranged protection for the torso. Trimmed.", "body" + Leathers[i].Name + "T", Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 10) {
+                Item bodyT = new Item(Leathers[i].Name + " body", "Provides " + Leathers[i].Descriptor + " ranged protection for the torso. Trimmed.", "body" + tempName + "T", Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 10) {
                     CosmeticNote = "t", EquipSlot = "Body",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
                 };
                 itemsToAdd.Add(bodyT);
 
-                Item chapsT = new Item(Leathers[i].Name + " chaps", "Provides " + Leathers[i].Descriptor + " ranged protection for the legs. Trimmed.", "chaps" + Leathers[i].Name + "T", Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 6) {
+                Item chapsT = new Item(Leathers[i].Name + " chaps", "Provides " + Leathers[i].Descriptor + " ranged protection for the legs. Trimmed.", "chaps" + tempName + "T", Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 6) {
                     CosmeticNote = "t", EquipSlot = "Legs",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
                 };
                 itemsToAdd.Add(chapsT);
 
                 // Gold trimmed body and chaps
-                Item bodyG = new Item(Leathers[i].Name + " body", "Provides " + Leathers[i].Descriptor + " ranged protection for the torso. Trimmed with gold.", "body" + Leathers[i].Name + "G", Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 10) {
+                Item bodyG = new Item(Leathers[i].Name + " body", "Provides " + Leathers[i].Descriptor + " ranged protection for the torso. Trimmed with gold.", "body" + tempName + "G", Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 10) {
                     CosmeticNote = "g", EquipSlot = "Body",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
                 };
                 itemsToAdd.Add(bodyG);
 
-                Item chapsG = new Item(Leathers[i].Name + " chaps", "Provides " + Leathers[i].Descriptor + " ranged protection for the legs. Trimmed with gold.", "chaps" + Leathers[i].Name + "G", Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 6) {
+                Item chapsG = new Item(Leathers[i].Name + " chaps", "Provides " + Leathers[i].Descriptor + " ranged protection for the legs. Trimmed with gold.", "chaps" + tempName + "G", Leathers[i].R, Leathers[i].G, Leathers[i].B, fullMult * 6) {
                     CosmeticNote = "g", EquipSlot = "Legs",  EquipTier = Leathers[i].Tier, EquipSkill = "Defense", EquipLevel = Leathers[i].Level, MiscString = "DefenseRange"
                 };
                 itemsToAdd.Add(chapsG);
@@ -1605,6 +1772,13 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", CountsAsIDs = [ "runeFire" ],  UseInt4 = -1, MustBeEquipped = true
             });
 
+            itemsToAdd.Add(new Item("Battlestaff", "It's a slightly magical stick.", "battlestaff", Color.BurlyWood, 7000) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush" });
+
+            itemsToAdd.Add(new Item("Air battlestaff", "A magical staff. Provides unlimited air runes.", "battlestaffAir", 255, 255, 255, 15500) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush", CountsAsIDs = [ "runeAir" ], UseInt4 = -1, MustBeEquipped = true });
+            itemsToAdd.Add(new Item("Water battlestaff", "A magical staff. Provides unlimited water runes.", "battlestaffWater", 30, 144, 255, 15500) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush", CountsAsIDs = [ "runeWater" ],  UseInt4 = -1, MustBeEquipped = true }); 
+            itemsToAdd.Add(new Item("Earth battlestaff", "A magical staff. Provides unlimited earth runes.", "battlestaffEarth", 165, 42, 42, 15500) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush", CountsAsIDs = [ "runeEarth" ],  UseInt4 = -1, MustBeEquipped = true }); 
+            itemsToAdd.Add(new Item("Fire battlestaff", "A magical staff. Provides unlimited fire runes.", "battlestaffFire", 220, 20, 60, 15500) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush", CountsAsIDs = [ "runeFire" ],  UseInt4 = -1, MustBeEquipped = true });
+
 
             // Pickpocket Loot
             itemsToAdd.Add(new Item("Small coin pouch", "Has a few coins in it.", "coinPouchSmall", 111, 66, 33, 5, true, false) { UseString = "GetGold", UseInt = 5 });
@@ -1620,52 +1794,160 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Fiendish ashes", "A heap of ashes.", "ashesFiendish", 122, 104, 127, 1) { UseString = "Ashes", UseInt = 10 });
             itemsToAdd.Add(new Item("Vile ashes", "A heap of ashes.", "ashesVile", 122, 104, 127, 1) { UseString = "Ashes", UseInt = 25 });
             
-
+            
+            itemsToAdd.Add(new Item("Burnt meat", "Oh dear, it's totally burnt!", "burntMeat", Color.DimGray, 1));
+            itemsToAdd.Add(new Item("Burnt food", "Completely inedible now, whatever it was supposed to be.", "burntFood", Color.DimGray, 1));
+            itemsToAdd.Add(new Item("Burnt food bowl", "Completely inedible now, whatever it was. At least the bowl is salvageable.", "burntBowl", Color.DimGray, 1) { UseString = "Transform", UseString2 = "bowlEmpty" });
+            itemsToAdd.Add(new Item("Burnt pie", "Completely inedible now, whatever it was. At least the dish is salvageable.", "burntPie", Color.DimGray, 1) { UseString = "Transform", UseString2 = "pieEmpty" });
+            
+            itemsToAdd.Add(new Item("Baked potato", "It'd taste even better with some toppings.", "potatoBaked", Color.SaddleBrown, 5) { UseString = "Heal", UseInt = 4 });
+            itemsToAdd.Add(new Item("Cooked sweetcorn", "A nice cob of cooked sweetcorn.", "sweetcornCooked", Color.Goldenrod, 9) { UseString = "Heal", UseInt = 2 }); 
+            itemsToAdd.Add(new Item("Golovanova fruit top", "The top of a Golovanova fruit - edible once cooked and full of Vitamin G.", "fruitGolovanovaTop", Color.ForestGreen, 3));
+            itemsToAdd.Add(new Item("Sulliuscep cap", "A Sulliuscep mushroom cap. Edible? Probably...", "sulliuscepCap", Color.Crimson, 3));
+            
             itemsToAdd.Add(new Item("Raw newt meat", "A cut of meat taken from a newt.", "meatRawNewt", 138, 3, 3, 1));
-            itemsToAdd.Add(new Item("Cooked newt meat", "A cooked newt steak.", "meatCookedNewt", 150, 100, 50, 4) { UseString = "Heal", UseInt = 3 }); 
             itemsToAdd.Add(new Item("Raw beef", "A cut of meat taken from a cow.", "meatRawBeef", 138, 3, 3, 1));
             itemsToAdd.Add(new Item("Raw rat meat", "A cut of meat taken from a rat.", "meatRawRat", 138, 3, 3, 1));
             itemsToAdd.Add(new Item("Raw bear meat", "A cut of meat taken from a rat.", "meatRawBear", 138, 3, 3, 1));
-            itemsToAdd.Add(new Item("Cooked steak", "A cooked steak.", "meatCookedBeef", 150, 100, 50, 4) { UseString = "Heal", UseInt = 3 }); 
-            itemsToAdd.Add(new Item("Raw chicken", "A whole chicken, currently very inedible.", "meatRawChicken", 138, 3, 3, 1));
-            itemsToAdd.Add(new Item("Cooked chicken", "A cooked chicken.", "meatCookedChicken", 150, 100, 50, 4) { UseString = "Heal", UseInt = 3 }); 
-            itemsToAdd.Add(new Item("Raw bird meat", "This certainly needs cooking!", "meatRawBird", 138, 3, 3, 15));
-            itemsToAdd.Add(new Item("Roast bird meat", "A nicely roasted bird.", "meatCookedBird", 150, 100, 50, 4) { UseString = "Heal", UseInt = 5 }); 
-            itemsToAdd.Add(new Item("Raw shrimps", "A few raw shrimp.", "fishRawShrimp", 138, 3, 3, 5));
-            itemsToAdd.Add(new Item("Cooked shrimps", "Some cooked shrimp.", "fishCookedShrimp", 150, 100, 50, 5) { UseString = "Heal", UseInt = 3 }); 
-            itemsToAdd.Add(new Item("Raw anchovies", "A few raw anchovies.", "fishRawAnchovies", 173, 216, 230, 15));
-            itemsToAdd.Add(new Item("Cooked anchovies", "Some cooked anchovies.", "fishCookedAnchovies", 143, 186, 200, 15) { UseString = "Heal", UseInt = 1 });
-            itemsToAdd.Add(new Item("Raw sardine", "I should try cooking this.", "fishRawSardine", 50, 205, 50, 10));
-            itemsToAdd.Add(new Item("Cooked sardine", "Some nicely cooked sardines.", "fishCookedSardine", 30, 185, 30, 10) { UseString = "Heal", UseInt = 4 }); 
-            itemsToAdd.Add(new Item("Raw herring", "I should try cooking this.", "fishRawHerring", 255, 255, 255, 10));
-            itemsToAdd.Add(new Item("Cooked herring", "Some nicely cooked herring.", "fishCookedHerring", 178, 144, 144, 10) { UseString = "Heal", UseInt = 5 }); 
+            itemsToAdd.Add(new Item("Raw chicken", "A whole chicken, currently very inedible.", "meatRawChicken", 242, 209, 209, 1));
+            itemsToAdd.Add(new Item("Raw rabbit", "Might taste better cooked.", "meatRawRabbit", 242, 209, 209, 20));
+            itemsToAdd.Add(new Item("Raw chompy", "I need to cook this first.", "meatRawChompy", Color.GreenYellow, 85));
+            itemsToAdd.Add(new Item("Raw bird meat", "This certainly needs cooking!", "meatRawBird", 242, 209, 209, 15));
+            itemsToAdd.Add(new Item("Raw shrimps", "A few raw shrimp.", "fishRawShrimp", 138, 3, 3, 5)); 
+            itemsToAdd.Add(new Item("Raw anchovies", "A few raw anchovies.", "fishRawAnchovies", 173, 216, 230, 15)); 
+            itemsToAdd.Add(new Item("Raw sardine", "I should try cooking this.", "fishRawSardine", 50, 205, 50, 10)); 
+            itemsToAdd.Add(new Item("Raw herring", "I should try cooking this.", "fishRawHerring", 255, 255, 255, 10)); 
             itemsToAdd.Add(new Item("Raw pike", "I should try cooking this.", "fishRawPike", 50, 205, 50, 20));
-            itemsToAdd.Add(new Item("Cooked pike", "Some nicely cooked pike.", "fishCookedPike", 30, 185, 30, 20) { UseString = "Heal", UseInt = 8 }); 
             itemsToAdd.Add(new Item("Raw trout", "I should try cooking this.", "fishRawTrout", 255, 255, 255, 10));
-            itemsToAdd.Add(new Item("Cooked trout", "Some nicely cooked trout.", "fishCookedTrout", 178, 144, 144, 10) { UseString = "Heal", UseInt = 7 }); 
-            itemsToAdd.Add(new Item("Raw salmon", "I should try cooking this.", "fishRawSalmon", 255, 20, 147, 30));
-            itemsToAdd.Add(new Item("Cooked salmon", "Some nicely cooked salmon.", "fishCookedSalmon", 255, 165, 0, 30) { UseString = "Heal", UseInt = 9 }); 
+            itemsToAdd.Add(new Item("Raw salmon", "I should try cooking this.", "fishRawSalmon", 255, 20, 147, 30)); 
             itemsToAdd.Add(new Item("Raw lobster", "I should try cooking this.", "fishRawLobster", 255, 140, 0, 70));
-            itemsToAdd.Add(new Item("Cooked lobster", "This looks tricky to eat.", "fishCookedLobster", 255, 165, 0, 70) { UseString = "Heal", UseInt = 12 }); 
             itemsToAdd.Add(new Item("Raw tuna", "I should try cooking this.", "fishRawTuna", 255, 255, 255, 40));
-            itemsToAdd.Add(new Item("Cooked tuna", "Wow, this is a big fish.", "fishCookedTuna", 178, 144, 144, 40) { UseString = "Heal", UseInt = 10 });
             itemsToAdd.Add(new Item("Raw swordfish", "I should try cooking this.", "fishRawSwordfish", 147, 112, 219, 80));
-            itemsToAdd.Add(new Item("Cooked swordfish", "I'd better be careful eating this!", "fishCookedSwordfish", 117, 82, 189, 80) { UseString = "Heal", UseInt = 14 }); 
             itemsToAdd.Add(new Item("Raw bass", "I should try cooking this.", "fishRawBass", 255, 20, 147, 40));
-            itemsToAdd.Add(new Item("Cooked bass", "Wow, this is a big fish.", "fishCookedBass", 255, 165, 0, 40) { UseString = "Heal", UseInt = 13 });
             itemsToAdd.Add(new Item("Raw cod", "I should try cooking this.", "fishRawCod", 173, 216, 230, 10));
-            itemsToAdd.Add(new Item("Cooked cod", "Some nicely cooked cod.", "fishCookedCod", 143, 186, 200, 10) { UseString = "Heal", UseInt = 7 });
             itemsToAdd.Add(new Item("Raw mackerel", "I should try cooking this.", "fishRawMackerel", 255, 255, 0, 15));
+            itemsToAdd.Add(new Item("Raw slimy eel", "I should try cooking this.", "fishRawEelSlimy", 173, 216, 230, 10));
+            itemsToAdd.Add(new Item("Raw cave eel", "I should try cooking this.", "fishRawEelCave", 255, 255, 0, 15));
+             
+            itemsToAdd.Add(new Item("Cooked meat", "A cooked cut of meat.", "meatCookedBeef", 150, 100, 50, 4) { UseString = "Heal", UseInt = 3 }); 
+            itemsToAdd.Add(new Item("Cooked shrimps", "Some cooked shrimp.", "fishCookedShrimp", 150, 100, 50, 5) { UseString = "Heal", UseInt = 3 }); 
+            itemsToAdd.Add(new Item("Cooked chicken", "A cooked chicken.", "meatCookedChicken", 150, 100, 50, 4) { UseString = "Heal", UseInt = 3 });
+            itemsToAdd.Add(new Item("Cooked rabbit", "Mmm this looks tasty.", "meatCookedRabbit", 150, 100, 50, 4) { UseString = "Heal", UseInt = 5 });
+            itemsToAdd.Add(new Item("Cooked anchovies", "Some cooked anchovies.", "fishCookedAnchovies", 143, 186, 200, 15) { UseString = "Heal", UseInt = 1 }); 
+            itemsToAdd.Add(new Item("Cooked sardine", "Some nicely cooked sardines.", "fishCookedSardine", 30, 185, 30, 10) { UseString = "Heal", UseInt = 4 }); 
+            itemsToAdd.Add(new Item("Poison karambwan", "Cooked octopus. It looks poorly cooked and quite dangerous.", "fishKarambwanPoison", Color.SeaGreen, 250) { UseString = "Hurt", UseInt = 5 });
+            itemsToAdd.Add(new Item("Cooked ugthanki", "Freshly cooked ugthanki meat.", "meatCookedUgthanki", 150, 100, 50, 5) { UseString = "Heal", UseInt = 3 }); 
+            itemsToAdd.Add(new Item("Cooked herring", "Some nicely cooked herring.", "fishCookedHerring", 178, 144, 144, 10) { UseString = "Heal", UseInt = 5 });
             itemsToAdd.Add(new Item("Cooked mackerel", "Some nicely cooked mackerel.", "fishCookedMackerel", 218, 165, 32, 15) { UseString = "Heal", UseInt = 6 }); 
+            itemsToAdd.Add(new Item("Roast bird meat", "A nicely roasted bird.", "meatCookedBird", 150, 100, 50, 17) { UseString = "Heal", UseInt = 6 });  
+            itemsToAdd.Add(new Item("Thin snail meat", "A succulently slime slice of sumptuous snail.", "meatCookedSnailThin", Color.Olive, 10) { UseString = "Heal", UseInt = 6 });
+            itemsToAdd.Add(new Item("Cooked trout", "Some nicely cooked trout.", "fishCookedTrout", 178, 144, 144, 10) { UseString = "Heal", UseInt = 7 });
+            itemsToAdd.Add(new Item("Lean snail meat", "A succulently slime slice of sumptuous snail.", "meatCookedSnailLean", Color.Orange, 20) { UseString = "Heal", UseInt = 7 });
+            itemsToAdd.Add(new Item("Cooked cod", "Some nicely cooked cod.", "fishCookedCod", 143, 186, 200, 10) { UseString = "Heal", UseInt = 7 });    
+            itemsToAdd.Add(new Item("Cooked pike", "Some nicely cooked pike.", "fishCookedPike", 30, 185, 30, 20) { UseString = "Heal", UseInt = 8 }); 
+            itemsToAdd.Add(new Item("Fat snail meat", "A succulently slime slice of sumptuous snail.", "meatCookedSnailFat", Color.Orange, 30) { UseString = "Heal", UseInt = 8 });
+            itemsToAdd.Add(new Item("Cooked salmon", "Some nicely cooked salmon.", "fishCookedSalmon", 255, 165, 0, 30) { UseString = "Heal", UseInt = 9 });
+            itemsToAdd.Add(new Item("Cooked slimy eel", "A cooked slimy eel - not delicious, but pretty nutritious.", "fishCookedEelSlimy", 143, 186, 200, 10) { UseString = "Heal", UseInt = 8 });
+            itemsToAdd.Add(new Item("Cooked tuna", "Wow, this is a big fish.", "fishCookedTuna", 178, 144, 144, 40) { UseString = "Heal", UseInt = 10 });
+            itemsToAdd.Add(new Item("Cooked karambwan", "Cooked octopus. It looks very nutritious.", "fishKarambwanCooked", Color.White, 250) { UseString = "Heal", UseInt = 18 }); 
+            itemsToAdd.Add(new Item("Cooked cave eel", "It's a bit slimy.", "fishCookedEelCave", 218, 165, 32, 15) { UseString = "Heal", UseInt = 10 }); 
+            itemsToAdd.Add(new Item("Cooked lobster", "This looks tricky to eat.", "fishCookedLobster", 255, 165, 0, 70) { UseString = "Heal", UseInt = 12 });
+            itemsToAdd.Add(new Item("Cooked swordfish", "I'd better be careful eating this!", "fishCookedSwordfish", 117, 82, 189, 80) { UseString = "Heal", UseInt = 14 });
+            itemsToAdd.Add(new Item("Cooked bass", "Wow, this is a big fish.", "fishCookedBass", 255, 165, 0, 40) { UseString = "Heal", UseInt = 13 });  
              
             itemsToAdd.Add(new Item("Spinach roll", "A home made spinach thing.", "rollSpinach", Color.SpringGreen, 5) { UseString = "Heal", UseInt = 2 });
             itemsToAdd.Add(new Item("Frog spawn", "That's disgusting!", "frogSpawn", Color.SpringGreen, 5) { UseString = "Heal", UseInt = 4 });
             itemsToAdd.Add(new Item("Giant frog legs", "This could feed a family of gnomes for a week!", "frogLegsGiant", Color.ForestGreen, 100) { UseString = "Heal", UseInt = 6 }); 
-            itemsToAdd.Add(new Item("Raw slimy eel", "I should try cooking this.", "fishRawEelSlimy", 173, 216, 230, 10));
-            itemsToAdd.Add(new Item("Cooked slimy eel", "A cooked slimy eel - not delicious, but pretty nutritious.", "fishCookedEelSlimy", 143, 186, 200, 10) { UseString = "Heal", UseInt = 8 });
-            itemsToAdd.Add(new Item("Raw cave eel", "I should try cooking this.", "fishRawEelCave", 255, 255, 0, 15));
-            itemsToAdd.Add(new Item("Cooked cave eel", "It's a bit slimy.", "fishCookedEelCave", 218, 165, 32, 15) { UseString = "Heal", UseInt = 10 }); 
-
+            
+            itemsToAdd.Add(new Item("Pie shell", "I need to find a filling for this pie.", "pieShell", Color.SandyBrown, 4)); 
+            itemsToAdd.Add(new Item("Uncooked berry pie", "This would be much more appetizing cooked.", "pieRedberryUncooked", Color.SandyBrown, 6)); 
+            itemsToAdd.Add(new Item("Redberry pie", "Looks tasty.", "pieRedberry", Color.SandyBrown, 6) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 5) } }); 
+            itemsToAdd.Add(new Item("Uncooked meat pie", "This would be much healthier cooked.", "pieMeatUncooked", Color.SandyBrown, 8)); 
+            itemsToAdd.Add(new Item("Meat pie", "Not for vegetarians.", "pieMeat", Color.SandyBrown, 8) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 6) } }); 
+            itemsToAdd.Add(new Item("Uncooked apple pie", "This would be much tastier cooked.", "pieAppleUncooked", Color.SandyBrown, 16)); 
+            itemsToAdd.Add(new Item("Apple pie", "Mmm apple pie.", "pieApple", Color.SandyBrown, 16) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 7) } }); 
+            itemsToAdd.Add(new Item("Part mud pie (compost)", "Still needs two more ingredients.", "pieMudCompost", Color.SaddleBrown, 27)); 
+            itemsToAdd.Add(new Item("Part mud pie (water)", "Still needs one more ingredient.", "pieMudWater", Color.SaddleBrown, 27)); 
+            itemsToAdd.Add(new Item("Uncooked mud pie", "This would be much more appetizing cooked.", "pieMudUncooked", Color.SaddleBrown, 27)); 
+            itemsToAdd.Add(new Item("Mud pie", "Looks tasty.", "pieMud", Color.SaddleBrown, 54)); 
+            itemsToAdd.Add(new Item("Part garden pie (tomato)", "Still needs two more ingredients.", "pieGardenTomato", Color.SandyBrown, 12)); 
+            itemsToAdd.Add(new Item("Part garden pie (onion)", "Still needs one more ingredient.", "pieGardenOnion", Color.SandyBrown, 12)); 
+            itemsToAdd.Add(new Item("Uncooked garden pie", "Needs cooking before I eat it.", "pieGardenUncooked", Color.SandyBrown, 12)); 
+            itemsToAdd.Add(new Item("Garden pie", "What I wouldn't give for a good steak about now...", "pieGarden", Color.SandyBrown, 12) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 6), new("Farming", 3) } }); 
+            itemsToAdd.Add(new Item("Part fish pie (trout)", "Still needs two more ingredients.", "pieFishTrout", Color.SandyBrown, 24)); 
+            itemsToAdd.Add(new Item("Part fish pie (cod)", "Still needs one more ingredient.", "pieFishCod", Color.SandyBrown, 49)); 
+            itemsToAdd.Add(new Item("Uncooked fish pie", "Raw fish is risky, better cook it.", "pieFishUncooked", Color.SandyBrown, 50)); 
+            itemsToAdd.Add(new Item("Fish pie", "Bounty of the sea.", "pieFish", Color.SandyBrown, 50) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 6), new("Fishing", 3) } }); 
+            itemsToAdd.Add(new Item("Uncooked botanical pie", "This would be much tastier cooked.", "pieBotanicalUncooked", Color.SandyBrown, 16)); 
+            itemsToAdd.Add(new Item("Botanical pie", "Mmm botanical pie.", "pieBotanical", Color.SandyBrown, 15) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 7), new("Herblore", 4) } }); 
+            itemsToAdd.Add(new Item("Uncooked mushroom pie", "This would be much tastier cooked.", "pieMushroomUncooked", Color.SandyBrown, 16)); 
+            itemsToAdd.Add(new Item("Mushroom pie", "Mmm mushroom pie.", "pieMushroom", Color.SandyBrown, 16) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 8), new("Crafting", 4) } }); 
+            itemsToAdd.Add(new Item("Part admiral pie (salmon)", "Still needs two more ingredients.", "pieAdmiralSalmon", Color.SandyBrown, 54)); 
+            itemsToAdd.Add(new Item("Part admiral pie (tuna)", "Still needs one more ingredient.", "pieAdmiralTuna", Color.SandyBrown, 154)); 
+            itemsToAdd.Add(new Item("Uncooked admiral pie", "This would taste a lot better cooked.", "pieAdmiralUncooked", Color.SandyBrown, 155)); 
+            itemsToAdd.Add(new Item("Admiral pie", "Much tastier than a normal fish pie.", "pieAdmiral", Color.SandyBrown, 155) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 8), new("Fishing", 5) } }); 
+            itemsToAdd.Add(new Item("Uncooked dragonfruit pie", "This would be much tastier cooked.", "pieDragonfruitUncooked", Color.SandyBrown, 40)); 
+            itemsToAdd.Add(new Item("Dragonfruit pie", "Mmm dragonfruit pie.", "pieDragonfruit", Color.SandyBrown, 40) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 10), new("Fletching", 4) } }); 
+            itemsToAdd.Add(new Item("Part wild pie (bear)", "Still needs two more ingredients.", "pieWildBear", Color.SandyBrown, 5)); 
+            itemsToAdd.Add(new Item("Part wild pie (chompy)", "Still needs one more ingredient.", "pieWildChompy", Color.SandyBrown, 90)); 
+            itemsToAdd.Add(new Item("Uncooked wild pie", "Good as it looks, I'd better cook it.", "pieWildUncooked", Color.SandyBrown, 91)); 
+            itemsToAdd.Add(new Item("Wild pie", "A triumph of man over nature.", "pieWild", Color.SandyBrown, 91) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 11), new("Slayer", 5), new("Ranged", 4) } }); 
+            itemsToAdd.Add(new Item("Part summer pie (bear)", "Still needs two more ingredients.", "pieSummerStrawberry", Color.SandyBrown, 21)); 
+            itemsToAdd.Add(new Item("Part summer pie (chompy)", "Still needs one more ingredient.", "pieSummerWatermelon", Color.SandyBrown, 69)); 
+            itemsToAdd.Add(new Item("Uncooked summer pie", "Fresh fruit may be good for you, but I should really cook this.", "pieSummerUncooked", Color.SandyBrown, 70)); 
+            itemsToAdd.Add(new Item("Summer pie", "All the fruits of a very small forest.", "pieSummer", Color.SandyBrown, 70) { UseString = "Potion", UseInt4 = 2, UseString3 = "pieEmpty", Potion = new() { new("Heal", 11), new("Agility", 5) } }); 
+            
+            itemsToAdd.Add(new Item("Incomplete pizza", "I need to add some cheese next.", "pizzaIncomplete", Color.Crimson, 25)); 
+            itemsToAdd.Add(new Item("Uncooked pizza", "This needs cooking.", "pizzaUncooked", Color.Yellow, 25)); 
+            itemsToAdd.Add(new Item("Plain pizza", "A cheese and tomato pizza.", "pizzaPlain", Color.Yellow, 70) { UseString = "Potion", UseInt4 = 2, Potion = new() { new("Heal", 7) } }); 
+            itemsToAdd.Add(new Item("Meat pizza", "A pizza with bits of meat on it.", "pizzaMeat", Color.Yellow, 80) { UseString = "Potion", UseInt4 = 2, Potion = new() { new("Heal", 8) } }); 
+            itemsToAdd.Add(new Item("Anchovy pizza", "A pizza with anchovies.", "pizzaAnchovy", Color.Yellow, 80) { UseString = "Potion", UseInt4 = 2, Potion = new() { new("Heal", 9) } }); 
+            itemsToAdd.Add(new Item("Pineapple pizza", "A tropicana pizza.", "pizzaPineapple", Color.Yellow, 100) { UseString = "Potion", UseInt4 = 2, Potion = new() { new("Heal", 11) } }); 
+            
+            itemsToAdd.Add(new Item("Incomplete stew", "I need to add some potato too.", "stewIncompleteMeat", Color.SandyBrown, 4)); 
+            itemsToAdd.Add(new Item("Incomplete stew", "I need to add some meat too.", "stewIncompletePotato", Color.SandyBrown, 4)); 
+            itemsToAdd.Add(new Item("Uncooked stew", "I need to cook this.", "stewUncooked", Color.SandyBrown, 10)); 
+            itemsToAdd.Add(new Item("Stew", "It's a meat and potato stew.", "stew", Color.SaddleBrown, 20) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 11) } }); 
+            itemsToAdd.Add(new Item("Uncooked curry", "I need to cook this.", "curryUncooked", Color.SandyBrown, 10)); 
+            itemsToAdd.Add(new Item("Curry", "It's a spicy hot curry.", "curry", Color.SaddleBrown, 20) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 19) } }); 
+            
+            itemsToAdd.Add(new Item("Chopped garlic", "A bowl of chopped garlic.", "bowlGarlic", Color.White, 7)); 
+            itemsToAdd.Add(new Item("Spicy sauce", "A bowl of spicy sauce.", "sauceSpicy", Color.Crimson, 9) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 2) } }); 
+            itemsToAdd.Add(new Item("Chili con carne", "A bowl of meat in chili con carne sauce.", "chiliConCarne", Color.Crimson, 9) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 5) } }); 
+            itemsToAdd.Add(new Item("Gnome spice", "It's Aluft Gianne's secret mix of spices.", "spiceGnome", ColorLib.Iron, 2)); 
+            
+            itemsToAdd.Add(new Item("Potato with butter", "A baked potato with butter.", "potatoButter", 225, 147, 70, 8) { UseString = "Heal", UseInt = 14 });
+            itemsToAdd.Add(new Item("Chili potato", "A baked potato with chili con carne.", "potatoChili", 225, 147, 70, 13) { UseString = "Heal", UseInt = 14 });
+            itemsToAdd.Add(new Item("Potato with cheese", "A baked potato with butter and cheese.", "potatoCheese", 225, 147, 70, 8) { UseString = "Heal", UseInt = 16 });
+            itemsToAdd.Add(new Item("Egg potato", "A baked potato with egg and tomato.", "potatoEgg", 225, 147, 70, 12) { UseString = "Heal", UseInt = 16 });
+            itemsToAdd.Add(new Item("Mushroom potato", "A baked potato with mushroom and onions.", "potatoMushroom", 225, 147, 70, 45) { UseString = "Heal", UseInt = 20 });
+            itemsToAdd.Add(new Item("Tuna potato", "A baked potato with tuna and sweetcorn.", "potatoTuna", 225, 147, 70, 113) { UseString = "Heal", UseInt = 22 });
+            itemsToAdd.Add(new Item("Bowl of sweetcorn", "A bowl of cooked sweetcorn.", "bowlCorn", Color.SandyBrown, 113) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 2) } });
+            itemsToAdd.Add(new Item("Chopped tuna", "A bowl of finely chopped tuna.", "bowlTuna", Color.SandyBrown, 113) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 10) } });
+            itemsToAdd.Add(new Item("Tuna and corn", "A bowl of cooked tuna and sweetcorn.", "bowlTunaCorn", Color.SandyBrown, 113)  { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 13) } });
+            
+            itemsToAdd.Add(new Item("Chopped tomato", "A mixture of tomatoes in a bowl..", "bowlTomato", Color.White, 3) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 2) } }); 
+            itemsToAdd.Add(new Item("Chopped onion", "A bowl of chopped onions.", "bowlOnions", Color.White, 3) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 1) } }); 
+            itemsToAdd.Add(new Item("Ugthanki & tomato", "A mixture of chopped tomatoes and ugthanki meat in a bowl.", "bowlUgthankiTomato", Color.Crimson, 7));
+            itemsToAdd.Add(new Item("Ugthanki & onion", "A mixture of chopped onion and ugthanki meat in a bowl.", "bowlUgthankiOnions", Color.Crimson, 7));  
+            itemsToAdd.Add(new Item("Onion & tomato", "A mixture of chopped onions and tomatoes in a bowl.", "bowlOnionTomato", Color.White, 3) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 3) } }); 
+            itemsToAdd.Add(new Item("Mushroom & onion", "A bowl of fried mushroom and onions.", "bowlMushroomOnion", Color.Beige, 45) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 11) } }); 
+            itemsToAdd.Add(new Item("Kebab mix", "A mixture of chopped tomatoes, onions, and ugthanki meat in a bowl.", "bowlKebabMix", Color.White, 3)); 
+            itemsToAdd.Add(new Item("Ugthanki kebab", "A fresh kebab made from ugthanki meat.", "kebabUgthanki", Color.White, 3) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 19) } }); 
+            itemsToAdd.Add(new Item("Ugthanki kebab (bad)", "A strange smelling kebab made from ugthanki meat.", "kebabUgthankiBad", Color.White, 3) { UseString = "KebabBad" }); 
+            itemsToAdd.Add(new Item("Fried onions", "A bowl of sliced, fried onions.", "onionsFried", Color.SaddleBrown, 7) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 5) } }); 
+            itemsToAdd.Add(new Item("Sliced mushrooms", "A bowl of sliced bittercap mushrooms.", "bowlMushrooms", Color.White, 42)); 
+            itemsToAdd.Add(new Item("Fried mushrooms", "A bowl of fried bittercap mushrooms.", "mushroomsFried", Color.SaddleBrown, 42) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 5) } }); 
+            itemsToAdd.Add(new Item("Bowl of raw egg", "A bowl of raw eggs.", "bowlEggs", Color.Yellow, 8)); 
+            itemsToAdd.Add(new Item("Scrambled egg", "A bowl of scrambled egg.", "eggsScrambled", Color.Goldenrod, 8) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 5) } }); 
+            itemsToAdd.Add(new Item("Egg and tomato", "A bowl of scrambled eggs and tomato.", "eggsTomato", Color.Crimson, 12) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 8) } }); 
+            itemsToAdd.Add(new Item("Nettles", "A handful of nettles.", "nettles", Color.ForestGreen, 3)); 
+            itemsToAdd.Add(new Item("Nettle water", "A bowl of water with nettles in it.", "bowlNettleWater", Color.SeaGreen, 10)); 
+            itemsToAdd.Add(new Item("Nettle tea", "It's a bowl of nettle tea.", "bowlNettleTea", Color.SeaGreen, 12) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 3) } }); 
+            itemsToAdd.Add(new Item("Nettle tea (milky)", "It's a bowl of milky nettle tea.", "bowlNettleTeaMilky", Color.SeaGreen.GetBrighter(), 12) { UseString = "Potion", UseInt4 = 1, UseString3 = "bowlEmpty", Potion = new() { new("Heal", 3) } }); 
+            itemsToAdd.Add(new Item("Cup of nettle tea", "It's a cup of nettle tea.", "cupNettleTea", Color.White, 12) { UseString = "Potion", UseInt4 = 1, UseString3 = "cupEmpty", Potion = new() { new("Heal", 3) } }); 
+            itemsToAdd.Add(new Item("Cup of nettle tea (milky)", "It's a cup of milky nettle tea.", "cupNettleTeaMilky", Color.White, 12) { UseString = "Potion", UseInt4 = 1, UseString3 = "cupEmpty", Potion = new() { new("Heal", 3) } }); 
+            
 
             itemsToAdd.Add(new Item("Fish spirit", "When you catch a fish, this is consumed and you will receive an extra fish.", "spiritFish", Color.Turquoise, 20, true) { MiscString = "Spirit", UseString2 = "fish" });
             itemsToAdd.Add(new Item("Herb spirit", "When you brew a potion, this is consumed and your potion will have an extra dose.", "spiritHerb", Color.Lime, 20, true) { MiscString = "Spirit", UseString2 = "herb" });
@@ -1678,7 +1960,12 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Garlic", "Deters vampires.", "garlic", Color.AntiqueWhite, 3));
             
             itemsToAdd.Add(new Item("Pot of flour", "A pot full of flour.", "potFlour", 207, 185, 151, 10));
-            itemsToAdd.Add(new Item("Bread dough", "Some uncooked dough.", "doughBread", 221, 199, 160, 4));
+            itemsToAdd.Add(new Item("Bread dough", "Some uncooked dough.", "doughBread", 221, 199, 160, 4) { UseString = "Baking" });
+            itemsToAdd.Add(new Item("Pizza base", "I need to add some tomato next.", "doughPizza", 221, 199, 160, 4) { UseString = "Baking" });
+            itemsToAdd.Add(new Item("Pitta dough", "Some uncooked dough.", "doughPitta", 221, 199, 160, 4) { UseString = "Baking" });
+            itemsToAdd.Add(new Item("Pitta bread", "Nice baked pitta bread. Needs more ingredients to make a kebab.", "breadPitta", 233, 185, 93, 10));
+            itemsToAdd.Add(new Item("Pastry dough", "Some uncooked dough.", "doughPastry", 221, 199, 160, 4) { UseString = "Baking" });
+            itemsToAdd.Add(new Item("Gianne dough", "Some uncooked gnomish dough.", "doughGianne", 221, 199, 160, 4) { UseString = "Baking" });
             itemsToAdd.Add(new Item("Bread", "Nice crispy bread.", "bread", 233, 185, 93, 12) { UseString = "Heal", UseInt = 5 });
             itemsToAdd.Add(new Item("Egg", "An egg from a chicken. Could be fried or scrambled, perhaps.", "eggChicken", 233, 185, 93, 4));
             itemsToAdd.Add(new Item("Cake", "A plain sponge cake.", "cake", 255, 255, 255, 50) { UseString = "Heal", UseInt = 9 });
@@ -1730,12 +2017,37 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Adamant ore spirit", "When mining adamant, this is consumed and you will receive an extra ore.", "spiritOreAdamant", ColorLib.Adamant, 20, true) { MiscString = "Spirit", UseString2 = "oreAdamant" });
             itemsToAdd.Add(new Item("Adamant ore mix", "A mix of adamant ore nuggets and luminite.", "oreMixAdamant", ColorLib.Adamant, 180)); 
             itemsToAdd.Add(new Item("Adamant bar", "It's a bar of adamant.", "barAdamant", ColorLib.Adamant, 240));
-            
+            itemsToAdd.Add(new Item("Runite ore", "A pile of runite ore nuggets.", "oreRunite", ColorLib.Rune, 300)); 
+            itemsToAdd.Add(new Item("Runite ore spirit", "When mining runite, this is consumed and you will receive an extra ore.", "spiritOreRunite", ColorLib.Rune, 20, true) { MiscString = "Spirit", UseString2 = "oreRunite" });
+            itemsToAdd.Add(new Item("Runite ore mix", "A mix of runite ore nuggets and luminite.", "oreMixRunite", ColorLib.Rune, 360)); 
+            itemsToAdd.Add(new Item("Rune bar", "It's a bar of rune.", "barRune", ColorLib.Rune, 480));
+            itemsToAdd.Add(new Item("Drakolith", "A lump of raw drakolith.", "oreDrakolith", Color.Yellow, 250));  
+            itemsToAdd.Add(new Item("Drakolith spirit", "When mining drakolith, this is consumed and you will receive an extra lump.", "spiritOreDrakolith", Color.Yellow, 20, true) { MiscString = "Spirit", UseString2 = "oreDrakolith" });
+            itemsToAdd.Add(new Item("Orichalcum ore", "A pile of orichalcum ore nuggets.", "oreOrichalcum", Color.Crimson, 500)); 
+            itemsToAdd.Add(new Item("Orichalcum ore spirit", "When mining orichalcum, this is consumed and you will receive an extra ore.", "spiritOreOrichalcum", Color.Crimson, 20, true) { MiscString = "Spirit", UseString2 = "oreOrichalcum" });
+            itemsToAdd.Add(new Item("Orichalcum ore mix", "A mix of orichalcum ore nuggets and drakolith.", "oreMixOrichalcum", Color.Crimson, 750)); 
+            itemsToAdd.Add(new Item("Orichalcum bar", "It's a bar of orichalcum.", "barOrichalcum", Color.Crimson, 1000));
+            itemsToAdd.Add(new Item("Phasmatite", "A lump of raw phasmatite.", "orePhasmatite", Color.SpringGreen, 500));  
+            itemsToAdd.Add(new Item("Phasmatite spirit", "When mining phasmatite, this is consumed and you will receive an extra lump.", "spiritOrePhasmatite", Color.SpringGreen, 20, true) { MiscString = "Spirit", UseString2 = "orePhasmatite" });
+            itemsToAdd.Add(new Item("Necrite ore", "A pile of necrite ore nuggets.", "oreNecrite", Color.ForestGreen, 1000)); 
+            itemsToAdd.Add(new Item("Necrite ore spirit", "When mining necrite, this is consumed and you will receive an extra ore.", "spiritOreNecrite", Color.ForestGreen, 20, true) { MiscString = "Spirit", UseString2 = "oreNecrite" });
+            itemsToAdd.Add(new Item("Necrite ore mix", "A mix of necrite ore nuggets and phasmatite.", "oreMixNecrite", Color.ForestGreen, 1500)); 
+            itemsToAdd.Add(new Item("Necronium bar", "It's a bar of necronium.", "barNecronium", Color.ForestGreen, 2000)); 
+            itemsToAdd.Add(new Item("Banite ore", "A pile of banite ore nuggets.", "oreBanite", Color.MediumSlateBlue, 1500)); 
+            itemsToAdd.Add(new Item("Banite ore spirit", "When mining banite, this is consumed and you will receive an extra ore.", "spiritOreBanite", Color.MediumSlateBlue, 20, true) { MiscString = "Spirit", UseString2 = "oreBanite" });
+            itemsToAdd.Add(new Item("Banite ore mix", "A mix of banite ore nuggets and phasmatite.", "oreMixBanite", Color.MediumSlateBlue, 3000)); 
+            itemsToAdd.Add(new Item("Bane bar", "It's a bar of bane.", "barBane", Color.MediumSlateBlue, 4000)); 
+            itemsToAdd.Add(new Item("Light animica", "The power of light condensed into an ore.", "oreAnimicaLight", Color.Turquoise, 3750, true));
+            itemsToAdd.Add(new Item("Dark animica", "The power of darkness condensed into an ore.", "oreAnimicaDark", Color.Purple, 3750, true));
+            itemsToAdd.Add(new Item("Animica mix", "A mix of light and dark animica.", "oreMixAnimica", Color.White, 7500)); 
+            itemsToAdd.Add(new Item("Light animica ore spirit", "When mining light animica, this is consumed and you will receive an extra ore.", "spiritOreAnimicaLight", Color.Turquoise, 20, true) { MiscString = "Spirit", UseString2 = "oreAnimicaLight" });
+            itemsToAdd.Add(new Item("Dark animica ore spirit", "When mining dark animica, this is consumed and you will receive an extra ore.", "spiritOreAnimicaDark", Color.Purple, 20, true) { MiscString = "Spirit", UseString2 = "oreAnimicaDark" });
+            itemsToAdd.Add(new Item("Elder rune bar", "It's a bar of elder rune.", "barElderRune", ColorLib.Rune.GetBrighter(), 8000));
+             
             itemsToAdd.Add(new Item("Silver ore", "A pile of silver ore nuggets.", "oreSilver", ColorLib.Steel, 50)); 
             itemsToAdd.Add(new Item("Silver ore spirit", "When mining silver, this is consumed and you will receive an extra ore.", "spiritOreSilver", ColorLib.Steel, 20, true) { MiscString = "Spirit", UseString2 = "oreSilver" });
             itemsToAdd.Add(new Item("Silver ore mix", "A mix silver ore nuggets with the impurities sifted out.", "oreMixSilver", ColorLib.Steel, 100)); 
-            itemsToAdd.Add(new Item("Silver bar", "It's a bar of silver.", "barSilver", ColorLib.Steel, 150));
-
+            itemsToAdd.Add(new Item("Silver bar", "It's a bar of silver.", "barSilver", ColorLib.Steel, 150)); 
             itemsToAdd.Add(new Item("Gold ore", "A pile of gold ore nuggets.", "oreGold", Color.Goldenrod, 100)); 
             itemsToAdd.Add(new Item("Gold ore spirit", "When mining gold, this is consumed and you will receive an extra ore.", "spiritOreGold", Color.Goldenrod, 20, true) { MiscString = "Spirit", UseString2 = "oreGold" });
             itemsToAdd.Add(new Item("Gold ore mix", "A mix gold ore nuggets with the impurities sifted out.", "oreMixGold", Color.Goldenrod, 200)); 
@@ -1753,8 +2065,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 new("Rune", ColorLib.Rune, 6, 50, 720, "proprietary"), 
                 new("Dragon", Color.Crimson.GetBrighter(), 8, 60, 1500, "draconic"),
                 new("Orichalcum", Color.Crimson, 7, 60, 1500, "excellent"), 
-                new("Necrite", Color.ForestGreen, 8, 70, 3000, "incredible"), 
-                new("Banite", Color.MediumSlateBlue, 9, 80, 6000, "amazing"),
+                new("Necronium", Color.ForestGreen, 8, 70, 3000, "incredible"), 
+                new("Bane", Color.MediumSlateBlue, 9, 80, 6000, "amazing"),
                 new("Elder rune", ColorLib.Rune.GetBrighter(), 10, 90, 12000, "unbelievable")
             }; 
 
@@ -1881,7 +2193,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
                 itemsToAdd.Add(new Item(Metals[i].Name + " crossbow limbs", "Can be combined with a crossbow stock to make an unstrung crossbow.", "limbs" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult));
 
-                if (tempName == "Bronze" || tempName == "Bronze" || tempName == "Iron" || tempName == "Steel" || tempName == "Black") {
+                if (tempName == "Bronze" || tempName == "Bronze" || tempName == "Iron" || tempName == "Steel" || tempName == "Black" || tempName == "Mithril" || tempName == "Adamant") {
                     // Trimmed
                     Item helmT = new Item(Metals[i].Name + " helmet", "Provides " + Metals[i].Descriptor + " melee protection for the head. Trimmed.", "helm" + tempName + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
                         CosmeticNote = "t", EquipSlot = "Head",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
@@ -2041,8 +2353,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Black bead [Q]", "A small round black bead.", "beadBlack", 50, 50, 50, 4));
             itemsToAdd.Add(new Item("Yellow bead [Q]", "A small round yellow bead.", "beadYellow", 255, 255, 0, 4));
             
-            itemsToAdd.Add(new Item("Ghostspeak amulet [Q]", "It lets me talk to ghosts.", "amuletGhostspeak", 255, 255, 0, 4) { EquipSlot = "Amulet" });
-            itemsToAdd.Add(new Item("Ghost's skull [Q]", "Ooooh spooky!", "mistWizGhostSkull", 255, 255, 255, 4) { UseString = "SecondExamine", MiscString = "It's the skull of the ghost that is haunting Lumbridge graveyard. Maybe I should return this back to the ghost's coffin.", ConsumedOnUse = false});
+            itemsToAdd.Add(new Item("Ghostspeak amulet [Q]", "It lets me talk to ghosts.", "amuletGhostspeak", 255, 255, 0, 4, trade: false) { EquipSlot = "Amulet" });
+            itemsToAdd.Add(new Item("Ghost's skull [Q]", "Ooooh spooky!", "mistWizGhostSkull", 255, 255, 255, 4, trade: false) { UseString = "SecondExamine", MiscString = "It's the skull of the ghost that is haunting Lumbridge graveyard. Maybe I should return this back to the ghost's coffin.", ConsumedOnUse = false});
             itemsToAdd.Add(new Item("Al Kharid flyer", "The money off voucher has expired.", "flyerAli", Color.Khaki, 1) { UseString = "SecondExamine", MiscString = "'Come to the Al Kharid Market place! High quality produce at low, low prices! Show this flyer to a merchant for money off your next purchase, courtesy of Ali Morrisane!'", ConsumedOnUse = false});
 
             itemsToAdd.Add(new Item("Ham hood", "Light-weight head protection and eye shield.", "hamHood", Color.HotPink, 75) { EquipSlot = "Head" });
@@ -2057,6 +2369,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Goblin champion scroll", "It's a challenge from the Goblin Champion!", "scrollChampionGoblin", Color.ForestGreen, 1, trade: false));
             itemsToAdd.Add(new Item("Lesser demon champion scroll", "It's a challenge from the Lesser Demon Champion!", "scrollChampionLesserDemon", Color.Crimson, 1, trade: false));
             itemsToAdd.Add(new Item("Imp champion scroll", "It's a challenge from the Imp Champion!", "scrollChampionImp", Color.Crimson.GetBrighter(), 1, trade: false));
+            itemsToAdd.Add(new Item("Zombie champion scroll", "It's a challenge from the Zombie Champion!", "scrollChampionZombie", Color.Teal, 1, trade: false));
+            itemsToAdd.Add(new Item("Skeleton champion scroll", "It's a challenge from the Skeleton Champion!", "scrollChampionSkeleton", Color.White, 1, trade: false));
 
             
             itemsToAdd.Add(new Item("Icosahedron [M]", "A blue icosahedron. Used in the Enchanting Chamber of the Mage Training Arena.", "mtaIcosahedron", Color.DodgerBlue, 0, trade: false));
@@ -2075,6 +2389,13 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Emerald [M]", "An emerald. Used in the Alchemist's Playground of the Mage Training Arena.", "mtaAlch4", Color.Lime, 3, trade: false));
             itemsToAdd.Add(new Item("Rune sword [M]", "A rune sword. Used in the Alchemist's Playground of the Mage Training Arena.", "mtaAlch5", ColorLib.Rune, 3, trade: false));
             itemsToAdd.Add(new Item("Coins [M]", "Coins. Used in the Alchemist's Playground of the Mage Training Arena.", "mtaAlchCoin", Color.Goldenrod, 0, true, false));
+            
+            itemsToAdd.Add(new Item("Coins", "Filthy lucre. Activate to add to your coin pouch.", "coins", Color.Goldenrod, 1, true) { UseString = "Gold" });
+            itemsToAdd.Add(new Item("Key (Varrock shack)", "This key opens the door of the shack at the Varrock West Crossroads.", "keyVarrockShack", Color.Goldenrod, 1));
+            itemsToAdd.Add(new Item("Key (clue step)", "Used to open the container you need to access for your clue step.", "keyClue", Color.Goldenrod, 0, trade: false));
+
+            itemsToAdd.Add(new Item("Pie recipe book", "Lots of pie recipes for me to try.", "bookRecipesPie", Color.Crimson, 5) { ConsumedOnUse = false, UseString = "Book", UseString2 = "recipesPie"});
+            itemsToAdd.Add(new Item("Scrumpled paper", "A piece of paper with barely legible writing - looks like a recipe!", "paperScrumpled", Color.White, 10) { ConsumedOnUse = false, UseString = "Book", UseString2 = "paperScrumpled" });
 
 
             for (int i = 0; i < itemsToAdd.Count; i++) {

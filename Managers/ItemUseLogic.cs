@@ -1,5 +1,5 @@
 ﻿using ZeroPlayersOnline.DataTypes;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Key = SadConsole.Input.Keys;
 
 namespace ZeroPlayersOnline.Managers {
     public static class ItemUseLogic {
@@ -8,7 +8,7 @@ namespace ZeroPlayersOnline.Managers {
         public static bool UseItem(ItemWrapper itemWrap, Player player) {
             if (itemWrap.GetRef() is Item item) { 
                 if (item.UseString == "GetGold") {
-                    player.HeldGold += item.UseInt;
+                    player.GiveGold(item.UseInt); 
                     GameLoop.ZPO.Log.AddMessage("You open the " + item.Name + " and find " + item.UseInt + " gold pieces.");
                 } else if (item.UseString == "Bones") {
                     GameLoop.ZPO.Log.AddMessage("You bury the " + item.Name.ToLowerInvariant() + " and get " + item.UseInt + " prayer experience.");
@@ -19,6 +19,15 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "Heal") {
                     player.CurrentHP = Math.Clamp(player.CurrentHP + item.UseInt, player.CurrentHP, player.Skills["Constitution"].Level);
                     GameLoop.ZPO.Log.AddMessage(new ColoredString("You eat the " + item.Name.ToLowerInvariant() + " and recover some hitpoints.", Color.Goldenrod, Color.Black));
+
+                    if (item.Potion != null) {
+                        for (int i = 0; i < item.Potion.Count; i++) {
+                            player.TryAddPotionEffect(item.Potion[i].Stat, item.Potion[i].Change);
+                        } 
+                    }
+                }  else if (item.UseString == "Hurt") {
+                    player.CurrentHP = Math.Clamp(player.CurrentHP - item.UseInt, 0, player.CurrentHP);
+                    GameLoop.ZPO.Log.AddMessage(new ColoredString("You eat the " + item.Name.ToLowerInvariant() + ". It tastes... painful. You lose " + item.UseInt + " health.", Color.Goldenrod, Color.Black));
 
                     if (item.Potion != null) {
                         for (int i = 0; i < item.Potion.Count; i++) {
@@ -161,6 +170,7 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "Dig") {
                     ClueLogic.GenericStep(player, GameLoop.ZPO.Log, "Dig");
                     ClueLogic.GenericStep(player, GameLoop.ZPO.Log, "Map");
+                    ClueLogic.GenericStep(player, GameLoop.ZPO.Log, "HotCold");
 
                     if (GameLoop.ZPO.Atlas.TryGetValue(player.NavLoc, out Location? curr)) {
                         if (curr != null) {
@@ -250,8 +260,8 @@ namespace ZeroPlayersOnline.Managers {
                                 GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it!" + (newToLog ? " (new!)" : ""), excitement, Color.Black));
                                 player.TryPickup(spawn, spawn.Quantity); 
                             }
-                        } else {
-                            player.HeldGold += item.UseInt;
+                        } else { 
+                            player.GiveGold(item.UseInt);
                             GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + item.UseInt + " gold pieces in it.", Color.DarkGoldenrod, Color.Black));
                         }
                     }
@@ -294,6 +304,9 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "Knife") {
                     ExtraWindows.CraftingMenu.IsVisible = true;
                     ExtraWindows.CraftingType = "Knife";
+                }  else if (item.UseString == "Baking") {
+                    ExtraWindows.CraftingMenu.IsVisible = true;
+                    ExtraWindows.CraftingType = "Baking";
                 } else if (item.UseString == "Glassblowing Pipe") {
                     ExtraWindows.CraftingMenu.IsVisible = true;
                     ExtraWindows.CraftingType = "Glassblowing Pipe";
@@ -302,6 +315,10 @@ namespace ZeroPlayersOnline.Managers {
                     ExtraWindows.MapViewing = item.UseString2;
                     ExtraWindows.MapW = item.UseInt;
                     ExtraWindows.MapH = item.UseInt2;
+                }  else if (item.UseString == "Book") {
+                    ExtraWindows.Book.IsVisible = true;
+                    ExtraWindows.BookID = item.UseString2;
+                    ExtraWindows.LeftPage = 0;
                 } else if (item.UseString == "SecondExamine") {
                     GameLoop.ZPO.Log.AddMessage(new ColoredString(item.MiscString, Color.SandyBrown, Color.Black));
 
@@ -401,9 +418,28 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "Extinguish") {
                     itemWrap.ID = item.UseString2;
                     GameLoop.ZPO.Log.AddMessage("You extinguish the " + item.Name + ".", Color.Yellow);
+                } else if (item.UseString == "Bell") { 
+                    GameLoop.ZPO.Log.AddMessage("You jangle the bell about for a bit.", Color.Yellow);
                 } else if (item.UseString == "ViewInventory") {
                     ExtraWindows.ConWrap = itemWrap;
                     ExtraWindows.InventoryContainer.IsVisible = true;
+                } else if (item.UseString == "Gold") {
+                    if (player.CoinPouch) {
+                        int qty = 1;
+                        if (Helper.EitherShift()) { qty *= 5; }
+                        if (Helper.EitherControl()) { qty *= 10; }
+                        if (Helper.KeyDown(Key.Space)) { qty *= 1000; }
+                        if (qty > itemWrap.Quantity || Helper.EitherAlt()) { qty = itemWrap.Quantity; }
+
+                        itemWrap.Quantity -= qty;
+                        player.GiveGold(qty); 
+                    } else { 
+                        GameLoop.ZPO.Log.AddMessage("You can't use the coin pouch to put these away, so you just fiddle with them a bit.", Color.Crimson);
+                    }
+                    return false;
+                } else if (item.UseString == "Transform") {
+                    itemWrap.ID = item.UseString2;
+                    return false;
                 }
 
                 return true;
@@ -524,6 +560,11 @@ namespace ZeroPlayersOnline.Managers {
                      
                     UsingSlot = -1; 
 
+                    if (rec.NeededTool != "" && !player.HasAllItems([rec.NeededTool + ",1"], false, true)) {
+                        GameLoop.ZPO.Log.AddMessage(new ColoredString("You need a " + GameLoop.ZPO.ResolveItemName(rec.NeededTool) + " to do that.", Color.Crimson, Color.Black));
+                        return false;
+                    }
+
                     if (!firstWrap.Noted && !secondWrap.Noted) { 
                         if (firstWrap.Quantity < rec.FirstQty) {
                             GameLoop.ZPO.Log.AddMessage(new ColoredString("You need " + rec.FirstQty + " " + firstItem.Name + " to do that.", Color.Crimson, Color.Black));
@@ -544,8 +585,21 @@ namespace ZeroPlayersOnline.Managers {
                             player.Inventory.Remove(secondWrap);
 
                         if (rec.OutputItem[0] != '_') {
-                            if (GameLoop.ZPO.ItemLibrary.ContainsKey(rec.OutputItem)) {
-                                Item made = new(GameLoop.ZPO.ItemLibrary[rec.OutputItem]);
+                            int failRoll = GameLoop.rand.Next(100);  
+                                // TODO: Make cooking gauntlets lower fail level after Family Crest is implemented
+
+                            int skillForRoll = 50 + (player.GetEffectiveSkillLevel(rec.SkillUsed) - rec.SkillLevelReq);
+
+                            string id = rec.OutputItem;
+
+                            if (rec.FailID == "" || failRoll <= skillForRoll || (rec.SkillUsed == "Cooking" && player.Equipment.TryGetValue("Cape", out ItemWrapper? cape) && cape != null && cape.ID == "capeSkillCooking")) {
+                                id = rec.OutputItem;
+                            } else {
+                                id = rec.FailID;
+                            }
+
+                            if (GameLoop.ZPO.ItemLibrary.ContainsKey(id)) {
+                                Item made = new(GameLoop.ZPO.ItemLibrary[id]);
                                 made.Quantity = rec.OutputQty;
 
                                 if (rec.SkillUsed == "Herblore" && made.UseInt4 > 0) {
@@ -565,6 +619,7 @@ namespace ZeroPlayersOnline.Managers {
                                     }
 
                                     if (player.Equipment.TryGetValue("Amulet", out ItemWrapper? eqp) && eqp != null && eqp.ID == "amuletChemistry" && GameLoop.rand.Next(20) == 0) { 
+                                        made.UseInt4++;
                                         eqp.Charges -= 1; 
                                         GameLoop.ZPO.Log.AddMessage(new ColoredString("Your amulet of chemistry allows you to get an extra dose out of your ingredients.", Color.PaleGreen, Color.Black));
                                         if (eqp.Charges <= 0) {
@@ -576,7 +631,7 @@ namespace ZeroPlayersOnline.Managers {
 
                                 player.TryPickup(made, made.Quantity);
                             } else {
-                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You get the feeling that should've resulted in " + rec.OutputItem + ", but that item doesn't exist.", Color.Crimson, Color.Black));
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString("You get the feeling that should've resulted in " + id + ", but that item doesn't exist.", Color.Crimson, Color.Black));
                             }
                         } else {
                             if (rec.OutputItem == "_fire") {

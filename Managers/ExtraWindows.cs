@@ -53,7 +53,7 @@ namespace ZeroPlayersOnline.Managers {
          
         
         public static Window Debug;
-        public static string DebugMenu = "Unfound";
+        public static string DebugMenu = "Overview";
         public static int DebugRandomSource = 0;
 
         public static Window Clue;
@@ -67,6 +67,11 @@ namespace ZeroPlayersOnline.Managers {
 
         public static Window InventoryContainer;
         public static ItemWrapper? ConWrap = null;
+
+        
+        public static Window Book;
+        public static string BookID = "";
+        public static int LeftPage = 0;
 
 
         public static bool AnyVisible(string except = "") {
@@ -90,6 +95,8 @@ namespace ZeroPlayersOnline.Managers {
                 return true;
             if (InventoryContainer.IsVisible && except != "InventoryContainer")
                 return true;
+            if (Book.IsVisible && except != "Book") 
+                return true;
             
             return false;
         }
@@ -105,6 +112,7 @@ namespace ZeroPlayersOnline.Managers {
             Clue.IsVisible = false;
             Teleport.IsVisible = false;
             InventoryContainer.IsVisible = false;
+            Book.IsVisible = false;
         }
 
         public static void SetupWindows() {
@@ -157,6 +165,11 @@ namespace ZeroPlayersOnline.Managers {
             InventoryContainer.CanDrag = true;
             InventoryContainer.Position = new Point(25, 10);
             InventoryContainer.Title = "Inventory Container".Align(HorizontalAlignment.Center, 48);
+
+            Book = new(77, 25);
+            Book.CanDrag = true;
+            Book.Position = new Point(25, 10);
+            Book.Title = "Book".Align(HorizontalAlignment.Center, 75);
         }
 
         public static void GuideDraw() {
@@ -247,28 +260,54 @@ namespace ZeroPlayersOnline.Managers {
             Debug.Print(2, 0, "[Debug Menu]");
             Debug.DrawLine(new Point(20, 1), new Point(20, 28), 179);
 
-            Debug.PrintClickable(2, 1, new ColoredString("Broken Links", DebugMenu == "Unfound" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; });
-            Debug.PrintClickable(18, 1, new ColoredString("?", Color.MediumPurple, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; DebugRandomSource = GameLoop.rand.Next(Sources.Count); });
+            Debug.PrintClickable(2, 1, new ColoredString("Overview", DebugMenu == "Overview" ? Color.Yellow : Color.White, Color.Black), () => { DebugMenu = "Overview"; });
+            Debug.PrintClickable(2, 3, new ColoredString("Broken Links", DebugMenu == "Unfound" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; });
+            Debug.PrintClickable(18, 3, new ColoredString("?", Color.MediumPurple, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; DebugRandomSource = GameLoop.rand.Next(Sources.Count); });
             
-            int qty = 1;
-            if (Helper.EitherShift())
-                qty *= 5;
-            if (Helper.EitherControl())
-                qty *= 10;
+            Debug.PrintClickable(2, 4, new ColoredString("Unobtainable Items", DebugMenu == "Unobtainable" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugUnobtainable(); DebugMenu = "Unobtainable"; });
+            
+            if (DebugMenu == "Overview") {
+                Debug.Print(22, 1, "         Locations: " + GameLoop.ZPO.Atlas.Count);
+                Debug.Print(22, 2, "             Items: " + GameLoop.ZPO.ItemLibrary.Count);
+                Debug.Print(22, 3, "       Use Recipes: " + GameLoop.ZPO.UseRecipes.Count);
+                Debug.Print(22, 4, "     Craft Recipes: " + GameLoop.ZPO.CraftLib.Values.Sum(o => o.Count));
+                Debug.Print(22, 5, "Processing Recipes: " + (GameLoop.ZPO.ProcessingStations.Values.Sum(o => o.Recipes.Count) - GameLoop.ZPO.ProcessingStations["Fire"].Recipes.Count));
+                Debug.Print(22, 6, "              NPCs: " + GameLoop.ZPO.NPCLibrary.Count);
+                Debug.Print(22, 7, "          Monsters: " + GameLoop.ZPO.MonsterLibrary.Count);
 
-            if (Sources.Count > 27) {
-                if (Helper.ScrolledUp()) { CompendiumSourceTop = Math.Clamp(CompendiumSourceTop - qty, 0, Sources.Count - 27); }
-                if (Helper.ScrolledDown()) { CompendiumSourceTop = Math.Clamp(CompendiumSourceTop + qty, 0, Sources.Count - 27); }
-            } else {
-                CompendiumSourceTop = 0;
-            }
+                int tutorialSteps = GameLoop.ZPO.ClueStepLibrary.Values.Where(o => o.Difficulty == "Tutorial").Count();
+                int beginnerSteps = GameLoop.ZPO.ClueStepLibrary.Values.Where(o => o.Difficulty == "Beginner").Count();
+                int easySteps = GameLoop.ZPO.ClueStepLibrary.Values.Where(o => o.Difficulty == "Easy").Count();
+                int mediumSteps = GameLoop.ZPO.ClueStepLibrary.Values.Where(o => o.Difficulty == "Medium").Count();
+                int hardSteps = GameLoop.ZPO.ClueStepLibrary.Values.Where(o => o.Difficulty == "Hard").Count();
 
-            int sourceY = 1;
-                        
-            Debug.Print(22, sourceY++, "Things found where the ID may be wrong or refer to a nonexistent item: ", Color.Crimson);
 
-            for (int source = CompendiumSourceTop; source < Sources.Count && source < CompendiumSourceTop + 27; source++) {
-                Debug.Print(22, sourceY++, Sources[source].Display, DebugRandomSource == sourceY - 2 ? Color.Yellow : Color.White);
+                Debug.Print(22, 8, "        Clue Steps: " + tutorialSteps + "t / " + beginnerSteps + "b / " + easySteps + "e / " + mediumSteps + "m / " + hardSteps + "h");
+                Debug.Print(22, 9, "            Quests: " + GameLoop.ZPO.QuestLibrary.Count);
+            } else { 
+                int qty = 1;
+                if (Helper.EitherShift())
+                    qty *= 5;
+                if (Helper.EitherControl())
+                    qty *= 10;
+
+                if (Sources.Count > 27) {
+                    if (Helper.ScrolledUp()) { CompendiumSourceTop = Math.Clamp(CompendiumSourceTop - qty, 0, Sources.Count - 27); }
+                    if (Helper.ScrolledDown()) { CompendiumSourceTop = Math.Clamp(CompendiumSourceTop + qty, 0, Sources.Count - 27); }
+                } else {
+                    CompendiumSourceTop = 0;
+                }
+
+                int sourceY = 1;
+            
+                if (DebugMenu == "Unfound")
+                    Debug.Print(22, sourceY++, "Things found where the ID may be wrong or refer to a nonexistent item: ", Color.Crimson);
+                if (DebugMenu == "Unobtainable")
+                    Debug.Print(22, sourceY++, "Items with no source found: ", Color.Crimson);
+
+                for (int source = CompendiumSourceTop; source < Sources.Count && source < CompendiumSourceTop + 27; source++) {
+                    Debug.Print(22, sourceY++, Sources[source].Display, DebugRandomSource == sourceY - 2 ? Color.Yellow : Color.White);
+                }
             }
         }
 
@@ -2383,8 +2422,13 @@ namespace ZeroPlayersOnline.Managers {
             foreach (var kv in GameLoop.ZPO.ProcessingStations) {
                 List<ProcessingRecipe> recipes = kv.Value.Recipes.OrderBy(o => (GameLoop.ZPO.ResolveItemName(o.OutputID))).ToList();
                 for (int i = 0; i < recipes.Count; i++) {
-                    if (recipes[i].SkillUsed == id) { 
-                        sources.Add(new("[" + recipes[i].SkillLevel.ToString().Align(HorizontalAlignment.Right, 3) + "] Process " + GameLoop.ZPO.ResolveItemName(recipes[i].InputID) + " to " + GameLoop.ZPO.ResolveItemName(recipes[i].OutputID) + " at " + kv.Value.Name, "Recipes", "ProcessRecipe", "", kv.Value.Name, i));
+                    if (recipes[i].SkillUsed == id) {
+                        if (kv.Value.Name != "Fire")
+                            sources.Add(new("[" + recipes[i].SkillLevel.ToString().Align(HorizontalAlignment.Right, 3) + "] Process " + GameLoop.ZPO.ResolveItemName(recipes[i].InputID) + " to " + GameLoop.ZPO.ResolveItemName(recipes[i].OutputID) + " at " + kv.Value.Name, "Recipes", "ProcessRecipe", "", kv.Value.Name, i));
+                    
+                        if (recipes[i].SkillUsed == "Cooking" && recipes[i].StopFailingLevel > 0) {
+                            sources.Add(new("[" + recipes[i].SkillLevel.ToString().Align(HorizontalAlignment.Right, 3) + "] Stop burning " + GameLoop.ZPO.ResolveItemName(recipes[i].InputID) + " on " + kv.Value.Name, "Recipes", "ProcessRecipe", "", kv.Value.Name, i));
+                        }    
                     }
                 }
             }
@@ -2476,6 +2520,10 @@ namespace ZeroPlayersOnline.Managers {
                 if (kv.Value.OutputItem == id) {
                     sources.Add(new("UseRecipe: " + GameLoop.ZPO.ResolveItemName(kv.Value.FirstItem) + " + " + GameLoop.ZPO.ResolveItemName(kv.Value.SecondItem), "Recipes", "UseRecipe", kv.Value.FirstItem, kv.Value.SecondItem, 0) );
                 }
+
+                if (kv.Value.FailID == id) {
+                    sources.Add(new("UseRecipe: " + GameLoop.ZPO.ResolveItemName(kv.Value.FirstItem) + " + " + GameLoop.ZPO.ResolveItemName(kv.Value.SecondItem) + " failed below " + kv.Value.StopFailLevel + " " + kv.Value.SkillUsed, "Recipes", "UseRecipe", kv.Value.FirstItem, kv.Value.SecondItem, 0));
+                }
             }
 
             foreach (var kv in GameLoop.ZPO.CraftLib) {
@@ -2496,6 +2544,10 @@ namespace ZeroPlayersOnline.Managers {
                         } else {
                             sources.Add(new("Processing: " + GameLoop.ZPO.ResolveItemName(recipes[i].InputID) + " at " + kv.Value.Name, "Recipes", "ProcessRecipe", "", kv.Value.Name, i));
                         }
+                    }
+
+                    if (recipes[i].FailOutput == id) {
+                        sources.Add(new("Processing: " + GameLoop.ZPO.ResolveItemName(recipes[i].InputID) + " failed at " + kv.Value.Name + " below " + recipes[i].StopFailingLevel + " " + recipes[i].SkillUsed, "Recipes", "ProcessRecipe", "", kv.Value.Name, i));
                     }
                 }
             }
@@ -2550,6 +2602,9 @@ namespace ZeroPlayersOnline.Managers {
                 if (kv.Value.UseString == "PlantSeed" && kv.Value.UseString3 == id) {
                     sources.Add(new("Seed Produce: " + kv.Value.Name + " at " + kv.Value.UseInt + " Farming", "Items", "", kv.Value.ID, "", 0));
                 }
+
+                if (kv.Value.UseString == "Transform" && kv.Value.UseString2 == id) { sources.Add(new("Received from Activating: " + kv.Value.Name, "Items", "", kv.Value.ID, "", 0)); }
+                if (kv.Value.UseString == "Extinguish" && kv.Value.UseString2 == id) { sources.Add(new("Received from Extinguishing: " + kv.Value.Name, "Items", "", kv.Value.ID, "", 0)); }
             }
 
             foreach (var kv in GameLoop.ZPO.GatherSpots) {
@@ -2610,7 +2665,24 @@ namespace ZeroPlayersOnline.Managers {
                 }
             } 
 
+            if (id == "mtaAlchCoin") { sources.Add(new("Cast Low or High Alchemy on the items from Alchemist's Playground in Mage Training Arena.", "Items", "", id, "", 0)); }
+            if (id == "fruitPeach") { sources.Add(new("Cast Bones to Peaches with low level bones in your inventory.", "Items", "", id, "", 0)); }
+
+
             sources = sources.OrderBy(o => o.Display).ToList();
+            return sources;
+        }
+
+        public static List<CompendiumResult> DebugUnobtainable() { 
+            List<CompendiumResult> sources = new();
+
+            foreach (var kv in GameLoop.ZPO.ItemLibrary) {
+                if (ItemSources(kv.Key).Count == 0) {
+                    sources.Add(new("Item: " + GameLoop.ZPO.ResolveItemName(kv.Key) + " (" + kv.Key + ")", "", "", "", "", 0, 0));
+                }
+            }
+
+
             return sources;
         }
 
@@ -2757,6 +2829,15 @@ namespace ZeroPlayersOnline.Managers {
                         }
 
                         string name = GameLoop.ZPO.ResolveItemName(dropsSorted[i].ItemID); 
+
+                        if (dropsSorted[i].QuantityMax > 1) {
+                            if (dropsSorted[i].QuantityMin == dropsSorted[i].QuantityMax) {
+                                name += " (" + dropsSorted[i].QuantityMin + ")";
+                            } else { 
+                                name += " (" + dropsSorted[i].QuantityMin + "-" + dropsSorted[i].QuantityMax + ")";
+                            }
+                        }
+
                         string dropchance = (dropsSorted[i].DropX).ToString().PadLeft(5) + " in " + dropsSorted[i].InY;
 
                         Color col = timesObtained > 0 ? Color.White : Color.DarkSlateGray;
@@ -2783,17 +2864,30 @@ namespace ZeroPlayersOnline.Managers {
                 monsterList.Clear();
                 monsterList = GameLoop.ZPO.MonsterLibrary.Values.ToList().OrderBy(f => f.Name).ToList();
 
-                for (int i = 0; i < monsterList.Count; i++) {
-                    CollectionLog.PrintClickable(1, 1 + i, new ColoredString(" " + monsterList[i].Name, CollectionID == monsterList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = monsterList[i].ID; });
+                int qty = 1;
+                if (Helper.EitherShift()) { qty *= 5; }
+                if (Helper.EitherControl()) { qty *= 10; }
+
+                if (monsterList.Count > 28) {
+                    if (Helper.ScrolledUp() && mousePos.X < 26) { CollectionSideTop = Math.Clamp(CollectionSideTop - qty, 0, monsterList.Count - 28); }
+                    if (Helper.ScrolledDown() && mousePos.X < 26) { CollectionSideTop = Math.Clamp(CollectionSideTop + qty, 0, monsterList.Count - 28); }
+                } else {
+                    CollectionSideTop = 0;
+                }
+
+                for (int i = CollectionSideTop; i < monsterList.Count && i < CollectionSideTop + 28; i++) {
+                    CollectionLog.PrintClickable(1, 1 + (i - CollectionSideTop), new ColoredString(Helper.Truncate(monsterList[i].Name.Align(HorizontalAlignment.Left, 21), 21) + (248.AsString() + monsterList[i].Level.ToString().Align(HorizontalAlignment.Right, 3)), CollectionID == monsterList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = monsterList[i].ID; });
                 }
 
                 if (GameLoop.ZPO.MonsterLibrary.ContainsKey(CollectionID)) {
                     AreaMonster view = GameLoop.ZPO.MonsterLibrary[CollectionID];
 
                     if (view.DropTable.Count > 24) {
-                        if (Helper.ScrolledUp()) { CollectionDropTop = Math.Clamp(CollectionDropTop - 1, 0, view.DropTable.Count - 24); }
-                        if (Helper.ScrolledDown()) { CollectionDropTop = Math.Clamp(CollectionDropTop + 1, 0, view.DropTable.Count - 24); }
-                    } 
+                        if (Helper.ScrolledUp() && mousePos.X > 26) { CollectionDropTop = Math.Clamp(CollectionDropTop - qty, 0, view.DropTable.Count - 24); }
+                        if (Helper.ScrolledDown() && mousePos.X > 26) { CollectionDropTop = Math.Clamp(CollectionDropTop + qty, 0, view.DropTable.Count - 24); }
+                    } else {
+                        CollectionDropTop = 0;
+                    }
 
                     int KC = 0;
 
@@ -2820,6 +2914,15 @@ namespace ZeroPlayersOnline.Managers {
                         }
 
                         string name = GameLoop.ZPO.ResolveItemName(dropsSorted[i].ItemID); 
+
+                        if (dropsSorted[i].QuantityMax > 1) {
+                            if (dropsSorted[i].QuantityMin == dropsSorted[i].QuantityMax) {
+                                name += " (" + dropsSorted[i].QuantityMin + ")";
+                            } else { 
+                                name += " (" + dropsSorted[i].QuantityMin + "-" + dropsSorted[i].QuantityMax + ")";
+                            }
+                        }
+
                         string dropchance = (dropsSorted[i].DropX).ToString().PadLeft(5) + " in " + dropsSorted[i].InY;
 
                         Color col = timesObtained > 0 ? Color.White : Color.DarkSlateGray;
@@ -3194,5 +3297,84 @@ namespace ZeroPlayersOnline.Managers {
             }
             InventoryContainer.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { InventoryContainer.IsVisible = false; ConWrap = null; });
         }        
+    
+        
+        public static void BookDraw() {
+            Book.Clear();
+            Helper.DrawBox(Book, 0, 0, 75, 23);
+
+            if (GameLoop.ZPO.BookLibrary.TryGetValue(BookID, out Book? book)) {
+                Book.Print(1, 0, ("[" + book.Name + "]").Align(HorizontalAlignment.Center, 75, (char) 196));
+
+                if (book.FrameType == 1) {
+                    Book.DrawLine(new Point(3, 2), new Point(35, 2), 196, Color.White);
+                    Book.DrawLine(new Point(41, 2), new Point(73, 2), 196, Color.White); 
+                    Book.Print(36, 3, "\\   /", Color.White);
+
+                    Book.DrawLine(new Point(2, 4), new Point(2, 22), 179, Color.White);
+                    Book.DrawLine(new Point(3, 3), new Point(3, 21), 179, Color.White);
+                    Book.DrawLine(new Point(73, 3), new Point(73, 21), 179, Color.White);
+                    Book.DrawLine(new Point(74, 3), new Point(74, 22), 179, Color.White);
+
+                    Book.DrawLine(new Point(3, 22), new Point(35, 22), 196, Color.White);
+                    Book.DrawLine(new Point(41, 22), new Point(73, 22), 196, Color.White); 
+                    Book.DrawLine(new Point(3, 23), new Point(35, 23), 196, Color.White);
+                    Book.DrawLine(new Point(41, 23), new Point(73, 23), 196, Color.White); 
+                    Book.Print(36, 22, "/   \\", Color.White);
+                    Book.Print(35, 23, "/     \\", Color.White);
+                     
+                    Book.Print(3, 2, "/", Color.White);
+                    Book.Print(2, 3, "/", Color.White);
+                    Book.Print(3, 22, "/", Color.White);
+                    Book.Print(2, 23, "/", Color.White);
+                     
+                    Book.Print(73, 2, "\\", Color.White);
+                    Book.Print(74, 3, "\\", Color.White);
+                    Book.Print(73, 22, "\\", Color.White);
+                    Book.Print(74, 23, "\\", Color.White);
+                    Book.Print(36, 23, "_____", Color.White);
+                    
+                    Book.DrawLine(new Point(37, 4), new Point(37, 21), 179, Color.White);
+                    Book.DrawLine(new Point(38, 4), new Point(38, 21), '|', Color.White);
+                    Book.DrawLine(new Point(39, 4), new Point(39, 21), 179, Color.White);
+                    
+                    Book.Print(5, 3, book.Pages[LeftPage].Name, Color.White);
+                    Book.PrintMultiLine(5, 5, book.Pages[LeftPage].Text, 31);
+
+                    if (book.Pages.Count > LeftPage + 1) { 
+                        Book.Print(41, 3, book.Pages[LeftPage + 1].Name.Align(HorizontalAlignment.Right, 31), Color.White);
+                        Book.PrintMultiLine(43, 5, book.Pages[LeftPage + 1].Text, 31);
+                    }
+
+                    if (book.Pages.Count > LeftPage + 2) { 
+                        Book.PrintClickable(61, 23, "[NEXT PAGE]", () => { 
+                            LeftPage += 2; 
+                            book.Pages[LeftPage].Reached(); 
+                            if (book.Pages.Count > LeftPage + 1) { 
+                                book.Pages[LeftPage+1].Reached(); 
+                            }
+                        });
+                    }
+                    if (LeftPage > 1) { Book.PrintClickable(5, 23, "[LAST PAGE]", () => { LeftPage -= 2; }); }
+                } else if (book.FrameType == 0) { 
+                    Book.DrawLine(new Point(21, 2), new Point(55, 2), 196, Color.White);
+                    Book.DrawLine(new Point(21, 21), new Point(55, 21), 196, Color.White);
+                    Book.DrawLine(new Point(21, 3), new Point(21, 20), 179, Color.White);
+                    Book.DrawLine(new Point(55, 3), new Point(55, 20), 179, Color.White);
+                     
+                    Book.Print(22, 3, book.Pages[LeftPage].Name.Align(HorizontalAlignment.Center, 33), Color.White);
+                    Book.PrintMultiLine(23, 5, book.Pages[LeftPage].Text, 31);
+
+                    if (book.Pages.Count > LeftPage + 1) { 
+                        Book.PrintClickable(45, 22, "[NEXT PAGE]", () => { 
+                            LeftPage += 1; 
+                            book.Pages[LeftPage].Reached();
+                        });
+                    }
+                    if (LeftPage > 0) { Book.PrintClickable(21, 22, "[LAST PAGE]", () => { LeftPage -= 1; }); }
+                }
+            }
+            Book.PrintClickable(76, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Book.IsVisible = false; });
+        }    
     }
 }
