@@ -23,15 +23,17 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public string NeedToolCat = "";
         public string NeededBait = "";
-        public string ExtraAction = "";
 
+        public RunAction? GatherAct = null;
+        public Requirement? Req = null;
+        public bool ShowAnyways = true;
 
         public List<WeightedItem>? PossibleItems = null;
 
         [JsonIgnore]
         public double LastGathered = 0;
 
-        public GatheringTile(string id, string name, string verb, int succ, int deplete, int restock, string skill = "", int skLevel = 0, int exp = 0, int expFail = 0, int damageOnFail = 0, bool levelBasedSucc = false, string neededTool = "", string neededBait = "", List<WeightedItem>? items = null, string action = "") {
+        public GatheringTile(string id, string name, string verb, int succ, int deplete, int restock, string skill = "", int skLevel = 0, int exp = 0, int expFail = 0, int damageOnFail = 0, bool levelBasedSucc = false, string neededTool = "", string neededBait = "", List<WeightedItem>? items = null, Requirement? req = null, bool show = true, RunAction? action = null) {
             ID = id;
             Name = name;
             InteractVerb = verb;
@@ -50,7 +52,9 @@ namespace ZeroPlayersOnline.DataTypes {
             NeedToolCat = neededTool;
             NeededBait = neededBait;
 
-            ExtraAction = action;
+            GatherAct = action;
+            Req = req;
+            ShowAnyways = show;
         }
 
 
@@ -62,10 +66,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public void Gather(Player p, MessageLog log, Dictionary<string, Item> itemLibrary, Location currentLoc, List<Skill> Recents) {
             if (CanGather(p) == "") {
-                if (ExtraAction != "") {
-                    if (ExtraAction == "AltarBoost") {
-                        p.TryAddPotionEffect("Prayer", 5);
-                    }
+                if (GatherAct != null) {
+                    GatherAct.Execute(); 
                 }
 
                 ClueLogic.GenericStep(p, log, "Gather", ID);
@@ -202,7 +204,7 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                 }
             } else {
-                    log.AddMessage(new ColoredString("You need " + CanGather(p) + " to do that.", Color.Crimson, Color.Black));
+                log.AddMessage(new ColoredString("You need " + CanGather(p) + " to do that.", Color.Crimson, Color.Black));
             }
         } 
 
@@ -242,6 +244,12 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                 } else {
                     return "a clue key, likely dropped by a nearby monster.";
+                }
+            }
+
+            if (Req != null) {
+                if (!Req.CheckRequirement(p, false, true)) {
+                    return Req.GetSummary();
                 }
             }
 

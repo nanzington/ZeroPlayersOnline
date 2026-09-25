@@ -11,7 +11,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public string WeakType = "Slash";
         public string SpecialCategory = "";
-        public string CountsAsSlayer = "";
+        public List<string> CountsAsSlayer = new();
         public int DamageReduction = 0; // Reduce damage by this as a percent unless using their weakness
 
         public int AggroLevel = 0; // If the players combat level is below this, the monster will automatically attack them 
@@ -19,14 +19,17 @@ namespace ZeroPlayersOnline.DataTypes {
          
         public string DefaultDmgDice = "1d3";  
         public string DefaultDmgType = "Typeless";
+        public int DefaultPoisonSeverity = 0;
         public List<BossAttack> Specials = new();
          
         public int LanesHere = 3;
 
         public double AttackSpeedInMS = 1000;
-        public int AttacksBetweenSpecials = 3;
-
+        public int AttacksBetweenSpecials = 3; 
         public int RespawnTime = 1;
+
+        public string KillItem = "";
+        public int KillItemCount = 0;
 
         public List<ItemDrop> DropTable = new();
 
@@ -44,7 +47,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double MovesSinceSpecial = 0;
 
-        public BossFight(string name, string id, int level, int maxHp, string weakness, int dr, int respawn, string defDmgDice, string defDmgType, double attackSpeed = 1000, int attacksBetween = 3, int lanes = 3, bool aggro = false, string specialCat = "", string slayer = "", List<BossAttack> specials = null, List<ItemDrop> drops = null) {
+        public BossFight(string name, string id, int level, int maxHp, string weakness, int dr, int respawn, string defDmgDice, string defDmgType, double attackSpeed = 1000, int attacksBetween = 3, int lanes = 3, bool aggro = false, string specialCat = "", List<BossAttack> specials = null, List<ItemDrop> drops = null) {
             ID = id;
             Name = name;
 
@@ -66,7 +69,6 @@ namespace ZeroPlayersOnline.DataTypes {
             AttacksBetweenSpecials = attacksBetween;
             LanesHere = lanes;
             SpecialCategory = specialCat;
-            CountsAsSlayer = slayer;
 
             if (specials != null)
                 Specials = specials;

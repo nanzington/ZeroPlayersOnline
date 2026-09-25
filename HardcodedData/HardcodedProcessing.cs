@@ -138,7 +138,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
-            toAdd.Add(new("Sink") {
+            ProcessingStation sink = new("Sink") {
                 Recipes = new() {
                     new ProcessingRecipe("bucketEmpty", "bucketWater"), 
                     new ProcessingRecipe("clayDust", "claySoft"), 
@@ -147,7 +147,13 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("jugEmpty", "jugWater"), 
                     new ProcessingRecipe("potFlour", "doughBread", secondaryOut: "potEmpty")
                 }
-            });
+            };
+
+            ProcessingStation fountain = Helper.Clone(sink);
+            fountain.Name = "Fountain";
+
+            toAdd.Add(sink);
+            toAdd.Add(fountain);
 
             toAdd.Add(new("Sand") { Recipes = new() { new ProcessingRecipe("bucketEmpty", "bucketSand") } });
 

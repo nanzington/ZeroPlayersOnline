@@ -52,6 +52,16 @@
                 return "Incomplete " + MiscString;
             }
 
+            if (RequirementType == "QuestPast") {
+                if (GameLoop.ZPO.QuestLibrary.TryGetValue(MiscString, out Quest? req)) {
+                    if (req != null) {
+                        return "Quest: " + req.Name + " [At or Above Stage " + MiscInt + "]";
+                    }
+                }
+
+                return "Partial Completion " + MiscString;
+            }
+
             if (RequirementType == "Item") {
                 if (MiscString == "Gold") {
                     return "Need " + MiscInt + " gold";
@@ -123,6 +133,41 @@
             if (RequirementType == "ClueMedium") {
                 return "Only while a specific medium clue step is active. (" + MiscString + ")";
             }
+
+            if (RequirementType == "CombatAtLeast") {
+                return "Must have Combat level " + MiscInt + " or higher.";
+            }
+
+            if (RequirementType == "CombatAtMost") {
+                return "Must have Combat level " + MiscInt + " or lower.";
+            }
+
+            if (RequirementType == "SlayerTask") {
+                if (MiscString == "Any") {
+                    return "Must have a slayer task active.";
+                } else {
+                    return "Must have an active " + GameLoop.ZPO.ResolveMonsterName(GameLoop.ZPO.player.SlayerTask) + " task.";
+                }
+            }
+
+            if (RequirementType == "SlayerNotBlocked") { return "Must not have " + GameLoop.ZPO.ResolveMonsterName(GameLoop.ZPO.player.SlayerTask) + " tasks blocked already."; }
+            if (RequirementType == "SlayerBlocked") { return "Must have " + GameLoop.ZPO.ResolveMonsterName(GameLoop.ZPO.player.SlayerTask) + " tasks blocked."; }
+            
+            if (RequirementType == "SlayerNotPreferred") { return "Must not have " + GameLoop.ZPO.ResolveMonsterName(GameLoop.ZPO.player.SlayerTask) + " tasks preferred already.";  }
+            if (RequirementType == "SlayerPreferred") { return "Must have " + GameLoop.ZPO.ResolveMonsterName(GameLoop.ZPO.player.SlayerTask) + " tasks preferred.";  }
+
+            if (RequirementType == "SlayerBlockRoom") {
+                int max = GameLoop.ZPO.player.GetQuestPoints() / 50;
+                return "Must have fewer than " + max + " tasks blocked - blocking " + GameLoop.ZPO.player.SlayerBlocked.Count + "."; 
+            }
+
+            if (RequirementType == "SlayerPreferRoom") {
+                int max = GameLoop.ZPO.player.GetQuestPoints() / 50;
+                return "Must have fewer than " + max + " tasks preferred - preferring " + GameLoop.ZPO.player.SlayerPrefer.Count + "."; 
+            }
+
+            if (RequirementType == "SlayerNotExtended") { return "Current slayer task must not already be extended."; }
+            if (RequirementType == "SlayerExtended") { return "Current slayer task must already be extended."; }
 
             return "";
         }
@@ -333,6 +378,42 @@
             }
 
             if (RequirementType == "ClueMedium") { if (p.CurrentClueMedium == MiscString) { return true; } }
+
+
+            if (RequirementType == "CombatAtLeast") { if (p.GetCombatLevel() >= MiscInt) { return true; } }
+            if (RequirementType == "CombatAtMost") { if (p.GetCombatLevel() <= MiscInt) { return true; } }
+
+            if (RequirementType == "SlayerTask") {
+                if (MiscString == "Any") {
+                    if (p.SlayerTask != "") { return true; }
+                    else if (p.SlayerTask == MiscString) { return true; }
+                }
+            }
+
+            if (RequirementType == "SlayerNotBlocked") { if (!p.SlayerBlocked.Contains(p.SlayerTask)) { return true; } }
+            if (RequirementType == "SlayerBlocked") { if (p.SlayerBlocked.Contains(p.SlayerTask)) { return true; } }
+            
+            if (RequirementType == "SlayerNotPreferred") { if (!p.SlayerPrefer.Contains(p.SlayerTask)) { return true; } }
+            if (RequirementType == "SlayerPreferred") { if (p.SlayerPrefer.Contains(p.SlayerTask)) { return true; } }
+
+            if (RequirementType == "SlayerBlockRoom") {
+                int max = p.GetQuestPoints() / 50;
+                if (p.SlayerBlocked.Count < max) { 
+                    return true;
+                }
+            }
+
+            if (RequirementType == "SlayerPreferRoom") {
+                int max = p.GetQuestPoints() / 50;
+                if (p.SlayerPrefer.Count < max) { 
+                    return true;
+                }
+            }
+
+            if (RequirementType == "SlayerExtended") { if (p.SlayerTaskExtended) { return true; }}
+            if (RequirementType == "SlayerNotExtended") { if (!p.SlayerTaskExtended) { return true; }}
+
+
 
             return false;
         }

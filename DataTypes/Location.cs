@@ -39,6 +39,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public List<string> NPCsHere = new();
 
         public List<string> ShopItemsHere = new();
+        public double ShopPriceMultiplier = 1.0;
 
         public List<string> FarmingPatchesHere = new();
          

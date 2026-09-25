@@ -26,6 +26,14 @@ namespace ZeroPlayersOnline.HardcodedData {
                 new("Delicious Ugthanki Kebab", "Chop the meat into the Onion and Tomato mixture. Finally fill the pitta bread with the Ugthanki, Onion, and Tomato mixture to make your delicious Ugthanki Kebab.")
             }));
 
+            toAdd.Add(new("Shield of Arrav", "bookArrav", 1, new() {
+                new("", ""),
+                new("", "/n /n /n /n    The Shield of Arrav /n /n       by A. R. Wright"),
+                new("Shield of Arrav", "Arrav is probably the best known hero of the 4th Age. Many legends are told of his heroics. /n /n One surviving artefact from the 4th Age is a fabulous shield. This shield is believed to have once belonged to Arrav and is now indeed known as the Shield of Arrav. /n /n For over 150 years it was the prize piece in the royal museum of Varrock."),
+                new("Shield of Arrav", "However, in the year 143 of the fifth age a gang of thieves called the Phoenix Gang broke into the museum and stole the shield in a daring raid.  /n /n As a result, the current ruler, King Roald, put a 1200 gold bounty (a massive sum of money in those days) on the return of the shield, hoping that one of the culprits would betray his fellows out of greed."),
+                new("Shield of Arrav", "This tactic did not work however, and the thieves who stole the shield have since gone on to become the most powerful crime gang in Varrock, despite making an enemy of the Royal Family many years ago. /n /n The reward for the return of the shield still stands.")
+            }));
+
 
             for (int i = 0; i < toAdd.Count; i++) {
                 BookLib.Add(toAdd[i].ID, toAdd[i]);

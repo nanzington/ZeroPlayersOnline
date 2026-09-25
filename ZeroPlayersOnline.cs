@@ -29,6 +29,7 @@ namespace ZeroPlayersOnline {
         public Dictionary<string, ClueStep> ClueStepLibrary = new();
         public Dictionary<string, Quest> QuestLibrary = new();
         public Dictionary<string, Book> BookLibrary = new();
+        public Dictionary<string, Cutscene> CutsceneLibrary = new();
 
         public MessageLog Log = new();
         public int LastPrinted = 0;
@@ -144,12 +145,14 @@ namespace ZeroPlayersOnline {
                 if (curr.ConnectedLocations.Count > 0) {
                     mini.Con.Print(57, printY++, "Connected Locations: ");
 
-                    for (int i = 0; i < curr.ConnectedLocations.Count; i++) {
-                        if (Atlas.TryGetValue(curr.ConnectedLocations[i].Destination, out Location? dest) && dest != null) { 
+                    List<Connection> conns = curr.ConnectedLocations.Where(o => (o.CanTraverse(player) && o.HideIfReqsNotMet) || !o.HideIfReqsNotMet).ToList();
+
+                    for (int i = 0; i < conns.Count; i++) {
+                        if (Atlas.TryGetValue(conns[i].Destination, out Location? dest) && dest != null) { 
                             string name = dest.DisplayName; 
 
-                            if (curr.ConnectedLocations[i].AltName != "") {
-                                name = curr.ConnectedLocations[i].AltName;
+                            if (conns[i].AltName != "") {
+                                name = conns[i].AltName;
                             }
 
                             if (dest.Region != curr.Region)
@@ -180,9 +183,9 @@ namespace ZeroPlayersOnline {
                                 }
                             }
 
-                            mini.Con.PrintClickable(57, printY++, new ColoredString("| " + name, curr.ConnectedLocations[i].CanTraverse(player) ? Color.White : Color.Crimson, Color.Black), () => {
-                                if (curr.ConnectedLocations[i].CanTraverse(player)) {
-                                    curr.ConnectedLocations[i].Traverse(player); 
+                            mini.Con.PrintClickable(57, printY++, new ColoredString("| " + name, conns[i].CanTraverse(player) ? Color.White : Color.Crimson, Color.Black), () => {
+                                if (conns[i].CanTraverse(player)) {
+                                    conns[i].Traverse(player); 
                                     GraceTimeStart = Helper.Time();
                                     AttackingMonster = null;
 
@@ -195,8 +198,8 @@ namespace ZeroPlayersOnline {
                                         }
                                     }
                                 } else {
-                                    if (curr.ConnectedLocations[i].Requirements is List<Requirement> req) {
-                                        Log.AddMessage("Missing some requirements to go there: " + (curr.ConnectedLocations[i].OnlyNeedOneReq ? "(only need one)" : ""), Color.Crimson);
+                                    if (conns[i].Requirements is List<Requirement> req) {
+                                        Log.AddMessage("Missing some requirements to go there: " + (conns[i].OnlyNeedOneReq ? "(only need one)" : ""), Color.Crimson);
 
                                         for (int j = 0; j < req.Count; j++) {
                                             Log.AddMessage("| " + req[j].GetSummary(), req[j].CheckRequirement(player, false, true) ? Color.Lime : Color.Crimson); 
@@ -206,7 +209,7 @@ namespace ZeroPlayersOnline {
                             });
                         }
                         else {
-                            mini.Con.Print(57, printY++, "| " + curr.ConnectedLocations[i].Destination, Color.DarkSlateGray);
+                            mini.Con.Print(57, printY++, "| " + conns[i].Destination, Color.DarkSlateGray);
                         }
                     }
 
@@ -234,10 +237,12 @@ namespace ZeroPlayersOnline {
                     double timeToAttack = boss.TimeLastAttacked + boss.AttackSpeedInMS - Helper.Time(); 
                     string bossDice = boss.DefaultDmgDice;
                     string bossType = boss.DefaultDmgType;
+                    int bossPoisonSeverity = boss.DefaultPoisonSeverity;
 
                     if (boss.UsingMove != -1 && boss.Specials.Count > boss.UsingMove) {
                         bossDice = boss.Specials[boss.UsingMove].DamageDice;
                         bossType = boss.Specials[boss.UsingMove].DamageType;
+                        bossPoisonSeverity = boss.Specials[boss.UsingMove].PoisonSeverity;
                     }
 
                     bool reachedKillLimit = player.KillLimit == 0 ? true : false;
@@ -354,21 +359,38 @@ namespace ZeroPlayersOnline {
                                     }
 
                                     if (modified > 0) {
-                                            if (player.Equipment.TryGetValue("Ring", out ItemWrapper? ring) && ring != null && ring.ID == "ringRecoil") {
-                                                int reflect = (modified / 10) + 1;
+                                        if (bossPoisonSeverity > 0) {
+                                            int odds = bossType == "Melee" ? 4 : bossType == "Ranged" ? 8 : 1;
 
-                                                if (reflect > ring.Charges)
-                                                    reflect = ring.Charges;
-
-                                                ring.Charges -= reflect; 
-                                                Log.AddMessage(new ColoredString("Your ring of recoil reflected " + reflect + " damage back!", Color.DeepSkyBlue, Color.Black));
-
-                                                if (ring.Charges <= 0) { 
-                                                    Log.AddMessage(new ColoredString("Your ring of recoil runs out of charge and shatters.", Color.Crimson, Color.Black));
-                                                    player.Equipment.Remove("Ring");
+                                            if (GameLoop.rand.Next(odds) == 0 && player.PoisonStatus < bossPoisonSeverity) {
+                                                bool antipoison = false;
+                                                foreach (var pcheck in player.ActivePotions) {
+                                                    if (pcheck.Stat == "Antipoison" && pcheck.Change > 0) {
+                                                        antipoison = true;
+                                                    }
+                                                }
+                                                if (!antipoison) {
+                                                    player.PoisonStatus = bossPoisonSeverity;
+                                                    Log.AddMessage("You have been poisoned!", Color.Lime);
                                                 }
                                             }
                                         }
+
+                                        if (player.Equipment.TryGetValue("Ring", out ItemWrapper? ring) && ring != null && ring.ID == "ringRecoil") {
+                                            int reflect = (modified / 10) + 1;
+
+                                            if (reflect > ring.Charges)
+                                                reflect = ring.Charges;
+
+                                            ring.Charges -= reflect; 
+                                            Log.AddMessage(new ColoredString("Your ring of recoil reflected " + reflect + " damage back!", Color.DeepSkyBlue, Color.Black));
+
+                                            if (ring.Charges <= 0) { 
+                                                Log.AddMessage(new ColoredString("Your ring of recoil runs out of charge and shatters.", Color.Crimson, Color.Black));
+                                                player.Equipment.Remove("Ring");
+                                            }
+                                        }
+                                    }
                                     
                                     bool died = modified > 0 ? player.TakeDamage(modified, Log) : false;
 
@@ -453,7 +475,7 @@ namespace ZeroPlayersOnline {
                                 player.TryGrantExp("Magic", spellExp, Log, SidebarManager.RecentlyTrainedSkills);
                             }
 
-                            int eqpAccuracy = 0; 
+                            double eqpAccuracy = 0; 
                             foreach (var kv in player.Equipment) {
                                 if (kv.Value.GetRef() is Item eqp) {
                                     if (eqp.MiscString == "HitChance") {
@@ -487,11 +509,22 @@ namespace ZeroPlayersOnline {
                                 bool crit = false;
 
                                 if (player.GetDamageType() == boss.WeakType) {
-                                    if (player.GetDamageType() == boss.SpecialCategory) {
-                                        pdmg = (int)Math.Ceiling(pdmg * 3f);
-                                    } else {
-                                        pdmg = (int)Math.Ceiling(pdmg * 1.5f);
-                                    }
+                                    pdmg = (int)Math.Ceiling(pdmg * 1.5f);
+                                }
+                                         
+                                bool eitherDamageSpecial = boss.SpecialCategory != "" && (player.GetDamageType() == boss.SpecialCategory || player.GetSecondaryDamageType() == boss.SpecialCategory);
+
+                                if (eitherDamageSpecial) { // Mostly for Crumble Undead, but open to similar spells for Demons, Vamps, etc
+                                    pdmg = (int)Math.Ceiling(pdmg * 2f);
+                                }
+
+                                if (efaritay) {
+                                    pdmg = (int) Math.Ceiling(pdmg * 1.2f);
+                                }
+
+                                if (boss.SpecialCategory == "Leaf" && !eitherDamageSpecial) {
+                                    pdmg = 0;    
+                                    Log.AddMessage(new ColoredString("You need a special kind of weapon to damage this enemy!", Color.Crimson, Color.Black));
                                 }
 
                                 if (efaritay) {
@@ -553,53 +586,58 @@ namespace ZeroPlayersOnline {
                                     player.TryGrantExp("Constitution", pdmg * (4 - player.DefenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
 
                                 if (boss.CurrentHP <= 0) {
-                                    boss.TimeLastKilled = Helper.Time();
-                                    boss.AttackingPlayer = false;
-
-                                    if (!player.CollectionLogBoss.ContainsKey(boss.ID))
-                                        player.CollectionLogBoss.Add(boss.ID, new(boss.ID));
-
-                                    player.CollectionLogBoss[boss.ID].KillCount += 1;
-
-                                    if (boss.ID == player.SlayerTask || (boss.CountsAsSlayer != "" && boss.CountsAsSlayer == player.SlayerTask)) {
-                                        if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp) && eqp != null && eqp.ID == "braceletExpeditious" && GameLoop.rand.Next(4) == 0) { 
-                                            eqp.Charges -= 1; 
-                                            Log.AddMessage(new ColoredString("Your expeditious bracelet made that kill count double!", Color.AntiqueWhite, Color.Black));
-
-                                            if (eqp.Charges <= 0) { 
-                                                Log.AddMessage(new ColoredString("Your expeditious bracelet runs out of charge and shatters.", Color.Crimson, Color.Black));
-                                                player.Equipment.Remove("Hands");
-                                            }
-                                            player.SlayerKillsRemaining -= 2;
-                                        } else if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp2) && eqp2 != null && eqp2.ID == "braceletSlaughter" && GameLoop.rand.Next(4) == 0) { 
-                                            eqp2.Charges -= 1; 
-                                            Log.AddMessage(new ColoredString("Your bracelet of slaughter made that kill count not count.", Color.Magenta, Color.Black));
-
-                                            if (eqp2.Charges <= 0) { 
-                                                Log.AddMessage(new ColoredString("Your bracelet of slaughter runs out of charge and shatters.", Color.Crimson, Color.Black));
-                                                player.Equipment.Remove("Hands");
-                                            }
-                                        }  else { 
-                                            player.SlayerKillsRemaining--;
-                                        }
-
-                                        if (player.SlayerKillsRemaining <= 0) {
-                                            Log.AddMessage("You have finished your Slayer task and should go get another.", Color.MediumPurple);
-                                            player.SlayerTask = "";
-                                            player.SlayerKillsRemaining = 0;
-                                            // TODO: Add slayer points if from a real slayer master
+                                    bool canKill = true;
+                                    if (boss.KillItem != "") {
+                                        if (player.HasAllItems([boss.KillItem +",1"], false, true)) {
+                                            player.ConsumeItems([boss.KillItem + ",1"], false, true);
+                                        } else {
+                                            canKill = false;
+                                            boss.CurrentHP = 0;
+                                            Log.AddMessage(new ColoredString("You need " + GameLoop.ZPO.ResolveItemName(boss.KillItem) + " to finish this enemy off.", Color.Crimson, Color.Black)); 
                                         }
                                     }
 
-                                    if (player.KillLimit != -1 && player.CollectionLogBoss[boss.ID].KillCount == player.KillLimit) {
-                                        Log.AddMessage(new ColoredString("You've killed " + player.KillLimit + " " + boss.Name + "s and will no longer receive drops or exp from them."));
-                                    }
+                                    if (canKill) {
+                                        boss.TimeLastKilled = Helper.Time();
+                                        boss.AttackingPlayer = false;
 
-                                    if (boss.DropTable != null && boss.DropTable.Count > 0) {
-                                        for (int j = 0; j < boss.DropTable.Count; j++) {
-                                            ItemDrop drop = boss.DropTable[j];
+                                        foreach (var quest in QuestLibrary) {
+                                            if (player.QuestLog.TryGetValue(quest.Key, out QuestStatus? status)) {
+                                                if (status.CurrentStage != quest.Value.CompleteStage && quest.Value.Stages.ContainsKey(status.CurrentStage)) {
+                                                    if (quest.Value.Stages[status.CurrentStage].ProgressType == "Kill" && quest.Value.Stages[status.CurrentStage].MiscString == boss.ID) {
+                                                        status.KillTracker++;
 
-                                            drop.RollDrop(player, player.CollectionLogBoss[boss.ID]);
+                                                        if (status.KillTracker >= quest.Value.Stages[status.CurrentStage].MiscInt) {
+                                                            status.CurrentStage = quest.Value.Stages[status.CurrentStage].LeadsToStage;
+                                                            status.KillTracker = 0;
+
+                                                            if (status.CurrentStage == quest.Value.CompleteStage) {
+                                                                Log.AddMessage(new ColoredString("You have completed " + quest.Value.Name + "!", Color.Lime, Color.Black));
+                                                                quest.Value.ProcessRewards(player);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (!player.CollectionLogBoss.ContainsKey(boss.ID))
+                                            player.CollectionLogBoss.Add(boss.ID, new(boss.ID));
+
+                                        player.CollectionLogBoss[boss.ID].KillCount += 1;
+                                     
+                                        player.ProgressSlayerTask(boss);
+
+                                        if (player.KillLimit != -1 && player.CollectionLogBoss[boss.ID].KillCount == player.KillLimit) {
+                                            Log.AddMessage(new ColoredString("You've killed " + player.KillLimit + " " + boss.Name + "s and will no longer receive drops or exp from them."));
+                                        }
+
+                                        if (boss.DropTable != null && boss.DropTable.Count > 0) {
+                                            for (int j = 0; j < boss.DropTable.Count; j++) {
+                                                ItemDrop drop = boss.DropTable[j];
+
+                                                drop.RollDrop(player, player.CollectionLogBoss[boss.ID]);
+                                            }
                                         }
                                     }
                                 }
@@ -629,7 +667,7 @@ namespace ZeroPlayersOnline {
                     }
                 }
 
-                if (curr.MonstersHere.Count > 0) {
+                if (curr.MonstersHere.Where(o => o.AllReqsMet(player)).ToList().Count > 0) {
                     mini.Con.DrawLine(new Point(56, printY), new Point(109, printY++), 196);
 
                     mini.Con.Print(57, printY, "Monsters Here: ");
@@ -817,6 +855,8 @@ namespace ZeroPlayersOnline {
                                         if (GameLoop.rand.Next(4) != 0)
                                             TryPlaceItem(player.NavLoc, new(droppedAmmo, AttackingMonster.Inaccessible));
                                         usedAmmo = true;
+                                    } else if (weapon.EquipAmmo == "Chargebow") {
+                                        usedAmmo = true;
                                     } else if (weapon.EquipAmmo == "RangedStandard") {
                                         if (player.Equipment.TryGetValue("Ammo", out ItemWrapper? arrowWrap) && arrowWrap.GetRef() is Item arrow && arrow.EquipDamageType == "RangedStandard") {
                                             arrowWrap.Quantity -= 1;
@@ -853,7 +893,7 @@ namespace ZeroPlayersOnline {
                                     player.TryGrantExp("Magic", spellExp, Log, SidebarManager.RecentlyTrainedSkills);
                                 }
 
-                                int eqpAccuracy = 0; 
+                                double eqpAccuracy = 0; 
                                 foreach (var kv in player.Equipment) {
                                     if (kv.Value.GetRef() is Item eqp) {
                                         if (eqp.MiscString == "HitChance") {
@@ -884,21 +924,28 @@ namespace ZeroPlayersOnline {
                                     }
 
                                     if (hitChance > 25 + (player.GetEffectiveSkillLevel(whichSkill) / 2.0) + eqpAccuracy) {
-                                        Log.AddMessage(new ColoredString("You tried to hit the " + AttackingMonster.Name + " but missed!", Color.Crimson, Color.Black));
+                                        Log.AddMessage(new ColoredString("You tried to hit " + (AttackingMonster.ProperName ? "" : "the ") + AttackingMonster.Name + " but missed!", Color.Crimson, Color.Black));
                                     } else {
                                         int pdmg = GoRogue.DiceNotation.Dice.Roll(player.GetDamageDice());
                                         bool crit = false;
 
                                         if (player.GetDamageType() == AttackingMonster.WeakType) {
-                                            if (player.GetDamageType() == AttackingMonster.SpecialCategory) { // Mostly for Crumble Undead, but open to similar spells for Demons, Vamps, etc
-                                                pdmg = (int)Math.Ceiling(pdmg * 3f);
-                                            } else {
-                                                pdmg = (int)Math.Ceiling(pdmg * 1.5f);
-                                            }
+                                            pdmg = (int)Math.Ceiling(pdmg * 1.5f);
+                                        }
+                                         
+                                        bool eitherDamageSpecial = AttackingMonster.SpecialCategory != "" && (player.GetDamageType() == AttackingMonster.SpecialCategory || player.GetSecondaryDamageType() == AttackingMonster.SpecialCategory);
+
+                                        if (eitherDamageSpecial) { // Mostly for Crumble Undead, but open to similar spells for Demons, Vamps, etc
+                                            pdmg = (int)Math.Ceiling(pdmg * 2f);
                                         }
 
                                         if (efaritay) {
                                             pdmg = (int) Math.Ceiling(pdmg * 1.2f);
+                                        }
+
+                                        if (AttackingMonster.SpecialCategory == "Leaf" && !eitherDamageSpecial) {
+                                            pdmg = 0;    
+                                            Log.AddMessage(new ColoredString("You need a special kind of weapon to damage this enemy!", Color.Crimson, Color.Black));
                                         }
 
                                         if (player.GetDamageType() == "Undead" && AttackingMonster.SpecialCategory != "Undead") {
@@ -928,7 +975,7 @@ namespace ZeroPlayersOnline {
 
                                             AttackingMonster.CurrentHP -= pdmg;
                                      
-                                            Log.AddMessage(new ColoredString("You hit the " + AttackingMonster.Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
+                                            Log.AddMessage(new ColoredString("You hit " + (AttackingMonster.ProperName ? "" : "the ") + AttackingMonster.Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
                                         }
 
                                         if (player.IsMaging()) {  
@@ -963,6 +1010,7 @@ namespace ZeroPlayersOnline {
                                             bool canKill = true;
                                             if (AttackingMonster.KillItem != "") {
                                                 if (player.HasAllItems([AttackingMonster.KillItem +",1"], false, true)) {
+                                                    player.ConsumeItems([AttackingMonster.KillItem + "," + AttackingMonster.KillItemCount], false, true);
                                                 } else {
                                                     canKill = false;
                                                     AttackingMonster.CurrentHP = 0;
@@ -974,35 +1022,27 @@ namespace ZeroPlayersOnline {
                                                 AttackingMonster.TimeLastKilled = Helper.Time();
                                                 AttackingMonster.AttackingPlayer = false;
 
-                                                if (AttackingMonster.ID == player.SlayerTask || (AttackingMonster.CountsAsSlayer != "" && AttackingMonster.CountsAsSlayer == player.SlayerTask)) {
-                                                    if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp) && eqp != null && eqp.ID == "braceletExpeditious" && GameLoop.rand.Next(4) == 0) { 
-                                                        eqp.Charges -= 1; 
-                                                        Log.AddMessage(new ColoredString("Your expeditious bracelet made that kill count double!", Color.AntiqueWhite, Color.Black));
+                                                foreach (var quest in QuestLibrary) {
+                                                    if (player.QuestLog.TryGetValue(quest.Key, out QuestStatus? status)) {
+                                                        if (status.CurrentStage != quest.Value.CompleteStage && quest.Value.Stages.ContainsKey(status.CurrentStage)) {
+                                                            if (quest.Value.Stages[status.CurrentStage].ProgressType == "Kill" && quest.Value.Stages[status.CurrentStage].MiscString == AttackingMonster.ID) {
+                                                                status.KillTracker++;
 
-                                                        if (eqp.Charges <= 0) { 
-                                                            Log.AddMessage(new ColoredString("Your expeditious bracelet runs out of charge and shatters.", Color.Crimson, Color.Black));
-                                                            player.Equipment.Remove("Hands");
+                                                                if (status.KillTracker >= quest.Value.Stages[status.CurrentStage].MiscInt) {
+                                                                    status.CurrentStage = quest.Value.Stages[status.CurrentStage].LeadsToStage;
+                                                                    status.KillTracker = 0; 
+
+                                                                    if (status.CurrentStage == quest.Value.CompleteStage) {
+                                                                        Log.AddMessage(new ColoredString("You have completed " + quest.Value.Name + "!", Color.Lime, Color.Black));
+                                                                        quest.Value.ProcessRewards(player);
+                                                                    }
+                                                                }
+                                                            }
                                                         }
-                                                        player.SlayerKillsRemaining -= 2;
-                                                    } else if (player.Equipment.TryGetValue("Hands", out ItemWrapper? eqp2) && eqp2 != null && eqp2.ID == "braceletSlaughter" && GameLoop.rand.Next(4) == 0) { 
-                                                        eqp2.Charges -= 1; 
-                                                        Log.AddMessage(new ColoredString("Your bracelet of slaughter made that kill count not count.", Color.Magenta, Color.Black));
-
-                                                        if (eqp2.Charges <= 0) { 
-                                                            Log.AddMessage(new ColoredString("Your bracelet of slaughter runs out of charge and shatters.", Color.Crimson, Color.Black));
-                                                            player.Equipment.Remove("Hands");
-                                                        }
-                                                    } else { 
-                                                        player.SlayerKillsRemaining--;
-                                                    }
-
-                                                    if (player.SlayerKillsRemaining <= 0) {
-                                                        Log.AddMessage("You have finished your Slayer task and should go get another.", Color.MediumPurple);
-                                                        player.SlayerTask = "";
-                                                        player.SlayerKillsRemaining = 0;
-                                                        // TODO: Add slayer points if from a real slayer master
                                                     }
                                                 }
+
+                                                player.ProgressSlayerTask(AttackingMonster);
 
                                                 if (!player.CollectionLog.ContainsKey(AttackingMonster.ID))
                                                     player.CollectionLog.Add(AttackingMonster.ID, new(AttackingMonster.ID));
@@ -1095,7 +1135,7 @@ namespace ZeroPlayersOnline {
                 mini.Con.Print(resourceX + 8, resourceY, "|");
                 mini.Con.PrintClickable(resourceX + 10, resourceY, new ColoredString("P", SelectedMenu == "Processing" ? Color.Yellow : curr.ProcessingStations.Count > 0 || curr.TempStations.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Processing"; });
                 mini.Con.Print(resourceX + 12, resourceY, "|");
-                mini.Con.PrintClickable(resourceX + 14, resourceY, new ColoredString("R", SelectedMenu == "Resources" ? Color.Yellow : curr.LocalGathers.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Resources"; });
+                mini.Con.PrintClickable(resourceX + 14, resourceY, new ColoredString("R", SelectedMenu == "Resources" ? Color.Yellow : curr.LocalGathers.Where(o => (o.CanGather(player) == "" && !o.ShowAnyways) || o.ShowAnyways).ToList().Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Resources"; });
                 mini.Con.Print(resourceX + 16, resourceY, "|");
                 mini.Con.PrintClickable(resourceX + 18, resourceY, new ColoredString("C", SelectedMenu == "Chat" ? Color.Yellow : ConversationPartner != null ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Chat"; });
                 mini.Con.Print(resourceX + 20, resourceY, "|");
@@ -1114,7 +1154,7 @@ namespace ZeroPlayersOnline {
                 if (SelectedMenu == "Resources") {
                     mini.Con.Print(resourceX + 2, resourceY++, "Resource Nodes Here");
 
-                    if (curr.LocalGathers.Count > 0) {
+                    if (curr.LocalGathers.Where(o => (o.CanGather(player) == "" && !o.ShowAnyways) || o.ShowAnyways).ToList().Count > 0) {
                         for (int i = 0; i < curr.LocalGathers.Count; i++) {
                             GatheringTile tile = curr.LocalGathers[i];
                             mini.Con.Print(resourceX + 2, resourceY, "|");
@@ -1170,7 +1210,7 @@ namespace ZeroPlayersOnline {
                         }
 
                         if (player.BankedItems.Count > 0) {
-                            for (int i = ActivityItemTop; i < player.BankedItems.Count && i < ActivityItemTop + 19; i++) { 
+                            for (int i = ActivityItemTop; i < player.BankedItems.Count && resourceY < 35; i++) { 
                                 if (player.BankedItems[i].GetRef() is Item item) { 
                                     string name = item.Name;
                                     if (name.Length > 25)
@@ -1254,7 +1294,7 @@ namespace ZeroPlayersOnline {
                         }
 
                         if (curr.ItemsHere.Count > 0) {
-                            for (int i = ActivityItemTop; i < curr.ItemsHere.Count && i < ActivityItemTop + 19; i++) { 
+                            for (int i = ActivityItemTop; i < curr.ItemsHere.Count && resourceY < 35; i++) { 
                                 Item item = curr.ItemsHere[i];
 
                                 string name = item.Name;
@@ -1431,7 +1471,7 @@ namespace ZeroPlayersOnline {
                                         ConversationPartner = thisOne;
 
                                         if (ConversationPartner.Dialogue.ContainsKey(CurrDialogueStage)) {
-                                            Log.AddMessage(ConversationPartner.Name + ": " + ConversationPartner.Dialogue[CurrDialogueStage].Text);
+                                            Log.AddMessage((ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker != "" ? ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker : ConversationPartner.Name) + ": " + ConversationPartner.Dialogue[CurrDialogueStage].Text);
                                         }
 
                                         SelectedMenu = "Chat";
@@ -1441,12 +1481,40 @@ namespace ZeroPlayersOnline {
                                 int extraButtons = 146;
                                 if (thisOne.SlayerTasks.Count > 0) {
                                     mini.Con.PrintClickable(extraButtons, resourceY, "S", () => {
-                                        if (player.SlayerTask == "") {
-                                            SlayerTask task = thisOne.SlayerTasks[GameLoop.rand.Next(thisOne.SlayerTasks.Count)];
-                                            player.SlayerTask = task.TargetID;
-                                            player.SlayerKillsRemaining = (task.KillMin >= task.KillMax) ? task.KillMin : GameLoop.rand.Next(task.KillMax - task.KillMin) + task.KillMin;
+                                        if (player.GetEffectiveSkillLevel("Slayer") < thisOne.MinSlayerLevel) {
+                                            Log.AddMessage("You need at least " + thisOne.MinSlayerLevel + " Slayer to receive a task from them (have " + player.GetEffectiveSkillLevel("Slayer") + ").", Color.Crimson);
+                                            return;
+                                        }
 
-                                            Log.AddMessage("Your new task is to kill " + player.SlayerKillsRemaining + " " + ResolveMonsterName(player.SlayerTask) + "s.", Color.MediumPurple);
+                                        if (player.GetEffectiveSkillLevel("Slayer") < thisOne.MinCombatLevel) {
+                                            Log.AddMessage("You need at least " + thisOne.MinCombatLevel + " Combat to receive a task from them (have " + player.GetCombatLevel() + ").", Color.Crimson);
+                                            return;
+                                        }
+
+                                        if (player.SlayerTask == "") { 
+                                            SlayerTask? task = Helper.ChooseWeighted(thisOne.SlayerTasks);
+                                            while (task != null && player.SlayerBlocked.Contains(task.TargetID)) {
+                                                task = Helper.ChooseWeighted(thisOne.SlayerTasks);
+                                            }
+
+                                            if (task != null) { 
+                                                player.SlayerTask = task.TargetID;
+                                                player.SlayerTaskFrom = thisOne.ID;
+                                                player.SlayerKillsRemaining = (task.KillMin >= task.KillMax) ? task.KillMin : GameLoop.rand.Next(task.KillMax - task.KillMin) + task.KillMin;
+                                                player.SlayerAssignedKills = player.SlayerKillsRemaining;
+
+                                                if (player.SlayerPrefer.Contains(player.SlayerTask)) {
+                                                    int extendCount = (int) Math.Ceiling(player.SlayerAssignedKills * 0.2);
+                                                    player.SlayerKillsRemaining += extendCount;   
+                                                    player.SlayerTaskExtended = true;
+                                                    Log.AddMessage("Your new task is to kill " + player.SlayerKillsRemaining + " " + ResolveMonsterName(player.SlayerTask) + "(s). Due to your preference, the task was automatically extended.", Color.MediumPurple);
+                                                } else {
+                                                    Log.AddMessage("Your new task is to kill " + player.SlayerKillsRemaining + " " + ResolveMonsterName(player.SlayerTask) + "(s).", Color.MediumPurple);
+                                                }
+
+                                            }
+                                        } else { 
+                                            Log.AddMessage("You've already got a task to kill " + player.SlayerKillsRemaining + " " + ResolveMonsterName(player.SlayerTask) + "(s).", Color.Crimson);
                                         }
                                     });
 
@@ -1493,7 +1561,7 @@ namespace ZeroPlayersOnline {
                                             CurrDialogueStage = choice.LeadsToStage;
 
                                             if (ConversationPartner.Dialogue.ContainsKey(CurrDialogueStage)) {
-                                                Log.AddMessage(ConversationPartner.Name + ": " + ConversationPartner.Dialogue[CurrDialogueStage].Text);
+                                                Log.AddMessage((ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker != "" ? ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker : ConversationPartner.Name) + ": " + ConversationPartner.Dialogue[CurrDialogueStage].Text);
                                             }
 
                                             if (choice.TeleportTo != "") {
@@ -1502,28 +1570,45 @@ namespace ZeroPlayersOnline {
                                                 if (choice.SetSpawnToo) {
                                                     player.NavRespawn = choice.TeleportTo;
                                                 }
-                                            } 
-
+                                            }  
                                             
                                             choice.ConsumeItemsIfNeeded(player);
+
+                                            foreach (var kv in choice.Cutscenes) {
+                                                if (GameLoop.ZPO.CutsceneLibrary.TryGetValue(kv, out Cutscene? cut)) {
+                                                    foreach (var req in cut.RequirementsToStart) {
+                                                        if (!req.CheckRequirement(player, false, true)) {
+                                                            continue;
+                                                        }
+                        
+                                                        ExtraWindows.Cutscene.IsVisible = true;
+                                                        ExtraWindows.CutsceneID = kv; 
+                                                        ExtraWindows.CutsceneScene = 0;
+                                                        ExtraWindows.CutsceneDialogue = 0;
+
+                                                        foreach (var act in cut.Actions) {
+                                                            act.Execute();
+                                                        }
+
+                                                        foreach (var item in cut.ItemsGiven) {
+                                                            string[] split = item.Split(",");
+                                                            if (GameLoop.ZPO.ResolveItem(split[0]) is Item give) {
+                                                                int qty = 1;
+                                                                if (split.Length > 1) {
+                                                                    int.TryParse(split[1], out qty);
+                                                                }
+                                                                player.TryPickup(give, qty);
+                                                            }
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+                                            }
 
                                             if (ConversationPartner.Dialogue.ContainsKey(CurrDialogueStage)) {
                                                 DialogueStage newDia = ConversationPartner.Dialogue[CurrDialogueStage];
 
-                                                if (newDia.SetsQuest != "") {
-                                                    if (player.QuestLog.TryGetValue(newDia.SetsQuest, out QuestStatus? status) && QuestLibrary.TryGetValue(newDia.SetsQuest, out Quest? quest)) {
-                                                        if (quest != null) {
-                                                            if (status.CurrentStage < newDia.SetsQuestStageTo) {
-                                                                status.CurrentStage = newDia.SetsQuestStageTo;
-                                                            }
-
-                                                            if (status.CurrentStage == quest.CompleteStage) {
-                                                                Log.AddMessage(new ColoredString("You have completed " + quest.Name + "!", Color.Lime, Color.Black));
-                                                                quest.ProcessRewards(player);
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                                if (newDia.SetsQuest != "") { player.TryProgressQuest(newDia.SetsQuest, newDia.SetsQuestStageTo); }
 
                                                 if (newDia.ItemsGiven != null) {
                                                     for (int i = 0; i < newDia.ItemsGiven.Count; i++) {
@@ -1555,42 +1640,9 @@ namespace ZeroPlayersOnline {
                                                     }
                                                 }
 
-                                                if (newDia.DataID != "" && newDia.DataHow != "") {
-                                                    Helper.AlterWorldState(newDia.DataID, newDia.DataHow, newDia.DataNum);
-                                                }
-
-                                                if (newDia.ActionWhenChosen != "") {
-                                                    if (newDia.ActionWhenChosen == "clueHelp") {
-                                                        bool printedAny = false;
-                                                        if (player.CurrentClueBeginner != "") { Log.AddMessage("Beginner: " + ClueLogic.HelpLog("Beginner", player), ColorLib.Mithril); printedAny = true; }
-                                                        if (player.CurrentClueEasy != "") {     Log.AddMessage("    Easy: " + ClueLogic.HelpLog("Easy", player), ColorLib.Mithril); printedAny = true; }
-                                                        if (player.CurrentClueMedium != "") {   Log.AddMessage("  Medium: " + ClueLogic.HelpLog("Medium", player), ColorLib.Mithril); printedAny = true; }
-                                                        if (player.CurrentClueHard != "") {     Log.AddMessage("    Hard: " + ClueLogic.HelpLog("Hard", player), ColorLib.Mithril); printedAny = true; }
-                                                        if (player.CurrentClueElite != "") {    Log.AddMessage("   Elite: " + ClueLogic.HelpLog("Elite", player), ColorLib.Mithril); printedAny = true; }
-                                                        if (player.CurrentClueMaster != "") {   Log.AddMessage("  Master: " + ClueLogic.HelpLog("Master", player), ColorLib.Mithril); printedAny = true; }
-                                                        
-                                                        if (!printedAny) {
-                                                            Log.AddMessage("Looks like you haven't got any clue steps active right now!", ColorLib.Mithril);
-                                                        }
-                                                    }
-
-                                                    if (newDia.ActionWhenChosen == "hansTime") {
-                                                        int totalSeconds = player.SecondsPlayed;
-                                                        int days = (totalSeconds > 86400 ? totalSeconds / 86400 : 0);
-                                                        totalSeconds -= (days * 86400);
-                                                        int hours = (totalSeconds > 3600 ? totalSeconds / 3600 : 0);
-                                                        totalSeconds -= (hours * 3600);
-                                                        int minutes = (totalSeconds > 60 ? totalSeconds / 60 : 0);
-                                                        totalSeconds -= (minutes * 60);
-
-                                                        string time = (days > 1 ? days + " days, " : days > 0 ? days + " day, " : "") +
-                                                                      (hours > 1 ? hours + " hours, " : hours > 0 ? hours + " hour, " : "") +
-                                                                      (minutes > 1 ? minutes + " minutes, " : minutes > 0 ? minutes + " minute, " : "") +
-                                                                      (totalSeconds > 1 ? totalSeconds + " seconds" : totalSeconds > 0 ? totalSeconds + " second" : "") + ".";
-
-                                                        Log.AddMessage("You've played for a total of " + time, ColorLib.Mithril);
-                                                    }
-                                                }
+                                                foreach (var act in newDia.Actions) {
+                                                    act.Execute();
+                                                } 
                                             }
                                         } else {
                                             if (choice.ClickReqs != null) {
@@ -1621,7 +1673,24 @@ namespace ZeroPlayersOnline {
                     mini.Con.Print(resourceX + 2, resourceY++, "Shop Items Here");
 
                     if (curr.ShopItemsHere.Count > 0) {
-                        for (int i = 0; i < curr.ShopItemsHere.Count; i++) {
+                        if (ActivityRect.Contains(mousePos)) {
+                            int scroll = 1;
+                            if (Helper.EitherShift()) {
+                                scroll *= 5;
+                            }
+                            if (Helper.EitherControl()) {
+                                scroll *= 10;
+                            }
+
+                            if (curr.ShopItemsHere.Count > 19) {
+                                if (Helper.ScrolledUp()) { ActivityItemTop = Math.Clamp(ActivityItemTop - scroll, 0, curr.ShopItemsHere.Count - 19); }
+                                if (Helper.ScrolledDown()) { ActivityItemTop = Math.Clamp(ActivityItemTop + scroll, 0, curr.ShopItemsHere.Count - 19); }
+                            } else {
+                                ActivityItemTop = 0;
+                            }
+                        }
+
+                        for (int i = ActivityItemTop; i < curr.ShopItemsHere.Count && resourceY < 35; i++) {
                             if (ItemLibrary.ContainsKey(curr.ShopItemsHere[i])) {
                                 Item shop = new(ItemLibrary[curr.ShopItemsHere[i]]); 
                                 mini.Con.Print(resourceX + 2, resourceY, "|");
@@ -1631,15 +1700,18 @@ namespace ZeroPlayersOnline {
                                 if (Helper.EitherShift()) { qty *= 5; }
                                 if (Helper.EitherControl()) { qty *= 10; }
 
-                                mini.Con.PrintClickable(resourceX + 4, resourceY, shop.GetNameCS(1, 0, shop.UseInt4) + new ColoredString(("(" + shop.Value + "gp)").Align(HorizontalAlignment.Right, spaceAfterName)), () => {
+                                int adjustedPrice = (int) (shop.Value * curr.ShopPriceMultiplier);
+
+                                mini.Con.PrintClickable(resourceX + 4, resourceY, shop.GetNameCS(1, 0, shop.UseInt4) + new ColoredString(("(" + adjustedPrice + "gp)").Align(HorizontalAlignment.Right, spaceAfterName)), () => {
                                     if (player.CanUseShops) {
-                                        if (player.GoldTotal() >= shop.Value * qty) {
-                                            player.TakeGold(shop.Value * qty); 
+                                        int totalPrice =  adjustedPrice * qty;
+                                        if (player.GoldTotal() >= totalPrice) {
+                                            player.TakeGold(totalPrice); 
 
                                             if (qty == 1)
                                                 Log.AddMessage("You purchased a" + (Helper.VowelStart(shop.Name.ToLower()) ? "n " : " ") + shop.Name + " for " + shop.Value + " gp.", Color.Goldenrod);
                                             else 
-                                                Log.AddMessage("You purchased " + qty + "x " + shop.Name + " for " + shop.Value + " gp.", Color.Goldenrod);
+                                                Log.AddMessage("You purchased " + qty + "x " + shop.Name + " for " + totalPrice + " gp.", Color.Goldenrod);
 
                                             if (!player.TryPickup(shop, qty, false, true)) {
                                                 Log.AddMessage("Your inventory is full and the "  + shop.Name + " falls to the ground.", Color.Crimson);
@@ -1651,77 +1723,6 @@ namespace ZeroPlayersOnline {
                                         Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
                                     }
                                 }); 
-
-                                /*
-                                if (shop.Stackable) {
-                                    mini.Con.PrintClickable(141, resourceY, "1", () => {
-                                        if (player.CanUseShops) {
-                                            if (player.HeldGold >= shop.Value) {
-                                                player.HeldGold -= shop.Value;
-                                                Log.AddMessage("You purchased a "  + shop.Name + " for " + shop.Value + " gp.", Color.Goldenrod);
-                                                if (!player.TryPickup(shop, 1)) {
-                                                    Log.AddMessage("Your inventory is full and the "  + shop.Name + " falls to the ground.", Color.Crimson);
-                                                }
-                                            } else {
-                                                Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
-                                            }
-                                        } else {
-                                            Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
-                                        }
-                                    });
-
-                                    mini.Con.PrintClickable(143, resourceY, "10", () => {
-                                        if (player.CanUseShops) {
-                                            if (player.HeldGold >= shop.Value * 10) {
-                                                player.HeldGold -= shop.Value * 10;
-                                                shop.Quantity = 10;
-                                                Log.AddMessage("You purchased 10x "  + shop.Name + " for " + shop.Value*10 + " gp.", Color.Goldenrod);
-                                                if (!player.TryPickup(shop, 10)) {
-                                                    Log.AddMessage("Your inventory is full and the 10x "  + shop.Name + " fall to the ground.", Color.Crimson);
-                                                }
-                                            } else {
-                                                Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
-                                            }
-                                        } else {
-                                            Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
-                                        }
-                                    });
-
-                                    mini.Con.PrintClickable(146, resourceY, "50", () => {
-                                        if (player.CanUseShops) {
-                                            if (player.HeldGold >= shop.Value * 50) {
-                                                player.HeldGold -= shop.Value * 50;
-                                                shop.Quantity = 50;
-                                                Log.AddMessage("You purchased 50x "  + shop.Name + " for " + shop.Value*50 + " gp.", Color.Goldenrod);
-                                                if (!player.TryPickup(shop, 50)) {
-                                                    Log.AddMessage("Your inventory is full and the 50x "  + shop.Name + " fall to the ground.", Color.Crimson);
-                                                }
-                                            } else {
-                                                Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
-                                            }
-                                        } else {
-                                            Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
-                                        }
-                                    });
-                                }
-                                else {
-                                    mini.Con.PrintClickable(146, resourceY, "1", () => {
-                                        if (player.CanUseShops) {
-                                            if (player.HeldGold >= shop.Value) {
-                                                player.HeldGold -= shop.Value;
-                                                Log.AddMessage("You purchased a "  + shop.Name + " for " + shop.Value + " gp.", Color.Goldenrod);
-                                                if (!player.TryPickup(shop, 1)) {
-                                                    Log.AddMessage("Your inventory is full and the "  + shop.Name + " falls to the ground.", Color.Crimson);
-                                                }
-                                            } else {
-                                                Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
-                                            }
-                                        } else {
-                                            Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
-                                        }
-                                    });
-                                }
-                                */
 
                                 resourceY++;
                             }
@@ -2189,6 +2190,12 @@ namespace ZeroPlayersOnline {
             if (ExtraWindows.Book.IsVisible)
                 ExtraWindows.BookDraw();
 
+            if (ExtraWindows.Cutscene.IsVisible)
+                ExtraWindows.CutsceneDraw();
+
+            if (ExtraWindows.Shop.IsVisible)
+                ExtraWindows.ShopDraw();
+
             if (TimeLastTicked + 1000 < Helper.Time()) {
                 TickTime();
             } 
@@ -2304,41 +2311,43 @@ namespace ZeroPlayersOnline {
 
 
             if (!ExtraWindows.AnyVisible()) {
-                if (Atlas.TryGetValue(player.NavLoc, out Location? curr) && curr != null) {
-                    if (Helper.HotkeyDown(Key.NumPad1) && curr.ConnectedLocations.Count > 0 && curr.ConnectedLocations[0].CanTraverse(player)) {
-                        curr.ConnectedLocations[0].Traverse(player);
+                if (Atlas.TryGetValue(player.NavLoc, out Location? curr) && curr != null) { 
+                    List<Connection> conns = curr.ConnectedLocations.Where(o => (o.CanTraverse(player) && o.HideIfReqsNotMet) || !o.HideIfReqsNotMet).ToList();
+
+                    if (Helper.HotkeyDown(Key.NumPad1) && conns.Count > 0 && conns[0].CanTraverse(player)) {
+                        conns[0].Traverse(player);
                     }
 
-                    if (Helper.HotkeyDown(Key.NumPad2) && curr.ConnectedLocations.Count > 1 && curr.ConnectedLocations[1].CanTraverse(player)) {
-                        curr.ConnectedLocations[1].Traverse(player);
+                    if (Helper.HotkeyDown(Key.NumPad2) && conns.Count > 1 && conns[1].CanTraverse(player)) {
+                        conns[1].Traverse(player);
                     }
 
-                    if (Helper.HotkeyDown(Key.NumPad3) && curr.ConnectedLocations.Count > 2 && curr.ConnectedLocations[2].CanTraverse(player)) {
-                        curr.ConnectedLocations[2].Traverse(player);
+                    if (Helper.HotkeyDown(Key.NumPad3) && conns.Count > 2 && conns[2].CanTraverse(player)) {
+                        conns[2].Traverse(player);
                     }
 
-                    if (Helper.HotkeyDown(Key.NumPad4) && curr.ConnectedLocations.Count > 3 && curr.ConnectedLocations[3].CanTraverse(player)) {
-                        curr.ConnectedLocations[3].Traverse(player);
+                    if (Helper.HotkeyDown(Key.NumPad4) && conns.Count > 3 && conns[3].CanTraverse(player)) {
+                        conns[3].Traverse(player);
                     }
 
-                    if (Helper.HotkeyDown(Key.NumPad5) && curr.ConnectedLocations.Count > 4 && curr.ConnectedLocations[4].CanTraverse(player)) {
-                        curr.ConnectedLocations[4].Traverse(player);
+                    if (Helper.HotkeyDown(Key.NumPad5) && conns.Count > 4 && conns[4].CanTraverse(player)) {
+                        conns[4].Traverse(player);
                     }
 
-                    if (Helper.HotkeyDown(Key.NumPad6) && curr.ConnectedLocations.Count > 5 && curr.ConnectedLocations[5].CanTraverse(player)) {
-                        curr.ConnectedLocations[5].Traverse(player);
+                    if (Helper.HotkeyDown(Key.NumPad6) && conns.Count > 5 && conns[5].CanTraverse(player)) {
+                        conns[5].Traverse(player);
                     }
 
-                    if (Helper.HotkeyDown(Key.NumPad7) && curr.ConnectedLocations.Count > 6 && curr.ConnectedLocations[6].CanTraverse(player)) {
-                        curr.ConnectedLocations[6].Traverse(player);
+                    if (Helper.HotkeyDown(Key.NumPad7) && conns.Count > 6 && conns[6].CanTraverse(player)) {
+                        conns[6].Traverse(player);
                     }
 
-                    if (Helper.HotkeyDown(Key.NumPad8) && curr.ConnectedLocations.Count > 7 && curr.ConnectedLocations[7].CanTraverse(player)) {
-                        curr.ConnectedLocations[7].Traverse(player);
+                    if (Helper.HotkeyDown(Key.NumPad8) && conns.Count > 7 && conns[7].CanTraverse(player)) {
+                        conns[7].Traverse(player);
                     }
 
-                    if (Helper.HotkeyDown(Key.NumPad9) && curr.ConnectedLocations.Count > 8 && curr.ConnectedLocations[8].CanTraverse(player)) {
-                        curr.ConnectedLocations[8].Traverse(player);
+                    if (Helper.HotkeyDown(Key.NumPad9) && conns.Count > 8 && conns[8].CanTraverse(player)) {
+                        conns[8].Traverse(player);
                     } 
                 }
             }
@@ -2362,10 +2371,10 @@ namespace ZeroPlayersOnline {
 
                 //player.TryPickup(new Item(ItemLibrary["clueScrollBeginner"]), 1);  
                 //player.CurrentClueBeginner = "B_HotColdAlKharidMine";
-                 
-                 //player.TryPickup(new Item(ItemLibrary["paperScrumpled"]), 1);
+
+                player.NavLoc = "MIST_VarrockPalaceBailey";
                 //player.TryPickup(new Item(ItemLibrary["uncutRuby"]), 1);
-                //player.TryPickup(new Item(ItemLibrary["barGold"]), 1);
+                //player.TryPickup(new Item(ItemLibrary["pouchRuneNote"]), 1);
                // player.TryPickup(new Item(ItemLibrary["tiaraWater"]), 1);   
                 //player.TryPickup(new Item(ItemLibrary["woolBall"]), 1);   
                // player.TryGrantExp("Runecrafting", 10000, Log, SidebarManager.RecentlyTrainedSkills);
@@ -2381,7 +2390,7 @@ namespace ZeroPlayersOnline {
 
                     Log.AddMessage(cask.Name + " log completed in average " + (totalCycles / simCount) + " opens over " + simCount + " simulations.");
                 }*/ 
-
+                ItemUseLogic.UsingSlot = -1;
             }
         }
 
@@ -2585,13 +2594,26 @@ namespace ZeroPlayersOnline {
             BossLibrary.Clear();
             HunterLibrary.Clear();
             BookLibrary.Clear();
+            CutsceneLibrary.Clear();
 
             HardcodedItems.InitItems(ItemLibrary);
+            HardcodedItemsCooking.InitItems(ItemLibrary);
+            HardcodedItemsClues.InitItems(ItemLibrary);
+            HardcodedItemsFarming.InitItems(ItemLibrary);
+            HardcodedItemsCrafting.InitItems(ItemLibrary);
+            HardcodedItemsQuests.InitItems(ItemLibrary);
+            HardcodedItemsSmithing.InitItems(ItemLibrary);
+            HardcodedItemsMinigames.InitItems(ItemLibrary);
+            HardcodedItemsHoliday.InitItems(ItemLibrary);
+
             HardcodedGathering.InitGathers(GatherSpots);
             HardcodedProcessing.InitProcessors(ProcessingStations);
             HardcodedUseRecipes.InitUseRecipes(UseRecipes);
             HardcodedMonsters.InitMonsters(MonsterLibrary);
+
             HardcodedLocations.InitLocs(Atlas, GatherSpots, MonsterLibrary);
+            HardcodedLocationsTutorial.InitLocs(Atlas, GatherSpots, MonsterLibrary);
+
             HardcodedNPCs.InitNPCs(NPCLibrary);
             HardcodedPrayers.InitPrayers(PrayerLibrary);
             HardcodedFarmPatches.InitPatches(player.FarmingPatches);
@@ -2602,6 +2624,7 @@ namespace ZeroPlayersOnline {
             HardcodedBosses.InitBosses(BossLibrary);
             HardcodedHunter.InitHunter(HunterLibrary);
             HardcodedBooks.InitBooks(BookLibrary);
+            HardcodedCutscenes.InitCutscenes(CutsceneLibrary);
         }
 
         public Item? ResolveItem(string ID) {

@@ -18,14 +18,16 @@ namespace ZeroPlayersOnline.DataTypes {
         public bool Tradeable = true;
         public bool Noteable = true;
         public bool Noted = false;
+        public bool OnlyOneOwnable = false;
 
         public string EquipSlot = "";
         public string MiscString = ""; 
 
         public int Value; 
 
-        public int EquipTier = 0;
+        public double EquipTier = 0;
         public string EquipDamageType = "";
+        public string EquipSecondaryDamage = "";
         public int EquipLevel = 0;
         public string EquipSkill = "";
         public double AttackSpeed = 1; // Speed in seconds between attacks
@@ -42,7 +44,10 @@ namespace ZeroPlayersOnline.DataTypes {
         public int UseInt2 = 0;
         public int UseInt3 = 0;
         public int UseInt4 = 0;
+        public string ChargeItem = "";
         public bool MustBeEquipped = false;
+        public bool UsesCharges = false;
+        public string ItemReturned = "";
         public List<ItemDrop> DropTable = new();
 
         public bool DestroyOnDrop = false;
@@ -63,6 +68,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public int ContainerSlots = 0;
         public bool ContainerStacksUnstackable = false;
+        public int ContainerMaxStack = -1;
         public List<ItemWrapper> Containing = new();
         public List<string> ContainableIDs = new(); 
 
@@ -102,12 +108,14 @@ namespace ZeroPlayersOnline.DataTypes {
             Tradeable = other.Tradeable;
             Noteable = other.Noteable;
             Noted = other.Noted;
+            OnlyOneOwnable = other.OnlyOneOwnable;
 
             MiscString = other.MiscString;
             EquipSlot = other.EquipSlot; 
             Value = other.Value;
             EquipTier = other.EquipTier;
             EquipDamageType = other.EquipDamageType;
+            EquipSecondaryDamage = other.EquipSecondaryDamage;
             EquipLevel = other.EquipLevel;
             EquipSkill = other.EquipSkill;
             AttackSpeed = other.AttackSpeed;
@@ -126,6 +134,9 @@ namespace ZeroPlayersOnline.DataTypes {
             UseInt2 = other.UseInt2;
             UseInt3 = other.UseInt3;
             UseInt4 = other.UseInt4; 
+            ChargeItem = other.ChargeItem;
+            ItemReturned = other.ItemReturned;
+            UsesCharges = other.UsesCharges;
             ExposedFlame = other.ExposedFlame;
             ProvidesLight = other.ProvidesLight;
 
@@ -174,6 +185,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
             ContainerSlots = other.ContainerSlots;
             ContainerStacksUnstackable = other.ContainerStacksUnstackable;
+            ContainerMaxStack = other.ContainerMaxStack;
 
             for (int i = 0; i < other.Containing.Count; i++) {
                 Containing.Add(new(other.Containing[i]));
@@ -234,6 +246,13 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (charges != 0 && UseString == "Potion") {
                     sellValue *= charges;
                 }
+
+                if (GameLoop.ZPO.Atlas.TryGetValue(GameLoop.ZPO.player.NavLoc, out Location? curr)) {
+                    if (curr.ShopPriceMultiplier != 1.0) {
+                        sellValue = (int) (sellValue * curr.ShopPriceMultiplier);
+                    }
+                }
+
                                         
                 if (!GameLoop.ZPO.player.ShopsAlwaysFullPrice && shop == 1) {
                     sellValue = (int) (Math.Floor(sellValue / 2.0));

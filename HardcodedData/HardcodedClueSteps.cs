@@ -77,7 +77,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new ClueStep("M_HotColdHAM", "Medium", "HotCold", "MIST_LumbridgeTowardsDraynor", "There is a device attached to the clue that tells you how close you are to the treasure...", ""));
             toAdd.Add(new ClueStep("M_HotColdHAM", "Medium", "HotCold", "MIST_BetweenBarbarianDraynor", "There is a device attached to the clue that tells you how close you are to the treasure...", ""));
             
-            toAdd.Add(new ClueStep("M_CrypticWizard", "Medium", "Gather", "MIST_WizardTowerBasement", "Probably filled with wizards socks.", ""));
+            toAdd.Add(new ClueStep("M_CrypticWizard", "Medium", "Gather", "MIST_WizardTowerBasement", "Probably filled with wizards socks.", "clueDrawersLocked"));
             
 
             // Hard Steps

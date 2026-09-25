@@ -6,15 +6,15 @@
         public int B = 255;
         public int A = 255;
 
-        public int Tier = 1;
+        public double Tier = 1;
         public int Level = 1;
 
         public int CostMultiplier = 1;
         public string Descriptor = "";
 
-        public MaterialDef(string name, Color c, int tier, int lv, int cost, string desc) : this(name, c.R, c.G, c.B, c.A, tier, lv, cost, desc) { }
+        public MaterialDef(string name, Color c, double tier, int lv, int cost, string desc) : this(name, c.R, c.G, c.B, c.A, tier, lv, cost, desc) { }
 
-        public MaterialDef(string name, int r, int g, int b, int a, int tier, int lv, int cost, string desc) {
+        public MaterialDef(string name, int r, int g, int b, int a, double tier, int lv, int cost, string desc) {
             Name = name;
             R = r;
             G = g;

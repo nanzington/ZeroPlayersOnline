@@ -1,4 +1,6 @@
-﻿namespace ZeroPlayersOnline.DataTypes {
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace ZeroPlayersOnline.DataTypes {
     public class NPC {
         public string Name = "";
         public string ID = "";
@@ -11,7 +13,7 @@
         public Dictionary<int, DialogueStage> Dialogue = new();
         public Requirement? ReqToSee = null;
 
-        public int SlayerLevel = 0;
+        public int SlayerLevel, MinSlayerLevel, MinCombatLevel = 0;
         public List<SlayerTask> SlayerTasks = new();
 
         public NPC(string n, string id, Dictionary<int, DialogueStage> dia, int ppL = 0, int ppExp = 0, int ppDmg = 1, Requirement req = null) {
@@ -44,7 +46,7 @@
                                     Item? roll = item.RollDrop(p, null, false, true);
 
                                     if (roll != null) {
-                                        roll.UseInt3 = item.InY;
+                                        roll.UseInt3 = (int) Math.Round(item.InY, MidpointRounding.AwayFromZero);
                                         rolled.Add(roll);
                                     }
                                 }

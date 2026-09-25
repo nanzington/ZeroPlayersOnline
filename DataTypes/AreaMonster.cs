@@ -9,6 +9,7 @@ namespace ZeroPlayersOnline.DataTypes {
     public class AreaMonster {
         public string Name = "";
         public string ID = "";
+        public bool ProperName = false;
 
         public int Level = 1;
         public int CurrentHP = 1;
@@ -36,9 +37,11 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public bool Inaccessible = false;
         public string SpecialCategory = "";
-        public string CountsAsSlayer = "";
+        public List<string> CountsAsSlayer = new();
         public int SlayerReq = 0;
         public string KillItem = "";
+        public int KillItemCount = 0;
+        
 
         [JsonIgnore]
         public double TimeLastKilled = 0;
@@ -47,7 +50,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double TimeLastAttacked = 0;
 
-        public AreaMonster(string n, string id, int lv, int hp, int dr, bool aggro, string ddice, string weakness, int respawn, string dtype, double atkSpeed = 2.4, List<Requirement>? reqs = null, bool seeAnyways = true, bool inaccessible = false, string specialCat = "", string slayer = "") {
+        public AreaMonster(string n, string id, int lv, int hp, int dr, bool aggro, string ddice, string weakness, int respawn, string dtype, double atkSpeed = 2.4, List<Requirement>? reqs = null, bool seeAnyways = true, bool inaccessible = false, string specialCat = "", bool proper = false) {
             Name = n;
             ID = id;
             Level = lv;
@@ -67,12 +70,13 @@ namespace ZeroPlayersOnline.DataTypes {
 
             RespawnTime = respawn;
             Inaccessible = inaccessible;
-            SpecialCategory = specialCat;
-            CountsAsSlayer = slayer;
+            SpecialCategory = specialCat; 
 
             if (reqs != null)
                 Requirements = reqs;
             SeeWithoutRequirements = seeAnyways;
+
+            ProperName = proper;
         } 
 
         public bool AllReqsMet(Player p) {
@@ -97,8 +101,14 @@ namespace ZeroPlayersOnline.DataTypes {
             if (DamageReduction > 0)
                 build += " " + DamageReduction + " DR.";
 
-            if (CountsAsSlayer != "")
-                build += " Counts for " + GameLoop.ZPO.ResolveMonsterName(CountsAsSlayer) + " Slayer tasks.";
+            if (CountsAsSlayer.Count > 0) {
+                string slayerB = "";
+                for (int i = 0; i < CountsAsSlayer.Count; i++) {
+                    slayerB += (i == 0 ? ", " : "") + (i == CountsAsSlayer.Count - 1 ? "and " : "") + GameLoop.ZPO.ResolveMonsterName(CountsAsSlayer[i]);
+                }
+                
+                build += " Counts for " + slayerB + " Slayer tasks.";
+            }
 
             if (SpecialCategory != "") {
                 build += " Counts as " + SpecialCategory + ".";

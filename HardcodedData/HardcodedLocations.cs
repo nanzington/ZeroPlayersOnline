@@ -5,182 +5,6 @@ namespace ZeroPlayersOnline.Hardcodes {
         public static void InitLocs(Dictionary<string, Location> Atlas, Dictionary<string, GatheringTile> Gathers, Dictionary<string, AreaMonster> Monsters) {
             List<Location> locsToAdd = new();
 
-            // Tutorial Island locations
-            {
-                locsToAdd.Add(new Location("TI_Main", "Tutorial Island", "Tutorial Island") { 
-                    Description = "You stand on a small island in a bay. There are a few scattered buildings here, designed to help teach some basic activities. There is a bank, a temple, a building that new people appear in, a shack housing a ladder to the cavern below, and the home of a local wizard. There is a pond near the new player building at the center of the island, and the island itself is lightly forested with paths between the buildings.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_AirAltar"),
-                        new Connection("TI_AnimalPen"),
-                        new Connection("TI_Bank"),
-                        new Connection("TI_Cavern"),
-                        new Connection("TI_GeneralStore"),
-                        new Connection("TI_Kitchen"),
-                        new Connection("TI_Temple"),
-                        new Connection("TI_WizardHut")
-                    },
-                    GatheringSpots = new List<string>() { "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "treePine", "fishNetSmall", "fishNetSmall" },
-                    NPCsHere = new List<string>() { "tutorFarming", "tutorFishing", "tutorSlayer", "man", "man", "man", "tiForlornGhost2" },
-                    FarmingPatchesHere = new List<string>() { "TI_allotment1", "TI_allotment2", "TI_allotment3" }, 
-                    DigItem = "clueScrollTutorial",
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("TI_HI_CrumpledNote", 1, new("QuestAt", 10, "TI_HauntedIsland"))
-                    }
-                });
-
-                locsToAdd.Add(new Location("TI_AirAltar", "Air Altar", "Tutorial Island") { 
-                    Description = "In a small clearing off to one side of a path lies a cracked stone altar engraved with the symbol for Air. A few crumbling pillars circle the altar, and a soft light pulses from the cracks in the altar itself. Planted near the bases of the pillars are a few sprigs of wild flax.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_Main")
-                    },
-                    ProcessingStations = new List<string>() { "Air Altar" },
-                    NPCsHere = new() { "tutorRunecrafting" },
-                    GatheringSpots = new List<string>() { "plantFlax", "plantFlax", "plantFlax", "plantFlax" }
-                });
-
-                locsToAdd.Add(new Location("TI_Bank", "Bank", "Tutorial Island") {
-                    Description = "The floor in here is tiled, with a row of wooden bankstands dividing the room in two. Behind the counter stands a row of bank tellers in matching grey suits, ready to serve any patrons that enter.",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("TI_Main") 
-                    },
-                    NPCsHere = new List<string>() { "tutorBanking" },
-                    IsBank = true
-                });
-
-                locsToAdd.Add(new Location("TI_Temple", "Temple", "Tutorial Island") {
-                    Description = "Rows of wooden pews with red cushions line the room to either stand of the center path. A small altar is at the far end of the room, overlooked by a stained glass window depicting Saradomin, god of order.",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("TI_Main")
-                    },
-                    NPCsHere = new() { "tiFatherGuy" }
-                });
-
-                locsToAdd.Add(new Location("TI_Cavern", "Cavern", "Tutorial Island") {
-                    Description = "The cramped cavern holds a small smithing area next to some copper and tin ore rocks, and a metal fenced area holding a few newts the size of golden retrievers. Their silence feels unnatural when compared to how quickly they dart about. It looks like there used to be a path off to another cavern, but at some point part of the ceiling collapsed and mostly blocked it. You could probably squeeze through the cracks to get through still.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_Main"),
-                        new Connection("TI_Newts"),
-                        new Connection("TI_DungeonEntrance", exp: 5, skill: "Agility") 
-                    },
-                    ProcessingStations = new List<string>() { "Furnace", "Anvil" },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("TI_HI_RustedSword", 1, new("QuestAt", 0, "TI_HauntedIsland"))
-                    },
-                    GatheringSpots = new List<string>() { "oreCopper", "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin", "oreTin", "rockEssence", "rockEssence", "rockEssence", "rockClay", "rockClay", "rockClay" },
-                    NPCsHere = new() { "tutorSmithing", "tutorCombat", "tiForlornGhost1" }
-                });
-
-                locsToAdd.Add(new Location("TI_AnimalPen", "Animal Pen", "Tutorial Island") {
-                    Description = "Some cows and chickens wander around aimlessly in the pen, staring blankly off to the horizon when they aren't chewing on grass. There are some crimson swifts darting about in and around the pen that could be caught fairly easily with a bird snare.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_Main")
-                    },
-                    AreaMonsters = new() { "cow", "cow", "cow", "chicken", "chicken", "chicken" },
-                    HunterSpots = new() { "birdSwift", "birdSwift", "birdSwift", "birdSwift" },
-                    NPCsHere = new() { "tutorHunter" }
-                });
-
-                locsToAdd.Add(new Location("TI_Newts", "Newt Cage", "Tutorial Island") {
-                    Description = "The newts scurry around you on the ground, largely ignoring your presence. A metal fence separates this area from the rest of the cavern, filled with mining and smithing supplies. The combat tutor stands outside the fence supervising you.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_Cavern") 
-                    },
-                    AreaMonsters = new() { "newt", "newt", "newt" }
-                });
-
-                locsToAdd.Add(new Location("TI_DungeonEntrance", "Old Agility Course - Entrance", "Tutorial Island") {
-                    Description = "The dimly lit cavern contains a rickety old agility course, along with overgrown vegetation and shambling hordes of zombies in the pit below. In the center of the pit is a tunnel that the zombies are coming out of. It seems like failing any of the obstacles will result in falling down to the zombies. The first bit of the course involves swinging across some monkey bars, but you could also simply jump down into the pit if you wanted.",
-                    DungeoneeringLevel = 1,
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_Cavern", exp: 5, skill: "Agility"),
-                        new Connection("TI_Agility1", exp: 5, skill: "Agility", alt: "(Cross Monkey Bars)"),
-                        new Connection("TI_AgilityPit", alt: "(Jump in Pit)") 
-                    }
-                });
-
-                locsToAdd.Add(new Location("TI_AgilityPit", "Old Agility Course - Pit", "Tutorial Island") {
-                    Description = "The pit has many zombies in it, any that happen to end up near you taking swipes in your direction. On one side of the pit are some grooves in the wall that you could use to climb back up to the entrance of the course. In the center is a tunnel that gives you an ominous feeling as you stand near it. Something powerful may be waiting inside.",
-                    DungeoneeringLevel = 1,
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_DungeonEntrance", alt: "(Climb to Entrance)"),
-                        new Connection("TI_BossCave", alt: "(Enter Ominous Tunnel)")
-                    },
-                    AreaMonsters = new() { "tiZombie", "tiZombie", "tiZombie", "tiZombie", "tiZombie", "tiZombie" }
-                });
-
-                locsToAdd.Add(new Location("TI_Agility1", "Old Agility Course - Past the Monkey Bars", "Tutorial Island") {
-                    Description = "A few small herb bushes cling to the wall, crowding the already thin walkway. The next obstacle is a series of small poles you must jump across the tops of to reach the next ledge.",
-                    DungeoneeringLevel = 1,
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_Agility2", exp: 5, skill: "Agility", alt: "(Hop Across Poles)"),
-                        new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
-                    },
-                    GatheringSpots = new List<string>() { "plantGuam", "plantGuam", "plantGuam" }
-                });
-
-                locsToAdd.Add(new Location("TI_Agility2", "Old Agility Course - Past the Poles", "Tutorial Island") {
-                    Description = "You are most of the way around the agility course now. This walkway is a little wider than the last, and uncrowded by vegetation. There are a few ore veins in the wall that you could mine. The obstacle leading to the next ledge is an old rotting balance beam.",
-                    DungeoneeringLevel = 1,
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_Agility3", exp: 5, skill: "Agility", alt: "(Cross Balance Beam)"),
-                        new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
-                    },
-                    GatheringSpots = new List<string>() { "oreCopper", "oreCopper", "oreCopper", "oreTin", "oreTin", "oreTin" }
-                });
-
-                locsToAdd.Add(new Location("TI_Agility3", "Old Agility Course - Past the Balance Beam", "Tutorial Island") {
-                    Description = "The end of the agility course is just up ahead, across a rolling log obstacle. Some roots from the trees above hang down from the ceiling here and could be chopped.",
-                    DungeoneeringLevel = 1,
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_DungeonEntrance", exp: 20, skill: "Agility", alt: "(Cross Rolling Log)"),
-                        new Connection("TI_AgilityPit", alt: "(Jump in Pit)")
-                    },
-                    GatheringSpots = new List<string>() { "rootsPine", "rootsPine", "rootsPine" }
-                });
-
-                locsToAdd.Add(new Location("TI_BossCave", "Old Agility Course - Zombie Lair", "Tutorial Island") {
-                    Description = "A short way into the tunnel it widens out into a small cavern. The smell of rotten flesh has grown overwhelming and you can finally see the source, a hulking zombie so large it can barely fit in this small cavern. It definitely could not fit through the tunnel to get out to the Agility Course. The huge zombie seems like it won't attack you until you approach, it's just walking in small circles dragging its huge club along the ground.",
-                    DungeoneeringLevel = 1,
-                    BossHere = "bossZombie",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_AgilityPit")
-                    }
-                }); 
-
-                locsToAdd.Add(new Location("TI_Kitchen", "Kitchen", "Tutorial Island") {
-                    Description = "The small building holds little more than a cooking range and a sink. The floor is checkered tiles, and some cooking implements hang from the walls. There's a bucket next to the sink.",
-                    ConnectedLocations = new List<Connection>() { 
-                        new Connection("TI_Main") 
-                    },
-                    ProcessingStations = new List<string>() { "Range", "Sink" },
-                    ItemSpawns = new List<ItemSpot>() {
-                        new ItemSpot("bucketEmpty", 1)
-                    },
-                    NPCsHere = new() { "tutorCooking" }
-                });
-
-                locsToAdd.Add(new Location("TI_GeneralStore", "General Store", "Tutorial Island") {
-                    Description = "An assortment of products one could almost mistake for knick-knacks line the shelves of this small building. Most of it doesn't appear to be too useful, but there are a few items of interest. There doesn't seem to be a shopkeeper around, but a jar on the counter indicates that the store is running on an honor system.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_Main")
-                    },
-                    ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "needle", "knife", "hatchetBronze", "pickaxeBronze", "fishingNetSmall", "vialEmpty", "trapBird", "runeAir", "runeEarth", "runeFire", "runeWater", "runeMind", "runeBody" },
-                    GatheringSpots = new List<string>() { "clueCrates" },
-                    ProcessingStations = new List<string>() { "Tannery", "Pottery Kiln", "Pottery Wheel" },
-                    NPCsHere = new() { "tiDrunkPirate" }
-                });
-
-                locsToAdd.Add(new Location("TI_WizardHut", "Wizard Hut", "Tutorial Island") {
-                    Description = "The inside of the shack is cramped and full of various knick-knacks and doodads. Some might call the mess 'homey' or 'cozy', but the most accurate descriptor might be 'eccentric'. Piles of books are placed haphazardly on the floor, leaving only narrow paths leading to each of the important spots in the room. An elderly wizard with a long flowing beard and classic blue robes sits at a small desk near a window, looking outside as he smokes from a pipe. A spinning wheel is tucked into a corner near the foot of the bed.",
-                    ConnectedLocations = new List<Connection>() {
-                        new Connection("TI_Main")
-                    },
-                    NPCsHere = new() { "tiWizardTerrova", "tiForlornGhost3" },
-                    ProcessingStations = new List<string>() { "Spinning Wheel" }
-                });
-            }
-
-
             // Misthalin Locations
             {
                 // // Lumbridge
@@ -201,7 +25,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                                 new Connection("MIST_Lumbridge"),
                                 new Connection("MIST_LumbridgeBehindCastle")
                             },
-                            NPCsHere = new() { "mistLumHans", "man", "man", "man", "woman", "woman" },
+                            NPCsHere = new() { "mistLumHans", "mistLumJacquelyn", "man", "man", "man", "woman", "woman" },
                             AreaMonsters = new() { "rat", "rat", "rat", "imp" },
                             GatheringSpots = new() { "treeOak", "treePine", "treePine" }
                         }); 
@@ -345,19 +169,208 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_Lumbridge")
                         },
-                        NPCsHere = new() { "mistLumAereck", "tutorPrayer", "woman" }
+                        NPCsHere = new() { "mistLumAereck", "tutorPrayer", "woman" },
+                        AreaMonsters = new() { "woman" }
                     }); 
 
                     locsToAdd.Add(new Location("MIST_LumbridgeGraveyard", "Lumbridge Graveyard", "Misthalin") {
                         Description = "A low fog clings to the ground around the headstones here. The graveyard is enclosed by a short wrought-iron fence, grass and weeds growing slightly rampant due to the lack of a gardener. An imposing building holds a mausoleum and the stairs down to the catacombs.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_Lumbridge"),
-                            new Connection("MIST_LumbridgeCatacombs"),
+                            new Connection("MIST_LumbridgeCatacombsUpper", new() { new("QuestPast", 0, "MI_BloodPact", summ: "Must have started The Blood Pact.") }) { CutscenesOnTraverse = new() { "MI_BloodPact1" } },
                             new Connection("MIST_LumbridgeSwamp5")
                         },
-                        NPCsHere = new() { "mistLumXenia", "mistLumRestlessGhost" },
+                        NPCsHere = new() { "mistLumXenia", "mistLumXenia1", "mistLumXenia8", "mistLumXenia9", "mistLumRestlessGhost" },
                         GatheringSpots = new() { "treeYew", "mistLumCoffin" }
                     });
+
+                    // Lumbridge Catacombs Maps
+                    {
+                        locsToAdd.Add(new Location("MIST_LumbridgeCatacombsUpper", "Catacombs - Upper Main Room", "Misthalin") {
+                            Description = "The inside of the catacombs are surprisingly spacious. There are two main rows of sarcophagi in the middle of the hall, and various pots of offerings and remains everywhere. Set into some of the walls are more stone coffins, and there are Saradomin banners hanging from the walls.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_LumbridgeGraveyard"),
+                                new Connection("MIST_LumbridgeCatacombsUpper", new() { new("QuestAt", 10, "MI_BloodPact") }, hideIfNoReqs: true) { CutscenesOnTraverse = new() { "MI_BloodPact2" } },
+                                new Connection("MIST_LumbridgeCatacombsUpper1", new() { new("QuestPast", 20, "MI_BloodPact") }, hideIfNoReqs: true),
+                                new Connection("MIST_CatacombsEntrance", new() { new("QuestPast", 80, "MI_BloodPact") }, hideIfNoReqs: true)
+                            },
+                            NPCsHere = new() { "mistLumXenia2", "mistLumXenia3" }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_LumbridgeCatacombsUpper1", "Catacombs - Upper Main Room", "Misthalin") {
+                            Description = "The inside of the catacombs are surprisingly spacious. There are two main rows of sarcophagi in the middle of the hall, and various pots of offerings and remains everywhere. Set into some of the walls are more stone coffins, and there are Saradomin banners hanging from the walls.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_LumbridgeGraveyard"),
+                                new Connection("MIST_LumbridgeCatacombsUpper"),
+                                new Connection("MIST_LumbridgeCatacombsUpper2", new() { new("QuestPast", 40, "MI_BloodPact", summ: "You must deal with the ranger before you advance further into the catacombs.") })
+                            },
+                            NPCsHere = new() { "mistLumXenia4", "mistLumXenia5", "mistLumKayle" },
+                            AreaMonsters = new() { "questBloodPactKayle" },
+                            ItemSpawns = new() { new("chargebowKayle", 1, new("QuestAt", 40, "MI_BloodPact")) }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_LumbridgeCatacombsUpper2", "Catacombs - Upper Side Room", "Misthalin") {
+                            Description = "This side room of the catacombs is, for some reason, essentially two large balconies facing eachother with a pit across the middle of the room. There are railings on either side of the hole that leads down, and the two halves of the room are connected by a walkway with a gate. ",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_LumbridgeCatacombsUpper1"),
+                                new Connection("MIST_LumbridgeCatacombsUpper3", new() { new("Data", 1, "CatacombsWinch", misc3: "equals", summ: "You have to use the winch to get to the other side of the room.") })
+                            },
+                            NPCsHere = new() { "mistLumXenia6" },
+                            GatheringSpots = new() { "mistLumWinch" },
+                            AreaMonsters = new() { "questBloodPactCaitlin" }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_LumbridgeCatacombsUpper3", "Catacombs - Upper Side Room - Across", "Misthalin") {
+                            Description = "This side room of the catacombs is, for some reason, essentially two large balconies facing eachother with a pit across the middle of the room. There are railings on either side of the hole that leads down, and the two halves of the room are connected by a walkway with a gate. You are on the far side from the entrance.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_LumbridgeCatacombsUpper1"),
+                                new Connection("MIST_LumbridgeCatacombsUpper2"),
+                                new Connection("MIST_LumbridgeCatacombsLower", new() { new("QuestAt", 60, "MI_BloodPact", summ: "You should deal with the wizard before going downstairs.") }) { CutscenesOnTraverse = new() { "MI_BloodPact5" } },
+                            },
+                            NPCsHere = new() { "mistLumXenia7", "mistLumCaitlin" },
+                            ItemSpawns = new() { new("staffCaitlin", 1, new("QuestAt", 60, "MI_BloodPact")) }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_LumbridgeCatacombsLower", "Catacombs - Lower", "Misthalin") {
+                            Description = "A large room supported by pillars, with banners hanging from the walls and more urns spread around the room in piles. One large sarcophagus, the resting place of Dragith Nurn, rests at the south end of the hall. Beneath a grate in the floor, some water flows through the center of the room.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_LumbridgeCatacombsUpper1"),
+                                new Connection("MIST_LumbridgeCatacombsUpper2"),
+                                new Connection("MIST_LumbridgeCatacombsUpper3"),
+                                new Connection("MIST_CatacombsEntrance", new() { new("QuestPast", 100, "MI_BloodPact", summ: "You should take Ilona back to the surface and speak to Xenia before venturing into the dungeon.")})
+                            },
+                            NPCsHere = new() { "mistLumReese" },
+                            GatheringSpots = new() { "mistLumIlona" },
+                            ItemSpawns = new() { new("swordReese", 1, new("QuestAt", 80, "MI_BloodPact")) },
+                            AreaMonsters = new() { "questBloodPactReese" }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsEntrance", "Catacombs - Dungeon Entrance", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The entrance to the catacombs, all clean stone tiles with torches to provide light. There's nothing here but the stairs back up and the path forward.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_LumbridgeGraveyard"),
+                                new Connection("MIST_LumbridgeCatacombsUpper1"),
+                                new Connection("MIST_LumbridgeCatacombsLower"),
+                                new Connection("MIST_CatacombsRoom1")
+                            }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom1", "Catacombs - Warped Cockroaches", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The first room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by some warped cockroaches that skitter about unpleasantly.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsEntrance"),
+                                new Connection("MIST_CatacombsRoom2")
+                            },
+                            AreaMonsters = new() { "warpedCockroach", "warpedCockroach", "warpedCockroach", "warpedCockroach", "warpedCockroach" }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom2", "Catacombs - Corpse Spiders", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The second room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by some corpse spiders skittering about. The cockroachers really weren't so bad compared to these nasty things.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom1"),
+                                new Connection("MIST_CatacombsRoom3")
+                            },
+                            AreaMonsters = new() { "spiderCorpse", "spiderCorpse", "spiderCorpse", "spiderCorpse", "spiderCorpse" }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom3", "Catacombs - Warped Flies", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The third room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by some warped flies buzzing back and forth through the air. There is a plinth here that looks like it could have a jade demon statuette on it.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom2"),
+                                new Connection("MIST_CatacombsRoom4")
+                            },
+                            AreaMonsters = new() { "warpedFly", "warpedFly", "warpedFly", "warpedFly", "warpedFly" },
+                            ItemSpawns = new() { new("statuetteJade", 1, new("NotItem", 1, "statuetteJade")) }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom4", "Catacombs - Corpse Torsos", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The fourth room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by the torsos of corpses dragging themselves along the ground.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom3"),
+                                new Connection("MIST_CatacombsRoom5")
+                            },
+                            AreaMonsters = new() { "corpseTorso", "corpseTorso", "corpseTorso", "corpseTorso", "corpseTorso" }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom5", "Catacombs - Warped Rats", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The fifth room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by a bunch of chittering warped rats.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom4"),
+                                new Connection("MIST_CatacombsRoom6")
+                            },
+                            AreaMonsters = new() { "warpedRat", "warpedRat", "warpedRat", "warpedRat", "warpedRat" }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom6", "Catacombs - Skeletons", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The sixth room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by some fairly normal skeletons, just the animated decayed remains of former Lumbridge citizens. There is a plinth here that looks like it could have a topaz demon statuette on it.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom5"),
+                                new Connection("MIST_CatacombsRoom7")
+                            },
+                            AreaMonsters = new() { "cataSkeleton", "cataSkeleton", "cataSkeleton", "cataSkeleton", "cataSkeleton" },
+                            ItemSpawns = new() { new("statuetteTopaz", 1, new("NotItem", 1, "statuetteTopaz")) }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom7", "Catacombs - Warped Bats", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The seventh room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by many warped bats flapping and screeching.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom6"),
+                                new Connection("MIST_CatacombsRoom8")
+                            },
+                            AreaMonsters = new() { "warpedBat", "warpedBat", "warpedBat", "warpedBat", "warpedBat" }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom8", "Catacombs - Corpse Archers", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The eighth room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by shambling corpses of former archers, still holding and using their bows. There is a plinth here that looks like it could have a sapphire demon statuette on it.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom7"),
+                                new Connection("MIST_CatacombsRoom9")
+                            },
+                            AreaMonsters = new() { "warpedBat", "warpedBat", "warpedBat", "warpedBat", "warpedBat" },
+                            ItemSpawns = new() { new("statuetteSapphire", 1, new("NotItem", 1, "statuetteSapphire")) }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom9", "Catacombs - Skoblins", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The ninth room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by skeletal goblins. I guess Dragith Nurn didn't just reanimate human remains. There is a plinth here that looks like it could have an emerald demon statuette on it.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom8"),
+                                new Connection("MIST_CatacombsRoom10")
+                            },
+                            AreaMonsters = new() { "skoblin", "skoblin", "skoblin", "skoblin", "skoblin" },
+                            ItemSpawns = new() { new("statuetteEmerald", 1, new("NotItem", 1, "statuetteEmerald")) }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom10", "Catacombs - Corpse Mages", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The tenth room of the catacombs, all clean stone tiles with torches to provide light. This room is inhabited by shambling corpses that have an aura of magic about them. There is a plinth here that looks like it could have a ruby demon statuette on it.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom9"),
+                                new Connection("MIST_CatacombsRoom11")
+                            },
+                            AreaMonsters = new() { "corpseMage", "corpseMage", "corpseMage", "corpseMage", "corpseMage" },
+                            ItemSpawns = new() { new("statuetteRuby", 1, new("NotItem", 1, "statuetteRuby")) }
+                        });
+
+                        locsToAdd.Add(new Location("MIST_CatacombsRoom11", "Catacombs - Dragith Nurn", "Misthalin") {
+                            DungeoneeringLevel = 1,
+                            Description = "The final room of the catacombs, all clean stone tiles with torches to provide light. There is a plinth here that looks like it could have a diamond demon statuette on it.",
+                            ConnectedLocations = new List<Connection>() {
+                                new Connection("MIST_CatacombsRoom10")
+                            },
+                            AreaMonsters = new() { "dragithNurn" },
+                            ItemSpawns = new() { new("statuetteDiamond", 1, new("NotItem", 1, "statuetteDiamond")) }
+                        });
+                    }
 
                     locsToAdd.Add(new Location("MIST_LumbridgeEmptyHouse", "Empty House", "Misthalin") {
                         Description = "It seems like someone used to live here, but they aren't around anymore. There are a couple shelves up against one wall, some more shelves hanging on another wall with cooking implements stacked on them, and a small table with two chairs in the middle of the room. A bed stuffed in one corner of the room and a couple brown rugs make the shack feel a little more homely. The last thing in the house is a range that still seems functional.",
@@ -390,6 +403,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_GroatsFarm")
                         },
                         NPCsHere = new() { "mistLumDoomsayer", "man", "man", "man", "man" },
+                        AreaMonsters = new() { "man", "man", "man", "man" },
                         GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "treeWillow", "treeWillow", "fishBaitLow", "fishBaitLow", "fishBaitLow", "fishLure", "fishLure", "fishLure" }
                     }); 
 
@@ -400,6 +414,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeFishingStore")
                         },
                         NPCsHere = new() { "mistLumHarlan", "man", "man", "woman", "woman", "woman", "woman" },
+                        AreaMonsters = new() { "man", "man", "woman", "woman", "woman", "woman" },
                         GatheringSpots = new() { "stallVegetable", "stallVegetable", "stallBakery", "stallBakery", "stallCrafting", "stallCrafting", "stallWine", "stallWine", "stallSeed", "stallSeed"}
                         // TODO: Add some shop items here? It IS a market
                     });
@@ -410,6 +425,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeNorth")
                         },
                         NPCsHere = new() { "mistLumBartender", "mistLumVeos", "clueArthur", "man", "man", "man" },
+                        AreaMonsters = new() { "man", "man", "man" },
                         ShopItemsHere = new() { "beer" }
                     });
 
@@ -426,8 +442,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeNorth")
                         },
-                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "knife", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "shovel", "hammer", "plantPotEmpty", "rope", "candle" }, // TODO: Once actual places to get candle and rope exist, remove them from here
-                        NPCsHere = new() { "man", "man" }
+                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "knife", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "shovel", "hammer", "plantPotEmpty", "candle" }, // TODO: Once actual places to get candles exist, remove them from here
+                        NPCsHere = new() { "man", "man" },
+                        AreaMonsters = new() { "man", "man" }
                     });
 
                     locsToAdd.Add(new Location("MIST_LumbridgeFishingStore", "Fishing Store", "Misthalin") {
@@ -436,7 +453,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeNorth")
                         },
                         ShopItemsHere = new() { "baitFish", "feather", "fishingNetSmall", "fishingNetBig", "fishingRod", "fishingRodFly", "fishingPotLobster", "fishingHarpoon", "fishRawShrimp", "fishRawAnchovies", "fishRawSardine", "fishRawHerring", "fishRawTrout", "fishRawPike", "fishRawSalmon", "fishRawTuna", "fishRawSwordfish" },
-                        NPCsHere = new() { "man", "man" }
+                        NPCsHere = new() { "man", "man" },
+                        AreaMonsters = new() { "man", "man" }
                     });
 
                     locsToAdd.Add(new Location("MIST_LumbridgeFredsFarm", "Fred's Farm", "Misthalin") {
@@ -444,15 +462,17 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeNorth"),
                             new Connection("MIST_DraynorCrossroads"),
+                            new Connection("MIST_DraynorFarm"),
                             new Connection("MIST_LumbridgeFredsFarmChickens"),
                             new Connection("MIST_LumbridgeFredsFarmCows")
                         },
                         ItemSpawns = new List<ItemSpot>() {
                             new ItemSpot("hatchetBronze", 1)
                         },
-                        GatheringSpots = new() { "clueChest", "treePine", "treePine", "treePine", "sheep", "sheep", "sheep", "plantPotato", "plantPotato", "plantPotato", "plantOnion", "plantOnion", "plantGrain", "plantGrain", "plantGrain"},
+                        GatheringSpots = new() { "clueChest", "treePine", "treePine", "treePine", "sheep", "sheep", "sheep", "plantOnion", "plantOnion", "plantGrain", "plantGrain", "plantGrain"},
                         ProcessingStations = new() { "Windmill" },
-                        NPCsHere = new() { "mistLumFred", "farmer" }
+                        NPCsHere = new() { "mistLumFred", "farmer" },
+                        AreaMonsters = new() { "farmer" }
                     }); 
 
                     locsToAdd.Add(new Location("MIST_LumbridgeFredsFarmChickens", "Fred's Chicken Coop", "Misthalin") {
@@ -463,7 +483,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ItemSpawns = new List<ItemSpot>() {
                             new ItemSpot("eggChicken", 1)
                         },
-                        AreaMonsters = new() { "chicken", "chicken", "chicken", "chicken" },
+                        AreaMonsters = new() { "farmer", "chicken", "chicken", "chicken", "chicken" },
                         NPCsHere = new() { "farmer" }
                     }); 
 
@@ -472,7 +492,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeFredsFarm")
                         },
-                        AreaMonsters = new() { "cow", "cow", "cow", "cow" },
+                        AreaMonsters = new() { "farmer", "cow", "cow", "cow", "cow" },
                         ProcessingStations = new() { "Dairy Cow" },
                         NPCsHere = new() { "farmer" }
                     }); 
@@ -1135,11 +1155,124 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_LumbridgeTowardsDraynor"),
                             new Connection("MIST_LumbridgeSwamp0")
                         },
-                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
-                        AreaMonsters = new() { "spiderGiant", "spiderGiant", "goblin", "goblin", "goblin" }
+                        NPCsHere = new() { "mistDrayTwiggyOKorn" }, // TODO: Achievement diary cape, also gives a chocolate bar 1/50 when talked to
+                        ItemSpawns = new() { new("hatchetBronze", 30) },
+                        GatheringSpots = new() { "treeWillow", "treeWillow", "treeWillow", "treeOak", "treeOak", "treePine", "treePine", "treePine", "fishNetSmall", "fishNetSmall", "fishBaitLow", "fishBaitLow" },
+                        AreaMonsters = new() { "knightBlackNA", "wizardDark7NA"  }
                     });
 
-                    locsToAdd.Add(new Location("MIST_WizardTowerBridge", "Wizard's Tower Bridge", "Misthalin") {
+                    locsToAdd.Add(new Location("MIST_DraynorVillage", "Draynor Village", "Misthalin") {
+                        Description = "A small, somewhat creepy, village on the border between Misthalin and Asgarnia. It has a small market, a bank, and a few houses for the residents. To the north there's the crossroads, Draynor Farm, and Draynor Manor, while to the east is the jail.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorCrossroads"), 
+                            new Connection("MIST_DraynorFarm"),
+                            new Connection("MIST_DraynorAgility1"), 
+                            new Connection("MIST_DraynorNorthEast"), 
+                            new Connection("MIST_DraynorMarket"),
+                            new Connection("MIST_DraynorBank"),
+                            new Connection("MIST_DraynorAggie"),
+                            new Connection("MIST_DraynorNed"), 
+                            new Connection("MIST_DraynorMorgan"),
+                            new Connection("MIST_DraynorSpria"),
+                            new Connection("MIST_DraynorWiseOldMan"),
+                            new Connection("MIST_DraynorJail"), 
+                            new Connection("MIST_DraynorOutskirtsSouth")
+                        },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
+                        AreaMonsters = new() { "man", "man", "man", "woman", "woman" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorMarket", "Draynor Market", "Misthalin") {
+                        Description = "A surprisingly busy market, given how small the village is. There are a couple seed stalls and a wine stall here, plus a toy stall with nothing worth stealing - I mean, buying. There's a small pig pen adjacent to the market with some very cute piglets waddling around in it.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorNorthEast"), 
+                            new Connection("MIST_DraynorVillage"), 
+                            new Connection("MIST_DraynorOutskirtsSouth"), 
+                            new Connection("ASG_PortSarimNorth", skill: "Agility", lv: 42)
+                        },
+                        NPCsHere = new() { "mistDrayOlivia", "mistDrayDiango", "mistDrayFortunato", "mistDrayMartin", "farmerMaster", "townCrier", "mistDrayTree", "mistDrayBankGuard" },
+                        ShopItemsHere = new() { "seedPotato", "seedOnion", "seedCabbage", "seedTomato", "seedSweetcorn", "seedStrawberry", "seedSnapegrass", "seedWatermelon", "seedBarley", "seedJute", "seedRosemary", "seedMarigold", "seedHammerstone", "seedAsgarnian", "seedYanillian", "seedKrandorian", "seedWildblood", "jugWine", "jugEmpty", "bottleWine", "jugVinegar", "chronicle", "cardTeleport"},
+                        GatheringSpots = new() { "stallSeed", "stallSeed", "stallWine", "treeOak", "treePine", "treePine" },
+                        AreaMonsters = new() { "guardMarket", "guardMarket", "man", "man", "man", "woman", "imp" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorBank", "Draynor Bank", "Misthalin") {
+                        Description = "A cozy little bank building right next to the main road through Draynor. There's a row of bank booths cutting off a third of the room. In the accessible part of the building is a poll booth, a small bearskin rug on the floor, and a bank deposit box plus some noticeboards that haven't been updated in a long time. In the sectioned off area there's a part of the wall that looks different than the rest, like it had to be repaired recently.",
+                        IsBank = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorVillage")
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorNed", "Ned's House", "Misthalin") {
+                        Description = "The inside of the house is stuffed fill of things, to the point that you consider Ned may have a hoarding problem. There are a bunch of chairs and nautical themed decorations all over the place, and a couple tables with ropes in the progress of being woven on them. A nice painting of White Wolf Mountain hangs on the wall. There are some crates full of even more junk, and a fireplace with a roaring fire in it.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorVillage")
+                        },
+                        NPCsHere = new() { "mistDrayNed1" },
+                        ShopItemsHere = new() { "rope" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorCrossroads", "Draynor Crossroads", "Misthalin") {
+                        Description = "The atmosphere feels particularly ominous here, as you near Draynor Manor. The crossroads go north to the manor grounds, west towards Falador, east to Draynor Farm and the Lumbridge windmill, and south to Draynor Village. There's a highwayman here looking for easy prey, and a very lost goblin who got separated from his squad at Draynor Farm.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorManorGate"),
+                            new Connection("MIST_DraynorManorWest"),
+                            new Connection("MIST_DraynorManorEast"),
+                            new Connection("ASG_FaladorFarm"),  
+                            new Connection("MIST_DraynorFarm"),
+                            new Connection("MIST_LumbridgeFredsFarm"), 
+                            new Connection("MIST_DraynorNorthEast"), 
+                            new Connection("MIST_DraynorVillage")
+                        },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
+                        AreaMonsters = new() { "highwayman", "goblin" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorNorthEast", "Northeast of Draynor", "Misthalin") {
+                        Description = "A small area crammed between the market and the road to Falador. There's nothing really here except some trees and a trapdoor down to the Draynor sewers.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("ASG_FaladorFarm"),
+                            new Connection("MIST_DraynorCrossroads"),
+                            new Connection("MIST_DraynorSewersEnd", alt: "(Climb Down Trapdoor)"),
+                            new Connection("MIST_DraynorMarket"), 
+                            new Connection("MIST_DraynorVillage")
+                        },
+                        GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine", "treePine" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorFarm", "Draynor Farm", "Misthalin") {
+                        Description = "A nice large field of wheat and potatoes near a run-down barn. It still provides most of the food for Draynor, though it is significantly less frequented since a band of goblins moved in. Now the goblins handle most of the farmwork and charge for the food that the Draynor citizens own anyways.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorCrossroads"),
+                            new Connection("MIST_LumbridgeFredsFarm"),
+                            new Connection("MIST_DraynorVillage")
+                        },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "plantPotato", "plantPotato", "plantPotato", "plantGrain", "plantGrain", "plantGrain" },
+                        AreaMonsters = new() { "goblin", "goblin", "goblin", "goblin", "goblin", "goblin" },
+                        NPCsHere = new() { "mistDrayLeela" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorJail", "Draynor Jail", "Misthalin") {
+                        Description = "An old jail building, hardly used anymore. There are some very hostile guards patrolling around outside the building. A few nettle bushes are around the back, but you'll need gloves of some kind to harvest them.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorVillage"),
+                            new Connection("MIST_DraynorOutskirtsSouth"), 
+                            new Connection("MIST_DraynorJailInterior"), 
+                            new Connection("MIST_DraynorSewersStart", alt: "(Climb Down Trapdoor)")
+                        },
+                        GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine", "plantNettles", "plantNettles", "plantNettles" },
+                        AreaMonsters = new() { "guardJail", "guardJail", "guardJail", "guardJail" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorIsland", "Draynor Island", "Misthalin") {
+                        Description = "This is a tiny island just off the coast Misthalin, near Draynor Village and the Wizards' Tower. There is literally nothing here but a patch of land and the fairy ring you used to arrive.",
+                        ConnectedLocations = new List<Connection>() {
+                            // TODO: Add a fairy ring here when they get added, code CLP
+                        }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_WizardTowerBridge", "Wizards' Tower Bridge", "Misthalin") {
                         Description = "On the large wide path from the Wizard Tower island to mainland Misthalin. There are a few banners hanging from poles, and some crates left partway down the bridge. The marble Wizard Tower spears into the sky above you, visible from far and wide.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_WizardTowerIsland"),
@@ -1148,7 +1281,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         GatheringSpots = new() { "clueCrates" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_WizardTowerIsland", "Wizard's Tower Island", "Misthalin") {
+                    locsToAdd.Add(new Location("MIST_WizardTowerIsland", "Wizards' Tower Island", "Misthalin") {
                         Description = "This island holds the Wizard's Tower, towering high above you. Two statues of famous wizards of old stand guard at the bridge entrance, while a fountain is just off the path into the tower. There is some sparse tree and shrub coverage on the island but otherwise not a lot of interest.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_WizardTower"),
@@ -1157,7 +1290,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         GatheringSpots = new() { "treePine", "treePine" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_WizardTower", "Wizard's Tower", "Misthalin") {
+                    locsToAdd.Add(new Location("MIST_WizardTower", "Wizards' Tower", "Misthalin") {
                         Description = "Wizards bustle about in here in the midst of completing various magical research projects. There are a few small rooms here on the first floor, plus a staircase up to the next floor and a ladder down to the basement. One of the rooms contains a library with some bookshelves containing various books that are probably very interesting if you're a wizard doing research.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_WizardTower2F"),
@@ -1170,7 +1303,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         AreaMonsters = new() { "wizard", "wizard", "wizard", "wizard" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_WizardTower2F", "Wizard's Tower - Second Floor", "Misthalin") {
+                    locsToAdd.Add(new Location("MIST_WizardTower2F", "Wizards' Tower - Second Floor", "Misthalin") {
                         Description = "This floor of the tower seems to be more of a sleeping area than the research areas below or above, with some cots placed in the rooms for weary wizards. There's not much else in here except a nice view through the windows looking out onto the surrounding landscape.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_WizardTower3F"),
@@ -1180,7 +1313,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         AreaMonsters = new() { "wizard", "wizard" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_WizardTower3F", "Wizard's Tower - Third Floor", "Misthalin") {
+                    locsToAdd.Add(new Location("MIST_WizardTower3F", "Wizards' Tower - Third Floor", "Misthalin") {
                         Description = "A decent portion of this floor is taken up by a large cage holding a lesser demon captive inside it. Though you can't reach it with melee attacks, you could probably hit it with ranged and magic attacks without it being able to retaliate. Slightly cruel, but it's a demon, so it's probably okay? There are also some high-ranking wizards up here busying themselves in their offices with various works. Illegible research notes cover a few of the tables up here.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_WizardTower2F")
@@ -1189,14 +1322,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                         AreaMonsters = new() { "wizDemonLesser", "wizard", "wizard" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_WizardTowerBasement", "Wizard's Tower - Third Floor", "Misthalin") {
-                        Description = "A decent portion of this floor is taken up by a large cage holding a lesser demon captive inside it. Though you can't reach it with melee attacks, you could probably hit it with ranged and magic attacks without it being able to retaliate. Slightly cruel, but it's a demon, so it's probably okay? There are also some high-ranking wizards up here busying themselves in their offices with various works. Illegible research notes cover a few of the tables up here.",
+                    locsToAdd.Add(new Location("MIST_WizardTowerBasement", "Wizards' Tower - Basement", "Misthalin") {
+                        Description = "Supposedly this basement is the ruins of the old Wizards' Tower, from back when it was inhabited by Zamorakian wizards. Now though it's just a dirty and messy basement with a few crumbling walls. Archmage Sedridor has set up office down here. There's a set of locked drawers down here, and a suspicious looking altar. Also a chicken... for some reason.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_WizardTower2F")
                         },
                         NPCsHere = new() { "mistWizSedridor" },
                         AreaMonsters = new() { "chicken", "mistWizSkeleton" },
-                        GatheringSpots = new() { "mistWizAltar" }
+                        GatheringSpots = new() { "mistWizAltar", "clueDrawersLocked" }
                     });
                 }
 
@@ -1246,6 +1379,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     locsToAdd.Add(new Location("MIST_VarrockOutskirtsSouth", "Varrock - Outskirts South", "Misthalin") {
                         Description = "Just outside the southern gates into the city of Varrock. For some reason some dark wizards are allowed to congregate at a small ritual stite, consisting of some stone pillars around a low table that might be a sacrificial altar. The stone walls surrounding the city are imposing, giving a feeling of security and civilization. You could enter through the gate, or skirt up around the west side of the city walls by passing through the mine.",
                         ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_VarrockSouth"),
                             new Connection("MIST_VarrockMineWest"),
                             new Connection("MIST_VarrockMineEast"),
                             new Connection("MIST_VarrockGuildChampions"),
@@ -1300,8 +1434,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                         },
                         ItemSpawns = new() { new("chocolateBar", 5), new("pieEmpty", 1), new("tinCakeEmpty", 1), new("bowlEmpty", 1), new("fruitApple", 3, count: 3), new("grapes", 5), new("potEmpty", 1), new("jugEmpty", 1) },
                         ProcessingStations = new() { "Windmill", "Sink", "Dairy Churn" },
-                        NPCsHere = new() { "mistVarRomily", "mistVarHeadChef" },
-                        ShopItemsHere = new() { "bookRecipesPie", "pieRedberry", "pieMeat", "pieMud", "pieApple", "pieGarden", "pieFish", "pieAdmiral", "pieWild", "pieSummer" }
+                        NPCsHere = new() { "mistVarHeadChef" },
+                        ShopItemsHere = new() { "bookRecipesPie", "potFlour", "pieEmpty", "pieRedberry", "pieMeat", "pieMud", "pieApple", "pieGarden", "pieFish", "pieAdmiral", "pieWild", "pieSummer" }
                     });
 
                     locsToAdd.Add(new Location("MIST_VarrockGuildCooksVIP", "Cook's Guild - VIP Area", "Misthalin") {
@@ -1314,13 +1448,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                     });
 
                     locsToAdd.Add(new Location("MIST_VarrockCrossroadsEast", "Varrock - East Crossroads", "Misthalin") {
-                        Description = "Just outside the eastern gates into the city of Varrock. There are a variety of buildings outside the walls here, including the Cook's Guild and a path to the Grand Exchange. Gertrude also lives here, across the road from the Leptoc Mansion, and there's a small locked shack. A bridge to the west leads to Barbarian Village. You could also pass through the gates into Varrock proper.",
+                        Description = "Just outside the eastern gates into the city of Varrock. There are a variety of buildings outside the walls here, including the Lumberyard and a path to the Digsite. There's also a secluded bar with a depressing atmosphere, a path to Silvarea, and a strange stone ruin emitting a soft brown light. You could also pass through the gates into Varrock proper.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_VarrockEast"),
+                            new Connection("MIST_VarrockCrossroadsNorth"),
                             new Connection("MIST_VarrockJollyBoar"),
                             new Connection("MIST_VarrockLumberyard"),
                             new Connection("RunecraftAltarEarth", new() { new("Item", 1, "talismanEarth", false) }),
-                            new Connection("MIST_VarrockChaosTunnel", new() { new("Quest", 10, "MI_WhatLiesBelow", false) }),
+                            new Connection("MIST_VarrockChaosTunnel", new() { new("Quest", 10, "MI_WhatLiesBelow", false) }, hideIfNoReqs: true),
                             new Connection("MIST_Silvarea"),
                             new Connection("MIST_Digsite"),
                             new Connection("MIST_VarrockMineEast"),
@@ -1329,6 +1464,276 @@ namespace ZeroPlayersOnline.Hardcodes {
                         NPCsHere = new() { "mistVarAnnaJones", "guard", "guard", "guard" },
                         AreaMonsters = new() { "guard", "guard", "guard", "imp" },
                         GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine", "treeOak", "treeOak", "treeYew", "treeYew" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockCrossroadsNorth", "Varrock - North Crossroads", "Misthalin") {
+                        Description = "Squeezed between the northern wall of Varrock and the border into the Wilderness, there's not much room for anything of interest here. If not entering Varrock through the gates or going to the Wilderness, the only other real options are to skirt around the city walls to the west or south-east, or to visit the Jolly Boar.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockAlongNorthWall"), 
+                            new Connection("MIST_VarrockNorth"), 
+                            new Connection("MIST_VarrockJollyBoar"),   
+                            new Connection("MIST_VarrockCrossroadsEast")
+                        }, 
+                        NPCsHere = new() { "guard", "guard", "guard" },
+                        AreaMonsters = new() { "guard", "guard", "guard", "knightBlackNA", "knightBlackNA" },
+                        GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine", "treeOak", "treeOak" },
+                        ItemSpawns = new() { new("runeEarth", 1) }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockJollyBoar", "Jolly Boar", "Misthalin") {
+                        Description = "Given how out of the way it is and the general atmosphere of grime and sadness, it's not hard to see why the Jolly Boar sees so little foot traffic. The common room is fairly spacious, all things considered, with a lot of empty tables and chairs scattered around. A bored bartender is on duty behind the bar, one of the few places largely free of dust in the establishment. Despite them not offering food of any kind, there's a kitchen with a cook who claims to be perpetually busy.",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_VarrockCrossroadsNorth"),
+                            new Connection("MIST_VarrockCrossroadsEast"),
+                            new Connection("MIST_VarrockJollyBoarKitchen")
+                        }, 
+                        NPCsHere = new() { "mistVarJollyBartender", "man", "woman", "woman" },
+                        AreaMonsters = new() { "knightBlackNA", "thiefNA", "man", "woman", "woman" },
+                        ShopItemsHere = new() { "beer" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockJollyBoarKitchen", "Jolly Boar Kitchen", "Misthalin") {
+                        Description = "...Okay, having seen the kitchen it's probably a good thing they don't offer food here. The room is small, cramped, dirty, and too hot from the two ovens running constantly. A handful of shelves are bolted to the walls and stacked with dishes and cutlery, dubious spice jars, and a small vase of wilted flowers and dirty water.",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_VarrockJollyBoar")
+                        }, 
+                        NPCsHere = new() { "mistVarJollyCook" },
+                        ProcessingStations = new() { "Range" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockPalaceBailey", "Varrock Palace Bailey", "Misthalin") {
+                        Description = "The bailey is spacious, containing a small path around back and a tree patch. Trees line the path up to the palace courtyard, and a few benches are off to the side to sit and enjoy the view. There's a broken cart off to one side of the bailey with some crates next to it. Banners bearing the Varrock heraldry hang everywhere.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockPalaceCourtyard"),
+                            new Connection("MIST_VarrockPalaceBaileyBack"),
+                            //new Connection("MIST_VarrockPalaceGarden", [ new("Skill", 35, "Agility")]), TODO: After Garden of Tranquility is implemented which is ages away
+                            new Connection("MIST_VarrockNorth"),
+                            new Connection("MIST_VarrockGrandExchange"),
+                            new Connection("MIST_VarrockPlaza")
+                        },
+                        GatheringSpots = new() { "treePine", "treePine", "treeOak", "clueCrates" },
+                        ProcessingStations = new() { "Fountain" },
+                        NPCsHere = new() { "mistVarTreznor" },
+                        FarmingPatchesHere = new() { "MIST_VarTree" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockPalaceBaileyBack", "Behind Varrock Palace", "Misthalin") {
+                        Description = "Around back behind the Varrock Palace, within the bailey. There are just a few yew trees here, plus an enclosure containing a grizzly bear. There's a human skeleton in the enclosure... hopefully just decorative.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockPalaceBailey"),
+                            new Connection("MIST_VarrockPalaceGarden"),
+                            new Connection("MIST_VarrockGrandExchange")
+                        },
+                        GatheringSpots = new() { "treeYew", "treeYew", "treeYew" },
+                        ProcessingStations = new() { "Fountain" },
+                        AreaMonsters = new() { "imp", "bearZoo" },
+                        ItemSpawns = new() { new("coins", 1, null, 10, true), new("runeBody", 1) }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockPalaceCourtyard", "Varrock Palace Courtyard", "Misthalin") {
+                        Description = "A small courtyard enclosed by stone walls attached to the front of the palace, with a couple fountains and a bunch of barrels and crates in it. Some guards patrol the area on the lookout for intruders. There's a small staircase up to the palace itself, with an overhang held up by stone pillars. Banners bearing the Varrock heraldry hang everywhere.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockPalaceGroundFloor"),
+                            new Connection("MIST_VarrockPalaceBailey")
+                        },
+                        GatheringSpots = new() { "clueCrates" },
+                        ProcessingStations = new() { "Fountain" },
+                        AreaMonsters = new() { "guard", "guard", "guard", "guard" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockPalaceGroundFloor", "Varrock Palace - Ground Floor", "Misthalin") {
+                        Description = "The layout of this floor is... very strange. It's a long curving hallway leading around the palace, touching each room except the banquet hall. Right in front of the entrance is a staircase up to the second floor, behind which is a door to the inner courtyard. There's not even a guard blocking the door into the throne room, besides the ones out in the main courtyard. The hallway is adorned with many suits of armor and sets of swords and shields in the Varrock colors, black and yellow.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockPalace2F"),
+                            new Connection("MIST_VarrockPalaceCourtyardInner"),
+                            new Connection("MIST_VarrockPalaceThroneRoom"),
+                            new Connection("MIST_VarrockPalaceBunkRoom"),
+                            new Connection("MIST_VarrockPalaceRoom"),
+                            new Connection("MIST_VarrockPalacePrysin"),
+                            new Connection("MIST_VarrockPalaceStairwell1F"),
+                            new Connection("MIST_VarrockPalaceLibrary"),
+                            new Connection("MIST_VarrockPalaceKitchen"),
+                            new Connection("MIST_VarrockPalaceCourtyard")
+                        },
+                        AreaMonsters = new() { "monkZamorakVarrock" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockPalaceCourtyardInner", "Varrock Palace - Inner Courtyard", "Misthalin") {
+                        Description = "A lovely little courtyard inside Varrock Palace. It just has a few small plants and a magic tree in the middle, with some narrow windows looking into the hallway of the ground floor of the palace.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockPalaceGroundFloor")
+                        },
+                        GatheringSpots = new() { "treeMagic" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockPalaceRoom", "Varrock Palace - Room", "Misthalin") {
+                        Description = "A small room with a single bed and a couple chests. There are paintings of a water mill and the moon rising over a river hanging on the wall, and some shelves holding various knick-knacks. A sword and shield bearing the Varrock colors hang on the walls above the bed. There's a nice fur rug dyed green spread on the floor that really ties the room together.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockPalaceGroundFloor")
+                        },
+                        GatheringSpots = new() { "clueChest" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockPalaceLibrary", "Varrock Palace - Library", "Misthalin") {
+                        Description = "A small room with a single bed and a couple chests. There are paintings of a water mill and the moon rising over a river hanging on the wall, and some shelves holding various knick-knacks. A sword and shield bearing the Varrock colors hang on the walls above the bed. There's a nice fur rug dyed green spread on the floor that really ties the room together.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockPalaceGroundFloor")
+                        },
+                        GatheringSpots = new() { "bookshelfWizard", "bookshelfWizard", "bookshelfArrav", "bookshelfWizard" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockPlaza", "Varrock Plaza", "Misthalin") {
+                        Description = "The beating heart of the kindom of Misthalin! The plaza has a nice fountain with a statue looking in each ordinal direction, and a number of small stalls hawk various goods that they won't actually let you buy.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockPalaceBailey"),
+                            new Connection("MIST_VarrockWest"),
+                            new Connection("MIST_VarrockZaff"),
+                            new Connection("MIST_VarrockFortuneTeller"),
+                            new Connection("MIST_VarrockGeneralStore"),
+                            new Connection("MIST_VarrockThessalia"),
+                            new Connection("MIST_VarrockEast"),
+                            new Connection("MIST_VarrockSouth")
+                        }, 
+                        NPCsHere = new() { "mistVarRomeo", "mistVarBaraek", "mistVarBenny", "mistVarShilop", "mistVarWilough", "mistVarToby" },
+                        GatheringSpots = new() { "treePine", "treePine", "treeOak" },
+                        ProcessingStations = new() { "Fountain" }
+                    });
+                     
+                    locsToAdd.Add(new Location("MIST_VarrockNorth", "Varrock North", "Misthalin") {
+                        Description = "Really more of the north-east of Varrock, this is a small section of the city just east of the palace. The salon and Saradominist chapel are found here, along with a real estate agent for those looking to purchase a home. There's a manhole leading down into the sewer system, which is infested with monsters, for the adventurous. Also Bob lives here.",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_VarrockCrossroadsNorth"),
+                            new Connection("MIST_VarrockHouseBob"),
+                            new Connection("MIST_VarrockChapel"),
+                            new Connection("MIST_VarrockEstateAgent"),
+                            new Connection("MIST_VarrockSalon"),
+                            new Connection("MIST_VarrockPalaceBailey"),
+                            new Connection("MIST_VarrockSewerEntrance"),
+                            new Connection("MIST_VarrockEast")
+                        }, 
+                        NPCsHere = new() { "guard", "man", "man", "woman", "woman" },
+                        AreaMonsters = new() { "guard", "man", "man", "woman", "woman", "imp" },
+                        GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine", "treePine", "treeYew" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockEast", "Varrock East", "Misthalin") {
+                        Description = "The bustling eastern district of Varrock, home to the bank, Horvik's Armor Shop, Lowe's Archery Emporium, and Jeff's house. Perhaps most notably though is the presence of the Varrock Museum, housing a number of fascinating exhibits. There's even a small fountain here, and a mostly useless training hall. So many sights to see!",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_VarrockNorth"),
+                            new Connection("MIST_VarrockPlaza"),
+                            new Connection("MIST_VarrockHouseJeff"),
+                            new Connection("MIST_VarrockHorvik"),
+                            new Connection("MIST_VarrockLowe"),
+                            new Connection("MIST_VarrockMuseum"),
+                            new Connection("MIST_VarrockMuseumWorkers"),
+                            new Connection("MIST_VarrockTrainingHall"),
+                            new Connection("MIST_VarrockBankEast"),
+                            new Connection("MIST_VarrockSouthEast"),
+                            new Connection("MIST_VarrockCrossroadsEast")
+                        }, 
+                        NPCsHere = new() { "guard", "man", "man", "woman", "woman", "woman", "woman", "streetCleaner", "townCrier" },
+                        AreaMonsters = new() { "guard", "man", "man", "woman", "woman", "woman", "woman" },
+                        GatheringSpots = new() { "treePine", "treePine", "treePine" },
+                        ProcessingStations = new() { "Fountain" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockBankEast", "Varrock East Bank", "Misthalin") {
+                        Description = "Nobody is quite sure why Varrock needs two banks so close to eachother, but they do both exist. This one is a bit smaller than the West bank, though perhaps a little more upscale. There's a line of bank booths you can use, plus a staircase up to the second floor, which contains an area enclosed by iron bars holding a bunch of gold and chests.",
+                        IsBank = true,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockEast")
+                        }, 
+                        GatheringSpots = new() { "clueDrawers" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockHorvik", "Horvik's Armor Shop", "Misthalin") {
+                        Description = "This open-air building, more of a stone canopy than an enclosed room, is really more of a forge than a storefront. A variety of smithing tools hang on the walls and there's a drill in the back corner of the shop, along with a workbench and some anvils towards the front. A few stacked crates hold the store stock, which consists of all of the main pieces of metal armor up to adamant. Horvik does charge a premium over what other shops would charge, but the convenience of having all the pieces in one place may be worth the price increase.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockEast")
+                        }, 
+                        NPCsHere = new() { "mistVarHorvik" },
+                        ShopPriceMultiplier = 1.2,
+                        ShopItemsHere = new() { "helmBronze", "platebodyBronze", "platelegsBronze", "bootsBronze", "gauntletsBronze", "sqShieldBronze", "kiteshieldBronze",
+                                                "helmIron", "platebodyIron", "platelegsIron", "bootsIron", "gauntletsIron", "sqShieldIron", "kiteshieldIron",
+                                                "helmSteel", "platebodySteel", "platelegsSteel", "bootsSteel", "gauntletsSteel", "sqShieldSteel", "kiteshieldSteel",
+                                                "helmBlack", "platebodyBlack", "platelegsBlack", "bootsBlack", "gauntletsBlack", "sqShieldBlack", "kiteshieldBlack",
+                                                "helmMithril", "platebodyMithril", "platelegsMithril", "bootsMithril", "gauntletsMithril", "sqShieldMithril", "kiteshieldMithril",
+                                                "helmAdamant", "platebodyAdamant", "platelegsAdamant", "bootsAdamant", "gauntletsAdamant", "sqShieldAdamant", "kiteshieldAdamant" },
+                        ProcessingStations = new() { "Anvil" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockLowe", "Lowe's Archery Emporium", "Misthalin") {
+                        Description = "The inside of this shop is filled with displays of various bows and arrows. Some posters hang on the wall depicting the best spots to shoot rabbits and deer, and there's a mannequin wearing some nice looking ranger clothing. The building has some lovely green stained glass windows looking out to the street. There's a small side room containing a workshop and a ladder up to the second floor, which is largely filled with crates of inventory.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockEast")
+                        }, 
+                        NPCsHere = new() { "mistVarLowe" },
+                        ShopItemsHere = new() { "arrowsBronze", "arrowsIron", "arrowsSteel", "arrowsMithril", "arrowsAdamant",
+                                                "boltsBronze",
+                                                "shortbowPine", "shortbowOak", "shortbowWillow", "shortbowTeak", "shortbowMaple", "shortbowAcadia",
+                                                "longbowPine", "longbowOak", "longbowWillow", "longbowTeak", "longbowMaple", "longbowAcadia",
+                                                "coifLeather", "bodyLeather", "chapsLeather", "bootsLeather", "vambracesLeather", "shieldLeather",
+                                                "coifHardleather", "bodyHardleather", "chapsHardleather", "bootsHardleather", "vambracesHardleather", "shieldHardleather",
+                                                "coifStudded", "bodyStudded", "chapsStudded", "bootsStudded", "vambracesStudded", "shieldStudded",
+                                                "coifCarapace", "bodyCarapace", "chapsCarapace", "bootsCarapace", "vambracesCarapace", "shieldCarapace",
+                                                "coifGreenDragonhide", "bodyGreenDragonhide", "chapsGreenDragonhide", "bootsGreenDragonhide", "vambracesGreenDragonhide", "shieldGreenDragonhide" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockSouthEast", "Varrock Southeast", "Misthalin") {
+                        Description = "In a larger city this part of town might be called the slums, but that feels like overkill when it's really just a cluster of buildings you're likely to get stabbed as you walk past. Interestingly there's also a sort of gated community in the corner of the city. You know, next to the Zamorakian temple and the run-down houses and the crumbling ruins of former run-down houses. Prime real estate.",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_VarrockEast"),
+                            new Connection("MIST_VarrockFencedArea"),
+                            new Connection("MIST_VarrockAubury"),
+                            new Connection("MIST_VarrockHouseAbandoned"),
+                            new Connection("MIST_VarrockHouseRundown"), // the one with two men and a range
+                            new Connection("MIST_VarrockHouseRundown2"), // adjoining above but with no resident
+                            new Connection("MIST_VarrockHouseRundown3"), // next to temple, one man
+                            new Connection("MIST_VarrockHouseYarlo"),
+                            new Connection("MIST_VarrockZamorakTemple"),
+                            new Connection("MIST_VarrockPhoenixGang"),
+                            new Connection("MIST_VarrockPhoenixGangSide"), // that little room to the east of the main phoenix building between it and the temple
+                            new Connection("MIST_VarrockSouth")
+                        }, 
+                        NPCsHere = new() { "dogStray", "man" },
+                        AreaMonsters = new() { "man", "mugger", "thief" },
+                        GatheringSpots = new() { "treeDead", "treeDead" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockAubury", "Aubury's Rune Shop", "Misthalin") {
+                        Description = "A tiny cramped room with barely any room to walk around. There are some shelves on the walls with containers, though the labels are illegible, and other knick-knacks. There are also a couple chairs and a small table, a crate and chest, some kind of gray fur rug covering the floor. The store is, in a word, the very essence of 'disreputable'. That said it's essentially the only place in Misthalin that sells runes, so you don't have much choice.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockSouthEast")
+                        }, 
+                        NPCsHere = new() { "mistVarAubury" },
+                        ShopItemsHere = new() { "runeAir", "runeFire", "runeWater", "runeEarth", "runeMind", "runeBody", "runeChaos", "runeDeath" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockSouth", "Varrock South", "Misthalin") {
+                        Description = "The southern entrance to Varrock, home to the sword shop and the Blue Moon Inn, the best inn in all of Misthalin! Or so they say. Probably not really anyone verifying claims like that around here. There's also a lovely little house with a cabbage patch, and a back alley west of the gate being frequented by some suspicious looking people.",
+                        ConnectedLocations = new List<Connection>() { 
+                            new Connection("MIST_VarrockPlaza"),
+                            new Connection("MIST_VarrockBlueMoon"),
+                            new Connection("MIST_VarrockSwordShop"),
+                            new Connection("MIST_VarrockHouseLovely"), // one right next to the south gate, on the right with the cabbage patch
+                            new Connection("MIST_VarrockHouseClue"), // across the street from above, has a clue step here and not much else
+                            new Connection("MIST_VarrockBlackArmGang"),
+                            new Connection("MIST_VarrockSouthEast"),
+                            new Connection("MIST_VarrockOutskirtsSouth")
+                        }, 
+                        NPCsHere = new() { "guard", "man", "man", "woman", "woman", "woman", "woman", "streetCleaner", "trampCharlie" },
+                        AreaMonsters = new() { "guard", "man", "man", "woman", "woman", "woman", "woman" },
+                        GatheringSpots = new() { "plantCabbage", "plantCabbage", "plantCabbage" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockSwordShop", "Varrock - Sword Shop", "Misthalin") {
+                        Description = "A fine establishment offering a variety of swords and daggers. The walls and tables are absolutely covered in display cases and weapon racks showing off a multitude of weaponry, a vast majority of which cannot be purchased at this store. In a small backroom there are a bunch of crates stacked up to store excess inventory. The front of the building, facing the main thoroughfare, has pleasant green stained glass windows letting in plenty of light.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockSouth")
+                        }, 
+                        NPCsHere = new() { "mistVarShopkeeperSword" },
+                        ShopItemsHere = new() { "daggerBronze", "daggerIron", "daggerSteel", "daggerBlack", "daggerMithril", "daggerAdamant", "swordBronze", "swordIron", "swordSteel", "swordBlack", "swordMithril", "swordAdamant" },
+                        GatheringSpots = new() { "clueCrates" }
                     });
                 }
 

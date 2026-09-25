@@ -3,6 +3,7 @@
         public string WarningText = "";
         public string DamageDice = "1d3";  
         public string DamageType = "Typeless";
+        public int PoisonSeverity = 0;
 
         public List<int> HitsLanes = new();
 

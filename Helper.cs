@@ -1,16 +1,10 @@
-﻿using GoRogue;
-using GoRogue.DiceNotation.Terms;
-using Newtonsoft.Json;
-using SadConsole;
-using SadConsole.Input;
-using SadRogue.Primitives;
+﻿using GoRogue; 
+using Newtonsoft.Json; 
+using SadConsole.Input; 
 using System.ComponentModel;
-using System.Globalization;
-using System.IO.Compression;
-using System.Text; 
-using System.Text.RegularExpressions;
+using System.Globalization; 
 using ZeroPlayersOnline.DataTypes;
-using ZeroPlayersOnline.Managers;
+using ZeroPlayersOnline.Managers; 
 using Rectangle = SadRogue.Primitives.Rectangle;
 
 namespace ZeroPlayersOnline {
@@ -626,6 +620,8 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
                 || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
                 || (ExtraWindows.Book.IsVisible && instance != ExtraWindows.Book)
+                || (ExtraWindows.Cutscene.IsVisible && instance != ExtraWindows.Cutscene)
+                || (ExtraWindows.Shop.IsVisible && instance != ExtraWindows.Shop)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return;
             }
@@ -788,19 +784,6 @@ namespace ZeroPlayersOnline {
             Point mousePos = mouse.CellPosition;
             bool mouseOn = mouse.IsOnScreenObject; 
 
-            if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
-                || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
-                || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
-                || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
-                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
-                || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
-                || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
-                || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
-                || (ExtraWindows.Book.IsVisible && instance != ExtraWindows.Book)
-                || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
-                return y;
-            }
-
             int cX = x;
             int cY = y;
 
@@ -855,6 +838,21 @@ namespace ZeroPlayersOnline {
                 } else {
                     instance.Print(cX, cY++, line, mouseHere ? col.GetDarker() : col, Color.Black);
                 } 
+            }
+
+            if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
+                || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
+                || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
+                || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
+                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
+                || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
+                || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
+                || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
+                || (ExtraWindows.Book.IsVisible && instance != ExtraWindows.Book)
+                || (ExtraWindows.Cutscene.IsVisible && instance != ExtraWindows.Cutscene)
+                || (ExtraWindows.Shop.IsVisible && instance != ExtraWindows.Shop)
+                || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
+                return y;
             }
 
             if (GameHost.Instance.Mouse.LeftClicked) {
@@ -951,18 +949,6 @@ namespace ZeroPlayersOnline {
             Point mousePos = mouse.CellPosition;
             bool mouseOn = mouse.IsOnScreenObject; 
 
-            if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
-                || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
-                || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
-                || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
-                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
-                || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
-                || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
-                || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
-                || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
-                return y;
-            }
-
             int cX = x;
             int cY = y;
 
@@ -1009,6 +995,20 @@ namespace ZeroPlayersOnline {
             if (line.String != "") {
                 bool mouseHere = mousePos.X >= x && mousePos.X <= x + width && mousePos.Y >= y && mousePos.Y <= heightMax && mouseOn; 
                 instance.Print(cX, cY++, mouseHere ? line.GetDarker() : line); 
+            }
+
+            if ((ExtraWindows.Guide.IsVisible && instance != ExtraWindows.Guide) 
+                || (ExtraWindows.CollectionLog.IsVisible && instance != ExtraWindows.CollectionLog)
+                || (ExtraWindows.CraftingMenu.IsVisible && instance != ExtraWindows.CraftingMenu)
+                || (ExtraWindows.Quests.IsVisible && instance != ExtraWindows.Quests)
+                || (ExtraWindows.Compendium.IsVisible && instance != ExtraWindows.Compendium)
+                || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
+                || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
+                || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
+                || (ExtraWindows.Cutscene.IsVisible && instance != ExtraWindows.Cutscene)
+                || (ExtraWindows.Shop.IsVisible && instance != ExtraWindows.Shop)
+                || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
+                return y;
             }
 
             if (GameHost.Instance.Mouse.LeftClicked) {
@@ -1109,6 +1109,53 @@ namespace ZeroPlayersOnline {
             return null;
         }
 
+        public static SlayerTask? ChooseWeighted(List<SlayerTask> list) {
+            int totalWeight = 0;
+            int currentCount = 0; 
+
+            foreach (var item in list) {
+                if (item.Requirements != null && item.Requirements.Count > 0) {
+                    bool canAdd = true;
+                    for (int i = 0; i < item.Requirements.Count; i++) {
+                        if (!item.Requirements[i].CheckRequirement(GameLoop.ZPO.player, false, true)) {
+                            canAdd = false;
+                            break;
+                        }
+                    } 
+
+                    if (canAdd) {
+                        totalWeight += item.Weight;
+                    }
+                } else {
+                    totalWeight += item.Weight;
+                }
+            }
+
+            int targetWeight = GameLoop.rand.Next(0, totalWeight);
+
+            foreach (SlayerTask item in list) { 
+                bool isValid = true;
+
+                if (item.Requirements != null && item.Requirements.Count > 0) {
+                    foreach (var req in item.Requirements) {
+                        if (!req.CheckRequirement(GameLoop.ZPO.player, false, true)) {
+                            isValid = false;
+                        }
+                    }
+                }
+
+                if (isValid) {
+                    currentCount += item.Weight;
+
+                    if (currentCount > targetWeight) {
+                        return item;
+                    }
+                } 
+            }
+
+            return null;
+        }
+
         public static ColoredString GoldString(int geltValue, bool shop) {
             if (geltValue > 0 || !shop) {
                 ColoredString GeltString = new(geltValue + "gp", Color.Gold, Color.Black);
@@ -1149,7 +1196,7 @@ namespace ZeroPlayersOnline {
                 rolled.Clear();
                  
                 foreach (var drop in filtered) {
-                    if (GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (fortune && GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
+                    if (GameLoop.rand.Next((int) Math.Round(drop.InY, MidpointRounding.AwayFromZero)) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (fortune && GameLoop.rand.Next((int) Math.Round(drop.InY, MidpointRounding.AwayFromZero)) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
                         rolled.Add(drop.ItemID);
                     }
                 }
@@ -1157,7 +1204,7 @@ namespace ZeroPlayersOnline {
                 if (maxRewards != -1) {
                     while(rolled.Count < maxRewards) {
                         foreach (var drop in filtered) {
-                            if (GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (fortune && GameLoop.rand.Next(drop.InY) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
+                            if (GameLoop.rand.Next((int) Math.Round(drop.InY, MidpointRounding.AwayFromZero)) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier) || (fortune && GameLoop.rand.Next((int) Math.Round(drop.InY, MidpointRounding.AwayFromZero)) < (drop.DropX * GameLoop.ZPO.player.DropMultiplier))) {
                                 rolled.Add(drop.ItemID);
                             }
                         }
@@ -1209,6 +1256,30 @@ namespace ZeroPlayersOnline {
             if (how == "belowOrEqual") { return GameLoop.ZPO.player.WorldState[id] <= num; }
 
             return false;
+        }
+
+        public static void Add(this List<ItemDrop> instance, List<ItemDrop> second, double modifier = 1.0) {
+            foreach (var kv in second) {
+                ItemDrop copy = new(kv);
+                copy.InY = (int) Math.Round(copy.InY * modifier, MidpointRounding.AwayFromZero);
+                instance.Add(copy);
+            }
+        }
+
+        public static List<ItemDrop> But(this List<ItemDrop> instance, double modifier = 1.0) {
+            List<ItemDrop> output = new();
+            foreach (var kv in instance) {
+                ItemDrop copy = new(kv);
+                copy.InY = copy.InY * modifier;
+                output.Add(copy);
+            }
+
+            return output;
+        }
+
+        public static bool Requirement(string type, int miscint, string misc1, string misc2 = "", bool consume = false, bool notes = false, bool equipped = true) {
+            Requirement req = new(type, miscint, misc1, consume, misc2);
+            return req.CheckRequirement(GameLoop.ZPO.player, notes, equipped);
         }
     }
 

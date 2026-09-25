@@ -53,20 +53,21 @@ namespace ZeroPlayersOnline.Hardcodes {
             List<MaterialDef> Leathers = new() {
                 new("Leather", 205, 127, 50, 255, 1, 1, 15, "leatherSoft"), 
                 new("Hardleather", 175, 97, 20, 255, 2, 10, 25, "leatherHard"),
-                new("Snakeskin", Color.DarkOliveGreen, 4, 30, 30, "leatherSnakeskin"), 
+                new("Carapace", Color.Orange, 4, 30, 12, "carapace"), 
+                new("Snakeskin", Color.DarkOliveGreen, 4.5, 30, 30, "leatherSnakeskin"), 
                 new("GreenDragonhide", Color.ForestGreen, 5, 40, 62, "leatherDragonGreen"),
                 new("BlueDragonhide", Color.CadetBlue, 6, 50, 70, "leatherDragonBlue"),
                 new("RedDragonhide", Color.Crimson, 6, 55, 78, "leatherDragonRed"),
                 new("BlackDragonhide", Color.DimGray, 7, 60, 86, "leatherDragonBlack")
             };
 
-            foreach (var leather in Leathers) { 
-
+            foreach (var leather in Leathers) {  
                 toAdd.Add(new("Needle", "Crafting", leather.Level, leather.CostMultiplier, [leather.Descriptor + "," + 1], "coif" + leather.Name, tool: "needle"));
                 toAdd.Add(new("Needle", "Crafting", leather.Level, leather.CostMultiplier * 5, [leather.Descriptor + "," + 5], "body" + leather.Name, tool: "needle"));
                 toAdd.Add(new("Needle", "Crafting", leather.Level, leather.CostMultiplier * 3, [leather.Descriptor + "," + 3], "chaps" + leather.Name, tool: "needle"));
                 toAdd.Add(new("Needle", "Crafting", leather.Level, leather.CostMultiplier, [leather.Descriptor + "," + 1], "vambraces" + leather.Name, tool: "needle"));
                 toAdd.Add(new("Needle", "Crafting", leather.Level, leather.CostMultiplier, [leather.Descriptor + "," + 1], "boots" + leather.Name, tool: "needle"));
+                toAdd.Add(new("Needle", "Crafting", leather.Level, leather.CostMultiplier, [leather.Descriptor + "," + 2], "shield" + leather.Name, tool: "needle"));
             }
 
 
@@ -163,7 +164,10 @@ namespace ZeroPlayersOnline.Hardcodes {
                 toAdd.Add(new("Casting", "Crafting", mat.Level, mat.CostMultiplier, mats, "necklace" + mat.Descriptor, 1, "mouldNecklace")); 
             }
              
+            toAdd.Add(new("Casting", "Crafting", 75, 15, ["barGold,1", "gemSlayer,1"], "ringSlayer", 1, "mouldRing") { Reqs = [ new("Data", 1, "SlayerRing", false, "equals", "Must have unlocked the ability to craft slayer rings in the slayer rewards shop.")]}); 
+
             toAdd.Add(new("Casting", "Crafting", 23, 53, ["barSilver,1"], "tiara", 1, "mouldTiara")); 
+            toAdd.Add(new("Casting", "Crafting", 23, 53, ["barSilver,1"], "unstrungSymbol", 1, "mouldHoly")); 
 
             
             toAdd.Add(new("Baking", "Cooking", 1, 0, ["doughBread,1"], "doughPizza")); 

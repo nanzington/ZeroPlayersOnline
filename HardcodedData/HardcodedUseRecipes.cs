@@ -85,6 +85,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("headlessShaft", "arrowheadsNecronium", "arrowsNecronium", 15, 15, 15, "Fletching", 40, 243)); 
             toAdd.Add(new("headlessShaft", "arrowheadsBane", "arrowsBane", 15, 15, 15, "Fletching", 40, 263)); 
             toAdd.Add(new("headlessShaft", "arrowheadsElderRune", "arrowsElderRune", 15, 15, 15, "Fletching", 40, 280)); 
+            toAdd.Add(new("headlessShaft", "arrowheadsBroad", "arrowsBroad", 15, 15, 15, "Fletching", 52, 150) { ExtraReqs = [ new("Data", 1, "SlayerBroadFletching", false, "equals", "Must purchase the ability to fletch broad arrows from a Slayer Master.")]}); 
             toAdd.Add(new("boltsUnfBronze", "feather", "boltsBronze", 10, 10, 10, "Fletching", 1, 5)); 
             toAdd.Add(new("boltsUnfIron", "feather", "boltsIron", 10, 10, 10, "Fletching", 10, 15)); 
             toAdd.Add(new("boltsUnfSteel", "feather", "boltsSteel", 10, 10, 10, "Fletching", 20, 35)); 
@@ -95,7 +96,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("boltsUnfNecronium", "feather", "boltsNecronium", 10, 10, 10, "Fletching", 70, 125));
             toAdd.Add(new("boltsUnfBane", "feather", "boltsBane", 10, 10, 10, "Fletching", 80, 137));  
             toAdd.Add(new("boltsUnfElderRune", "feather", "boltsElderRune", 10, 10, 10, "Fletching", 90, 150));     
-             
+            toAdd.Add(new("boltsUnfBroad", "feather", "boltsBroad", 10, 10, 10, "Fletching", 55, 30) { ExtraReqs = [ new("Data", 1, "SlayerBroadFletching", false, "equals", "Must purchase the ability to fletch broad bolts from a Slayer Master.")]}); 
+            
             toAdd.Add(new("grappleUnf", "rope", "grapple", 1, 1, 1, "Fletching", 20, 0));  
 
             // Herblore
@@ -274,6 +276,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             }
              
+            toAdd.Add(new("unstrungSymbol", "woolBall", "unblessedSymbol", 1, 1, 1, "Crafting", 16, 4)); 
+
             toAdd.Add(new("bodyHardleather", "studsSteel", "bodyStudded", 1, 1, 1, "Crafting", 20, 40)); 
             toAdd.Add(new("coifHardleather", "studsSteel", "coifStudded", 1, 1, 1, "Crafting", 20, 40)); 
             toAdd.Add(new("chapsHardleather", "studsSteel", "chapsStudded", 1, 1, 1, "Crafting", 20, 40)); 
@@ -294,6 +298,11 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("knife", "fruitPineappleRing", "fruitPineappleChunks", 0)); 
             toAdd.Add(new("hammer", "fruitCoconut", "fruitCoconutHalf", 0)); 
             toAdd.Add(new("vialEmpty", "fruitCoconutHalf", "fruitCoconutMilk", returns: ["fruitCoconutShell"]));    
+
+
+            // Rag and Bone Man 
+            toAdd.Add(new("jugVinegar", "potEmpty", "potVinegar", returns: [ "jugEmpty" ])); 
+
 
 
             

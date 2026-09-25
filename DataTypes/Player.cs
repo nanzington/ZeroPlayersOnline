@@ -97,9 +97,21 @@ namespace ZeroPlayersOnline.DataTypes {
         public int StepsDoneMaster = 0;
 
         public string SlayerTask = "";
-        public int SlayerKillsRemaining = 0;
+        public string SlayerTaskFrom = "";
+        public int SlayerAssignedKills = 0;
+        public int SlayerKillsRemaining = 0; 
         public int SlayerTaskStreak = 0;
         public int SlayerPoints = 0;
+        public bool SlayerTaskExtended = false;
+
+        public string StoredTask = "";
+        public string StoredTaskFrom = "";
+        public int StoredKillsLeft = 0;
+        public int StoredKillsAssigned = 0; 
+        public bool StoredTaskExtended = false;
+
+        public List<string> SlayerBlocked = new();
+        public List<string> SlayerPrefer = new();
          
         public string ArtisanTask = "";
         public int ArtisanTaskRemaining = 0;
@@ -113,7 +125,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public int PizazzGraveyard = 0;
         public int PizazzTelekinetic = 0;
         public int PizazzAlchemist = 0;
-
+         
 
         public Dictionary<string, int> WorldState = new();
 
@@ -133,22 +145,22 @@ namespace ZeroPlayersOnline.DataTypes {
         }
 
         public string GetDamageDice() {
-            int weaponTier = 1;
+            double weaponTier = 1;
             bool maging = IsMaging();
 
             string style = "Melee";
 
             if (Equipment.TryGetValue("Weapon", out ItemWrapper? eqpWrap) && eqpWrap.GetRef() is Item eqp) {
-                weaponTier = eqp.EquipTier + 1;
+                weaponTier = eqp.EquipTier;
 
                 if (eqp.EquipSkill == "Ranged") {
                     style = "Ranged";
-                    if (eqp.EquipAmmo == "Arrow" || eqp.EquipAmmo == "Bolt") { // Only other option currently is Self, where we don't need to change weaponTier
+                    if (eqp.EquipAmmo == "RangedStandard" || eqp.EquipAmmo == "RangedHeavy") { // Only other option currently is Self, where we don't need to change weaponTier
                         if (Equipment.TryGetValue("Ammo", out ItemWrapper? ammoWrap) && ammoWrap.GetRef() is Item ammo) {
                             if (ammo.EquipLevel <= eqp.EquipLevel) {
-                                weaponTier = ammo.EquipTier + 1;
+                                weaponTier = ammo.EquipTier;
                             } else {
-                                weaponTier = eqp.EquipTier + 1;
+                                weaponTier = eqp.EquipTier;
                             }
                         } else {
                             weaponTier = 0;
@@ -160,11 +172,15 @@ namespace ZeroPlayersOnline.DataTypes {
                     weaponTier = 1;
                 }
             }
-            int strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10); 
+            double strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 10f) + 1, 1, 10); 
 
             if (maging) { 
                 style = "Magic";
                 strength = GameLoop.ZPO.SpellLibrary[CastingSpell].Tier * 2;
+            }
+
+            if (style == "Ranged") {
+                strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Ranged") / 10f) + 1, 1, 10); 
             }
 
             double partialBoost = 0;
@@ -202,7 +218,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
             strength += (int) Math.Floor(partialBoost);
 
-            return weaponTier + "d" + strength;
+            return ((int) Math.Floor(weaponTier)) + "d" + ((int) Math.Floor(strength));
         }
 
         public string GetDamageType() {
@@ -215,58 +231,76 @@ namespace ZeroPlayersOnline.DataTypes {
             return "Crush";
         }
 
+        public string GetSecondaryDamageType() {
+            if (Equipment.TryGetValue("Weapon", out ItemWrapper? wepWrapper) && wepWrapper.GetRef() is Item wep)
+                return wep.EquipSecondaryDamage;
+            return "";
+        }
+
         public bool TryPickup(ItemWrapper wrap, int qty, bool noted = false, bool shop = false, bool fromGround = false) {
-            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
-                for (int i = 0; i < Inventory.Count; i++) { 
-                    if (Inventory[i].ID == wrap.ID && (Inventory[i].GetRef() is Item inv && (inv.Stackable || (noted && Inventory[i].Noted)))) {
-                        Inventory[i].Quantity += qty; 
-                        if (!shop)
-                            wrap.Quantity -= qty;
-                        return true; 
-                    }
+            bool alreadyOwned = false;
+            if (wrap.GetRef() is Item item && item.OnlyOneOwnable) {
+                if (Helper.Requirement("ItemOwned", 1, wrap.ID)) {
+                    GameLoop.ZPO.Log.AddMessage("You already own one of those (in inventory, bank, or equipped) and can't pick up another.", Color.Crimson);
+                    alreadyOwned = true;
                 }
+            }
 
-                ItemWrapper clone = new(wrap);
-             
-                if (Inventory.Count < InventoryLimit) {
-                    if (wrap.GetRef() is Item pickup && (pickup.Stackable || (pickup.Noteable && noted))) { 
-                        if (noted)
-                            clone.Noted = true;
-
-                        clone.Quantity = qty;
-                        if (!shop)
-                            wrap.Quantity -= qty;
-                        Inventory.Add(clone);
-                    } else {
-                        for (int i = 0; i < qty; i++) { 
-                            ItemWrapper secondClone = new(clone);
-                            secondClone.Quantity = 1;
-                            clone.Quantity--;
+            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
+                ItemWrapper clone = new(wrap) { Quantity = qty };
+                if (!alreadyOwned) {
+                    for (int i = 0; i < Inventory.Count; i++) { 
+                        if (Inventory[i].ID == wrap.ID && (Inventory[i].GetRef() is Item inv && (inv.Stackable || (noted && Inventory[i].Noted)))) {
+                            Inventory[i].Quantity += qty; 
                             if (!shop)
-                                wrap.Quantity--;
+                                wrap.Quantity -= qty;
+                            return true; 
+                        }
+                    } 
+             
+                    if (Inventory.Count < InventoryLimit) {
+                        if (wrap.GetRef() is Item pickup && (pickup.Stackable || (pickup.Noteable && noted))) { 
+                            if (noted)
+                                clone.Noted = true;
 
-                            if (Inventory.Count < InventoryLimit)
-                                Inventory.Add(secondClone);
-                            else {
-                                if (curr.IsBank && CanUseBanks) {
-                                    BankItem(secondClone);
-                                    return true;
-                                } else {
-                                    GameLoop.ZPO.TryPlaceItem(NavLoc, secondClone);
-                                    return true;
+                            clone.Quantity = qty;
+                            if (!shop)
+                                wrap.Quantity -= qty;
+                            Inventory.Add(clone);
+                        } else {
+                            for (int i = 0; i < qty; i++) { 
+                                ItemWrapper secondClone = new(clone);
+                                secondClone.Quantity = 1;
+                                clone.Quantity--;
+                                if (!shop)
+                                    wrap.Quantity--;
+
+                                if (Inventory.Count < InventoryLimit)
+                                    Inventory.Add(secondClone);
+                                else {
+                                    if (curr.IsBank && CanUseBanks) {
+                                        BankItem(secondClone);
+                                        return true;
+                                    } else {
+                                        GameLoop.ZPO.TryPlaceItem(NavLoc, secondClone);
+                                        return true;
+                                    }
                                 }
                             }
                         }
-                    }
-                    return true;
-                } 
+                        return true;
+                    } 
+                }
 
                 if (fromGround) {
-                    GameLoop.ZPO.Log.AddMessage("Your inventory is too full to pick up anything else right now.", Color.Crimson);
+                    if (!alreadyOwned) {
+                        GameLoop.ZPO.Log.AddMessage("Your inventory is too full to pick up anything else right now.", Color.Crimson);
+                    }
+
                     return false;
                 }
                  
-                if (curr.IsBank && CanUseBanks) {
+                if (curr.IsBank && CanUseBanks && !alreadyOwned) {
                     BankItem(clone); 
                     return true;
                 }
@@ -288,55 +322,64 @@ namespace ZeroPlayersOnline.DataTypes {
 
 
         public bool TryPickup(Item item, int qty, bool noted = false, bool shop = false, bool fromGround = false) {  
-            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
-                for (int i = 0; i < Inventory.Count; i++) { 
-                    if (Inventory[i].GetRef() is Item wrap && wrap.ID == item.ID && (wrap.Stackable || (noted && Inventory[i].Noted))) {
-                        Inventory[i].Quantity += qty;
-                        if (!shop)
-                            item.Quantity -= qty;
-                        return true; 
-                    }
+            bool alreadyOwned = false;
+            if (item.OnlyOneOwnable) {
+                if (Helper.Requirement("ItemOwned", 1, item.ID)) {
+                    GameLoop.ZPO.Log.AddMessage("You already own one of those (in inventory, bank, or equipped) and can't pick up another.", Color.Crimson);
+                    alreadyOwned = true;
                 }
+            }
 
+            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) { 
                 Item clone = new(item) { Quantity = qty };
-                
-             
-                if (Inventory.Count < InventoryLimit) {
-                    if (item.Stackable || (item.Noteable && noted)) { 
-                        if (noted)
-                            clone.Noted = true;
-                        if (!shop)
-                            item.Quantity -= qty;
-                        Inventory.Add(new(clone));
-                    } else {
-                        for (int i = 0; i < qty; i++) { 
-                            Item secondClone = new(clone) { Quantity = 1 }; 
-                            clone.Quantity--;
-                            if (!shop)
-                                item.Quantity--;
 
-                            if (Inventory.Count < InventoryLimit)
-                                Inventory.Add(new(secondClone));
-                            else {
-                                if (curr.IsBank && CanUseBanks) {
-                                    BankItem(new(secondClone));
-                                    return true;
-                                } else {
-                                    GameLoop.ZPO.TryPlaceItem(NavLoc, new(secondClone));
-                                    return false;
+                if (!alreadyOwned) {
+                    for (int i = 0; i < Inventory.Count; i++) { 
+                        if (Inventory[i].GetRef() is Item wrap && wrap.ID == item.ID && (wrap.Stackable || (noted && Inventory[i].Noted))) {
+                            Inventory[i].Quantity += qty;
+                            if (!shop)
+                                item.Quantity -= qty;
+                            return true; 
+                        }
+                    }
+             
+                    if (Inventory.Count < InventoryLimit) {
+                        if (item.Stackable || (item.Noteable && noted)) { 
+                            if (noted)
+                                clone.Noted = true;
+                            if (!shop)
+                                item.Quantity -= qty;
+                            Inventory.Add(new(clone));
+                        } else {
+                            for (int i = 0; i < qty; i++) { 
+                                Item secondClone = new(clone) { Quantity = 1 }; 
+                                clone.Quantity--;
+                                if (!shop)
+                                    item.Quantity--;
+
+                                if (Inventory.Count < InventoryLimit)
+                                    Inventory.Add(new(secondClone));
+                                else {
+                                    if (curr.IsBank && CanUseBanks) {
+                                        BankItem(new(secondClone));
+                                        return true;
+                                    } else {
+                                        GameLoop.ZPO.TryPlaceItem(NavLoc, new(secondClone));
+                                        return false;
+                                    }
                                 }
                             }
                         }
-                    }
-                    return true;
-                } 
+                        return true;
+                    } 
+                }
 
                 if (fromGround) {
                     GameLoop.ZPO.Log.AddMessage("Your inventory is too full to pick up anything else right now.", Color.Crimson);
                     return false;
                 }
                  
-                if (curr.IsBank && CanUseBanks) {
+                if (curr.IsBank && CanUseBanks && !alreadyOwned) {
                     BankItem(new(clone)); 
                     return true;
                 }
@@ -449,6 +492,10 @@ namespace ZeroPlayersOnline.DataTypes {
                                     if (Inventory[i].Charges != 0 && toDrop.UseString == "Potion") {
                                         sellValue *= Inventory[i].Charges;
                                     } 
+
+                                    if (curr.ShopPriceMultiplier != 1.0) {
+                                        sellValue = (int) (sellValue * curr.ShopPriceMultiplier);
+                                    }
                                         
                                     if (!ShopsAlwaysFullPrice && !curr.ShopItemsHere.Contains(Inventory[i].ID)) {
                                         sellValue = (int) (Math.Floor(sellValue / 2.0));
@@ -663,7 +710,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public int GetEffectiveSkillLevel(string which) {
             if (Skills.TryGetValue(which, out Skill? s)) {
                 if (s != null) {
-                    int level = s.Level;
+                    double level = s.Level;
 
                     foreach (var pot in ActivePotions) {
                         if (pot.Stat == which) {
@@ -691,7 +738,7 @@ namespace ZeroPlayersOnline.DataTypes {
                         }
                     }
 
-                    return level;
+                    return (int) Math.Floor(level);
                 }
             }
 
@@ -706,6 +753,12 @@ namespace ZeroPlayersOnline.DataTypes {
                 return false;
             if (!GameLoop.ZPO.ItemLibrary.ContainsKey(craft.OutputItem))
                 return false;
+
+            foreach (var req in craft.Reqs) {
+                if (!req.CheckRequirement(this, false, true)) {
+                    return false;
+                }
+            }
 
             if (craft.ExtraTool != "") {
                 bool hasTool = false;
@@ -1506,6 +1559,131 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             return total;
+        }
+
+        public void TryProgressQuest(string ID, int stage) {
+            if (GameLoop.ZPO.QuestLibrary.TryGetValue(ID, out Quest? quest)) {
+                if (QuestLog.TryGetValue(ID, out QuestStatus? status)) {
+                    if (status.CurrentStage < stage) {
+                        status.CurrentStage = stage;
+                        if (status.CurrentStage == quest.CompleteStage) { 
+                            GameLoop.ZPO.Log.AddMessage(new ColoredString("You have completed " + quest.Name + "!", Color.Lime, Color.Black));
+                            quest.ProcessRewards(this);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ProgressSlayerTask(AreaMonster AttackingMonster) {
+            if (AttackingMonster.ID == SlayerTask || (AttackingMonster.CountsAsSlayer.Contains(SlayerTask))) {
+                if (Equipment.TryGetValue("Hands", out ItemWrapper? eqp) && eqp != null && eqp.ID == "braceletExpeditious" && GameLoop.rand.Next(4) == 0) { 
+                    eqp.Charges -= 1; 
+                    GameLoop.ZPO.Log.AddMessage(new ColoredString("Your expeditious bracelet made that kill count double!", Color.AntiqueWhite, Color.Black));
+
+                    if (eqp.Charges <= 0) { 
+                        GameLoop.ZPO.Log.AddMessage(new ColoredString("Your expeditious bracelet runs out of charge and shatters.", Color.Crimson, Color.Black));
+                        Equipment.Remove("Hands");
+                    }
+                    SlayerKillsRemaining -= 2;
+                } else if (Equipment.TryGetValue("Hands", out ItemWrapper? eqp2) && eqp2 != null && eqp2.ID == "braceletSlaughter" && GameLoop.rand.Next(4) == 0) { 
+                    eqp2.Charges -= 1; 
+                    GameLoop.ZPO.Log.AddMessage(new ColoredString("Your bracelet of slaughter made that kill count not count.", Color.Magenta, Color.Black));
+
+                    if (eqp2.Charges <= 0) { 
+                        GameLoop.ZPO.Log.AddMessage(new ColoredString("Your bracelet of slaughter runs out of charge and shatters.", Color.Crimson, Color.Black));
+                        Equipment.Remove("Hands");
+                    }
+                } else { 
+                    SlayerKillsRemaining--;
+                }
+
+                if (SlayerKillsRemaining <= 0) {
+                    GameLoop.ZPO.Log.AddMessage("You have finished your Slayer task and should go get another.", Color.MediumPurple);
+                    SlayerTask = "";
+                    SlayerKillsRemaining = 0;
+                    SlayerAssignedKills = 0;
+                    SlayerTaskExtended = false;
+                    
+                    SlayerTaskStreak++;
+
+                    if (SlayerTaskFrom == "mistLumJacquelyn") {
+                        if (SlayerTaskStreak % 50 == 0) { SlayerPoints += QuestCompleted("DES_SmokingKills") ? 15 : 7; }
+                        else if (SlayerTaskStreak % 10 == 0) { SlayerPoints += QuestCompleted("DES_SmokingKills)") ? 5 : 2; }
+                        else { SlayerPoints += QuestCompleted("DES_SmokingKills)") ? 1 : 1; }
+                    }
+
+                    SlayerTaskFrom = "";
+                }
+            }
+        }
+
+        public void ProgressSlayerTask(BossFight boss) {
+            if (boss.ID == SlayerTask || (boss.CountsAsSlayer.Contains(SlayerTask))) {
+                if (Equipment.TryGetValue("Hands", out ItemWrapper? eqp) && eqp != null && eqp.ID == "braceletExpeditious" && GameLoop.rand.Next(4) == 0) { 
+                    eqp.Charges -= 1; 
+                    GameLoop.ZPO.Log.AddMessage(new ColoredString("Your expeditious bracelet made that kill count double!", Color.AntiqueWhite, Color.Black));
+
+                    if (eqp.Charges <= 0) { 
+                        GameLoop.ZPO.Log.AddMessage(new ColoredString("Your expeditious bracelet runs out of charge and shatters.", Color.Crimson, Color.Black));
+                        Equipment.Remove("Hands");
+                    }
+                    SlayerKillsRemaining -= 2;
+                } else if (Equipment.TryGetValue("Hands", out ItemWrapper? eqp2) && eqp2 != null && eqp2.ID == "braceletSlaughter" && GameLoop.rand.Next(4) == 0) { 
+                    eqp2.Charges -= 1; 
+                    GameLoop.ZPO.Log.AddMessage(new ColoredString("Your bracelet of slaughter made that kill count not count.", Color.Magenta, Color.Black));
+
+                    if (eqp2.Charges <= 0) { 
+                        GameLoop.ZPO.Log.AddMessage(new ColoredString("Your bracelet of slaughter runs out of charge and shatters.", Color.Crimson, Color.Black));
+                        Equipment.Remove("Hands");
+                    }
+                } else { 
+                    SlayerKillsRemaining--;
+                }
+
+                if (SlayerKillsRemaining <= 0) {
+                    GameLoop.ZPO.Log.AddMessage("You have finished your Slayer task and should go get another.", Color.MediumPurple);
+                    SlayerTask = "";
+                    SlayerKillsRemaining = 0;
+                    SlayerAssignedKills = 0;
+                    SlayerTaskExtended = false;
+                    
+                    SlayerTaskStreak++;
+
+                    if (SlayerTaskFrom == "mistLumJacquelyn") {
+                        if (SlayerTaskStreak % 50 == 0) { SlayerPoints += QuestCompleted("DES_SmokingKills") ? 15 : 7; }
+                        else if (SlayerTaskStreak % 10 == 0) { SlayerPoints += QuestCompleted("DES_SmokingKills)") ? 5 : 2; }
+                        else { SlayerPoints += QuestCompleted("DES_SmokingKills)") ? 1 : 1; }
+                    }
+
+                    SlayerTaskFrom = ""; 
+                }
+            }
+        }
+
+        public bool QuestCompleted(string id) {
+            if (GameLoop.ZPO.QuestLibrary.TryGetValue(id, out Quest? quest)) {
+                if (QuestLog.TryGetValue(id, out QuestStatus? status)) {
+                    if (status.CurrentStage == quest.CompleteStage) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public int GetQuestPoints(bool total = false) { 
+            int questPoints = 0;
+            int totalPossibleQP = 0; 
+
+            foreach (var kv in GameLoop.ZPO.QuestLibrary) {
+                totalPossibleQP += kv.Value.QuestPoints;
+                if (kv.Value.CurrentStage() == kv.Value.CompleteStage)
+                    questPoints += kv.Value.QuestPoints;
+            }
+
+            return total ? totalPossibleQP : questPoints;
         }
     }
 }

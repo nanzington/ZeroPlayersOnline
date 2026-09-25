@@ -72,7 +72,21 @@ namespace ZeroPlayersOnline.Managers {
         public static Window Book;
         public static string BookID = "";
         public static int LeftPage = 0;
+         
+        public static Window Cutscene;
+        public static string CutsceneID = "";
+        public static int CutsceneScene = 0;
+        public static int CutsceneDialogue = 0;
 
+        public static Window Shop;
+        public static string ShopID = "";
+        public static string SlayerTab = "Unlocks";
+        public static int ShopTop = 0;
+        public static List<string> ShopItems = new();
+        public static List<SlayerReward> SlayerUnlocks = new();
+        public static List<SlayerReward> SlayerBuy = new();
+        public static List<SlayerReward> SlayerTasks = new();
+        public static List<SlayerReward> SlayerCosmetics = new();
 
         public static bool AnyVisible(string except = "") {
             if (CollectionLog.IsVisible && except != "Collection")
@@ -97,6 +111,10 @@ namespace ZeroPlayersOnline.Managers {
                 return true;
             if (Book.IsVisible && except != "Book") 
                 return true;
+            if (Cutscene.IsVisible && except != "Cutscene")
+                return true;
+            if (Shop.IsVisible && except != "Shop")
+                return true;
             
             return false;
         }
@@ -113,63 +131,24 @@ namespace ZeroPlayersOnline.Managers {
             Teleport.IsVisible = false;
             InventoryContainer.IsVisible = false;
             Book.IsVisible = false;
+            Cutscene.IsVisible = false;
+            Shop.IsVisible = false;
         }
 
         public static void SetupWindows() {
-            CollectionLog = new(100, 30);
-            CollectionLog.CanDrag = true;
-            CollectionLog.Position = new Point(25, 10);
-            CollectionLog.Title = "Collection Log".Align(HorizontalAlignment.Center, 68);
-
-            Guide = new(100, 30);
-            Guide.CanDrag = true;
-            Guide.Position = new Point(25, 10);
-            Guide.Title = "Guidebook".Align(HorizontalAlignment.Center, 98);
-
-            CraftingMenu = new(100, 30);
-            CraftingMenu.CanDrag = true;
-            CraftingMenu.Position = new Point(15, 10);
-            CraftingMenu.Title = "Crafting Menu".Align(HorizontalAlignment.Center, 98);
-
-            Map = new(50, 30);
-            Map.CanDrag = true;
-            Map.Position = new Point(25, 10);
-            Map.Title = "Map".Align(HorizontalAlignment.Center, 48);
-
-            Quests = new(100, 30);
-            Quests.CanDrag = true;
-            Quests.Position = new Point(25, 10);
-            Quests.Title = "Quest Log".Align(HorizontalAlignment.Center, 98);
- 
-            Compendium = new(100, 30);
-            Compendium.CanDrag = true;
-            Compendium.Position = new Point(25, 10);
-            Compendium.Title = "Compendium".Align(HorizontalAlignment.Center, 98);
-
-            Debug = new(100, 30);
-            Debug.CanDrag = true;
-            Debug.Position = new Point(25, 10);
-            Debug.Title = "Debug Menu".Align(HorizontalAlignment.Center, 98);
-
-            Clue = new(70, 20);
-            Clue.CanDrag = true;
-            Clue.Position = new Point(40, 10);
-            Clue.Title = "Clue Scroll".Align(HorizontalAlignment.Center, 68);
-
-            Teleport = new(50, 30);
-            Teleport.CanDrag = true;
-            Teleport.Position = new Point(25, 10);
-            Teleport.Title = "Teleports".Align(HorizontalAlignment.Center, 48);
-
-            InventoryContainer = new(50, 10);
-            InventoryContainer.CanDrag = true;
-            InventoryContainer.Position = new Point(25, 10);
-            InventoryContainer.Title = "Inventory Container".Align(HorizontalAlignment.Center, 48);
-
-            Book = new(77, 25);
-            Book.CanDrag = true;
-            Book.Position = new Point(25, 10);
-            Book.Title = "Book".Align(HorizontalAlignment.Center, 75);
+            CollectionLog = new(100, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Collection Log".Align(HorizontalAlignment.Center, 98)};
+            Guide = new(100, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Guidebook".Align(HorizontalAlignment.Center, 98)};
+            CraftingMenu = new(100, 30) { CanDrag = true, Position = new Point(15, 10), Title = "Crafting Menu".Align(HorizontalAlignment.Center, 98)};
+            Map = new(50, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Map".Align(HorizontalAlignment.Center, 48)};
+            Quests = new(100, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Quest Log".Align(HorizontalAlignment.Center, 98)};
+            Compendium = new(100, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Compendium".Align(HorizontalAlignment.Center, 98)};
+            Debug = new(100, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Debug Menu".Align(HorizontalAlignment.Center, 98)};
+            Clue = new(70, 20) { CanDrag = true, Position = new Point(25, 10), Title = "Clue Scroll".Align(HorizontalAlignment.Center, 68)};
+            Teleport = new(50, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Teleports".Align(HorizontalAlignment.Center, 48)};
+            InventoryContainer = new(50, 10) { CanDrag = true, Position = new Point(25, 10), Title = "Inventory COntainer".Align(HorizontalAlignment.Center, 48)}; 
+            Book = new(77, 25) { CanDrag = true, Position = new Point(25, 10), Title = "Book".Align(HorizontalAlignment.Center, 75)}; 
+            Cutscene = new(100, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Cutscene".Align(HorizontalAlignment.Center, 98)};
+            Shop = new(50, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Shop".Align(HorizontalAlignment.Center, 48)}; 
         }
 
         public static void GuideDraw() {
@@ -451,7 +430,7 @@ namespace ZeroPlayersOnline.Managers {
             foreach (var kv in GameLoop.ZPO.NPCLibrary) {  
                 foreach (var pick in kv.Value.PickpocketLoot) {
                     if (!GameLoop.ZPO.ItemLibrary.ContainsKey(pick.ItemID)) {
-                        findings.Add(new("NPC: " + kv.Value.Name + " Pickpocket (" + pick.ItemID + ")", "", "", "", "", 0));
+                        findings.Add(new("NPC: " + kv.Value.ID + " Pickpocket (" + pick.ItemID + ")", "", "", "", "", 0));
                     }
                 }
 
@@ -460,7 +439,7 @@ namespace ZeroPlayersOnline.Managers {
                         foreach (var item in dia.Value.ItemsGiven) {
                             string[] split = item.Split(",");
                             if (split[0] != "Gold" && !GameLoop.ZPO.ItemLibrary.ContainsKey(split[0])) {
-                                findings.Add(new("NPC: " + kv.Value.Name + " Dialogue (" + split[0] + ")", "", "", "", "", 0));
+                                findings.Add(new("NPC: " + kv.Value.ID + " Dialogue (" + split[0] + ")", "", "", "", "", 0));
                             }
                         }
                     }
@@ -470,7 +449,7 @@ namespace ZeroPlayersOnline.Managers {
             foreach (var kv in GameLoop.ZPO.MonsterLibrary) {  
                 foreach (var drop in kv.Value.DropTable) {
                     if (!GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
-                        findings.Add(new("Monster: " + kv.Value.Name + " Drop (" + drop.ItemID + ")", "", "", "", "", 0));
+                        findings.Add(new("Monster: " + kv.Value.ID + " Drop (" + drop.ItemID + ")", "", "", "", "", 0));
                     }
                 } 
             }
@@ -497,7 +476,7 @@ namespace ZeroPlayersOnline.Managers {
             foreach (var kv in GameLoop.ZPO.BossLibrary) {  
                 foreach (var drop in kv.Value.DropTable) {
                     if (!GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
-                        findings.Add(new("Boss: " + kv.Value.Name + " Drop (" + drop.ItemID + ")", "", "", "", "", 0));
+                        findings.Add(new("Boss: " + kv.Value.ID + " Drop (" + drop.ItemID + ")", "", "", "", "", 0));
                     }
                 } 
             }
@@ -505,7 +484,7 @@ namespace ZeroPlayersOnline.Managers {
             foreach (var kv in GameLoop.ZPO.HunterLibrary) {  
                 foreach (var drop in kv.Value.Drops) {
                     if (!GameLoop.ZPO.ItemLibrary.ContainsKey(drop.ItemID)) {
-                        findings.Add(new("Hunter Creature: " + kv.Value.Name + " Drop (" + drop.ItemID + ")", "", "", "", "", 0));
+                        findings.Add(new("Hunter Creature: " + kv.Value.ID + " Drop (" + drop.ItemID + ")", "", "", "", "", 0));
                     }
                 } 
             }
@@ -747,6 +726,11 @@ namespace ZeroPlayersOnline.Managers {
 
                             Compendium.Print(32, viewY++, "Skill Level: " + viewingRecipe.SkillLevelReq + " " + viewingRecipe.SkillUsed + " (+" + viewingRecipe.ExpGranted + " exp)", Color.White); 
                             Compendium.Print(32, viewY++, "Misc String: " + viewingRecipe.MiscString, Color.White); 
+                             
+                            viewY++;
+                                
+                            Compendium.Print(32, viewY++, " Fail Output: " + viewingRecipe.FailID, Color.White);
+                            Compendium.Print(32, viewY++, "Stop Failing: " + viewingRecipe.StopFailLevel, Color.White);
 
                             if (viewingRecipe.OutputItem == "_fire") {
                                 viewY++;
@@ -827,7 +811,7 @@ namespace ZeroPlayersOnline.Managers {
                                 recY++;
                                 
                                 Compendium.Print(32, recY++, "Skill: " + rec.Level + " " + rec.Skill + " (+" + rec.ExpGranted + " exp)", Color.White);
-                                recY++;
+                                recY++; 
 
                                 Compendium.Print(32, recY, "Items Needed: ");
                                 for (int reagent = 0; reagent < rec.NeededItems.Count; reagent++) {
@@ -853,9 +837,9 @@ namespace ZeroPlayersOnline.Managers {
 
 
                     if (CompendiumViewingID2 == "") {
-                        if (stations.Count > 24) {
-                            if (Helper.ScrolledUp()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop - qty, 0, stations.Count - 24); }
-                            if (Helper.ScrolledDown()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop + qty, 0, stations.Count - 24); }
+                        if (stations.Count > 22) {
+                            if (Helper.ScrolledUp()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop - qty, 0, stations.Count - 22); }
+                            if (Helper.ScrolledDown()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop + qty, 0, stations.Count - 22); }
                         } else {
                             CompendiumSidebarTop = 0;
                         }
@@ -865,7 +849,7 @@ namespace ZeroPlayersOnline.Managers {
                     int sidebarY = 7;
                     
                     if (CompendiumViewingID2 == "") {
-                        for (int i = CompendiumSidebarTop; i < stations.Count && i < CompendiumSidebarTop + 24; i++) { 
+                        for (int i = CompendiumSidebarTop; i < stations.Count && i < CompendiumSidebarTop + 22; i++) { 
                             Compendium.PrintClickable(2, sidebarY++, stations[i].Name, () => { CompendiumViewingID2 = stations[i].Name; Sources = StationLocations(CompendiumViewingID2); });
                         }
                     } else {
@@ -874,9 +858,9 @@ namespace ZeroPlayersOnline.Managers {
                             
                             List<ProcessingRecipe> recipes = station.Recipes.Where(u => (GameLoop.ZPO.ResolveItemName(u.InputID).ToLower().Contains(Filter.ToLower())) || (GameLoop.ZPO.ResolveItemName(u.OutputID).ToLower().Contains(Filter.ToLower()))).OrderBy(o => (GameLoop.ZPO.ResolveItemName(o.OutputID))).ToList();
                             
-                            if (recipes.Count > 20) {
-                                if (Helper.ScrolledUp()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop - qty, 0, recipes.Count - 20); }
-                                if (Helper.ScrolledDown()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop + qty, 0, recipes.Count - 20); }
+                            if (recipes.Count > 19) {
+                                if (Helper.ScrolledUp()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop - qty, 0, recipes.Count - 19); }
+                                if (Helper.ScrolledDown()) { CompendiumSidebarTop = Math.Clamp(CompendiumSidebarTop + qty, 0, recipes.Count - 19); }
                             } else {
                                 CompendiumSidebarTop = 0;
                             }
@@ -892,7 +876,7 @@ namespace ZeroPlayersOnline.Managers {
                                 Compendium.Print(2, sidebarY, "Opens UI for Craft Recipes", Color.White);
                             }
 
-                            for (int i = CompendiumSidebarTop; i < recipes.Count && i < CompendiumSidebarTop + 20; i++) {
+                            for (int i = CompendiumSidebarTop; i < recipes.Count && i < CompendiumSidebarTop + 19; i++) {
                                 Item? output = GameLoop.ZPO.ResolveItem(recipes[i].OutputID);
 
                                 if (output != null) {
@@ -945,6 +929,11 @@ namespace ZeroPlayersOnline.Managers {
                                 recY++;
                                 
                                 Compendium.Print(32, recY++, "Skill: " + rec.SkillLevel + " " + rec.SkillUsed + " (+" + rec.SkillEXP + " exp)", Color.White);
+
+                                recY++;
+                                
+                                Compendium.Print(32, recY++, " Fail Output: " + rec.FailOutput, Color.White);
+                                Compendium.Print(32, recY++, "Stop Failing: " + rec.StopFailingLevel, Color.White);
                             }
                         }
                     }  
@@ -2603,6 +2592,10 @@ namespace ZeroPlayersOnline.Managers {
                     sources.Add(new("Seed Produce: " + kv.Value.Name + " at " + kv.Value.UseInt + " Farming", "Items", "", kv.Value.ID, "", 0));
                 }
 
+                if (kv.Value.ItemReturned == id) {
+                    sources.Add(new("Returned when " + kv.Value.Name + " is fully consumed.", "Items", "", kv.Value.ID, "", 0));
+                }
+
                 if (kv.Value.UseString == "Transform" && kv.Value.UseString2 == id) { sources.Add(new("Received from Activating: " + kv.Value.Name, "Items", "", kv.Value.ID, "", 0)); }
                 if (kv.Value.UseString == "Extinguish" && kv.Value.UseString2 == id) { sources.Add(new("Received from Extinguishing: " + kv.Value.Name, "Items", "", kv.Value.ID, "", 0)); }
             }
@@ -2667,6 +2660,7 @@ namespace ZeroPlayersOnline.Managers {
 
             if (id == "mtaAlchCoin") { sources.Add(new("Cast Low or High Alchemy on the items from Alchemist's Playground in Mage Training Arena.", "Items", "", id, "", 0)); }
             if (id == "fruitPeach") { sources.Add(new("Cast Bones to Peaches with low level bones in your inventory.", "Items", "", id, "", 0)); }
+            if (id == "maskDragith") { sources.Add(new("Activate any of the five pieces of the mask with all five parts in your inventory.", "Items", "", id, "", 0)); }
 
 
             sources = sources.OrderBy(o => o.Display).ToList();
@@ -2968,7 +2962,7 @@ namespace ZeroPlayersOnline.Managers {
 
             if (GameLoop.ZPO.CraftLib.ContainsKey(CraftingType)) {
                 foreach (var craft in GameLoop.ZPO.CraftLib[CraftingType]) {
-                    string item = GameLoop.ZPO.ResolveItemName(craft.NeededItems[0].Split(",")[0]); // TODO: Remake this to list all items somehow
+                    string item = GameLoop.ZPO.ResolveItemName(craft.NeededItems[0].Split(",")[0]);
                     if (!ItemsUsed.Contains(item)) {
                         ItemsUsed.Add(item);
                     }
@@ -3002,9 +2996,9 @@ namespace ZeroPlayersOnline.Managers {
                 idx *= 10;
 
 
-            if (ActiveRecipes.Count > 26 && mousePos.X > 25) {
-                if (Helper.ScrolledUp()) { CraftingListTop = Math.Clamp(CraftingListTop - idx, 0, ActiveRecipes.Count - 26); }
-                if (Helper.ScrolledDown()) { CraftingListTop = Math.Clamp(CraftingListTop + idx, 0, ActiveRecipes.Count - 26); }
+            if (ActiveRecipes.Count > 26) {
+                if (Helper.ScrolledUp() && mousePos.X > 25) { CraftingListTop = Math.Clamp(CraftingListTop - idx, 0, ActiveRecipes.Count - 26); }
+                if (Helper.ScrolledDown() && mousePos.X > 25) { CraftingListTop = Math.Clamp(CraftingListTop + idx, 0, ActiveRecipes.Count - 26); }
             } else {
                 CraftingListTop = 0;
             }
@@ -3015,7 +3009,6 @@ namespace ZeroPlayersOnline.Managers {
                 string name = GameLoop.ZPO.ResolveItemName(rec.OutputItem) + (rec.OutputQty > 1 ? " x" + rec.OutputQty : "");
 
                 string[] item = rec.NeededItems[0].Split(",");
-                // TODO: Rework this display too, to account for multiple possible reagents
                 string line = name.Align(HorizontalAlignment.Left, 31, ' ') + 179.AsString() + " "
                     + rec.Level.ToString().Align(HorizontalAlignment.Right, 3) + " " + 179.AsString() + " "
                     + rec.ExpGranted.ToString().Align(HorizontalAlignment.Right, 5) + " " + 179.AsString() + " "
@@ -3039,6 +3032,12 @@ namespace ZeroPlayersOnline.Managers {
                         }
 
                         GameLoop.ZPO.Log.AddMessage(mats, Color.Crimson);
+
+                        if (rec.Reqs.Count > 0) { 
+                            foreach (var kv in rec.Reqs) { 
+                                GameLoop.ZPO.Log.AddMessage("Also: " + kv.GetSummary(), kv.CheckRequirement(GameLoop.ZPO.player, false, true) ? Color.Lime : Color.Crimson);
+                            } 
+                        }
                     });
                 }
             }
@@ -3052,7 +3051,7 @@ namespace ZeroPlayersOnline.Managers {
 
             if (GameLoop.ZPO.CraftLib.ContainsKey(CraftingType)) {
                 foreach (var craft in GameLoop.ZPO.CraftLib[CraftingType]) {
-                    string itemNeeded = GameLoop.ZPO.ResolveItemName(craft.NeededItems[0].Split(",")[0]); // TODO: Maybe involve multiple ingredients, or just file it under the first/primary permanently?
+                    string itemNeeded = GameLoop.ZPO.ResolveItemName(craft.NeededItems[0].Split(",")[0]);
                     if (itemNeeded == CraftingSubtype) {
                         ActiveRecipes.Add(craft);
                     }
@@ -3376,5 +3375,262 @@ namespace ZeroPlayersOnline.Managers {
             }
             Book.PrintClickable(76, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Book.IsVisible = false; });
         }    
+    
+        public static void CutsceneDraw() {
+            Cutscene.Clear();
+            Helper.DrawBox(Cutscene, 0, 0, 98, 28);
+
+            if (GameLoop.ZPO.CutsceneLibrary.TryGetValue(CutsceneID, out Cutscene? cut)) { 
+                Cutscene.Print(2, 0, ("[" + cut.DisplayTitle + "]").Align(HorizontalAlignment.Center, 98, (char)196));
+                
+                Helper.DrawBox(Cutscene, 1, 1, 96, 18);
+                Helper.DrawBox(Cutscene, 1, 20, 96, 7);
+
+                if (CutsceneScene < cut.Scenes.Count) { 
+                    Cutscene.PrintMultiLine(2, 8, cut.Scenes[CutsceneScene].Description, 96, center: true);
+
+                    if (CutsceneDialogue < cut.Scenes[CutsceneScene].DialogueLines.Count) {
+                        Cutscene.PrintMultiLine(2, 22, cut.Scenes[CutsceneScene].DialogueLines[CutsceneDialogue], 96, center: true);
+                    }
+
+                    if (cut.Scenes[CutsceneScene].DialogueLines.Count > CutsceneDialogue + 1) {
+                        Cutscene.PrintClickable(92, 28, "[NEXT]", () => { CutsceneDialogue++; });
+                    } else if (cut.Scenes.Count > CutsceneScene + 1) { 
+                        Cutscene.PrintClickable(92, 28, "[NEXT]", () => { CutsceneDialogue = 0; CutsceneScene++; });
+                    } else {
+                        Cutscene.PrintClickable(91, 28, "[CLOSE]", () => { CutsceneDialogue = 0; CutsceneScene = 0; Cutscene.IsVisible = false; });
+                    }
+
+                    if (CutsceneDialogue > 0) { 
+                        Cutscene.PrintClickable(2, 28, "[BACK]", () => { CutsceneDialogue--; });
+                    } else if (CutsceneScene > 0) { 
+                        Cutscene.PrintClickable(2, 28, "[BACK]", () => { CutsceneScene--; CutsceneDialogue = cut.Scenes[CutsceneScene].DialogueLines.Count - 1; });
+                    }
+                } 
+            }
+
+            
+            Cutscene.PrintClickable(99, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { 
+                Cutscene.IsVisible = false; 
+                CutsceneScene = 0;
+                CutsceneDialogue = 0;
+            });
+        }
+        
+
+        public static void ShopDraw() {
+            Shop.Clear();
+            Helper.DrawBox(Shop, 0, 0, 48, 28);
+            Shop.Print(2, 0, "[Shop - " + ShopID + "]");
+
+            int resourceX = 1;
+            int resourceY = 1;
+
+            MessageLog Log = GameLoop.ZPO.Log;
+
+            if (ShopID == "Slayer Rewards") {
+                Shop.Print(2, 0, "[Shop - " + ShopID + " (" + GameLoop.ZPO.player.SlayerPoints + " points)]");
+                Shop.PrintClickable(2, 1, new ColoredString("Unlocks", SlayerTab == "Unlocks" ? Color.Yellow : Color.White, Color.Black), () => { SlayerTab = "Unlocks"; });
+                Shop.Print(10, 1, 179.AsString(), Color.White);
+                Shop.PrintClickable(12, 1, new ColoredString("Buy", SlayerTab == "Buy" ? Color.Yellow : Color.White, Color.Black), () => { SlayerTab = "Buy"; });
+                Shop.Print(16, 1, 179.AsString(), Color.White);
+                Shop.PrintClickable(18, 1, new ColoredString("Tasks", SlayerTab == "Tasks" ? Color.Yellow : Color.White, Color.Black), () => { SlayerTab = "Tasks"; });
+                Shop.Print(24, 1, 179.AsString(), Color.White);
+                Shop.PrintClickable(26, 1, new ColoredString("Cosmetic", SlayerTab == "Cosmetic" ? Color.Yellow : Color.White, Color.Black), () => { SlayerTab = "Cosmetic"; });
+                Shop.DrawLine(new Point(1, 2), new Point(48, 2), 196, Color.White);
+
+                resourceY = 3;
+                List<SlayerReward> viewing = SlayerUnlocks;
+                if (SlayerTab == "Unlocks") { viewing = SlayerUnlocks; }
+                else if (SlayerTab == "Buy") { viewing = SlayerBuy; }
+                else if (SlayerTab == "Tasks") { viewing = SlayerTasks; }
+
+                int qty = 1;
+                if (Helper.EitherShift())
+                    qty *= 5;
+                if (Helper.EitherControl())
+                    qty *= 10;
+
+
+                if (viewing.Count > 26) {
+                    if (Helper.ScrolledUp()) { ShopTop = Math.Clamp(ShopTop - qty, 0, viewing.Count - 26); }
+                    if (Helper.ScrolledDown()) { ShopTop = Math.Clamp(ShopTop + qty, 0, viewing.Count - 26); }
+                } else {
+                    ShopTop = 0;
+                }
+
+                for (int i = ShopTop; i < viewing.Count && i < ShopTop + 26; i++) {
+                    SlayerReward reward = viewing[i];
+
+                    Shop.PrintClickable(resourceX, resourceY, new ColoredString("?", Color.MediumPurple, Color.Black), () => { 
+                        Log.AddMessage(new ColoredString(reward.Description, Color.SandyBrown, Color.Black));
+                    });
+                    int spaceAfterName = 46 - reward.Name.Length;
+
+                    Shop.PrintClickable(resourceX + 2, resourceY++, new ColoredString(reward.Name + ("(" + reward.SlayerPointCost + " points)").Align(HorizontalAlignment.Right, spaceAfterName), !reward.AllReqsMet() || (GameLoop.ZPO.player.SlayerPoints < reward.SlayerPointCost) ? Color.Crimson : Color.White, Color.Black), () => {
+                        if (GameLoop.ZPO.player.CanUseShops) {
+                            if (!reward.AllReqsMet()) { 
+                                List<string> failed = new();
+                                foreach (var req in reward.Reqs) { 
+                                    if (!req.CheckRequirement(GameLoop.ZPO.player, false, true)) {
+                                        failed.Add(req.GetSummary());
+                                    }
+                                }
+
+                                if (failed.Count == 1) { 
+                                    Log.AddMessage("Missing requirement: " + failed[0], Color.Crimson);  
+                                } else {
+                                    Log.AddMessage("Missing requirements: ", Color.Crimson); 
+                                    foreach (var fail in failed) { 
+                                        Log.AddMessage("| " + fail, Color.Crimson); 
+                                    } 
+                                }
+
+                                return;
+                            }
+
+                            if (GameLoop.ZPO.player.SlayerPoints >= reward.SlayerPointCost) {
+                                GameLoop.ZPO.player.SlayerPoints -= reward.SlayerPointCost; 
+
+                                if (SlayerTab != "Tasks") {
+                                    Log.AddMessage("You unlocked " + reward.Name + " for " + reward.SlayerPointCost + " slayer points.", Color.Goldenrod); 
+                                }
+
+                                foreach (var act in reward.Actions) {
+                                    act.Execute();
+                                }
+                            } else {
+                                Log.AddMessage(new ColoredString("You don't have enough slayer points to buy that!", Color.Crimson, Color.Black));
+                            }
+                        } else {
+                            Log.AddMessage(new ColoredString("You aren't allowed to use shops. Yes, that includes the Slayer Rewards shop.", Color.Crimson, Color.Black));
+                        }
+                    }); 
+                } 
+            } else {
+                foreach (var shopStr in ShopItems) {
+                    if (GameLoop.ZPO.ItemLibrary.ContainsKey(shopStr)) {
+                        Item shop = new(GameLoop.ZPO.ItemLibrary[shopStr]); 
+                        Shop.Print(resourceX, resourceY, "|");
+                        int spaceAfterName = 46 - shop.GetName(1, 0, shop.UseInt4).Length;
+
+                        int qty = 1;
+                        if (Helper.EitherShift()) { qty *= 5; }
+                        if (Helper.EitherControl()) { qty *= 10; }
+
+                        Shop.PrintClickable(resourceX + 2, resourceY, shop.GetNameCS(1, 0, shop.UseInt4) + new ColoredString(("(" + shop.Value + "gp)").Align(HorizontalAlignment.Right, spaceAfterName)), () => {
+                            if (GameLoop.ZPO.player.CanUseShops) {
+                                if (GameLoop.ZPO.player.GoldTotal() >= shop.Value * qty) {
+                                    GameLoop.ZPO.player.TakeGold(shop.Value * qty); 
+
+                                    if (qty == 1)
+                                        Log.AddMessage("You purchased a" + (Helper.VowelStart(shop.Name.ToLower()) ? "n " : " ") + shop.Name + " for " + shop.Value + " gp.", Color.Goldenrod);
+                                    else 
+                                        Log.AddMessage("You purchased " + qty + "x " + shop.Name + " for " + shop.Value + " gp.", Color.Goldenrod);
+
+                                    if (!GameLoop.ZPO.player.TryPickup(shop, qty, false, true)) {
+                                        Log.AddMessage("Your inventory is full and the "  + shop.Name + " falls to the ground.", Color.Crimson);
+                                    }
+                                } else {
+                                    Log.AddMessage(new ColoredString("You don't have enough gold to buy that!", Color.Crimson, Color.Black));
+                                }
+                            } else {
+                                Log.AddMessage(new ColoredString("You aren't allowed to use shops.", Color.Crimson, Color.Black));
+                            }
+                        }); 
+
+                        resourceY++;
+                    }
+                    else {
+                        Shop.Print(resourceX, resourceY, "|");
+                        Shop.Print(resourceX + 2, resourceY++, shopStr, Color.DarkSlateGray);
+                    }
+                }
+            }
+            
+
+            Shop.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Shop.IsVisible = false; });
+        }
+
+        public static void BuildShop() {
+            ShopItems.Clear();
+
+            if (ShopID == "Slayer Equipment") {
+                ShopItems.Add("gemSlayer");
+                
+                ShopItems.Add("staffSlayer");
+                ShopItems.Add("shieldMirror");
+                ShopItems.Add("spearLeafbladed");
+                ShopItems.Add("arrowsBroad");
+                ShopItems.Add("arrowheadsBroad");
+                ShopItems.Add("boltsUnfBroad");
+                ShopItems.Add("boltsBroad");
+                 
+                ShopItems.Add("facemask");
+                ShopItems.Add("nosepeg");
+                ShopItems.Add("earmuffs");
+                ShopItems.Add("helmSpiny"); 
+                ShopItems.Add("glovesSlayer");
+                ShopItems.Add("bootsInsulated");
+                ShopItems.Add("bootsStone");
+                ShopItems.Add("witchwood");
+                ShopItems.Add("lanternBug");  
+
+                ShopItems.Add("bellSlayer"); 
+                ShopItems.Add("hammerRock");
+                ShopItems.Add("bagSalt");
+                ShopItems.Add("saltShaker");
+                ShopItems.Add("iceCooler");
+                ShopItems.Add("iceShaker");
+                ShopItems.Add("fungicide");
+                ShopItems.Add("fungicideShaker");
+                ShopItems.Add("explosiveFishing"); 
+                ShopItems.Add("explosiveShaker");
+
+                ShopItems.Add("gogglesReinforced"); // TODO: make this only show up if porcine of interest is completed
+            }
+
+
+
+
+
+            SlayerUnlocks.Clear();
+            SlayerUnlocks.Add(new("Malevolent Masquerade", 400, "Learn to assemble a slayer helmet, which requires 55 Crafting.", [ new("Data", 0, "SlayerHelm", false, "equals", "Must not already know how to craft slayer helmets.") ], [ new("Data", "SlayerHelm", "set", 1)]));
+            SlayerUnlocks.Add(new("Ring Bling", 150, "Learn to craft a slayer ring, which requires 75 Crafting.", [ new("Data", 0, "SlayerRing", false, "equals", "Must not already know how to craft slayer rings.") ], [ new("Data", "SlayerRing", "set", 1)]));
+            SlayerUnlocks.Add(new("Broader Fletching", 300, "Learn to fletch broad arrows (52 Fletching), and broad bolts (55 Fletching).", [ new("Data", 0, "SlayerBroadFletching", false, "equals", "Must not already know how to fletch broad arrows/bolts.") ], [ new("Data", "SlayerBroadFletching", "set", 1)]));
+            SlayerUnlocks.Add(new("Seeing Red", 50, "Konar, Duradel, and Nieve will be able to assign red dragons as your task.", [ new("Data", 0, "SlayerRedDragons", false, "equals", "Must not already be assignable red dragons.") ], [ new("Data", "SlayerRedDragons", "set", 1)]));
+            SlayerUnlocks.Add(new("Watch the Birdie", 80, "Konar, Duradel, Nieve, Chaeldar, and Krystilia will be able to assign Aviansie as your task.", [ new("Data", 0, "SlayerAviansie", false, "equals", "Must not already be assignable Aviansie.") ], [ new("Data", "SlayerAviansie", "set", 1)]));
+            SlayerUnlocks.Add(new("Hot Stuff", 100, "Duradel, Nieve, and Chaeldar, will be able to assign TzHaar as your task.", [ new("Data", 0, "SlayerTzHaar", false, "equals", "Must not already be assignable TzHaar.") ], [ new("Data", "SlayerTzhaar", "set", 1)]));
+            SlayerUnlocks.Add(new("Like a Boss", 200, "Konar, Duradel, Krystilia and Nieve will be able to assign various bosses as your task.", [ new("Data", 0, "SlayerBosses", false, "equals", "Must not already be assignable bosses.") ], [ new("Data", "SlayerBosses", "set", 1)]));
+            SlayerUnlocks.Add(new("Reptile Got Ripped", 80, "Konar, Duradel, Nieve, and Chaeldar will be able to assign Lizardmen as your task.", [ new("Data", 0, "SlayerLizardmen", false, "equals", "Must not already be assignable Lizardmen.") ], [ new("Data", "SlayerLizardmen", "set", 1)]));
+            SlayerUnlocks.Add(new("Bigger and Badder", 50, "Certain slayer monsters will have the chance of spawning a superior version whilst on a Slayer task.", [ new("Data", 0, "SlayerSuperior", false, "equals", "Must not already have superiors unlocked.") ], [ new("Data", "SlayerSuperior", "set", 1)]));
+            SlayerUnlocks.Add(new("Duly Noted", 200, "Mithril dragons will drop mithril bars in noted form if killed during an assignment.", [ new("Data", 0, "SlayerMithril", false, "equals", "Must not already receive mithril bars as notes.") ], [ new("Data", "SlayerMithril", "set", 1)]));
+            SlayerUnlocks.Add(new("Stop the Wyvern", 500, "Stops you from getting Fossil Island Wyvern tasks, without counting towards the blocked task limit.", [ new("Data", 0, "SlayerWyverns", false, "equals", "Must not already have Wyverns turned off.") ], [ new("Data", "SlayerWyverns", "set", 1)]));
+            SlayerUnlocks.Add(new("Basilocked", 80, "Konar, Duradel, and Nieve will be able to assign basilisks as your task.", [ new("Data", 0, "SlayerBasilisk", false, "equals", "Must not already be assignable basilisks.") ], [ new("Data", "SlayerBasilisk", "set", 1)]));
+            SlayerUnlocks.Add(new("Actual Vampire Slayer", 80, "Konar, Duradel, Nieve, and Chaeldar will be able to assign vampires as your task.", [ new("Data", 0, "SlayerVampire", false, "equals", "Must not already be assignable vampires.") ], [ new("Data", "SlayerVampire", "set", 1)]));
+            SlayerUnlocks.Add(new("Task Storage", 500, "Gain the ability to store your current task.", [ new("Data", 0, "SlayerStorage", false, "equals", "Must not already be able to store your task.") ], [ new("Data", "SlayerStorage", "set", 1)]));
+            SlayerUnlocks.Add(new("I Wildy More Slayer", 0, "Krystilia will be able to assign jellies, dust devils, nechryaels, and abyssal demons as your task.", [ new("Data", 0, "SlayerWildy", false, "equals", "Must not already be assignable various wilderness monsters.") ], [ new("Data", "SlayerWildy", "set", 1)]));
+            SlayerUnlocks.Add(new("Warped Reality", 60, "Konar, Duradel, Nieve, and Chaeldar will be able to assign Warped creatures as your task. Not the ones in the Lumbridge Catacombs.", [ new("Data", 0, "SlayerWarped", false, "equals", "Must not already be assignable warped creatures.") ], [ new("Data", "SlayerWarped", "set", 1)]));
+            SlayerUnlocks.Add(new("Lured In", 80, "Duradel and Nieve will be able to assign aquanites as your task.", [ new("Data", 0, "SlayerAquanite", false, "equals", "Must not already be assignable aquanites.") ], [ new("Data", "SlayerAquanite", "set", 1)]));
+            SlayerUnlocks.Add(new("Wings Spread", 80, "Duradel and Nieve will be able to assign gryphons as your task.", [ new("Data", 0, "SlayerGryphon", false, "equals", "Must not already be assignable gryphons.") ], [ new("Data", "SlayerGryphon", "set", 1)]));
+            SlayerUnlocks.Add(new("Chance of Heavy Frost", 100, "Duradel and Nieve will assign frost dragon tasks slightly more often.", [ new("Data", 0, "SlayerFrost", false, "equals", "Must not already have more likely frost dragons.") ], [ new("Data", "SlayerFrost", "set", 1)]));
+            
+            SlayerBuy.Clear();
+            SlayerBuy.Add(new("Slayer ring (8)", 75, "An equippable ring that acts as a slayer gem and lets you teleport to useful slayer sites.", null, [ new("GiveItem", "ringSlayer", "", 1)]));
+            SlayerBuy.Add(new("Broad bolts (x250)", 35, "Bolts that can damage Turoths and Kurask. Level 55 Slayer and 50 Ranged, alongside a suitable crossbow, are required to fire these bolts.", null, [ new("GiveItem", "boltsBroad", "", 250)]));
+            SlayerBuy.Add(new("Broad arrows (x250)", 35, "Bolts that can damage Turoths and Kurask. Level 55 Slayer and 50 Ranged, alongside a suitable crossbow, are required to fire these bolts.", null, [ new("GiveItem", "boltsBroad", "", 250)]));
+            SlayerBuy.Add(new("Herb sack", 75, "Stores up to 30 of each type of grimy herb (for a total of 450 herbs). Requires 58 Herblore.", [ new("Skill", 58, "Herblore") ], [ new("GiveItem", "sackHerb", "", 1)]));
+            SlayerBuy.Add(new("Rune pouch", 750, "Stores up to 3 types of runes. Only one can be owned. Can also be obtained by exchanging a rune pouch note at a bank.", [ new("ItemNotOwned", 1, "pouchRune") ], [ new("GiveItem", "sackHerb", "", 1)]));
+            
+            SlayerTasks.Clear();
+            SlayerTasks.Add(new("Cancel task", 30, "Cancels your current task without ending your streak.", [ new("SlayerTask", 1, "Any")], [ new("SlayerTask", "Cancel", "", 1)]));
+            SlayerTasks.Add(new("Block task", 100, "Cancels your current task without ending your streak, and adds it to your block list so you don't receive it again.", [ new("SlayerTask", 1, "Any"), new("SlayerBlockRoom", 1, ""), new("SlayerNotBlocked", 1, "") ], [ new("SlayerTask", "Block", "", 1)]));
+            SlayerTasks.Add(new("Extend task", 100, "Extends your current task by 20% of the originally assigned kills.", [ new("SlayerTask", 1, "Any"), new("SlayerNotExtended", 1, "") ], [ new("SlayerTask", "Extend", "", 1)]));
+            SlayerTasks.Add(new("Prefer task", 100, "Makes it more likely you will receive this task in the future, and extends the task by 20%.", [ new("SlayerTask", 1, "Any"), new("SlayerPreferRoom", 1, ""), new("SlayerNotPreferred", 1, "") ], [ new("SlayerTask", "Prefer", "", 1)]));
+            SlayerTasks.Add(new("Store task", 0, "Swap your active task with your stored task, if any.", [ new("Data", 1, "SlayerStorage", false, "equals", "Must have unlocked task storage from the Unlocks menu.") ], [ new("SlayerTask", "Store", "", 1)]));
+            
+
+        }
+
     }
 }

@@ -21,6 +21,8 @@
         public string FailID = "";
         public int StopFailLevel = 0;
 
+        public List<Requirement> ExtraReqs = new();
+
         public Recipe(string fI, string sI, string oI, int fQ = 1, int sQ = 1, int oQ = 1, string s = "", int lv = 1, int exp = 0, string sound = "", string miscStr = "", string tool = "", List<string>? returns = null) {
             FirstItem = fI;
             SecondItem = sI;

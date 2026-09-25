@@ -12,6 +12,8 @@
         public string OutputItem = "";
         public int OutputQty = 1; 
 
+        public List<Requirement> Reqs = new();
+
         public CraftRecipe(string st, string sk, int lv, int exp, List<string> items, string outId, int outQty = 1, string tool = "") {
             Station = st;
             Skill = sk;

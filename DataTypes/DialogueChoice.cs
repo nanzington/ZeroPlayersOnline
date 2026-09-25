@@ -9,6 +9,8 @@
         public string TeleportTo = "";
         public bool SetSpawnToo = false;
 
+        public List<string> Cutscenes = new();
+
 
         public DialogueChoice(string t, int stage, List<Requirement>? reqs = null, bool showAnyways = false, string tele = "", bool spawn = false) {
             Text = t;

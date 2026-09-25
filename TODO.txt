@@ -1,5 +1,5 @@
 Misthalin Mania
-- Lumbridge locations filled out
+- (DONE) Lumbridge locations filled out
 - Draynor Village locations filled out
 - (DONE) HAM Hideout locations filled out
 - (DONE) Wizard Tower locations filled out
@@ -7,20 +7,19 @@ Misthalin Mania
 - Barbarian Village locations filled out
 - Edgeville locations filled out
 - Zanaris locations filled out
-- Lumbridge underground (catacombs)
 - (DONE) Quest: Sheep Shearer
 - (DONE) Quest: Cook's Assistant
 - (DONE) Quest: The Restless Ghost
 - (DONE) Quest: Imp Catcher
+- (DONE) Quest: The Blood Pact
 - Quest: Demon Slayer (needs varrock) 
 - Quest: Romeo & Juliet (needs varrock)
-- Quest: Shield of Arrav (needs varrock)
+- x Quest: Shield of Arrav (needs varrock)
 - Quest: Ernest the Chicken (needs draynor but christ)
 - Quest: Vampire Slayer (needs varrock)
 - Quest: Rune Mysteries (needs varrock)
 - Quest: Misthalin Mystery (just lumbridge i think but this one might be spicy to do right)
-- Quest: The Ides of Milk (just lumbridge, should be fairly straitforward)
-- Quest: The Blood Pact (only lumbridge but so involved)
+- x Quest: The Ides of Milk (just lumbridge, should be fairly straitforward)
 - Quest: Gertrude's Cat (needs varrock)
 - Quest: Priest in Peril (needs varrock / silvarea)
 - Quest: A Soul's Bane (needs varrock)
@@ -31,8 +30,7 @@ Misthalin Mania
 
 Go back and add more clues as Barbarian Village, Varrock, Draynor, Al Kharid, and Falador are added
 
-- Finish up areas in Al Kharid: Emir's Arena, Mage Training Arena, Shantay Pass, Giant's Foundry, Citharede Abbey, Palace
-- First real minigame/activity area, Mage Training Arena?
+- Finish up areas in Al Kharid: Emir's Arena, Shantay Pass, Giant's Foundry, Citharede Abbey, Palace
 
 Maybe expand a lil bit into Al Kharid and Port Sarim/Falador to open some more content relevant to Misthalin there?
 - Al Kharid for clue steps and the mine, just to the Shantay Pass and leave the actual desert for later
@@ -43,15 +41,11 @@ Maybe expand a lil bit into Al Kharid and Port Sarim/Falador to open some more c
 - Can nearly begin adding task diaries
 - Implement lodestone network, make it so you have to reach and enable lodestones to teleport to them, maybe have a selective cooldown based on if you've charged it with law runes?
 - Grand Exchange is reachable now, time to implement that. Need a new window for it probably.
-- Implement hot/cold clue logic (search all connected map locations recursively out 10 steps, see if the target map is found and the shortest possible steps to it)
-- Implement food burning and then remove it again with the cooking skillcape equipped
-- Implement books, tie it to a UseString that opens the relevant book text in a window
 - Lock ruby necklace -> digsite pendant behind the museum cleaning thing
 - Make Shantay drop the scrumpled paper rarely on talk
 
  
 Weapon poison, maybe a poison equipment slot that applies to any melee or ranged attack?
-Optionally hide connections if requirements not met? Maybe default to visible regardless since it'd mostly be for sneaky map copies
 
 
 
@@ -62,11 +56,11 @@ Immediately important stuff to get working:
 
 
 Less immediate but still important:
-- Add poison mechanic to bosses when there's a boss that can inflict poison
+- Reimplement the cornucopia prayer, it's currently busted as hell
+- Compass mechanic? Select destination somehow, tell player if it's within 10 maps of them and lead them to it if so
 - Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
 - Dungeoneering areas that are actual random layout dungeons, reset layout somehow (on reload, if player is in a dungeon then reset their loc to the entrance, or if they reach the end crystal tp back to start and give set exp) 
 - Bank preset options somehow
-- Add slayer shop (slayer points and gold), way to skip/block/prefer tasks
 - Implement bronze logic when the grand exchange is actually available
 - Achievement Diaries / tasks for areas, split into difficulties, reward item for completing it, reward item only if it doesn't exist anywhere in the world, your bank, inventory, or equipment
 - Random Events
@@ -99,6 +93,9 @@ Randomizer Options - Basically just provide an option for ID remaps
 
 
 Future Skills to work on:
+- Construction: Player-owned house in each place that you could put it, but you can own any/all of them at once. 
+- - Maximum number of houses based on your current construction level, 1 and level 1 and then every 10th level after. Have to choose where you want houses
+- - Must build a teleport focus in a house to be able to teleport to it
 - Artisan (slayer for skilling)
 - Divination (create gathering spots, transmute materials, etc)
 - Proxy combat skill of some kind (ex necromancy, summoning, taming, something like that)
@@ -149,7 +146,10 @@ Material Tiers/Levels
 30 - Mithril, Teak, Carapace
 40 - Adamant, Maple, Green Dhide
 50 - Rune, Acadia, Blue Dhide 
-60 - Oric, Yew, Black Dhide
+60 - Oric, Mahogany, Black Dhide
+70 - Necronium, Yew, ???
+80 - Bane, Magic, ???
+90 - Elder Rune, Elder Wood, ???
 
 Clue Step Notes
 - Tutorial should only require level 1s at most.
@@ -169,9 +169,6 @@ Next quests to implement and things they need
 - Demon Slayer
 - - Locations: Path from Lumbridge to Varrock, a decent portion of Varrock, Wizard tower so also path to Draynor
 - - Mechanics: Boss fight vs Delrith (or temporary monsters), partial item delivery for quest steps?
-- The Restless Ghost
-- - Locations: Lumbridge Swamp, Wizard Tower
-- - Mechanics: Temporary monsters
 - Romeo and Juliet
 - - Locations: Basically all of varrock and the surrounding area / the southeast mine
 - Shield of Arrav
@@ -208,10 +205,6 @@ How will this even be possible?
 - Fully viable poison build? 
 
 =========================================
-
-Prayer 
-- Prayer potions now raise your level temporarily 
-
 
 Treasure Trails   
 - Consider whether or not it's even worth adding sliding puzzles when they kinda suck, maybe let players force them open with strength score/check

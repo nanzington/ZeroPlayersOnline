@@ -102,7 +102,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
-            toAdd.Add(new("MI_RestlessGhost", "Restless Ghost", "Short", "Novice", "A ghost is haunting Lumbridge graveyard. The priest of Lumbridge church of Saradomin wants you to find out how to get rid of it.", 30, new() { "Misthalin" }) {
+            toAdd.Add(new("MI_RestlessGhost", "The Restless Ghost", "Short", "Novice", "A ghost is haunting Lumbridge graveyard. The priest of Lumbridge church of Saradomin wants you to find out how to get rid of it.", 30, new() { "Misthalin" }) {
                 DateFullyImplemented = 20260916,
                 Rewards = { new("Experience", "Prayer", 1125) },
                 QuestPoints = 1,
@@ -122,6 +122,74 @@ namespace ZeroPlayersOnline.Hardcodes {
                     {
                         30,
                         new("I found the skull in the basement of the Wizards' Tower and returned it to the coffin, causing the ghost to fade away. Nobody asked for the amulet of ghostspeak back, so I'll hold onto it. Could be useful in the future.", 30)
+                    }
+                }
+            });
+
+            toAdd.Add(new("MI_BloodPact", "The Blood Pact", "Short", "Novice", "Dire deeds are afoot in Lumbridge Graveyard. A tomb lies defiled and rumours of baleful cults and profane rituals are whispered throughout the town. /n /n The veteran adventurer Xenia has come in search of talented heroes to accompany her into the depths of Lumbridge Catacombs. Together, you will uncover a plot to awaken a slumbering evil. Can you save the citizens of Lumbridge from a fate worse than death?", 100, new() { "Misthalin" }) {
+                DateFullyImplemented = 20260922,
+                Rewards = { new("Item", "combatLampTiny", 1) },
+                QuestPoints = 1,
+                Stages = new() {
+                    {
+                        0,
+                        new("Xenia, an old adventurer, said she had seen some Zamorakian cultists entering the catacombs beneath Lumbridge Church. She asked me to go with her into the catacombs to deal with them.", 10)
+                    },
+                    {
+                        10,
+                        new("Inside the catacombs, Xenia and I overheard the cultists talking about a blood pact. I should accompany Xenia to fight the first cultist.", 20)
+                    },
+                    {
+                        20,
+                        new("The first cultist shot Xenia, wounding her badly. She will not be able to fight. I need to defeat the first cultist myself.", 30, "Kill", "questBloodPactKayle", 1)
+                    },
+                    {
+                        30,
+                        new("I should either kill or spare the first cultist.", 40)
+                    },
+                    {
+                        40,
+                        new("I have dealt with the first cultist, Kayle. I need to defeat the second cultist.", 50, "Kill", "questBloodPactCaitlin", 1)
+                    },
+                    {
+                        50,
+                        new("I must choose whether to kill or spare the second cultist.", 60)
+                    },
+                    {
+                        60,
+                        new("I have dealt with the second cultist, Caitlin. Only one cultist is left.", 70, "Kill", "questBloodPactReese", 1)
+                    },
+                    {
+                        70,
+                        new("I should either kill or spare the final cultist, Reese.", 80)
+                    },
+                    {
+                        80,
+                        new("I should untie the prisoner and escape.", 90)
+                    },
+                    {
+                        90,
+                        new("With the cultists' plan foiled, I need to go speak to Xenia again.", 100)
+                    },
+                    {
+                        100,
+                        new("Xenia thanked me for my help stopping the cultists.", 100)
+                    }
+                }
+            });
+
+            toAdd.Add(new("MI_ShieldOfArrav", "Shield of Arrav", "Medium", "Novice", "Varrockian literature tells of a valuable shield, stolen long ago from the Museum of Varrock by a gang of professional thieves. See if you can track down this shield and return it to the Museum. Reldo, in the Varrock Palace Library, may know more.", 1000, new() { "Misthalin" }) {
+                DateFullyImplemented = 20260913,
+                Rewards = { new("Item", "Gold", 1200) },
+                QuestPoints = 1,
+                Stages = new() {
+                    {
+                        0,
+                        new("I found a book describing the shield and the bounty for retrieving it. I should ask Reldo if he knows anything about the gangs that were involved in stealing it.", 10)
+                    },
+                    {
+                        10,
+                        new("Reldo suggested that I go and speak with Baraek, the fur trader in ", 20)
                     }
                 }
             });

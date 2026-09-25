@@ -1,4 +1,5 @@
-﻿using SadConsole.Input;
+﻿using GoRogue.DiceNotation.Terms;
+using SadConsole.Input;
 using ZeroPlayersOnline.DataTypes;
 using ZeroPlayersOnline.UI;
 
@@ -121,12 +122,12 @@ namespace ZeroPlayersOnline.Managers {
                              
                             for (int j = 0; j < curr.ItemsHere.Count; j++) {
                                 if (player.RandomItems == 0) {
-                                    if (curr.ItemsHere[j].ID == curr.ItemSpawns[i].ItemID) {
+                                    if (curr.ItemsHere[j].ID == curr.ItemSpawns[i].ItemID && curr.ItemsHere[j].Inaccessible == curr.ItemSpawns[i].Inaccessible) {
                                         spawnedCount += curr.ItemsHere[j].Quantity;
                                     }
                                 } else {
                                     if (GameLoop.ZPO.ItemLibrary.ContainsKey(curr.ItemSpawns[i].ItemID)) {
-                                        if (curr.ItemsHere[j].ID == GameLoop.ZPO.ItemLibrary[curr.ItemSpawns[i].ItemID].ID) { 
+                                        if (curr.ItemsHere[j].ID == GameLoop.ZPO.ItemLibrary[curr.ItemSpawns[i].ItemID].ID && curr.ItemsHere[j].Inaccessible == curr.ItemSpawns[i].Inaccessible) { 
                                             spawnedCount += curr.ItemsHere[j].Quantity;
                                         }
                                     }
@@ -136,7 +137,12 @@ namespace ZeroPlayersOnline.Managers {
                             if (spawnedCount < curr.ItemSpawns[i].SpawnCount) {
                                 if (GameLoop.ZPO.ItemLibrary.ContainsKey(curr.ItemSpawns[i].ItemID)) {
                                     Item spawn = new(GameLoop.ZPO.ItemLibrary[curr.ItemSpawns[i].ItemID]);
-                                    GameLoop.ZPO.TryPlaceItem(curr.ID, new(spawn));
+
+                                    if (curr.ItemSpawns[i].Inaccessible) {
+                                        spawn.Inaccessible = true;
+                                    }
+
+                                    GameLoop.ZPO.TryPlaceItem(curr.ID, new(spawn, spawn.Inaccessible));
                                     curr.ItemSpawns[i].LastPickedUp = Helper.Time();
                                 }
                             }
@@ -346,22 +352,43 @@ namespace ZeroPlayersOnline.Managers {
                                 if (!player.Inventory[i].Noted) { 
                                     mini.Con.PrintClickable(px, 15 + i, new ColoredString("* ", Color.Yellow, Color.Black), () => { 
                                         bool success = ItemUseLogic.UseItem(player.Inventory[i], player);
-
-                                        if (inv.ConsumedOnUse && success) {
-                                            if (player.PrayerActive("Cornucopia") && inv.ID != "coins") {
-                                                if (GameLoop.rand.Next(5) != 0) { 
-                                                    player.Inventory[i].Quantity -= 1;
-                                                } else { 
-                                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("The blessing of the cornucopia preserves your item.", Color.Goldenrod, Color.Black));
+                                        bool flagForDeletion = false;
+                                        if (inv.ConsumedOnUse && success) { 
+                                            if (inv.UsesCharges) {
+                                                if (player.Inventory[i].Charges > 0) {
+                                                    if (player.PrayerActive("Cornucopia") && GameLoop.rand.Next(10) == 0) {
+                                                        GameLoop.ZPO.Log.AddMessage(new ColoredString("The blessing of the cornucopia preserves your charge.", Color.Goldenrod, Color.Black));
+                                                    } else { 
+                                                        player.Inventory[i].Charges--; 
+                                                        if (player.Inventory[i].Charges <= 0 && inv.ShattersAtZeroCharges && inv.ItemReturned == "") { 
+                                                            flagForDeletion = true;
+                                                            GameLoop.ZPO.Log.AddMessage("Your " + inv.Name + " runs out of uses and shatters.", Color.MediumPurple);
+                                                        } else if (player.Inventory[i].Charges <= 0 && inv.ItemReturned != "") { 
+                                                            GameLoop.ZPO.Log.AddMessage("Your " + inv.Name + " runs out of charges.", Color.MediumPurple);
+                                                        }
+                                                    }
+                                                } else if (player.Inventory[i].Charges == 0) { 
+                                                    GameLoop.ZPO.Log.AddMessage("That item doesn't have any charges left.", Color.Crimson);
                                                 }
                                             } else {
-                                                player.Inventory[i].Quantity -= 1;
+                                                if (player.PrayerActive("Cornucopia") && inv.ID != "coins" && GameLoop.rand.Next(10) == 0) { 
+                                                    GameLoop.ZPO.Log.AddMessage(new ColoredString("The blessing of the cornucopia preserves your item.", Color.Goldenrod, Color.Black));
+                                                } else {
+                                                    player.Inventory[i].Quantity -= 1; 
+                                                    if (player.Inventory[i].Quantity <= 0) {
+                                                        flagForDeletion = true;
+                                                    }
+                                                }
                                             }
                                         }
 
-                                        if (player.Inventory[i].Quantity <= 0) {
+                                        if (flagForDeletion || player.Inventory[i].Quantity <= 0) {
                                             player.Inventory.RemoveAt(i);
                                             dropped = true;
+                                             
+                                            if (inv.ItemReturned != "" && GameLoop.ZPO.ResolveItem(inv.ItemReturned) is Item returned) {
+                                                player.TryPickup(returned, 1);
+                                            }
                                         }
                                     });
                                     px -= 2;

@@ -4,7 +4,7 @@ namespace ZeroPlayersOnline.DataTypes {
     public class ItemDrop {
         public string ItemID = "";
         public int DropX = 0;
-        public int InY = 0;
+        public double InY = 0;
 
         public int QuantityMin = 0;
         public int QuantityMax = 1;
@@ -17,8 +17,10 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public string AltLog = "";
 
+        [JsonConstructor]
+        public ItemDrop() {}
 
-        public ItemDrop(string id, int x, int y, int min, int max, bool noted = false, bool evenIf0 = false, Requirement? req = null, string altlog = "") {
+        public ItemDrop(string id, int x, double y, int min, int max, bool noted = false, bool evenIf0 = false, Requirement? req = null, string altlog = "") {
             ItemID = id;
             DropX = x;
             InY = y;
@@ -32,6 +34,18 @@ namespace ZeroPlayersOnline.DataTypes {
 
             Requirement = req;
             AltLog = altlog; // Basically just used for the general clue log drops to redirect them
+        }
+
+        public ItemDrop(ItemDrop other) {
+            ItemID = other.ItemID;
+            DropX = other.DropX;
+            InY = other.InY;
+            QuantityMin = other.QuantityMin;
+            QuantityMax = other.QuantityMax;
+            EvenAt0x = other.EvenAt0x;
+            Noted = other.Noted;
+            Requirement = other.Requirement;
+            AltLog = other.AltLog;
         }
 
         // Rolls 0 to InY, if less than DropX, success
@@ -65,10 +79,10 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 if (dropX != 0) {
                     if (player.DropModifier != 2) {
-                        int dropRoll = GameLoop.rand.Next(InY);
-                        int dropRoll2 = GameLoop.rand.Next(InY);
-                        int dropRoll3 = GameLoop.rand.Next(InY);
-                        int dropRoll4 = GameLoop.rand.Next(InY);
+                        int dropRoll = GameLoop.rand.Next((int) Math.Round(InY, MidpointRounding.AwayFromZero));
+                        int dropRoll2 = GameLoop.rand.Next((int) Math.Round(InY, MidpointRounding.AwayFromZero));
+                        int dropRoll3 = GameLoop.rand.Next((int) Math.Round(InY, MidpointRounding.AwayFromZero));
+                        int dropRoll4 = GameLoop.rand.Next((int) Math.Round(InY, MidpointRounding.AwayFromZero));
 
                         bool wealth = false;
                         bool fortune = false;

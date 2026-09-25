@@ -315,7 +315,20 @@ namespace ZeroPlayersOnline.Managers {
                     ExtraWindows.MapViewing = item.UseString2;
                     ExtraWindows.MapW = item.UseInt;
                     ExtraWindows.MapH = item.UseInt2;
-                }  else if (item.UseString == "Book") {
+                } else if (item.UseString == "RedeemRunePouch") {
+                    Requirement lazy = new("ItemNotOwned", 1, "pouchRune");
+
+                    if (lazy.CheckRequirement(player, false, true)) {
+                        if (GameLoop.ZPO.ResolveItem("pouchRune") is Item pouch) {
+                            player.TryPickup(pouch, 1);
+                            return true;
+                        }
+                    } else {
+                        GameLoop.ZPO.Log.AddMessage("You already own a rune pouch, so you should hold onto this voucher in case you lose yours.", Color.Crimson);
+                    }
+
+                    return false;
+                } else if (item.UseString == "Book") {
                     ExtraWindows.Book.IsVisible = true;
                     ExtraWindows.BookID = item.UseString2;
                     ExtraWindows.LeftPage = 0;
@@ -328,11 +341,11 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "CleanHerb") {
                     if (player.Skills.TryGetValue("Herblore", out Skill? herb) && herb != null) {
                         if (herb.Level >= item.UseInt) {
-                            if (GameLoop.ZPO.ItemLibrary.TryGetValue(item.UseString2, out Item? spawn) && spawn != null) {
-                                player.TryPickup(spawn, 1);
+                            if (GameLoop.ZPO.ItemLibrary.TryGetValue(item.ItemReturned, out Item? spawn) && spawn != null) { 
                                 player.TryGrantExp("Herblore", item.UseInt2, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+                                return true;
                             } else {
-                                GameLoop.ZPO.Log.AddMessage(new ColoredString(item.UseString2 + " does not currently exist, herb preserved.", Color.Crimson, Color.Black));
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString(item.ItemReturned + " does not currently exist, herb preserved.", Color.Crimson, Color.Black));
                                 return false;
                             }
                         } else { 
@@ -381,12 +394,7 @@ namespace ZeroPlayersOnline.Managers {
                             } 
                         }
 
-                        itemWrap.Charges--;
-
-                        if (itemWrap.Charges > 0)
-                            return false;
-                        if (item.UseString3 != "" && GameLoop.ZPO.ItemLibrary.TryGetValue(item.UseString3, out Item? returned) && returned != null)
-                            player.TryPickup(new Item(returned), 1);
+                        return true;
                     }
                 } else if (item.UseString == "SlayerGem") {
                     if (player.SlayerTask != "") {
@@ -394,6 +402,7 @@ namespace ZeroPlayersOnline.Managers {
                     } else {
                         GameLoop.ZPO.Log.AddMessage("You have no active task. (" + player.SlayerPoints + " pts, " + player.SlayerTaskStreak + " streak)", Color.MediumPurple);
                     }
+                    return false;
                 } else if (item.UseString == "ChargeDragonstone") {
                     foreach (var kv in player.Inventory) {
                         if (kv.ID == "amuletGlory") { kv.Charges = 4; }
@@ -408,6 +417,7 @@ namespace ZeroPlayersOnline.Managers {
                         if (kv.Value.ID == "braceletCombat") { kv.Value.Charges = 4; }
                         if (kv.Value.ID == "necklaceSkills") { kv.Value.Charges = 4; } 
                     }
+                    return true;
                 } else if (item.UseString == "Light") {
                     if (player.HasAllItems(["tinderbox,1"])) {
                         itemWrap.ID = item.UseString2;
@@ -415,14 +425,36 @@ namespace ZeroPlayersOnline.Managers {
                     } else { 
                         GameLoop.ZPO.Log.AddMessage("You need something to actually light that with, to light it.", Color.Crimson);
                     }
+                    return false;
                 } else if (item.UseString == "Extinguish") {
                     itemWrap.ID = item.UseString2;
                     GameLoop.ZPO.Log.AddMessage("You extinguish the " + item.Name + ".", Color.Yellow);
+                    return false;
                 } else if (item.UseString == "Bell") { 
                     GameLoop.ZPO.Log.AddMessage("You jangle the bell about for a bit.", Color.Yellow);
+                    // TODO: when molanisks are reachable somewhere, make this summon one if you have 39 slayer
+                    return false;
                 } else if (item.UseString == "ViewInventory") {
                     ExtraWindows.ConWrap = itemWrap;
                     ExtraWindows.InventoryContainer.IsVisible = true;
+                    return false;
+                } else if (item.UseString == "LampAll") {
+                    string[] split = item.UseString2.Split(",");
+
+                    foreach (var skill in split) {
+                        player.TryGrantExp(skill, item.UseInt, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+                    } 
+                    return true;
+                } else if (item.UseString == "DragithNurn") {
+                    if (GameLoop.ZPO.ResolveItem("maskDragith") is Item mask) {
+                        if (player.HasAllItems(["maskDragith1", "maskDragith2", "maskDragith3", "maskDragith4", "maskDragith5"])) {
+                            player.ConsumeItems(["maskDragith1", "maskDragith2", "maskDragith3", "maskDragith4", "maskDragith5"], false, false);
+                            player.TryPickup(mask, 1);
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("You need all five parts of the mask to combine them.", Color.Crimson);
+                        }
+                    }
+                    return false;
                 } else if (item.UseString == "Gold") {
                     if (player.CoinPouch) {
                         int qty = 1;
@@ -439,6 +471,26 @@ namespace ZeroPlayersOnline.Managers {
                     return false;
                 } else if (item.UseString == "Transform") {
                     itemWrap.ID = item.UseString2;
+                    return false;
+                } else if (item.UseString == "Teleport") {
+                    if (GameLoop.ZPO.Atlas.ContainsKey(item.UseString2)) {
+                        if (item.UsesCharges) {
+                            if (itemWrap.Charges > 0) { 
+                                GameLoop.ZPO.Log.AddMessage("You teleport to " + GameLoop.ZPO.Atlas[item.UseString2].DisplayName + ".", Color.MediumPurple);
+                                player.NavLoc = item.UseString2;
+                                return true;
+                            } else if (itemWrap.Charges < 0) { 
+                                GameLoop.ZPO.Log.AddMessage("You teleport to " + GameLoop.ZPO.Atlas[item.UseString2].DisplayName + ".", Color.MediumPurple);
+                                player.NavLoc = item.UseString2;
+                                return true;
+                            }
+                        } else { 
+                            GameLoop.ZPO.Log.AddMessage("You teleport to " + GameLoop.ZPO.Atlas[item.UseString2].DisplayName + ".", Color.MediumPurple);
+                            player.NavLoc = item.UseString2;
+                            return true;
+                        } 
+                    }
+
                     return false;
                 }
 
@@ -497,7 +549,36 @@ namespace ZeroPlayersOnline.Managers {
 
                     UsingSlot = -1;
                     return true;
-                } 
+                }
+                
+                if (GameLoop.ZPO.ResolveItem(first) is Item firstCharge && GameLoop.ZPO.ResolveItem(second) is Item secondCharge) {  
+                    if (secondCharge.ChargeItem == first) {
+                        Item swap = new(firstCharge);
+                        firstCharge = secondCharge;
+                        secondCharge = swap;
+                        
+                        int swapSlot = firstSlot;
+                        firstSlot = secondSlot;
+                        secondSlot = swapSlot;
+                    }
+
+                    ItemWrapper firstChargeWrap = player.Inventory[firstSlot];
+                    ItemWrapper secondChargeWrap = player.Inventory[secondSlot];
+                     
+                    if (firstCharge.ChargeItem == second) {
+                        if (secondChargeWrap.Charges != 0) {
+                            firstChargeWrap.Charges += secondChargeWrap.Charges;
+                            if (secondCharge.ShattersAtZeroCharges) {
+                                player.Inventory.RemoveAt(secondSlot);
+                            }
+                        } else {
+                            firstChargeWrap.Charges += secondChargeWrap.Quantity;
+                            player.Inventory.RemoveAt(secondSlot);
+                        }
+
+                        return true;
+                    } 
+                }
 
                 if (GameLoop.ZPO.ResolveItem(first) is Item firstPouch && GameLoop.ZPO.ResolveItem(second) is Item secondPouch) {  
                     if (secondPouch.ContainableIDs.Contains(first)) { 
@@ -521,8 +602,20 @@ namespace ZeroPlayersOnline.Managers {
                         foreach (var conWrap in firstPouchWrap.Containing) {
                             if (conWrap.ID == second && conWrap.GetRef() is Item con) {
                                 if (!conWrap.Noted && (con.Stackable || firstPouch.ContainerStacksUnstackable)) {
-                                    conWrap.Quantity += secondPouchWrap.Quantity;
-                                    player.Inventory.RemoveAt(secondSlot);
+                                    if (conWrap.Quantity + secondPouchWrap.Quantity < firstPouch.ContainerMaxStack) {
+                                        conWrap.Quantity += secondPouchWrap.Quantity;
+                                        player.Inventory.RemoveAt(secondSlot);
+                                    } else {
+                                        int placed = firstPouch.ContainerMaxStack - conWrap.Quantity;
+                                        conWrap.Quantity += placed;
+                                        secondPouchWrap.Quantity -= placed;
+                                        
+                                        GameLoop.ZPO.Log.AddMessage("Container can't hold anymore of that item.");
+
+                                        if (secondPouchWrap.Quantity <= 0) {
+                                            player.Inventory.RemoveAt(secondSlot);
+                                        }
+                                    }
                                     return true;
                                 }
                             } 
@@ -563,6 +656,15 @@ namespace ZeroPlayersOnline.Managers {
                     if (rec.NeededTool != "" && !player.HasAllItems([rec.NeededTool + ",1"], false, true)) {
                         GameLoop.ZPO.Log.AddMessage(new ColoredString("You need a " + GameLoop.ZPO.ResolveItemName(rec.NeededTool) + " to do that.", Color.Crimson, Color.Black));
                         return false;
+                    }
+
+                    if (rec.ExtraReqs.Count > 0) {
+                        foreach (var req in rec.ExtraReqs) {
+                            if (!req.CheckRequirement(player, false, true)) { 
+                                GameLoop.ZPO.Log.AddMessage(new ColoredString("Missing requirement to combine those: " + req.GetSummary(), Color.Crimson, Color.Black));
+                                return false;
+                            }
+                        }
                     }
 
                     if (!firstWrap.Noted && !secondWrap.Noted) { 
@@ -689,6 +791,13 @@ namespace ZeroPlayersOnline.Managers {
                             GameLoop.ZPO.Log.AddMessage("You need at least " + eqp.EquipLevel + " " + eqp.EquipSkill + " to equip that.", Color.Crimson);
                             canEquip = false;
                         }
+                    }
+                }
+
+                if (eqp.EquipReq != null) {
+                    if (!eqp.EquipReq.CheckRequirement(player, false, true)) { 
+                        GameLoop.ZPO.Log.AddMessage("Missing equip requirement: " + eqp.EquipReq.GetSummary(), Color.Crimson);
+                        canEquip = false;
                     }
                 }
 

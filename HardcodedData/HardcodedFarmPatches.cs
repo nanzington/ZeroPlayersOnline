@@ -14,6 +14,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new FarmingPatch("MIST_LumbTree", "Tree"));
             toAdd.Add(new FarmingPatch("MIST_LumbHops", "Hops"));
             toAdd.Add(new FarmingPatch("MIST_VarBush", "Bush"));
+            toAdd.Add(new FarmingPatch("MIST_VarTree", "Tree"));
 
             // Desert 
             toAdd.Add(new FarmingPatch("DES_AlKharidCactus", "Cactus"));

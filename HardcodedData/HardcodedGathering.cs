@@ -15,7 +15,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             tiles.Add(new GatheringTile("plantOnion", "Onion Plant", "Pick", 100, 100, 5, "Farming", 1, 0, 0, items: new() { new("onion", 1) })); 
             tiles.Add(new GatheringTile("plantGrain", "Wheat", "Pick", 100, 100, 5, "Farming", 1, 0, 0, items: new() { new("grain", 1) })); 
             tiles.Add(new GatheringTile("plantGuam", "Guam Bush", "Pick", 100, 100, 10, "Farming", 1, 5, 0, items: new() { new("herbGrimyGuam", 1) }));
-            tiles.Add(new GatheringTile("plantNettles", "Nettles", "Pick", 100, 100, 1, "Farming", 1, 0, 0, items: new() { new("nettles", 1) }));
+            tiles.Add(new GatheringTile("plantNettles", "Nettles", "Pick", 100, 100, 1, "Farming", 1, 0, 0, items: new() { new("nettles", 1) }, req: new("AnyEquipInSlot", 0, "Hands")));
 
             tiles.Add(new GatheringTile("treePine", "Pine Tree", "Chop", 100, 100, 10, "Woodcutting", 1, 25, 0, neededTool: "Hatchet", items: new() { new("logPine", 1) }));
             tiles.Add(new GatheringTile("rootsPine", "Pine Roots", "Chop", 100, 100, 10, "Woodcutting", 1, 25, 0, neededTool: "Hatchet", items: new() { new("logPine", 1) }));
@@ -64,16 +64,21 @@ namespace ZeroPlayersOnline.Hardcodes {
             tiles.Add(new GatheringTile("clueCrates", "Crates", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("clueBoxes", "Boxes", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("clueBookcase", "Bookcase", "Search", 100, 100, 5));
+            tiles.Add(new GatheringTile("clueDrawers", "Drawers", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("clueChest", "Chest", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("bookshelfWizard", "Bookshelves", "Search", 100, 100, 0));
-            tiles.Add(new GatheringTile("altar", "Altar", "Pray at", 100, 100, 0, action: "AltarBoost"));
+            tiles.Add(new GatheringTile("altar", "Altar", "Pray at", 100, 100, 0, action: new("TempSkillBoost", "Prayer", "", 5)));
             
-            tiles.Add(new GatheringTile("clueDrawers", "Drawers", "Search", 100, 100, 5, neededBait: "keyClue"));
+            tiles.Add(new GatheringTile("clueDrawersLocked", "Drawers", "Search", 100, 100, 5, neededBait: "keyClue"));
             
             tiles.Add(new GatheringTile("mistWizAltar", "Altar", "Search", 100, 100, 0, items: new() { new("mistWizGhostSkull", 1, reqs: new() { new("QuestAt", 20, "MI_RestlessGhost") }) })); // Used for Restless Ghost
-            tiles.Add(new GatheringTile("mistLumCoffin", "Coffin", "Search", 100, 100, 0, neededBait: "mistWizGhostSkull")); // Used for Restless Ghost
+            tiles.Add(new GatheringTile("mistLumCoffin", "Coffin", "Search", 100, 100, 0, neededBait: "mistWizGhostSkull")); // Used for Restless Ghost 
+            tiles.Add(new GatheringTile("mistLumWinch", "Winch", "Operate", 100, 100, 0, req: new("QuestAt", 50, "MI_BloodPact", summ: "You should deal with the wizard before trying to do that."), action: new("Data", "CatacombsWinch", "set", 1)));
+            tiles.Add(new GatheringTile("mistLumIlona", "Ilona", "Untie", 100, 100, 0, req: new("QuestAt", 80, "MI_BloodPact", summ: "to deal with the final cultist"), action: new("Quest", "MI_BloodPact", "", 90)));
 
             tiles.Add(new GatheringTile("lumbridgeFlag", "Lumbridge Flag", "Raise", 100, 100, 0)); // TODO: Make this tie into the task/achievement diary system, it's a Lumbridge task
+             
+            tiles.Add(new GatheringTile("bookshelfArrav", "Bookshelves", "Search", 100, 100, 0, items: [ new("bookArrav", 1) ], req: new("ItemNotOwned", 1, "bookArrav", false, "", "Must not already have the Shield of Arrav book in your bank or inventory.")));
 
             tiles.Add(new GatheringTile("mtaEnchantIcosahedron", "Icosahedron Pile", "Take from", 100, 100, 0, items: new() { new("mtaIcosahedron", 31), new("mtaDragonstone", 1) }));
             tiles.Add(new GatheringTile("mtaEnchantCube", "Cube Pile", "Take from", 100, 100, 0, items: new() { new("mtaCube", 31), new("mtaDragonstone", 1) }));

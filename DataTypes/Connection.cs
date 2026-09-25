@@ -10,6 +10,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public List<Requirement>? Requirements = new();
         public bool OnlyNeedOneReq = false;
+        public bool HideIfReqsNotMet = false;
 
         public int ExpGranted = 0;
         public string ExpTo = "";
@@ -20,7 +21,11 @@ namespace ZeroPlayersOnline.DataTypes {
         public string WorldStateID = "";
         public int WorldStateNum = 0;
 
-        public Connection(string dest, List<Requirement>? req = null, bool onlyOne = false, int exp = 0, string skill = "", string alt = "", bool check = false, int lv = 1, string checkFailDest = "", int minFailDmg = 0, int maxFailDmg = 0) { 
+        public List<string> CutscenesOnTraverse = new();
+        public string SetsQuest = "";
+        public int QuestStage = -1;
+
+        public Connection(string dest, List<Requirement>? req = null, bool onlyOne = false, int exp = 0, string skill = "", string alt = "", bool check = false, int lv = 1, string checkFailDest = "", int minFailDmg = 0, int maxFailDmg = 0, bool hideIfNoReqs = false) { 
             Destination = dest;
 
             if (req != null)
@@ -39,6 +44,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
             MinimumFailDamage = minFailDmg;
             MaximumFailDamage = maxFailDmg;
+
+            HideIfReqsNotMet = hideIfNoReqs;
         }
 
 
@@ -120,9 +127,44 @@ namespace ZeroPlayersOnline.DataTypes {
                 Helper.AlterWorldState(WorldStateID, WorldStateChange, WorldStateNum);
             }
 
+            if (SetsQuest != "") { p.TryProgressQuest(SetsQuest, QuestStage); }
+
+            foreach (var kv in CutscenesOnTraverse) {
+                if (GameLoop.ZPO.CutsceneLibrary.TryGetValue(kv, out Cutscene? cut)) {
+                    foreach (var req in cut.RequirementsToStart) {
+                        if (!req.CheckRequirement(p, false, true)) {
+                            continue;
+                        }
+                        
+                        ExtraWindows.Cutscene.IsVisible = true;
+                        ExtraWindows.CutsceneID = kv; 
+                        ExtraWindows.CutsceneScene = 0;
+                        ExtraWindows.CutsceneDialogue = 0;
+
+                        foreach (var act in cut.Actions) {
+                            act.Execute();
+                        }
+
+                        foreach (var item in cut.ItemsGiven) {
+                            string[] split = item.Split(",");
+                            if (GameLoop.ZPO.ResolveItem(split[0]) is Item give) {
+                                int qty = 1;
+                                if (split.Length > 1) {
+                                    int.TryParse(split[1], out qty);
+                                }
+                                p.TryPickup(give, qty);
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+
             if (ExpTo != "")
                 p.TryGrantExp(ExpTo, ExpGranted, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills, false); 
             p.NavLoc = Destination;
+            GameLoop.ZPO.AttackingBoss = false;
+            GameLoop.ZPO.AttackingMonster = null;
         }
     }
 }
