@@ -2372,7 +2372,7 @@ namespace ZeroPlayersOnline {
                 //player.TryPickup(new Item(ItemLibrary["clueScrollBeginner"]), 1);  
                 //player.CurrentClueBeginner = "B_HotColdAlKharidMine";
 
-                player.NavLoc = "MIST_VarrockPalaceBailey";
+                //player.NavLoc = "MIST_VarrockPalaceBailey";
                 //player.TryPickup(new Item(ItemLibrary["uncutRuby"]), 1);
                 //player.TryPickup(new Item(ItemLibrary["pouchRuneNote"]), 1);
                // player.TryPickup(new Item(ItemLibrary["tiaraWater"]), 1);   
