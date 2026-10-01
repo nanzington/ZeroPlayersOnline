@@ -21,16 +21,35 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new ClueStep("B_SpeakHans", "Beginner", "Speak", "MIST_LumbridgeCastleBailey", "Always walking around the castle grounds and somehow knows everyones age.", "mistLumHans"));
             toAdd.Add(new ClueStep("B_SpeakCook", "Beginner", "Speak", "MIST_LumbridgeCastleKitchen", "In the place Duke Horacio calls home, talk to a man with a hat dropped by goblins.", "mistLumCook"));
             toAdd.Add(new ClueStep("B_SpeakHunding", "Beginner", "Speak", "MIST_BarbarianLookout", "In a village of barbarians, I am the one who guards the village from up high.", "mistBarbHunding"));
+            
             toAdd.Add(new ClueStep("B_EmoteBobs", "Beginner", "Emote", "MIST_LumbridgeBobsAxes", "Clap at Bob's Brilliant Axes. Equip a bronze hatchet and leather boots.", "Clap", "hatchetBronze", "bootsLeather"));
             toAdd.Add(new ClueStep("B_EmoteAKMine", "Beginner", "Emote", "DES_AlKharidMine", "Panic at Al Kharid Mine.", "Panic"));
+            
             toAdd.Add(new ClueStep("B_AnagramSedridor", "Beginner", "Anagram", "MIST_WizardTowerBasement", "The anagram reveals who to speak to next: CHAR GAME DISORDER", "mistWizSedridor"));
             toAdd.Add(new ClueStep("B_AnagramRanael", "Beginner", "Anagram", "DES_AlKharidRanael", "The anagram reveals who to speak to next: AN EARL", "desAlKharidRanael"));
+            toAdd.Add(new ClueStep("B_AnagramApothecary", "Beginner", "Anagram", "MIST_VarrockApothecary", "The anagram reveals who to speak to next: CARPET AHOY", "mistVarIngald"));
+            toAdd.Add(new ClueStep("B_AnagramFortunato", "Beginner", "Anagram", "MIST_DraynorMarket", "The anagram reveals who to speak to next: TAUNT ROOF", "mistDrayFortunato"));
+            toAdd.Add(new ClueStep("B_AnagramGertrude", "Beginner", "Anagram", "MIST_VarrockGertrude", "The anagram reveals who to speak to next: RUG DETER", "mistVarGertrude"));
+            
             toAdd.Add(new ClueStep("B_MapWizardTowerIsland", "Beginner", "Map", "MIST_WizardTowerIsland", "Seems like you have to find the location that matches the description of the clue.", ""));
             toAdd.Add(new ClueStep("B_MapDraynorOutskirtsSouth", "Beginner", "Map", "MIST_DraynorOutskirtsSouth", "Seems like you have to find the location that matches the description of the clue.", ""));
             toAdd.Add(new ClueStep("B_MapVarrockMineWest", "Beginner", "Map", "MIST_VarrockMineWest", "Seems like you have to find the location that matches the description of the clue.", ""));
             toAdd.Add(new ClueStep("B_MapVarrockMineEast", "Beginner", "Map", "MIST_VarrockMineEast", "Seems like you have to find the location that matches the description of the clue.", ""));
+            
             toAdd.Add(new ClueStep("B_HotColdCows", "Beginner", "HotCold", "MIST_LumbridgeFredsFarmCows", "There is a device attached to the clue that tells you how close you are to the treasure...", ""));
             toAdd.Add(new ClueStep("B_HotColdAlKharidMine", "Beginner", "HotCold", "DES_AlKharidMineOutside", "There is a device attached to the clue that tells you how close you are to the treasure...", ""));
+            
+            toAdd.Add(new ClueStep("B_CharlieMining", "Beginner", "Speak", "MIST_VarrockSouth", "Talk to Charlie the Tramp in Varrock to find out what item he needs.", "mistVarCharlie", "oreIron"));
+            toAdd.Add(new ClueStep("B_CharlieFishing", "Beginner", "Speak", "MIST_VarrockSouth", "Talk to Charlie the Tramp in Varrock to find out what item he needs.", "mistVarCharlie", "fishRawHerring"));
+            toAdd.Add(new ClueStep("B_CharlieCrafting", "Beginner", "Speak", "MIST_VarrockSouth", "Talk to Charlie the Tramp in Varrock to find out what item he needs.", "mistVarCharlie", "bodyHardleather"));
+            toAdd.Add(new ClueStep("B_CharlieWoodcutting", "Beginner", "Speak", "MIST_VarrockSouth", "Talk to Charlie the Tramp in Varrock to find out what item he needs.", "mistVarCharlie", "logOak"));
+            toAdd.Add(new ClueStep("B_CharlieFarming", "Beginner", "Speak", "MIST_VarrockSouth", "Talk to Charlie the Tramp in Varrock to find out what item he needs.", "mistVarCharlie", "plantPotOak"));
+            toAdd.Add(new ClueStep("B_CharlieCooking", "Beginner", "Speak", "MIST_VarrockSouth", "Talk to Charlie the Tramp in Varrock to find out what item he needs.", "mistVarCharlie", "pieRedberry"));
+            toAdd.Add(new ClueStep("B_CharlieHerblore", "Beginner", "Speak", "MIST_VarrockSouth", "Talk to Charlie the Tramp in Varrock to find out what item he needs.", "mistVarCharlie", "potionUnfMarrentill"));
+            
+
+
+
 
             // Easy Steps
             toAdd.Add(new ClueStep("E_DigLumbridgeBailey", "Easy", "Dig", "MIST_LumbridgeCastleBailey", "Dig where only the skilled, the wealthy, or the brave can choose not to visit again."));

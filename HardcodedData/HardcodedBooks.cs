@@ -31,9 +31,18 @@ namespace ZeroPlayersOnline.HardcodedData {
                 new("", "/n /n /n /n    The Shield of Arrav /n /n       by A. R. Wright"),
                 new("Shield of Arrav", "Arrav is probably the best known hero of the 4th Age. Many legends are told of his heroics. /n /n One surviving artefact from the 4th Age is a fabulous shield. This shield is believed to have once belonged to Arrav and is now indeed known as the Shield of Arrav. /n /n For over 150 years it was the prize piece in the royal museum of Varrock."),
                 new("Shield of Arrav", "However, in the year 143 of the fifth age a gang of thieves called the Phoenix Gang broke into the museum and stole the shield in a daring raid.  /n /n As a result, the current ruler, King Roald, put a 1200 gold bounty (a massive sum of money in those days) on the return of the shield, hoping that one of the culprits would betray his fellows out of greed."),
-                new("Shield of Arrav", "This tactic did not work however, and the thieves who stole the shield have since gone on to become the most powerful crime gang in Varrock, despite making an enemy of the Royal Family many years ago. /n /n The reward for the return of the shield still stands.")
+                new("Shield of Arrav", "This tactic did not work however, and the thieves who stole the shield have since gone on to become the most powerful crime gang in Varrock, despite making an enemy of the Royal Family many years ago. /n /n The reward for the return of the shield still stands.", [ new("Quest", "MI_ShieldOfArrav", "", 5) ], [ new("QuestAt", 0, "MI_ShieldOfArrav") ])
             }));
 
+            toAdd.Add(new("Intelligence Report", "arravIntel", 0, new() {
+                new("Intelligence Report", "There is an archaeologist with mining equipment hanging around the statue outside of the city. Could she be on to a hidden treasure buried near the statue? /n /n A new channel has been dug and a barge has been assembled near the digsite. The Varrock museum seems to be paying for it. Could they have information about new treasures?"),
+            }));
+
+            toAdd.Add(new("The Groats Principles", "bookGroats", 1, new() {
+                new("Principle One", "Happy animals make happy farmers. It is crucial to ensure your animals have everything they could need: space, food, water. Without those essentials met you'll spend your time running around trying to make them happy and healthy. Not to mention, unhappy animals produce worse products! /n /n The Groats name lives and dies on its reputation, and that reputation relies on producing high quality milk and eggs."),
+                new("Principle Two", "Never make more than you need. Greed will rot not only your soul, but your land. Your animals remain healthier when not pushed to their limits."),
+                new("Principle Three", "Always squirrel money away from the tax collector. It's not a good citizen that avoids all of their taxes, but a smart one keeps a little back. The more you can invest into your farm and your animals, the more you can give back later on in your life.")
+            }));
 
             for (int i = 0; i < toAdd.Count; i++) {
                 BookLib.Add(toAdd[i].ID, toAdd[i]);

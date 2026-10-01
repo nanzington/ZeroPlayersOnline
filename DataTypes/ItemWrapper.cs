@@ -10,6 +10,10 @@ namespace ZeroPlayersOnline.DataTypes {
         public int Charges = 1;
         public bool Noted = false; 
 
+        public int MiscInt = 0;
+        public int MiscInt2 = 0;
+        public int MiscInt3 = 0;
+
         public List<ItemWrapper> Containing = new();
         public bool AutoAddingContainer = false;
 
@@ -30,6 +34,10 @@ namespace ZeroPlayersOnline.DataTypes {
             Noted = wrap.Noted;
 
             Inaccessible = inaccessible; 
+
+            MiscInt = wrap.UseInt;
+            MiscInt2 = wrap.UseInt2;
+            MiscInt3 = wrap.UseInt3;
 
             if (wrap.Containing.Count > 0) {
                 foreach (var con in wrap.Containing) {
@@ -52,6 +60,10 @@ namespace ZeroPlayersOnline.DataTypes {
             Noted = other.Noted;
             Inaccessible = other.Inaccessible;
             Library = other.Library;
+             
+            MiscInt = other.MiscInt;
+            MiscInt2 = other.MiscInt2;
+            MiscInt3 = other.MiscInt3;
 
             for (int i = 0; i < other.Containing.Count; i++) {
                 Containing.Add(other.Containing[i]);

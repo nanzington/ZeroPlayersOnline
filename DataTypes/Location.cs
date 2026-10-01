@@ -46,6 +46,9 @@ namespace ZeroPlayersOnline.DataTypes {
         public List<string> HunterSpots = new();
         public List<HunterCreature> CreaturesHere = new();
 
+        public string UPCsong = "";
+        public string JGXsong = "";
+
         [JsonIgnore]
         public Dictionary<int, string> TrapsDown = new();
 

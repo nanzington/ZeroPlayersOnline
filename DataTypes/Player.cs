@@ -129,6 +129,13 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public Dictionary<string, int> WorldState = new();
 
+        public bool AllSongsUnlocked = false;
+        public List<string> BlockedSongs = new();
+        public string MusicMode = "Auto";
+        public List<string> UnlockedSongs = new();
+
+        public List<GETransaction> ActiveGE = new();
+
         [JsonIgnore]
         public List<HunterCreature> SpawnedCreatures = new();
 
@@ -202,7 +209,7 @@ namespace ZeroPlayersOnline.DataTypes {
                         partialBoost += item.EquipTier / 5.0;
                     }
 
-                    if (item.MiscString == "OffenseBoostMelee" && style == "Melee") {
+                    if ((item.MiscString == "OffenseBoostMelee" && style == "Melee") || (item.MiscString == "Defender" && style == "Melee")) {
                         partialBoost += item.EquipTier;
                     }
                     
@@ -249,8 +256,10 @@ namespace ZeroPlayersOnline.DataTypes {
             if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) {
                 ItemWrapper clone = new(wrap) { Quantity = qty };
                 if (!alreadyOwned) {
+                    if (!ItemsEverObtained.Contains(wrap.ID)) { ItemsEverObtained.Add(wrap.ID); }
+
                     for (int i = 0; i < Inventory.Count; i++) { 
-                        if (Inventory[i].ID == wrap.ID && (Inventory[i].GetRef() is Item inv && (inv.Stackable || (noted && Inventory[i].Noted)))) {
+                        if (Inventory[i].ID == wrap.ID && (Inventory[i].GetRef() is Item inv && (inv.Stackable || (noted && Inventory[i].Noted)))) {  
                             Inventory[i].Quantity += qty; 
                             if (!shop)
                                 wrap.Quantity -= qty;
@@ -265,7 +274,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
                             clone.Quantity = qty;
                             if (!shop)
-                                wrap.Quantity -= qty;
+                                wrap.Quantity -= qty; 
+
                             Inventory.Add(clone);
                         } else {
                             for (int i = 0; i < qty; i++) { 
@@ -333,7 +343,9 @@ namespace ZeroPlayersOnline.DataTypes {
             if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr)) { 
                 Item clone = new(item) { Quantity = qty };
 
-                if (!alreadyOwned) {
+                if (!alreadyOwned) { 
+                    if (!ItemsEverObtained.Contains(item.ID)) { ItemsEverObtained.Add(item.ID); }
+
                     for (int i = 0; i < Inventory.Count; i++) { 
                         if (Inventory[i].GetRef() is Item wrap && wrap.ID == item.ID && (wrap.Stackable || (noted && Inventory[i].Noted))) {
                             Inventory[i].Quantity += qty;
@@ -1329,7 +1341,7 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (kv.Value.GetRef() is Item eqp) {
                     double num = eqp.EquipTier;
                     if (eqp.EquipSkill == "Defense" || eqp.MiscString == "DefenseAll") {
-                        if (eqp.MiscString == "DefenseMelee") {
+                        if (eqp.MiscString == "DefenseMelee" || eqp.MiscString == "PowerMelee") {
                             if (against == "Ranged") {
                                 num *= 2;
                             }
@@ -1339,6 +1351,15 @@ namespace ZeroPlayersOnline.DataTypes {
 
                             if (eqp.MiscString == "PowerMelee") {
                                 num = Math.Floor(num * 0.8);
+                            }
+                        }
+
+                        if (eqp.MiscString == "Defender") {
+                            if (against == "Melee") {
+                                num = (int)Math.Floor(num / 2.0);
+                            }
+                            if (against == "Magic") {
+                                num = (int)Math.Floor(num / 4.0);
                             }
                         }
 
@@ -1355,7 +1376,7 @@ namespace ZeroPlayersOnline.DataTypes {
                             }
                         }
 
-                        if (eqp.MiscString == "DefenseRange") {
+                        if (eqp.MiscString == "DefenseRange" || eqp.MiscString == "PowerRange") {
                             if (against == "Magic") {
                                 num *= 2;
                             }
@@ -1569,6 +1590,10 @@ namespace ZeroPlayersOnline.DataTypes {
                         if (status.CurrentStage == quest.CompleteStage) { 
                             GameLoop.ZPO.Log.AddMessage(new ColoredString("You have completed " + quest.Name + "!", Color.Lime, Color.Black));
                             quest.ProcessRewards(this);
+                        }
+
+                        if (status.CurrentStage == 0) {
+                            GameLoop.ZPO.Log.AddMessage(new ColoredString("You have started the quest: " + quest.Name + ".", Color.Yellow, Color.Black));
                         }
                     }
                 }

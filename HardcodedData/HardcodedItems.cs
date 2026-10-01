@@ -153,10 +153,11 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Oil lantern", "An unlit oil lantern.", "oilLantern", ColorLib.Steel, 125) { UseString = "Light", UseString2 = "oilLanternLit", ConsumedOnUse = false });
             
 
-            itemsToAdd.Add(new Item("Tutorial Island cape", "A cape signifying you completed all challenges on Tutorial Island. Congratulations!", "capeCompTI", 135, 206, 235, 0) { EquipSlot = "Cape", EquipTier = 1, MiscString = "OmniBoost" });
-            itemsToAdd.Add(new Item("Defense skillcape", "The cape worn by masters of the art of Defense.", "capeSkillDefense", Color.CornflowerBlue, 0) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
-            itemsToAdd.Add(new Item("Cooking skillcape", "The cape worn by masters of the art of Cooking.", "capeSkillCooking", Color.Purple, 0) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
-            itemsToAdd.Add(new Item("Farming skillcape", "The cape worn by masters of the art of Farming.", "capeSkillFarming", Color.ForestGreen, 0) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
+            itemsToAdd.Add(new Item("Tutorial Island cape", "A cape signifying you completed all challenges on Tutorial Island. Congratulations!", "capeCompTI", 135, 206, 235, 0, trade: false) { EquipSlot = "Cape", EquipTier = 1, MiscString = "OmniBoost" });
+            itemsToAdd.Add(new Item("Defense skillcape", "The cape worn by masters of the art of Defense.", "capeSkillDefense", Color.CornflowerBlue, 0, trade: false) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
+            itemsToAdd.Add(new Item("Cooking skillcape", "The cape worn by masters of the art of Cooking.", "capeSkillCooking", Color.Purple, 0, trade: false) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
+            itemsToAdd.Add(new Item("Farming skillcape", "The cape worn by masters of the art of Farming.", "capeSkillFarming", Color.ForestGreen, 0, trade: false) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
+            itemsToAdd.Add(new Item("Runecrafting skillcape", "The cape worn by masters of the art of Runecrafting.", "capeSkillRunecrafting", Color.Yellow, 0, trade: false) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
 
             {
                 // ordinary wizard
@@ -232,8 +233,6 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Black wizard skirt", "I can do better magic in this. Trimmed with gold.", "wizardBlackBottomG", Color.DimGray, 30) { CosmeticNote = "g", EquipSlot = "Legs", EquipTier = 1, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseMagic" });
             }
 
-            itemsToAdd.Add(new Item("Staff", "It's a slightly magical stick.", "staff", Color.BurlyWood, 15) { EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush" });
-            itemsToAdd.Add(new Item("Magic staff", "It's a slightly magical stick.", "staffMagic", Color.BurlyWood, 200) { EquipSlot = "Weapon",  EquipTier = 2, EquipSkill = "Magic", EquipLevel = 10, EquipDamageType = "Crush" });
             itemsToAdd.Add(new Item("Beginner wand", "A beginner level wand.", "wandBeginner", Color.BurlyWood, 1200) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush" });
             itemsToAdd.Add(new Item("Apprentice wand", "An apprentice level wand.", "wandApprentice", Color.BurlyWood, 2400) { EquipSlot = "Weapon",  EquipTier = 5, EquipSkill = "Magic", EquipLevel = 40, EquipDamageType = "Crush" });
             itemsToAdd.Add(new Item("Teacher wand", "A teacher level wand.", "wandTeacher", Color.BurlyWood, 4800) { EquipSlot = "Weapon",  EquipTier = 6, EquipSkill = "Magic", EquipLevel = 50, EquipDamageType = "Crush" });
@@ -325,7 +324,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", CountsAsIDs = [ "runeFire" ],  UseInt4 = -1, MustBeEquipped = true
             });
 
-            itemsToAdd.Add(new Item("Battlestaff", "It's a slightly magical stick.", "battlestaff", Color.BurlyWood, 7000) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush" });
+            itemsToAdd.Add(new Item("Staff", "It's a barely magical stick.", "staff", Color.BurlyWood, 15) { EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush" });
+            itemsToAdd.Add(new Item("Magic staff", "It's a slightly magical stick.", "staffMagic", Color.BurlyWood, 200) { EquipSlot = "Weapon",  EquipTier = 2, EquipSkill = "Magic", EquipLevel = 10, EquipDamageType = "Crush" });
+            itemsToAdd.Add(new Item("Battlestaff", "It's a magical stick.", "battlestaff", Color.BurlyWood, 7000) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush" });
 
             itemsToAdd.Add(new Item("Air battlestaff", "A magical staff. Provides unlimited air runes.", "battlestaffAir", 255, 255, 255, 15500) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush", CountsAsIDs = [ "runeAir" ], UseInt4 = -1, MustBeEquipped = true });
             itemsToAdd.Add(new Item("Water battlestaff", "A magical staff. Provides unlimited water runes.", "battlestaffWater", 30, 144, 255, 15500) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush", CountsAsIDs = [ "runeWater" ],  UseInt4 = -1, MustBeEquipped = true }); 
@@ -413,6 +414,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Big bones", "The remains of some huge creature or person.", "bonesBig", 255, 255, 255, 100) { UseString = "Bones", UseInt = 15 });
                 itemsToAdd.Add(new Item("Long bone", "A Construction bone.", "boneLong", 255, 255, 255, 100, trade: false) { UseString = "Bones", UseInt = 15 });
                 itemsToAdd.Add(new Item("Curved bone", "A curved Construction bone.", "boneCurved", 255, 255, 255, 100, trade: false) { UseString = "Bones", UseInt = 15 });
+                itemsToAdd.Add(new Item("Bull bones", "Bigger than cow bones.", "bonesBull", 255, 255, 255, 1, trade: false) { UseString = "Bones", UseInt = 40 });
             
                 itemsToAdd.Add(new Item("Fiendish ashes", "A heap of ashes.", "ashesFiendish", 122, 104, 127, 1) { UseString = "Ashes", UseInt = 10 });
                 itemsToAdd.Add(new Item("Vile ashes", "A heap of ashes.", "ashesVile", 122, 104, 127, 1) { UseString = "Ashes", UseInt = 25 });
@@ -433,7 +435,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });itemsToAdd.Add(new Item("Huger club", "Where did that zombie even get such a large bone? You can barely move this thing.", "clubHuger", 255, 255, 255, 5000) {
                 EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush", AttackSpeed = 3
             });  
-            itemsToAdd.Add(new Item("Baby zombie plush", "Despite being a zombie, kinda cute? It even has a little chicken that it's riding on.", "petBabyZombie", 34, 140, 34, 1000) {
+            itemsToAdd.Add(new Item("Baby zombie plush", "Despite being a zombie, kinda cute? It even has a little chicken that it's riding on.", "petBabyZombie", 34, 140, 34, 1000, trade: false) {
                 EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "The baby zombie gurgles a bit.", "The zombie's chicken clucks loudly.", "The baby zombie runs in a small circle quickly.", "CHICKEN JOCKEY!"}
             });  
             itemsToAdd.Add(new Item("Rotten flesh", "This doesn't really seem edible...", "fleshRotten", 150, 100, 50, 4) { UseString = "Heal", UseInt = 2, Potion = new() { new("Attack", -3) } });
@@ -448,13 +450,17 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Unicorn horn dust", "Finely ground horn of Unicorn.", "unicornHornDust", Color.SandyBrown, 25));
             itemsToAdd.Add(new Item("Chocolate bar", "Mmmmmmmm chocolate.", "chocolateBar", Color.Chocolate, 10));
             itemsToAdd.Add(new Item("Unicorn horn dust", "It's ground up chocolate.", "chocolateDust", Color.Chocolate, 10));
-            itemsToAdd.Add(new Item("Bear fur", "This would make warm clothing.", "bearFur", Color.SandyBrown, 10));
+            itemsToAdd.Add(new Item("Bear fur", "This would make warm clothing.", "fur", Color.SandyBrown, 10));
             itemsToAdd.Add(new Item("Red spiders' eggs", "Ewww!", "spiderEggsRed", Color.Crimson, 7));
             itemsToAdd.Add(new Item("Goat horn", "Not much good for blowing.", "goatHorn", Color.AntiqueWhite, 12));
             itemsToAdd.Add(new Item("Goat horn dust", "Finely ground goat horn.", "goatHornDust", Color.AntiqueWhite, 12));
 
             itemsToAdd.Add(new Item("Vial", "A glass vial, currently empty.", "vialEmpty", 200, 200, 200, 2) { colA = 150 });
-            itemsToAdd.Add(new Item("Vial of water", "A glass vial full of water.", "vialWater", 14, 129, 205, 2) { colA = 150 });
+            itemsToAdd.Add(new Item("Vial of water", "A glass vial full of water.", "vialWater", 14, 129, 205, 2) { colA = 150 }); 
+            itemsToAdd.Add(new Item("Empty vial pack", "A pack containing 100 empty vials.", "vialEmptyPack", Color.SandyBrown, 200) { UseString = "ItemPack", UseString2 = "vialEmpty", UseInt = 100});
+            itemsToAdd.Add(new Item("Water-filled vial pack", "A pack containing 100 vials of water.", "vialWaterPack", Color.SandyBrown, 200) { UseString = "ItemPack", UseString2 = "vialWater", UseInt = 100});
+            itemsToAdd.Add(new Item("Eye of newt pack", "A pack containing 100 newt eyes.", "eyeNewtPack", Color.SandyBrown, 300) { UseString = "ItemPack", UseString2 = "eyeNewt", UseInt = 100});
+
             itemsToAdd.Add(new Item("Guam potion (unf)", "I need another ingredient to finish this Guam potion.", "potionUnfGuam", ColorLib.Guam.SetAlpha(150), 3));
             itemsToAdd.Add(new Item("Marrentill potion (unf)", "I need another ingredient to finish this Marrentill potion.", "potionUnfMarrentill", ColorLib.Marrentill.SetAlpha(150), 5));
             itemsToAdd.Add(new Item("Tarromin potion (unf)", "I need another ingredient to finish this Tarromin potion.", "potionUnfTarromin", ColorLib.Tarromin.SetAlpha(150), 11));
@@ -504,7 +510,108 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Pie recipe book", "Lots of pie recipes for me to try.", "bookRecipesPie", Color.Crimson, 5) { ConsumedOnUse = false, UseString = "Book", UseString2 = "recipesPie"});
             itemsToAdd.Add(new Item("Scrumpled paper", "A piece of paper with barely legible writing - looks like a recipe!", "paperScrumpled", Color.White, 10) { ConsumedOnUse = false, UseString = "Book", UseString2 = "paperScrumpled" });
             
-            
+            itemsToAdd.Add(new Item("Anti-dragon shield", "This provides partial protection from dragonbreath attack.", "shieldAntidragon", Color.Orange, 20) {
+                EquipSlot = "Offhand",  EquipTier = 2, EquipSkill = "Defense", EquipLevel = 1, MiscString = "DefenseAll", EquipReq = new("QuestPast", 0, "MI_DragonSlayer")
+            });
+
+            itemsToAdd.Add(new Item("Cow slippers", "Cute cow slippers.", "slippersCow",  Color.DimGray, 1000) { EquipSlot = "Feet", Cosmetic = true });
+            itemsToAdd.Add(new Item("Mooleta", "A defensive weapon.", "mooleta", Color.DarkGray, 1, trade: false) {
+                EquipSlot = "Offhand",  EquipTier = 2, EquipSkill = "Defense", EquipLevel =1, MiscString = "Defender"
+            });
+            itemsToAdd.Add(new Item("Beef", "Commonly referred to as Sir Loin.", "petBeef", Color.DimGray, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Beef lets out a little moo.", "Beef lets out a loud moo.", "Beef struts his stuff.", "Beef eats a bit of grass."},
+                UseString = "BeefEmote", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Kitten (black)", "A friendly little pet.", "kittenBlack", Color.DimGray, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Kitten (gray)", "A friendly little pet.", "kittenGray", Color.DarkGray, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Kitten (white)", "A friendly little pet.", "kittenWhite", Color.White, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Kitten (orange)", "A friendly little pet.", "kittenOrange", Color.Orange, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Kitten (brown)", "A friendly little pet.", "kittenBrown", Color.SaddleBrown, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Kitten", "A friendly little pet.", "kittenCalico", Color.White, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Cat (black)", "A fully grown feline.", "catBlack", Color.DimGray, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Cat (gray)", "A fully grown feline.", "catGray", Color.DarkGray, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Cat (white)", "A fully grown feline.", "catWhite", Color.White, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Cat (orange)", "A fully grown feline.", "catOrange", Color.Orange, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Cat (brown)", "A fully grown feline.", "catBrown", Color.SaddleBrown, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Cat", "A fully grown feline.", "catCalico", Color.White, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            });
+
+            itemsToAdd.Add(new Item("Overgrown cat (black)", "A friendly not-so little pet.", "catBlackOvergrown", Color.DimGray, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Overgrown cat (gray)", "A friendly not-so little pet.", "catGrayOvergrown", Color.DarkGray, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Overgrown cat (white)", "A friendly not-so little pet.", "catWhiteOvergrown", Color.White, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Overgrown cat (orange)", "A friendly not-so little pet.", "catOrangeOvergrown", Color.Orange, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Overgrown cat (brown)", "A friendly not-so little pet.", "catBrownOvergrown", Color.SaddleBrown, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            }); 
+
+            itemsToAdd.Add(new Item("Overgrown cat", "A friendly not-so little pet.", "catCalicoOvergrown", Color.White, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
+                UseString = "CatMenu", ConsumedOnUse = false
+            });
 
             for (int i = 0; i < itemsToAdd.Count; i++) {
                 ItemLibrary.Add(itemsToAdd[i].ID, itemsToAdd[i]);

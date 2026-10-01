@@ -58,6 +58,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             toAdd.Add(new("Anvil") { OpensUI = true });
+            toAdd.Add(new("Grand Exchange") { OpensUI = true });
+            toAdd.Add(new("GE Bank") { OpensUI = true });
 
             ProcessingStation Range = new("Range") {
                 Recipes = new() {
@@ -65,6 +67,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("weedSwamp", "ashSoda"),
                     new ProcessingRecipe("meatRawNewt", "meatCookedBeef", "Cooking", 1, 30, failOutput: "burntMeat", failStop: 34),
                     new ProcessingRecipe("meatRawBeef", "meatCookedBeef", "Cooking", 1, 30, failOutput: "burntMeat", failStop: 34),
+                    new ProcessingRecipe("meatRawTbone", "meatCookedTbone", "Cooking", 13, 90, failOutput: "burntMeat", failStop: 49),
                     new ProcessingRecipe("meatRawRat", "meatCookedBeef", "Cooking", 1, 30, failOutput: "burntMeat", failStop: 34),
                     new ProcessingRecipe("meatRawBear", "meatCookedBeef", "Cooking", 1, 30, failOutput: "burntMeat", failStop: 34),
                     new ProcessingRecipe("meatCookedBeef", "burntMeat", "Cooking", 1, 3),

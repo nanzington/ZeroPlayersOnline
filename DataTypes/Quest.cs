@@ -13,6 +13,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public List<string> RegionsNeeded = new();
 
         public string StartNPC = "";
+        public string StartLoc = "";
 
         public int QuestPoints = 0;
 
@@ -85,6 +86,16 @@ namespace ZeroPlayersOnline.DataTypes {
                             Item pickup = new(reward);
                             pickup.Quantity = kv.MiscInt;
                             p.TryPickup(pickup, pickup.Quantity);
+                        }
+                    }
+                }
+
+                if (kv.RewardType == "RandomItem") {
+                    if (kv.MiscString == "kitten") {
+                        List<string> kittenColors = [ "kittenBlack", "kittenGray", "kittenWhite", "kittenOrange", "kittenBrown", "kittenCalico" ];
+
+                        if (GameLoop.ZPO.ResolveItem(kittenColors[GameLoop.rand.Next(kittenColors.Count)]) is Item kitten) {
+                            p.TryPickup(kitten, 1);
                         }
                     }
                 }

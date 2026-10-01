@@ -65,6 +65,11 @@ namespace ZeroPlayersOnline.Managers {
         public static bool TeleCostsCharges = false;
         public static bool TeleFairyRing = false;
 
+        public static Window LampMenu; 
+        public static List<string> LampSkills = new();
+        public static ItemWrapper? LampWrap = null;
+        public static int LampAmount = 0;
+
         public static Window InventoryContainer;
         public static ItemWrapper? ConWrap = null;
 
@@ -87,6 +92,23 @@ namespace ZeroPlayersOnline.Managers {
         public static List<SlayerReward> SlayerBuy = new();
         public static List<SlayerReward> SlayerTasks = new();
         public static List<SlayerReward> SlayerCosmetics = new();
+
+        public static Window GrandExchange;
+        public static bool GECollectOnly = false;
+        public static string GEBuyID = "";
+        public static ItemWrapper? GESellView = null;
+        public static GETransaction? GEListView = null;
+        public static GETransaction? GEListPotential = null;
+        public static int GEPriceEntry = 0;
+        public static int GEView = 0; // 0: Buying, 1: Selling, 2: Viewing Existing Listing
+        public static bool GEInventory = false;
+        public static string GEFilterSave = "";
+        public static string GESearchFilter = "";
+        public static string GETyping = "";
+        public static List<Item> GEItems = new();
+        public static int GEScrollTop = 0;
+         
+        public static Window CatMenu;
 
         public static bool AnyVisible(string except = "") {
             if (CollectionLog.IsVisible && except != "Collection")
@@ -115,6 +137,12 @@ namespace ZeroPlayersOnline.Managers {
                 return true;
             if (Shop.IsVisible && except != "Shop")
                 return true;
+            if (LampMenu.IsVisible && except != "Lamp") 
+                return true;
+            if (GrandExchange.IsVisible && except != "Grand Exchange")
+                return true;
+            if (CatMenu.IsVisible && except != "Cat Menu")
+                return true;
             
             return false;
         }
@@ -133,6 +161,9 @@ namespace ZeroPlayersOnline.Managers {
             Book.IsVisible = false;
             Cutscene.IsVisible = false;
             Shop.IsVisible = false;
+            LampMenu.IsVisible = false;
+            GrandExchange.IsVisible = false;
+            CatMenu.IsVisible = false;
         }
 
         public static void SetupWindows() {
@@ -149,6 +180,9 @@ namespace ZeroPlayersOnline.Managers {
             Book = new(77, 25) { CanDrag = true, Position = new Point(25, 10), Title = "Book".Align(HorizontalAlignment.Center, 75)}; 
             Cutscene = new(100, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Cutscene".Align(HorizontalAlignment.Center, 98)};
             Shop = new(50, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Shop".Align(HorizontalAlignment.Center, 48)}; 
+            LampMenu = new(50, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Lamp".Align(HorizontalAlignment.Center, 48)};
+            GrandExchange = new(100, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Grand Exchange".Align(HorizontalAlignment.Center, 98)};
+            CatMenu = new(20, 7) { CanDrag = true, Position = new Point(25, 10), Title = "Cat Menu".Align(HorizontalAlignment.Center, 18)};
         }
 
         public static void GuideDraw() {
@@ -240,10 +274,11 @@ namespace ZeroPlayersOnline.Managers {
             Debug.DrawLine(new Point(20, 1), new Point(20, 28), 179);
 
             Debug.PrintClickable(2, 1, new ColoredString("Overview", DebugMenu == "Overview" ? Color.Yellow : Color.White, Color.Black), () => { DebugMenu = "Overview"; });
-            Debug.PrintClickable(2, 3, new ColoredString("Broken Links", DebugMenu == "Unfound" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; });
-            Debug.PrintClickable(18, 3, new ColoredString("?", Color.MediumPurple, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; DebugRandomSource = GameLoop.rand.Next(Sources.Count); });
+            Debug.PrintClickable(2, 3, new ColoredString("Broken Links", DebugMenu == "Unfound" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; CompendiumSourceTop = 0; });
+            Debug.PrintClickable(18, 3, new ColoredString("?", Color.MediumPurple, Color.Black), () => { Sources = DebugSources(); DebugMenu = "Unfound"; DebugRandomSource = GameLoop.rand.Next(Sources.Count); CompendiumSourceTop = 0; });
             
-            Debug.PrintClickable(2, 4, new ColoredString("Unobtainable Items", DebugMenu == "Unobtainable" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugUnobtainable(); DebugMenu = "Unobtainable"; });
+            Debug.PrintClickable(2, 4, new ColoredString("Unobtainable Items", DebugMenu == "Unobtainable" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugUnobtainable(); DebugMenu = "Unobtainable"; CompendiumSourceTop = 0; });
+            Debug.PrintClickable(2, 5, new ColoredString("Unplaced Songs", DebugMenu == "Songs" ? Color.Yellow : Color.White, Color.Black), () => { Sources = DebugSongs(); DebugMenu = "Songs"; CompendiumSourceTop = 0; });
             
             if (DebugMenu == "Overview") {
                 Debug.Print(22, 1, "         Locations: " + GameLoop.ZPO.Atlas.Count);
@@ -283,6 +318,8 @@ namespace ZeroPlayersOnline.Managers {
                     Debug.Print(22, sourceY++, "Things found where the ID may be wrong or refer to a nonexistent item: ", Color.Crimson);
                 if (DebugMenu == "Unobtainable")
                     Debug.Print(22, sourceY++, "Items with no source found: ", Color.Crimson);
+                if (DebugMenu == "Songs")
+                    Debug.Print(22, sourceY++, "Songs that can't be unlocked currently: " + Sources.Count, Color.Crimson);
 
                 for (int source = CompendiumSourceTop; source < Sources.Count && source < CompendiumSourceTop + 27; source++) {
                     Debug.Print(22, sourceY++, Sources[source].Display, DebugRandomSource == sourceY - 2 ? Color.Yellow : Color.White);
@@ -2598,6 +2635,7 @@ namespace ZeroPlayersOnline.Managers {
 
                 if (kv.Value.UseString == "Transform" && kv.Value.UseString2 == id) { sources.Add(new("Received from Activating: " + kv.Value.Name, "Items", "", kv.Value.ID, "", 0)); }
                 if (kv.Value.UseString == "Extinguish" && kv.Value.UseString2 == id) { sources.Add(new("Received from Extinguishing: " + kv.Value.Name, "Items", "", kv.Value.ID, "", 0)); }
+                if (kv.Value.UseString == "Light" && kv.Value.UseString2 == id) { sources.Add(new("Received from Lighting: " + kv.Value.Name, "Items", "", kv.Value.ID, "", 0)); }
             }
 
             foreach (var kv in GameLoop.ZPO.GatherSpots) {
@@ -2658,9 +2696,32 @@ namespace ZeroPlayersOnline.Managers {
                 }
             } 
 
+            ShopID = "Slayer Equipment";
+            BuildShop();
+
+            foreach (var kv in ShopItems) {
+                if (kv == id) {
+                    sources.Add(new("Slayer Equipment Shop", "Items", "", id, "", 0, 0));
+                }
+            }
+
+            foreach (var kv in SlayerBuy) {
+                foreach (var act in kv.Actions) {
+                    if (act.ActionID == "GiveItem" && act.MiscString == id) { 
+                        sources.Add(new("Slayer Rewards Shop", "Items", "", id, "", 0, 0));
+                    }
+                }
+            }
+
+
+
             if (id == "mtaAlchCoin") { sources.Add(new("Cast Low or High Alchemy on the items from Alchemist's Playground in Mage Training Arena.", "Items", "", id, "", 0)); }
             if (id == "fruitPeach") { sources.Add(new("Cast Bones to Peaches with low level bones in your inventory.", "Items", "", id, "", 0)); }
             if (id == "maskDragith") { sources.Add(new("Activate any of the five pieces of the mask with all five parts in your inventory.", "Items", "", id, "", 0)); }
+            if (id == "casketTutorial") { sources.Add(new("Complete a Tutorial treasure trail and receive the casket at the end.", "Items", "", id, "", 0)); }
+            if (id == "casketBeginner") { sources.Add(new("Complete a Beginner treasure trail and receive the casket at the end.", "Items", "", id, "", 0)); }
+            if (id == "casketEasy") { sources.Add(new("Complete an Easy treasure trail and receive the casket at the end.", "Items", "", id, "", 0)); }
+            if (id == "casketMedium") { sources.Add(new("Complete a Medium treasure trail and receive the casket at the end.", "Items", "", id, "", 0)); }
 
 
             sources = sources.OrderBy(o => o.Display).ToList();
@@ -2676,6 +2737,24 @@ namespace ZeroPlayersOnline.Managers {
                 }
             }
 
+
+            return sources;
+        }
+
+        public static List<CompendiumResult> DebugSongs() { 
+            List<CompendiumResult> sources = new();
+            List<string> SongsPlaced = new();
+
+            foreach (var kv in GameLoop.ZPO.Atlas) {
+                if (kv.Value.UPCsong != "") { SongsPlaced.Add(kv.Value.UPCsong); }
+                if (kv.Value.JGXsong != "") { SongsPlaced.Add(kv.Value.JGXsong); }
+            }
+            
+            foreach (var song in GameLoop.SoundManager.Songs.Keys.OrderBy(o => o).ToList()) {
+                if (!SongsPlaced.Contains(song)) { 
+                    sources.Add(new("UPC: " + song, "", "", "", "", 0, 0));
+                }
+            }
 
             return sources;
         }
@@ -3155,7 +3234,9 @@ namespace ZeroPlayersOnline.Managers {
                         Quests.Print(19, 1, "Quest Name: " + currQuest.Name);
                         Quests.Print(19, 2, "Difficulty: " + currQuest.Difficulty);
                         Quests.Print(19, 3, "    Length: " + currQuest.Length);
-                        int afterDesc = Quests.PrintMultiLine(19, 5, currQuest.Description, 80) + 2;
+                        Quests.Print(19, 4, " Start NPC: " + GameLoop.ZPO.ResolveNPCName(currQuest.StartNPC) + " (" + GameLoop.ZPO.ResolveLocationName(currQuest.StartLoc) + ")");
+
+                        int afterDesc = Quests.PrintMultiLine(19, 6, currQuest.Description, 80) + 2;
 
                         if (currQuest.CurrentStage() != -1) {
                             Quests.PrintClickable(19, afterDesc, "[View Quest Log]", () => { QuestOverview = false; QuestBlockScrollTop = 0; });
@@ -3194,7 +3275,7 @@ namespace ZeroPlayersOnline.Managers {
 
                                 printY = Quests.PrintMultiLine(19, printY, kv.Value.Description, 80, col.R, col.G, col.B);
 
-                                printY += 2;
+                                printY += 1;
                             }
                         }
 
@@ -3555,7 +3636,7 @@ namespace ZeroPlayersOnline.Managers {
         public static void BuildShop() {
             ShopItems.Clear();
 
-            if (ShopID == "Slayer Equipment") {
+            if (ShopID == "Slayer Equipment" || ShopID == "ALL") {
                 ShopItems.Add("gemSlayer");
                 
                 ShopItems.Add("staffSlayer");
@@ -3620,7 +3701,7 @@ namespace ZeroPlayersOnline.Managers {
             SlayerBuy.Add(new("Broad bolts (x250)", 35, "Bolts that can damage Turoths and Kurask. Level 55 Slayer and 50 Ranged, alongside a suitable crossbow, are required to fire these bolts.", null, [ new("GiveItem", "boltsBroad", "", 250)]));
             SlayerBuy.Add(new("Broad arrows (x250)", 35, "Bolts that can damage Turoths and Kurask. Level 55 Slayer and 50 Ranged, alongside a suitable crossbow, are required to fire these bolts.", null, [ new("GiveItem", "boltsBroad", "", 250)]));
             SlayerBuy.Add(new("Herb sack", 75, "Stores up to 30 of each type of grimy herb (for a total of 450 herbs). Requires 58 Herblore.", [ new("Skill", 58, "Herblore") ], [ new("GiveItem", "sackHerb", "", 1)]));
-            SlayerBuy.Add(new("Rune pouch", 750, "Stores up to 3 types of runes. Only one can be owned. Can also be obtained by exchanging a rune pouch note at a bank.", [ new("ItemNotOwned", 1, "pouchRune") ], [ new("GiveItem", "sackHerb", "", 1)]));
+            SlayerBuy.Add(new("Rune pouch note", 750, "Exchange at a bank for a rune pouch, which stores up to 3 types of runes. Only one pouch can be owned.", null, [ new("GiveItem", "pouchRuneNote", "", 1)]));
             
             SlayerTasks.Clear();
             SlayerTasks.Add(new("Cancel task", 30, "Cancels your current task without ending your streak.", [ new("SlayerTask", 1, "Any")], [ new("SlayerTask", "Cancel", "", 1)]));
@@ -3632,5 +3713,297 @@ namespace ZeroPlayersOnline.Managers {
 
         }
 
+        public static void LampDraw() {
+            LampMenu.Clear();
+            Helper.DrawBox(LampMenu, 0, 0, 48, 28);
+            LampMenu.Print(2, 0, "[Choose a skill to gain " + LampAmount + " experience]");
+
+            for(int i = 0; i < LampSkills.Count; i++) {
+                if (GameLoop.ZPO.player.Skills.ContainsKey(LampSkills[i])) { 
+                    LampMenu.PrintClickable(2, 1 + i, LampSkills[i], () => { 
+                        LampMenu.IsVisible = false;  
+                        GameLoop.ZPO.Log.AddMessage("You gain " + LampAmount + " experience in " + LampSkills[i] + ".");
+                        GameLoop.ZPO.player.TryGrantExp(LampSkills[i], LampAmount, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+                        LampSkills = new();
+
+                        if (LampWrap != null) { 
+                            LampWrap.Quantity -= 1;  
+                            if (LampWrap.Quantity <= 0) { 
+                                GameLoop.ZPO.player.Inventory.Remove(LampWrap);
+                            }
+                        }
+
+                        LampWrap = null; 
+                    });
+                } else {
+                    LampMenu.Print(2, 1 + i, LampSkills[i] + " (skill not found, report this)", Color.DarkSlateGray);
+                }
+            }
+             
+              
+            LampMenu.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { LampMenu.IsVisible = false; });
+        }    
+        
+
+        public static void GrandExchangeDraw() {
+            Player p = GameLoop.ZPO.player;
+            GrandExchange.Clear();
+            Helper.DrawBox(GrandExchange, 0, 0, 98, 28);
+            GrandExchange.Print(2, 0, "[Grand Exchange]".Align(HorizontalAlignment.Center, 98, (char) 196));
+            
+            GrandExchange.DrawLine(new Point(40, 1), new Point(40, 28), 179, Color.White);
+            GrandExchange.DrawLine(new Point(41, 22), new Point(98, 22), 196, Color.White);
+             
+            GrandExchange.PrintClickable(2, 1, new ColoredString("Inv", GEInventory ? Color.Yellow : Color.White, Color.Black), () => { if (!GECollectOnly) { GEInventory = true; } });
+            GrandExchange.PrintClickable(6, 1, new ColoredString("List", !GEInventory ? Color.Yellow : Color.White, Color.Black), () => { GEInventory = false; });
+            GrandExchange.DrawLine(new Point(1, 2), new Point(39, 2), 196, Color.White);
+
+            GrandExchange.Print(11, 1, 179.AsString(), Color.White);
+
+            GrandExchange.PrintStringField(13, 1, "", ref GESearchFilter, ref GETyping, "filter");
+
+            if (GEInventory) { // Show the players inventory, allow clicking to potentially create a listing
+                int pY = 3;
+                foreach (var kv in p.Inventory) {
+                    if (kv.GetRef() is Item inv) { 
+                        if (inv.Tradeable && inv.Value > 0) {
+                            GrandExchange.PrintClickable(2, pY++, inv.GetNameCS(kv.Quantity, 2, kv.Charges, kv.Noted), () => {
+                                GEView = 1;
+                                GESellView = kv;
+                                GEPriceEntry = inv.Value;
+                                GEListPotential = new(new(kv) { Quantity = 1 }, false, inv.Value);
+                            });
+
+                            if (kv == GESellView) {
+                                GrandExchange.Print(1, pY - 1, ">", Color.White);
+                            }
+                        } else {
+                            GrandExchange.Print(2, pY++, inv.GetName(kv.Quantity, 0, kv.Charges, kv.Noted) + " (untradeable)", Color.DarkSlateGray);
+                        }
+                    } 
+                }
+            } else { // Show active listings and their prices and likelihoods, allow cancelling
+                int pY = 3;
+                foreach (var kv in p.ActiveGE) {
+                    bool shouldBreak = false;
+                    if (kv.Wrap.GetRef() is Item list) {
+                        GrandExchange.Print(1, pY, Helper.Checkmark(kv.Resolved));
+                        GrandExchange.PrintClickable(3, pY, list.GetNameCS(kv.Wrap.Quantity), () => {
+                            if (kv.Buying) {
+                                if (kv.Resolved) { // Buying and the purchase happened
+                                    bool noted = list.Noteable && kv.Wrap.Quantity > 1;
+                                    p.TryPickup(kv.Wrap, kv.Wrap.Quantity, noted, true);
+                                    p.ActiveGE.Remove(kv);
+                                    shouldBreak = true;
+                                    GameLoop.ZPO.Log.AddMessage("Collected item: " + kv.Wrap.Quantity + "x " + GameLoop.ZPO.ResolveItemName(kv.Wrap.ID) + ".", Color.Lime);
+                                } else { // Buying but purchase did not happen, return gold
+                                    p.GiveGold(kv.Wrap.Quantity * kv.ListPrice);
+                                    p.ActiveGE.Remove(kv);
+                                    shouldBreak = true;
+                                    GameLoop.ZPO.Log.AddMessage("Cancelled buy offer, " + (kv.Wrap.Quantity * kv.ListPrice) + " gold returned.", Color.Crimson);
+                                }
+                            } else {
+                                if (kv.Resolved) { // Selling and sale happened, give gold
+                                    p.GiveGold(kv.Wrap.Quantity * kv.ListPrice);
+                                    p.ActiveGE.Remove(kv);
+                                    shouldBreak = true;
+                                    GameLoop.ZPO.Log.AddMessage("Collected gold: " + (kv.Wrap.Quantity * kv.ListPrice) + ".", Color.Lime);
+                                } else { // No sale, give back item, note it if needed
+                                    bool noted = list.Noteable && kv.Wrap.Quantity > 1;
+                                    p.TryPickup(kv.Wrap, kv.Wrap.Quantity, noted, true);
+                                    p.ActiveGE.Remove(kv);
+                                    shouldBreak = true;
+                                    GameLoop.ZPO.Log.AddMessage("Cancelled sell offer, " + kv.Wrap.Quantity + "x " + GameLoop.ZPO.ResolveItemName(kv.Wrap.ID) + " returned.", Color.Crimson);
+                                }
+                            }
+                        });
+                    }
+
+                    if (shouldBreak) {
+                        break;
+                    }
+                }
+            }
+
+            if (!GECollectOnly) { 
+                if (GEFilterSave != GESearchFilter) {
+                    GEFilterSave = GESearchFilter;
+                    UpdateGEItems();
+                }
+
+                int show = 21;
+                if (GEItems.Count > show) {
+                    int qty = 1;
+                    if (Helper.EitherShift()) { qty *= 5; }
+                    if (Helper.EitherControl()) { qty *= 10; }
+
+                    if (Helper.ScrolledUp()) { GEScrollTop = Math.Clamp(GEScrollTop - qty, 0, GEItems.Count - show); }
+                    if (Helper.ScrolledDown()) { GEScrollTop = Math.Clamp(GEScrollTop + qty, 0, GEItems.Count - show); }
+                } else {
+                    GEScrollTop = 0;
+                }
+
+                for (int i = GEScrollTop; i < GEItems.Count && i < GEScrollTop + show; i++) {
+                    GrandExchange.PrintClickable(42, 1 + (i - GEScrollTop), GEItems[i].GetNameCS(), () => {
+                        GEView = 0;
+                        GEListPotential = new(new(GEItems[i]), true, GEItems[i].Value);
+                        GEPriceEntry = GEItems[i].Value;
+                    });
+                }
+            } else {
+                GrandExchange.Print(41, 10, "Can only collect items here.".Align(HorizontalAlignment.Center, 57), Color.White);
+            }
+
+            if (GEListPotential != null) {
+                GrandExchange.Print(47, 23, GEListPotential.Buying ? " BUYING:" : "SELLING:", Color.White);
+                if (GEListPotential.Wrap.GetRef() is Item potential) {
+                    GrandExchange.Print(56, 23, potential.GetNameCS(GEListPotential.Wrap.Quantity));
+                    
+                    GrandExchange.PrintClickable(42, 25, new ColoredString("Market Price: " + potential.Value, Color.White, Color.Black), () => { GEListPotential.ListPrice = potential.Value; }); 
+
+                    int qty = 1;
+                    if (Helper.EitherShift()) { qty *= 5; }
+                    if (Helper.EitherControl()) { qty *= 10; }
+                    if (Helper.KeyDown(Key.Space)) { qty *= 1000; }
+
+                    GrandExchange.Print(42, 26, "  List Price: " + GEListPotential.ListPrice, Color.White); 
+                    int tenPercent = (int) Math.Max(1, Math.Floor(potential.Value / 10.0));
+
+                    GrandExchange.PrintClickable(56, 27, "-X", () => { GEListPotential.ListPrice = Math.Clamp(GEListPotential.ListPrice - qty, 0, GEListPotential.ListPrice); });
+                    GrandExchange.PrintClickable(59, 27, "+X", () => { GEListPotential.ListPrice = Math.Clamp(GEListPotential.ListPrice + qty, GEListPotential.ListPrice, int.MaxValue); });
+
+                    GrandExchange.PrintClickable(62, 27, "-10%", () => { GEListPotential.ListPrice = Math.Clamp(GEListPotential.ListPrice - tenPercent, 0, GEListPotential.ListPrice); });
+                    GrandExchange.PrintClickable(67, 27, "+10%", () => { GEListPotential.ListPrice = Math.Clamp(GEListPotential.ListPrice + tenPercent, GEListPotential.ListPrice, int.MaxValue); });
+
+                    GrandExchange.PrintClickable(72, 27, "INSTA", () => { 
+                        if (GEListPotential.Buying) { GEListPotential.ListPrice = potential.Value * 2; }
+                        else if (!GEListPotential.Buying) { GEListPotential.ListPrice = potential.Value / 2; }
+                    });
+
+
+                    GrandExchange.Print(42, 28, "    Quantity: ", Color.White);
+                    GrandExchange.PrintClickable(56, 28, "-", () => { GEListPotential.Wrap.Quantity = Math.Clamp(GEListPotential.Wrap.Quantity - qty, 1, GEListPotential.Wrap.Quantity); });
+                    GrandExchange.PrintClickable(58, 28, "+", () => { GEListPotential.Wrap.Quantity = Math.Clamp(GEListPotential.Wrap.Quantity + qty, GEListPotential.Wrap.Quantity, int.MaxValue); });
+
+                    
+                    GrandExchange.Print(88, 24, "Total Price", Color.White); 
+                    GrandExchange.Print(80, 25, (GEListPotential.ListPrice * GEListPotential.Wrap.Quantity).ToString().Align(HorizontalAlignment.Right, 19), Color.Goldenrod); 
+
+
+                    bool playerCanList = false;
+
+                    if (GEListPotential.Buying) {
+                        if (p.GoldTotal() >= GEListPotential.Wrap.Quantity * GEListPotential.ListPrice) {
+                            playerCanList = true;
+                        }
+                    } else {
+                        if (p.HasAllItems([GEListPotential.Wrap.ID + "," + GEListPotential.Wrap.Quantity], true)) {
+                            playerCanList = true;
+                        }
+                    }
+
+                    GrandExchange.Print(95, 26, "Odds", Color.White);
+
+                    int odds = GEListPotential.PerSecondDenom();
+
+                    GrandExchange.Print(80, 27, (odds == 0 ? "NEVER" : odds == 1 ? "INSTA" : ("1 in " + odds.ToString())).Align(HorizontalAlignment.Right, 19), odds == 0 ? Color.Crimson : odds == 1 ? Color.Lime : Color.White);
+
+                    GrandExchange.PrintClickable(93, 28, new ColoredString("[LIST]", playerCanList ? Color.Lime : Color.Crimson, Color.Black), () => {
+                        if (p.ActiveGE.Count < 8) {
+                            if (GEListPotential.Buying) { // Deduct gold
+                                GEInventory = false;
+                                p.ActiveGE.Add(GEListPotential);
+                                p.TakeGold(GEListPotential.ListPrice * GEListPotential.Wrap.Quantity);
+                                GameLoop.ZPO.Log.AddMessage("Listed a buy offer for " + GEListPotential.Wrap.Quantity + "x " + potential.Name + " at " + GEListPotential.ListPrice + " each (" + (GEListPotential.ListPrice * GEListPotential.Wrap.Quantity) + " total).", Color.Goldenrod);
+                                
+                                GEListPotential = null; 
+                            } else { // Remove items
+                                p.ConsumeItems([GEListPotential.Wrap.ID + "," + GEListPotential.Wrap.Quantity], true);
+                                p.ActiveGE.Add(GEListPotential);
+                                GameLoop.ZPO.Log.AddMessage("Listed a sell offer for " + GEListPotential.Wrap.Quantity + "x " + potential.Name + " at " + GEListPotential.ListPrice + " each (" + (GEListPotential.ListPrice * GEListPotential.Wrap.Quantity) + " total).", Color.Goldenrod);
+                                
+                                GEListPotential = null; 
+                            }
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("Maximum of 8 concurrent listings in the Grand Exchange. Take one down to put up a new listing.", Color.Crimson);
+                        }
+                    });
+                }
+            }
+
+
+            GrandExchange.PrintClickable(99, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { GrandExchange.IsVisible = false; });
+        }
+
+        public static void UpdateGEItems() {
+            if (GameLoop.ZPO.player.GrandExchangeMode == 0) {
+                GEItems = GameLoop.ZPO.ItemLibrary.Values.Where(o => (o.ID.ToLower().Contains(GESearchFilter.ToLower()) || o.Name.ToLower().Contains(GESearchFilter.ToLower())) && o.Tradeable && o.Value > 0).ToList();
+            } else if (GameLoop.ZPO.player.GrandExchangeMode == 1) {
+                GEItems = GameLoop.ZPO.ItemLibrary.Values.Where(o => (o.ID.ToLower().Contains(GESearchFilter.ToLower()) || o.Name.ToLower().Contains(GESearchFilter.ToLower())) && o.Tradeable && o.Value > 0).Where(o => GameLoop.ZPO.player.ItemsEverObtained.Contains(o.ID)).ToList();
+            }
+        }
+    
+        public static void CatDraw() {
+            CatMenu.Clear();
+            Helper.DrawBox(CatMenu, 0, 0, 18, 5);
+            CatMenu.Print(2, 0, "[Cat Menu]");
+
+            if (GameLoop.ZPO.player.Equipment.TryGetValue("Pet", out ItemWrapper? pet) && pet != null) {
+                CatMenu.PrintClickable(2, 1, "Pet", () => {
+                    pet.MiscInt2 = 0;
+                    GameLoop.ZPO.Log.AddMessage("You pet your cat for a bit. It purrs contentedly.", Color.Yellow);
+                });
+
+                CatMenu.Print(11, 1, pet.MiscInt2.ToString().Align(HorizontalAlignment.Right, 7));
+
+                CatMenu.PrintClickable(2, 2, "Play", () => {
+                    pet.MiscInt2 = 0;
+                    GameLoop.ZPO.Log.AddMessage("You play with your cat for a bit. It meows happily.", Color.Yellow);
+                });
+                
+                CatMenu.Print(11, 2, pet.MiscInt2.ToString().Align(HorizontalAlignment.Right, 7));
+
+                bool hasMilk = GameLoop.ZPO.player.HasAllItems(["bucketMilk,1"]);
+                CatMenu.PrintClickable(2, 3, new ColoredString("Give Milk", hasMilk ? Color.White : Color.DarkSlateGray, Color.Black), () => {
+                    if (hasMilk) {
+                        GameLoop.ZPO.player.ConsumeItems(["bucketMilk,1"]);
+                        GameLoop.ZPO.Log.AddMessage("You give your cat some milk. It seems pleased.", Color.Yellow);
+                        pet.MiscInt = 0;
+                    } else {
+                        GameLoop.ZPO.Log.AddMessage("You don't have any milk to give it!", Color.Crimson);
+                    }
+                });
+                
+                CatMenu.Print(11, 3, pet.MiscInt.ToString().Align(HorizontalAlignment.Right, 7));
+
+                string firstFishID = "";
+                foreach (var kv in GameLoop.ZPO.player.Inventory) {
+                    if (!kv.Noted && (kv.ID.Contains("fishRaw") || kv.ID.Contains("fishCooked"))) {
+                        firstFishID = kv.ID;
+                    }
+                }
+
+                CatMenu.PrintClickable(2, 4, new ColoredString("Give Fish", firstFishID != "" ? Color.White : Color.DarkSlateGray, Color.Black), () => {
+                    if (firstFishID != "") {
+                        GameLoop.ZPO.player.ConsumeItems([firstFishID + ",1"]);
+                        GameLoop.ZPO.Log.AddMessage("You give your cat some fish. It seems very pleased.", Color.Yellow);
+                        pet.MiscInt = 0;
+                    } else {
+                        GameLoop.ZPO.Log.AddMessage("You don't have any fish to give it!", Color.Crimson);
+                    }
+                });
+                
+                CatMenu.Print(11, 4, pet.MiscInt.ToString().Align(HorizontalAlignment.Right, 7));
+                
+                if (firstFishID != "") {
+                    CatMenu.Print(2, 5, "(" + GameLoop.ZPO.ResolveItemName(firstFishID) + ")", Color.DarkSlateGray);
+                }
+            }
+
+            CatMenu.PrintClickable(19, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { CatMenu.IsVisible = false; });
+        }
+    
+        
+        
     }
 }

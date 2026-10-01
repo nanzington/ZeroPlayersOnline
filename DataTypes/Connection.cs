@@ -8,7 +8,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public int MinimumFailDamage = 0;
         public int MaximumFailDamage = 0;
 
-        public List<Requirement>? Requirements = new();
+        public List<Requirement> Requirements = new();
         public bool OnlyNeedOneReq = false;
         public bool HideIfReqsNotMet = false;
 
@@ -69,6 +69,13 @@ namespace ZeroPlayersOnline.DataTypes {
 
             if (OnlyNeedOneReq && anyPassed)
                 return true;
+
+            if (Level != 0 && ExpTo != "") {
+                if (p.GetEffectiveSkillLevel(ExpTo) < Level) {
+                    allPassed = false;
+                }
+            }
+
             return allPassed;
         }
 

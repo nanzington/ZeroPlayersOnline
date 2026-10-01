@@ -194,6 +194,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                 };
                 itemsToAdd.Add(warhammer);
 
+                Item defender = new Item(Metals[i].Name + " defender", "A defensive weapon.", "defender" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult, trade: false) {
+                    EquipSlot = "Offhand",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "Defender"
+                };
+                itemsToAdd.Add(defender);
+
                 Item sqshield = new Item(Metals[i].Name + " square shield", "A medium square shield.", "sqShield" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 2) {
                     EquipSlot = "Offhand",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"
                 };

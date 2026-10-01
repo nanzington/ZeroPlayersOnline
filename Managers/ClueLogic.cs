@@ -20,8 +20,19 @@ namespace ZeroPlayersOnline.Managers {
                         if (clueTut != null) {
                             if (clueTut.ClueType == clueType && player.NavLoc == clueTut.SolveLoc && interacted == clueTut.EmoteOrNpc) {
                                 if (clueTut.ClueType != "Emote") {
-                                    ProgressStep(diff, player, Log);
-                                    return true;
+                                    if (interacted == "mistVarCharlie" && clueTut.Equip1 != "") {
+                                        if (player.HasAllItems([clueTut.Equip1 + ",1"])) {
+                                            player.ConsumeItems([clueTut.Equip1 + ",1"]);
+                                            ProgressStep(diff, player, Log);
+                                            return true;
+                                        } else {
+                                            GameLoop.ZPO.Log.AddMessage("Charlie wants you to bring him a " + GameLoop.ZPO.ResolveItemName(clueTut.Equip1).ToLower() + ".", Color.SandyBrown);
+                                            return true;
+                                        }
+                                    } else {
+                                        ProgressStep(diff, player, Log);
+                                        return true;
+                                    }
                                 } else {
                                     bool first = false;
                                     bool second = false;
@@ -71,31 +82,32 @@ namespace ZeroPlayersOnline.Managers {
             else if (tier == "Master") { toIncrement = ref player.StepsDoneMaster; toReset = ref player.CurrentClueMaster; stepsNeeded = 5; }
 
 
+            if (player.HasAllItems(["clueScroll" + tier])) {
+                for (int i = 0; i < player.Inventory.Count; i++) {
+                    if (player.Inventory[i].ID == "clueScroll" + tier) {
+                        player.Inventory.RemoveAt(i);
+                        toIncrement += 1;
+                        toReset = "";
 
-            for (int i = 0; i < player.Inventory.Count; i++) {
-                if (player.Inventory[i].ID == "clueScroll" + tier) {
-                    player.Inventory.RemoveAt(i);
-                    toIncrement += 1;
-                    toReset = "";
+                        if (toIncrement >= stepsNeeded) {
+                            if (GameLoop.ZPO.ItemLibrary.TryGetValue("casket" + tier, out Item? caskTut)) {
+                                if (caskTut != null) {
+                                    player.TryPickup(new Item(caskTut), 1);
+                                }
+                            }
+                            toIncrement = 0;
+                            Log.AddMessage(new ColoredString("You finished the treasure hunt and found a casket!", Color.Turquoise, Color.Black));
+                        } else {
+                            if (GameLoop.ZPO.ItemLibrary.TryGetValue("clueScroll" + tier, out Item? scrollTut)) {
+                                if (scrollTut != null) {
+                                    player.TryPickup(new Item(scrollTut), 1);
+                                }
+                            }
+                            Log.AddMessage(new ColoredString("You found another clue scroll!", Color.Turquoise, Color.Black));
+                        }
 
-                    if (toIncrement >= stepsNeeded) {
-                        if (GameLoop.ZPO.ItemLibrary.TryGetValue("casket" + tier, out Item? caskTut)) {
-                            if (caskTut != null) {
-                                player.TryPickup(new Item(caskTut), 1);
-                            }
-                        }
-                        toIncrement = 0;
-                        Log.AddMessage(new ColoredString("You finished the treasure hunt and found a casket!", Color.Turquoise, Color.Black));
-                    } else {
-                        if (GameLoop.ZPO.ItemLibrary.TryGetValue("clueScroll" + tier, out Item? scrollTut)) {
-                            if (scrollTut != null) {
-                                player.TryPickup(new Item(scrollTut), 1);
-                            }
-                        }
-                        Log.AddMessage(new ColoredString("You found another clue scroll!", Color.Turquoise, Color.Black));
+                        break;
                     }
-
-                    break;
                 }
             }
         }

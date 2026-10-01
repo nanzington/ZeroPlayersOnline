@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+*.ogg
+[Mm]usic/
+Music.resx
+Music.Designer.cs
+
+
 # User-specific files
 *.rsuser
 *.suo

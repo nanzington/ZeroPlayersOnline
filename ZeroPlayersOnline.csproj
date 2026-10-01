@@ -31,6 +31,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Music.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Music.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Music.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Music.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="fonts\CheepicusExtended.font">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

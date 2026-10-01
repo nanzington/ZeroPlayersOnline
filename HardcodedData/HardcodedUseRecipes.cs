@@ -52,6 +52,17 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("bowstring", "shortbowMagicU", "shortbowMagic", 1, 1, 1, "Fletching", 80, 105));
             toAdd.Add(new("bowstring", "shortbowElderU", "shortbowElder", 1, 1, 1, "Fletching", 90, 120));
              
+            toAdd.Add(new("bowstring", "longbowPineU", "longbowPine", 1, 1, 1, "Fletching", 1, 5));
+            toAdd.Add(new("bowstring", "longbowOakU", "longbowOak", 1, 1, 1, "Fletching", 10, 10));
+            toAdd.Add(new("bowstring", "longbowWillowU", "longbowWillow", 1, 1, 1, "Fletching", 20, 15));
+            toAdd.Add(new("bowstring", "longbowTeakU", "longbowTeak", 1, 1, 1, "Fletching", 30, 30));
+            toAdd.Add(new("bowstring", "longbowMapleU", "longbowMaple", 1, 1, 1, "Fletching", 40, 45));
+            toAdd.Add(new("bowstring", "longbowAcadiaU", "longbowAcadia", 1, 1, 1, "Fletching", 50, 60));
+            toAdd.Add(new("bowstring", "longbowMahoganyU", "longbowMahogany", 1, 1, 1, "Fletching", 60, 75));
+            toAdd.Add(new("bowstring", "longbowYewU", "longbowYew", 1, 1, 1, "Fletching", 70, 90));
+            toAdd.Add(new("bowstring", "longbowMagicU", "longbowMagic", 1, 1, 1, "Fletching", 80, 105));
+            toAdd.Add(new("bowstring", "longbowElderU", "longbowElder", 1, 1, 1, "Fletching", 90, 120));
+             
             toAdd.Add(new("stockPine", "limbsBronze", "crossbowPineU", 1, 1, 1, "Fletching", 1, 5));
             toAdd.Add(new("stockOak", "limbsIron", "crossbowOakU", 1, 1, 1, "Fletching", 10, 10));
             toAdd.Add(new("stockWillow", "limbsSteel", "crossbowWillowU", 1, 1, 1, "Fletching", 20, 15));
@@ -131,7 +142,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("potionUnfTarromin", "beadYellow", "potionMagic", 1, 1, 1, "Herblore", 5, 35));
             toAdd.Add(new("potionUnfTarromin", "limpwurt", "potionStrength", 1, 1, 1, "Herblore", 7, 40));
 
-            toAdd.Add(new("potionUnfMarrentill", "bearFur", "potionDefense", 1, 1, 1, "Herblore", 9, 45));
+            toAdd.Add(new("potionUnfMarrentill", "fur", "potionDefense", 1, 1, 1, "Herblore", 9, 45));
             toAdd.Add(new("potionUnfMarrentill", "unicornHornDust", "potionAntipoison", 1, 1, 1, "Herblore", 13, 50));  
              
             toAdd.Add(new("potionUnfHarralander", "goatHornDust", "potionCombat", 1, 1, 1, "Herblore", 36, 84));  
@@ -298,7 +309,9 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("knife", "fruitPineappleRing", "fruitPineappleChunks", 0)); 
             toAdd.Add(new("hammer", "fruitCoconut", "fruitCoconutHalf", 0)); 
             toAdd.Add(new("vialEmpty", "fruitCoconutHalf", "fruitCoconutMilk", returns: ["fruitCoconutShell"]));    
-
+             
+            toAdd.Add(new("doogle", "fishRawSardine", "sardineSeasoned")); 
+            toAdd.Add(new("arravShieldLeft", "arravShieldRight", "arravShield")); 
 
             // Rag and Bone Man 
             toAdd.Add(new("jugVinegar", "potEmpty", "potVinegar", returns: [ "jugEmpty" ])); 

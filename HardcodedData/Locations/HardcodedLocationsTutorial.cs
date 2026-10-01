@@ -6,6 +6,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             List<Location> locsToAdd = new();
              
             locsToAdd.Add(new Location("TI_Main", "Tutorial Island", "Tutorial Island") { 
+                UPCsong = "Lux Aeterna",
                 Description = "You stand on a small island in a bay. There are a few scattered buildings here, designed to help teach some basic activities. There is a bank, a temple, a building that new people appear in, a shack housing a ladder to the cavern below, and the home of a local wizard. There is a pond near the new player building at the center of the island, and the island itself is lightly forested with paths between the buildings.",
                 ConnectedLocations = new List<Connection>() {
                     new Connection("TI_AirAltar"),

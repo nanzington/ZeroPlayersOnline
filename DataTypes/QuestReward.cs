@@ -21,6 +21,12 @@
                 build = (MiscInt > 1 ? MiscInt + "x " : "") + GameLoop.ZPO.ResolveItemName(MiscString);
             }
 
+            if (RewardType == "RandomItem") {
+                if (MiscString == "kitten") {
+                    build = "a kitten";
+                }
+            }
+
             return build;
         }
     }

@@ -154,40 +154,57 @@ namespace ZeroPlayersOnline.Managers {
 
 
                 mini.Con.DrawLine(new Point(0, 12), new Point(54, 12), 196);
-                int hx = 2;
+                int hx = 0;
                 mini.Con.PrintClickable(hx, 13, new ColoredString("INV", SidebarMenu == "Inventory" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Inventory"; });
-                hx = hx + 4;
-                mini.Con.Print(hx, 13, "|"); 
-                hx = hx + 2;
+                hx = hx + 3;
+                mini.Con.Print(hx, 13, " "); 
+                hx = hx + 1;
                 mini.Con.PrintClickable(hx, 13, new ColoredString("EQP", SidebarMenu == "Equipment" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Equipment"; });
-                hx = hx + 4;
-                mini.Con.Print(hx, 13, "|");
-                hx = hx + 2;
+                hx = hx + 3;
+                mini.Con.Print(hx, 13, " ");
+                hx = hx + 1;
                 mini.Con.PrintClickable(hx, 13, new ColoredString("SKL", SidebarMenu == "Skills" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Skills"; });
-                hx = hx + 4;
-                mini.Con.Print(hx, 13, "|");
-                hx = hx + 2;
+                hx = hx + 3;
+                mini.Con.Print(hx, 13, " ");
+                hx = hx + 1;
                 mini.Con.PrintClickable(hx, 13, new ColoredString("MAG", SidebarMenu == "Magic" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Magic"; });
-                hx = hx + 4;
-                mini.Con.Print(hx, 13, "|");
-                hx = hx + 2;
+                hx = hx + 3;
+                mini.Con.Print(hx, 13, " ");
+                hx = hx + 1;
                 mini.Con.PrintClickable(hx, 13, new ColoredString("PRA", SidebarMenu == "Prayer" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Prayer"; });
-                hx = hx + 4;
-                mini.Con.Print(hx, 13, "|");
-                hx = hx + 2;
+                hx = hx + 3;
+                mini.Con.Print(hx, 13, " ");
+                hx = hx + 1;
                 mini.Con.PrintClickable(hx, 13, new ColoredString("EMO", SidebarMenu == "Emote" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Emote"; });
-                hx = hx + 4;
-                mini.Con.Print(hx, 13, "|");
-                hx = hx + 2;
+                hx = hx + 3;
+                mini.Con.Print(hx, 13, " ");
+                hx = hx + 1;
                 mini.Con.PrintClickable(hx, 13, new ColoredString("QST", SidebarMenu == "Quest" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Quest"; });
-                hx = hx + 4;
-                mini.Con.Print(hx, 13, "|");
-                hx = hx + 2;
+                hx = hx + 3;
+                mini.Con.Print(hx, 13, " ");
+                hx = hx + 1;
                 mini.Con.PrintClickable(hx, 13, new ColoredString("LOG", SidebarMenu == "Log" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Log"; });
-                hx = hx + 4;
-                mini.Con.Print(hx, 13, "|");
-                hx = hx + 2;
+                hx = hx + 3;
+                mini.Con.Print(hx, 13, " ");
+                hx = hx + 1;
                 mini.Con.PrintClickable(hx, 13, new ColoredString("POT", SidebarMenu == "Potions" ? Color.Yellow : Color.White, Color.Black), () => { SidebarMenu = "Potions"; });
+                hx = hx + 3;
+                mini.Con.Print(hx, 13, " ");
+                hx = hx + 1;
+                mini.Con.PrintClickable(hx, 13, new ColoredString("MUS", SidebarMenu == "Music" ? Color.Yellow : Color.White, Color.Black), () => { 
+                    SidebarMenu = "Music"; 
+
+                    int scrollTop = 0;
+                    List<KeyValuePair<string, IrrKlang.ISoundSource>> songs = GameLoop.SoundManager.Songs.OrderBy(o => o.Key).ToList();
+
+                    for (int i = 0; i < songs.Count; i++) {
+                        if (GameLoop.SoundManager.CurrentSong == songs[i].Key) {
+                            scrollTop = i - 9;
+                        }
+                    }
+
+                    SidebarManager.SidebarScrollTop = Math.Clamp(scrollTop, 0, songs.Count - 18);
+                });
 
 
                 mini.Con.DrawLine(new Point(0, 14), new Point(54, 14), 196);
@@ -303,7 +320,21 @@ namespace ZeroPlayersOnline.Managers {
 
                             mini.Con.PrintClickable(px, 15 + i, new ColoredString("? ", Color.MediumPurple, Color.Black), () => { 
                                 if (player.Inventory[i].Containing.Count == 0) {
-                                    GameLoop.ZPO.Log.AddMessage(new ColoredString(inv.ExamineText, Color.SandyBrown, Color.Black)); 
+                                    List<string> kittenColors = [ "kittenBlack", "kittenGray", "kittenWhite", "kittenOrange", "kittenBrown", "kittenCalico" ];
+                                    if (kittenColors.Contains(player.Inventory[i].ID)) {
+                                        int minSinceFed = player.Inventory[i].MiscInt / 60;
+                                        int minSincePlay = player.Inventory[i].MiscInt2 / 60;
+                                        int minAge = player.Inventory[i].MiscInt3 / 60;
+                                        GameLoop.ZPO.Log.AddMessage(new ColoredString(inv.ExamineText + " (" + minSinceFed + " minutes since fed, " + minSincePlay + " minutes without play, " + minAge + " minutes old)", Color.SandyBrown, Color.Black));
+                                    } else {
+                                        List<string> catColors = [ "catBlack", "catGray", "catWhite", "catOrange", "catBrown", "catCalico" ];
+                                        if (catColors.Contains(player.Inventory[i].ID)) {
+                                            int minAge = player.Inventory[i].MiscInt3 / 60;
+                                            GameLoop.ZPO.Log.AddMessage(new ColoredString(inv.ExamineText + " (" + minAge + " minutes old)", Color.SandyBrown, Color.Black));
+                                        } else {
+                                            GameLoop.ZPO.Log.AddMessage(new ColoredString(inv.ExamineText, Color.SandyBrown, Color.Black));
+                                        }
+                                    }
                                 } else {
                                     string build = inv.Name + ": ";
 
@@ -759,7 +790,7 @@ namespace ZeroPlayersOnline.Managers {
                         });
 
                         if (pet.UseString != "") {  
-                            mini.Con.PrintClickable(13 + pet.Name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
+                            mini.Con.PrintClickable(13 + name.Length + 1, printY, new ColoredString("*", Color.Yellow, Color.Black), () => { 
                                 bool success = ItemUseLogic.UseItem(petWrap, player);
 
                                 if (pet.ConsumedOnUse && success) {
@@ -910,36 +941,43 @@ namespace ZeroPlayersOnline.Managers {
                         sortedList = sortedList.OrderBy(o => o.DateFullyImplemented).Reverse().ToList();
                     }
 
-                    foreach (var kv in sortedList) {
-                        totalPossibleQP += kv.QuestPoints;
-                        if (kv.CurrentStage() == kv.CompleteStage)
-                            questPoints += kv.QuestPoints;
+                    int qty = 1;
+                    if (Helper.EitherShift())
+                        qty *= 5;
+                    if (Helper.EitherControl())
+                        qty *= 10;
 
+                    if (sortedList.Count > 18) {
+                        if (Helper.ScrolledUp()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop - qty, 0, sortedList.Count - 18); }
+                        if (Helper.ScrolledDown()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop + qty, 0, sortedList.Count - 18); }
+                    } else {
+                        SidebarScrollTop = 0;
+                    }
 
-                        count++;
-                        if (count < SidebarScrollTop) {
-                            continue;
-                        } 
+                    for (int quest = SidebarScrollTop; quest < sortedList.Count && quest < SidebarScrollTop + 18; quest++) {
+                        totalPossibleQP += sortedList[quest].QuestPoints;
+                        if (sortedList[quest].CurrentStage() == sortedList[quest].CompleteStage)
+                            questPoints += sortedList[quest].QuestPoints; 
 
                         Color col = Color.DarkSlateGray;
 
-                        if (kv.CanStartQuest(player)) {
+                        if (sortedList[quest].CanStartQuest(player)) {
                             col = Color.Crimson;
                         }
 
-                        if (kv.CurrentStage() != -1) {
+                        if (sortedList[quest].CurrentStage() != -1) {
                             col = Color.Yellow;
                         }
 
-                        if (kv.CurrentStage() == kv.CompleteStage) {
+                        if (sortedList[quest].CurrentStage() == sortedList[quest].CompleteStage) {
                             col = Color.Lime;
                         }
 
-                        mini.Con.PrintClickable(0, 17 + printQuest, new ColoredString(kv.Name, col, Color.Black), () => {
+                        mini.Con.PrintClickable(0, 17 + printQuest, new ColoredString(sortedList[quest].Name, col, Color.Black), () => {
                             ExtraWindows.Quests.IsVisible = true;
-                            ExtraWindows.ViewingQuestID = kv.ID;
+                            ExtraWindows.ViewingQuestID = sortedList[quest].ID;
                              
-                            if (kv.CurrentStage() == -1) {
+                            if (sortedList[quest].CurrentStage() == -1) {
                                 ExtraWindows.QuestOverview = true;
                             } else {
                                 ExtraWindows.QuestOverview = false;
@@ -1256,6 +1294,49 @@ namespace ZeroPlayersOnline.Managers {
                         }
                     } else {
                         mini.Con.Print(1, printY++, "(no active potion effects)", Color.DarkSlateGray);
+                    }
+                }
+                else if (SidebarMenu == "Music") { 
+                    mini.Con.PrintClickable(1, 15, new ColoredString("Auto", player.MusicMode == "Auto" ? Color.Yellow : Color.White, Color.Black), () => {
+                        player.MusicMode = "Auto";
+                        GameLoop.SoundManager.CurrentSong = "";
+                        GameLoop.SoundManager.music.StopAllSounds();
+                    });
+
+                    mini.Con.PrintClickable(6, 15, new ColoredString("Shuffle UPC", player.MusicMode == "Shuffle UPC" ? Color.Yellow : Color.White, Color.Black), () => {
+                        GameLoop.SoundManager.music.StopAllSounds();
+                        player.MusicMode = "Shuffle UPC";
+                        GameLoop.SoundManager.CurrentSong = "";
+                        GameLoop.SoundManager.music.StopAllSounds();
+                        GameLoop.SoundManager.PickMusic();
+                    });
+                     
+                    mini.Con.DrawLine(new Point(0, 16), new Point(54, 16), 196);
+
+                    List<KeyValuePair<string, IrrKlang.ISoundSource>> songs = GameLoop.SoundManager.Songs.OrderBy(o => o.Key).ToList();
+
+                    int qty = 1;
+                    if (Helper.EitherShift()) { qty *= 5; }
+                    if (Helper.EitherControl()) { qty *= 10; }
+
+                    int songListLength = 18;
+                    
+                    if (songs.Count > songListLength) {
+                        if (Helper.ScrolledUp()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop - qty, 0, songs.Count - songListLength); }
+                        if (Helper.ScrolledDown()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop + qty, 0, songs.Count - songListLength); }
+                    } else {
+                        SidebarScrollTop = 0;
+                    }
+
+
+                    for (int i = SidebarScrollTop; i < songs.Count && i < SidebarScrollTop + songListLength; i++) {
+                        bool songUnlocked = player.UnlockedSongs.Contains(songs[i].Key) || player.AllSongsUnlocked;
+                        mini.Con.PrintClickable(1, 17 + (i - SidebarScrollTop), new ColoredString(songs[i].Key, GameLoop.SoundManager.CurrentSong == songs[i].Key ? Color.Green : songUnlocked ? Color.White : Color.DarkSlateGray, Color.Black), () => {
+                            player.MusicMode = "Shuffle UPC";
+                            GameLoop.SoundManager.CurrentSong = "";
+                            GameLoop.SoundManager.music.StopAllSounds();
+                            GameLoop.SoundManager.PickMusic(songs[i].Key);
+                        });
                     }
                 }
             } 

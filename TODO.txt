@@ -12,31 +12,48 @@ Misthalin Mania
 - (DONE) Quest: The Restless Ghost
 - (DONE) Quest: Imp Catcher
 - (DONE) Quest: The Blood Pact
+- (DONE) Quest: Rune Mysteries
+- (DONE) Quest: Shield of Arrav
+- (DONE) Quest: The Ides of Milk
+- (DONE) Quest: Gertrude's Cat
+- Quest: A Porcine of Interest
+- Quest: Sleeping Giants (unlocks Giants' Foundry)
 - Quest: Demon Slayer (needs varrock) 
-- Quest: Romeo & Juliet (needs varrock)
-- x Quest: Shield of Arrav (needs varrock)
+- Quest: Romeo & Juliet (needs varrock) 
 - Quest: Ernest the Chicken (needs draynor but christ)
-- Quest: Vampire Slayer (needs varrock)
-- Quest: Rune Mysteries (needs varrock)
+- Quest: Vampire Slayer (needs varrock) 
 - Quest: Misthalin Mystery (just lumbridge i think but this one might be spicy to do right)
-- x Quest: The Ides of Milk (just lumbridge, should be fairly straitforward)
-- Quest: Gertrude's Cat (needs varrock)
 - Quest: Priest in Peril (needs varrock / silvarea)
 - Quest: A Soul's Bane (needs varrock)
 - Quest: All Fired Up (needs varrock / silvarea)
 - Quest: Lost City (needs port sarim / entrana and god that's gonna suck)
 - Quest: Prince Ali Rescue (needs varrock, al kharid, and draynor)
+- Quest: One Piercing Note (al kharid - citharede abbey)
+- Quest: The Dig Site (varrock)
+- Quest: Tears of Guthix
+- Quest: Doric's Quest (falador)
+- Quest: Black Knights' Fortress (falador)
+- Quest: Witch's Potion (Rimmington)
+- Quest: The Knight's Sword (falador, south of port sarim)
+- Quest: Goblin Diplomacy (falador)
+- Quest: Below Ice Mountain (falador)
+- Quest: Recruitment Drive (falador)
+- Quest: The Lost Tribe (falador)
+- Quest: Death to the Dorgeshuun (lumbridge)
+- Quest: What Lies Below (needs a way to the Chaos Altar, so probably make the abyss and part of the wilderness if adding this)
 - Quest: Dragon Slayer (need varrock/champions guild, edgeville, ice mountain, dwarven mine, rimmington, port sarim, crandor)
 
-Go back and add more clues as Barbarian Village, Varrock, Draynor, Al Kharid, and Falador are added
+Other to finish Misthalin demo (which will end with Dragon Slayer being possible):
+- Falador (at least to the mine but preferably the whole city, might as well implement local quests so there's more options to reach 32 QP for dragon slayer)
+- Rimmington (+ Crafting Guild since it's in the area anyways)
+- Port Sarim (+ Entrana, maybe look into the other areas to see if there are any worth adding now like Pest Control or whatever)
+- Al Kharid: Palace, Giant's Foundry, Citharede Abbey, Emir's Arena, Shantay Pass
+- Ice Mountain
+- Construction skill and player-owned houses
+- Artisan skill?, plop some guilds or workshops or something down to go do them at
+- Mahogany Homes
+- Task diaries, should be able to do at least some of Lumbridge/Draynor and Varrock
 
-- Finish up areas in Al Kharid: Emir's Arena, Shantay Pass, Giant's Foundry, Citharede Abbey, Palace
-
-Maybe expand a lil bit into Al Kharid and Port Sarim/Falador to open some more content relevant to Misthalin there?
-- Al Kharid for clue steps and the mine, just to the Shantay Pass and leave the actual desert for later
-- Port Sarim for Entrana, access to be able to expand into Karamja
-- Falador also for the mine
-- If Port Sarim and Falador added, might as well do Rimmington and the Crafting Guild since that's not much more. Taverly/Burthorpe can probably wait, might as well do ice mountain to tie into Barb Village and Edgeville
 
 - Can nearly begin adding task diaries
 - Implement lodestone network, make it so you have to reach and enable lodestones to teleport to them, maybe have a selective cooldown based on if you've charged it with law runes?
@@ -45,6 +62,11 @@ Maybe expand a lil bit into Al Kharid and Port Sarim/Falador to open some more c
 - Make Shantay drop the scrumpled paper rarely on talk
 
  
+- Music Menu
+- - Let maps or RunActions unlock songs, and Requirements check that you have a song unlocked or playing actively
+- - Allow players to block songs so that they don't get autoplayed or shuffled to
+ 
+
 Weapon poison, maybe a poison equipment slot that applies to any melee or ranged attack?
 
 
@@ -52,16 +74,13 @@ Weapon poison, maybe a poison equipment slot that applies to any melee or ranged
 Immediately important stuff to get working: 
 - Start splitting stuff out of the ZPO file because it's getting ridiculous and it doesn't need to be that dense now
 - An achievement tracking thing where performing an action can check to see if doing it progresses an achievement/task, also have a screen to show all achieves with some sort options
-- Figure out how to convey how WorldState data is changed 
 
 
 Less immediate but still important:
-- Reimplement the cornucopia prayer, it's currently busted as hell
 - Compass mechanic? Select destination somehow, tell player if it's within 10 maps of them and lead them to it if so
 - Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
 - Dungeoneering areas that are actual random layout dungeons, reset layout somehow (on reload, if player is in a dungeon then reset their loc to the entrance, or if they reach the end crystal tp back to start and give set exp) 
 - Bank preset options somehow
-- Implement bronze logic when the grand exchange is actually available
 - Achievement Diaries / tasks for areas, split into difficulties, reward item for completing it, reward item only if it doesn't exist anywhere in the world, your bank, inventory, or equipment
 - Random Events
 - Skill pets, tiny chance when gaining exp in the skill if pet is not already owned
@@ -160,10 +179,8 @@ Clue Step Notes
 - Elite only up to level 80, may require up to master quests
 - Master up to 99, may require up to grandmaster quests
 
-- - Hot and Cold / Coordinate clues: Maybe create a system to check all connections out to 10 layers to see if the target map is in it, then give a response based on shortest distance to it?
-- - Map clues: gives you the description of a map, go to the map and dig there with a spade
-- - Charlie the Tramp: Have to give Charlie a specific item, need to tweak the list a bit to make sure it's all level 10 and under to acquire
-- - Music Steps? Would require finally implementing music
+- - Music Steps? Play a specific music track while talking to an NPC, maybe on higher clue step difficulties require that you be on auto and manage to keep the song playing from its trigger location (so you have to puzzle out a route to get from the trigger spot to the NPC without it changing)
+
 
 Next quests to implement and things they need 
 - Demon Slayer
@@ -171,10 +188,6 @@ Next quests to implement and things they need
 - - Mechanics: Boss fight vs Delrith (or temporary monsters), partial item delivery for quest steps?
 - Romeo and Juliet
 - - Locations: Basically all of varrock and the surrounding area / the southeast mine
-- Shield of Arrav
-- - Locations: Seedy parts of Varrock, Varrock Castle
-- - Mechanics: Probably just use the RS3 changes to make it solo, can have multiplayer stuff if multiplayer is added later
-
 
 Holiday Events, 
 * set to actually appear based on system clock or character setting (eg permanent easter, halloween, christmas, all, etc)

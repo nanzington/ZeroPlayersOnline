@@ -116,6 +116,8 @@ namespace ZeroPlayersOnline.DataTypes {
                                 }
 
                                 GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn, inaccessible)); 
+                                if (!player.ItemsEverObtained.Contains(spawn.ID)) { player.ItemsEverObtained.Add(spawn.ID); }
+
                             }
                         }
                     } else {
@@ -139,6 +141,7 @@ namespace ZeroPlayersOnline.DataTypes {
                                     return spawn;
 
                                 GameLoop.ZPO.TryPlaceItem(player.NavLoc, new(spawn, inaccessible));
+                                if (!player.ItemsEverObtained.Contains(spawn.ID)) { player.ItemsEverObtained.Add(spawn.ID); }
                             }
                         }
                     }

@@ -622,6 +622,9 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Book.IsVisible && instance != ExtraWindows.Book)
                 || (ExtraWindows.Cutscene.IsVisible && instance != ExtraWindows.Cutscene)
                 || (ExtraWindows.Shop.IsVisible && instance != ExtraWindows.Shop)
+                || (ExtraWindows.LampMenu.IsVisible && instance != ExtraWindows.LampMenu)
+                || (ExtraWindows.GrandExchange.IsVisible && instance != ExtraWindows.GrandExchange)
+                || (ExtraWindows.CatMenu.IsVisible && instance != ExtraWindows.CatMenu)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return;
             }
@@ -851,6 +854,9 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Book.IsVisible && instance != ExtraWindows.Book)
                 || (ExtraWindows.Cutscene.IsVisible && instance != ExtraWindows.Cutscene)
                 || (ExtraWindows.Shop.IsVisible && instance != ExtraWindows.Shop)
+                || (ExtraWindows.LampMenu.IsVisible && instance != ExtraWindows.LampMenu)
+                || (ExtraWindows.GrandExchange.IsVisible && instance != ExtraWindows.GrandExchange)
+                || (ExtraWindows.CatMenu.IsVisible && instance != ExtraWindows.CatMenu)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return y;
             }
@@ -889,7 +895,7 @@ namespace ZeroPlayersOnline {
             ColoredString line = new("");
 
             foreach (ColoredString word in words) {
-                if (line.Length + word.Length + 1 < width && word.String != "/n") {
+                if (line.Length + word.Length < width && word.String != "/n") {
                     line += word + " ";  
                 }
                 else { 
@@ -910,7 +916,7 @@ namespace ZeroPlayersOnline {
             line = new("");
 
             foreach (ColoredString word in words) {
-                if (line.Length + word.Length + 1 < width && word.String != "/n") {
+                if (line.Length + word.Length < width && word.String != "/n") {
                     line += word + " ";  
                 }
                 else { 
@@ -1005,8 +1011,12 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.Debug.IsVisible && instance != ExtraWindows.Debug)
                 || (ExtraWindows.Clue.IsVisible && instance != ExtraWindows.Clue)
                 || (ExtraWindows.Teleport.IsVisible && instance != ExtraWindows.Teleport)
+                || (ExtraWindows.Book.IsVisible && instance != ExtraWindows.Book)
                 || (ExtraWindows.Cutscene.IsVisible && instance != ExtraWindows.Cutscene)
                 || (ExtraWindows.Shop.IsVisible && instance != ExtraWindows.Shop)
+                || (ExtraWindows.LampMenu.IsVisible && instance != ExtraWindows.LampMenu)
+                || (ExtraWindows.GrandExchange.IsVisible && instance != ExtraWindows.GrandExchange)
+                || (ExtraWindows.CatMenu.IsVisible && instance != ExtraWindows.CatMenu)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return y;
             }
@@ -1252,6 +1262,7 @@ namespace ZeroPlayersOnline {
             if (how == "over") { return GameLoop.ZPO.player.WorldState[id] > num; }
             if (how == "below") { return GameLoop.ZPO.player.WorldState[id] < num; }
             if (how == "equals") { return GameLoop.ZPO.player.WorldState[id] == num; }
+            if (how == "notEquals") { return GameLoop.ZPO.player.WorldState[id] != num; }
             if (how == "overOrEqual") { return GameLoop.ZPO.player.WorldState[id] >= num; }
             if (how == "belowOrEqual") { return GameLoop.ZPO.player.WorldState[id] <= num; }
 

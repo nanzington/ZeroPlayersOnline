@@ -83,7 +83,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Skeleton", "mistWizSkeleton", 13, 18, 0, true, "1d3-1", "Earth", 10, "Melee") { Requirements = new() { new("QuestAt", 20, "MI_RestlessGhost"), new("Item", 1, "mistWizGhostSkull", false) }, SeeWithoutRequirements = false, DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("scrollChampionSkeleton", 1, 5000, 1, 1) } });
             toAdd.Add(new("Unicorn", "unicorn", 15, 19, 0, false, "1d3-1", "Stab", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("unicornHorn", 1, 1, 1, 1) } });
-            toAdd.Add(new("Black bear", "bearBlack", 19, 25, 0, false, "1d3", "Fire", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("bearFur", 1, 1, 1, 1), new("meatRawBear", 1, 1, 1, 1) } });
+            toAdd.Add(new("Black bear", "bearBlack", 19, 25, 0, false, "1d3", "Fire", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("fur", 1, 1, 1, 1), new("meatRawBear", 1, 1, 1, 1) } });
             toAdd.Add(new("Ram", "ram", 2, 8, 0, false, "1d3-2", "Fire", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1) } });
             toAdd.Add(new("Scorpion", "scorpion", 14, 17, 0, false, "1d3-1", "Stab", 1, "Melee") { DropTable = new() { new("clueScrollBeginner", 1, 100, 1, 1) } });
             
@@ -209,6 +209,19 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Market guard", "guardMarket", 20, 22, 0, false, "1d3", "Air", 1, "Melee", 3.0) { DropTable = new() { new("bonesRegular", 1, 1, 1, 1) } });
             toAdd.Add(new("Jail guard", "guardJail", 26, 32, 0, true, "1d3", "Fire", 1, "Melee", 3.0) { DropTable = new() { new("bonesRegular", 1, 1, 1, 1) } });
             toAdd.Add(new("Highwayman", "highwayman", 5, 13, 0, true, "1d2-1", "Water", 1, "Melee", 3.0) { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("capeBlack", 1, 1, 1, 1), new("boltsIron", 1, 20, 2, 12) } });
+            toAdd.Add(new("Shantay guard", "guardShantay", 22, 32, 0, false, "1d3", "Fire", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1) } });
+            
+            toAdd.Add(new("Barbarian", "barbarian8", 8, 14, 0, false, "1d3-1", "Fire", 1, "Melee") {
+                DropTable = new() {
+                    DropTables.GemDrop.But(128.0/1.0), 
+                    new("bonesRegular", 1, 1, 1, 1),  
+                    new("hatchetBronze", 1, 21, 1, 1), new("staff", 1, 32, 1, 1), new("maceIron", 1, 128, 1, 1), 
+                    new("runeChaos", 1, 32, 2, 2), new("arrowsBronze", 1, 43, 15, 15), new("runeEarth", 1, 43, 2, 2), new("runeFire", 1, 64, 5, 5), new("runeMind", 1, 64, 5, 5), new("runeLaw", 1, 128, 2, 2),
+                    new("coins", 1, 3, 5, 5), new("coins", 1, 14, 8, 8), new("coins", 1, 26, 17, 17), new("coins", 1, 43, 27, 27),
+                    new("spiritOreTin", 1, 128, 1, 1), new("fur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
+                    new("clueScrollBeginner", 1, 75, 1, 1), new("clueScrollEasy", 1, 128, 1, 1)
+                } 
+            });
 
             toAdd.Add(new("Barbarian", "barbarian9", 9, 20, 0, true, "1d2", "Fire", 1, "Melee") {
                 DropTable = new() {
@@ -217,7 +230,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("hatchetBronze", 1, 21, 1, 1), new("staff", 1, 32, 1, 1), new("maceIron", 1, 128, 1, 1), 
                     new("runeChaos", 1, 32, 2, 2), new("arrowsBronze", 1, 43, 15, 15), new("runeEarth", 1, 43, 2, 2), new("runeFire", 1, 64, 5, 5), new("runeMind", 1, 64, 5, 5), new("runeLaw", 1, 128, 2, 2),
                     new("coins", 1, 3, 5, 5), new("coins", 1, 14, 8, 8), new("coins", 1, 26, 17, 17), new("coins", 1, 43, 27, 27),
-                    new("spiritOreTin", 1, 128, 1, 1), new("bearFur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
+                    new("spiritOreTin", 1, 128, 1, 1), new("fur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
                     new("clueScrollBeginner", 1, 75, 1, 1), new("clueScrollEasy", 1, 128, 1, 1)
                 } 
             });
@@ -229,7 +242,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("hatchetBronze", 1, 21, 1, 1), new("staff", 1, 32, 1, 1), new("maceIron", 1, 128, 1, 1), 
                     new("runeChaos", 1, 32, 2, 2), new("arrowsBronze", 1, 43, 15, 15), new("runeEarth", 1, 43, 2, 2), new("runeFire", 1, 64, 5, 5), new("runeMind", 1, 64, 5, 5), new("runeLaw", 1, 128, 2, 2),
                     new("coins", 1, 3, 5, 5), new("coins", 1, 14, 8, 8), new("coins", 1, 26, 17, 17), new("coins", 1, 43, 27, 27),
-                    new("spiritOreTin", 1, 128, 1, 1), new("bearFur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
+                    new("spiritOreTin", 1, 128, 1, 1), new("fur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
                     new("clueScrollBeginner", 1, 75, 1, 1), new("clueScrollEasy", 1, 128, 1, 1)
                 } 
             });
@@ -241,7 +254,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("hatchetBronze", 1, 21, 1, 1), new("battleaxeBronze", 1, 32, 1, 1), new("maceIron", 1, 128, 1, 1), 
                     new("runeChaos", 1, 32, 3, 3), new("arrowsBronze", 1, 32, 10, 10), new("runeEarth", 1, 43, 5, 5), new("runeFire", 1, 64, 8, 8), new("runeMind", 1, 64, 10, 10), new("runeLaw", 1, 128, 2, 2),
                     new("coins", 1, 3, 8, 8), new("coins", 1, 14, 12, 12), new("coins", 1, 26, 25, 25), new("coins", 1, 43, 32, 32),
-                    new("spiritOreTin", 1, 128, 1, 1), new("bearFur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
+                    new("spiritOreTin", 1, 128, 1, 1), new("fur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
                     new("clueScrollBeginner", 1, 55, 1, 1), new("clueScrollEasy", 1, 128, 1, 1)
                 } 
             });
@@ -253,7 +266,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("hatchetBronze", 1, 21, 1, 1), new("battleaxeBronze", 1, 32, 1, 1), new("maceIron", 1, 128, 1, 1), 
                     new("runeChaos", 1, 32, 3, 3), new("arrowsBronze", 1, 32, 10, 10), new("runeEarth", 1, 43, 5, 5), new("runeFire", 1, 64, 8, 8), new("runeMind", 1, 64, 10, 10), new("runeLaw", 1, 128, 2, 2),
                     new("coins", 1, 3, 8, 8), new("coins", 1, 14, 12, 12), new("coins", 1, 26, 25, 25), new("coins", 1, 43, 32, 32),
-                    new("spiritOreTin", 1, 128, 1, 1), new("bearFur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
+                    new("spiritOreTin", 1, 128, 1, 1), new("fur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
                     new("clueScrollBeginner", 1, 55, 1, 1), new("clueScrollEasy", 1, 128, 1, 1)
                 } 
             });
@@ -265,7 +278,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("hatchetIron", 1, 21, 1, 1), new("battleaxeBronze", 1, 32, 1, 1), new("maceIron", 1, 128, 1, 1), 
                     new("runeChaos", 1, 32, 3, 3), new("arrowsBronze", 1, 32, 10, 10), new("runeEarth", 1, 43, 5, 5), new("runeFire", 1, 64, 8, 8), new("runeMind", 1, 64, 10, 10), new("runeLaw", 1, 128, 2, 2),
                     new("coins", 1, 3, 8, 8), new("coins", 1, 14, 12, 12), new("coins", 1, 26, 25, 25), new("coins", 1, 43, 32, 32),
-                    new("spiritOreTin", 1, 128, 1, 1), new("bearFur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
+                    new("spiritOreTin", 1, 128, 1, 1), new("fur", 1, 128, 1, 1), new("beer", 1, 128, 1, 1), new("meatCookedBeef", 1, 128, 1, 1), new("mouldRing", 1, 128, 1, 1),
                     new("clueScrollBeginner", 1, 30, 1, 1), new("clueScrollEasy", 1, 128, 1, 1)
                 } 
             });
@@ -286,16 +299,19 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Thief", "thiefNA", 16, 17, 0, false, "1d5-1", "Fire", 1, "Melee") { DropTable = new() { DropTables.GenericHumanTable.But() } });
             toAdd.Add(new("Thief", "thief", 16, 17, 0, true, "1d5-1", "Fire", 1, "Melee") { DropTable = new() { DropTables.GenericHumanTable.But() } });
 
-            toAdd.Add(new("Grizzly bear", "bearZoo", 21, 27, 0, false, "1d3", "Water", 1, "Melee", inaccessible: true) { CountsAsSlayer = [ "bear" ], DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("bearFur", 1, 1, 1, 1), new("meatRawBear", 1, 1, 1, 1), new("clueScrollBeginner", 1, 90, 1, 1) } });
+            toAdd.Add(new("Grizzly bear", "bearZoo", 21, 27, 0, false, "1d3", "Water", 1, "Melee", inaccessible: true) { CountsAsSlayer = [ "bear" ], DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("fur", 1, 1, 1, 1), new("meatRawBear", 1, 1, 1, 1), new("clueScrollBeginner", 1, 90, 1, 1) } });
             toAdd.Add(new("Monk of Zamorak", "monkZamorakVarrock", 21, 27, 0, false, "1d5", "RangedLight", 1, "Melee", inaccessible: true) { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("monkZamorakTop", 1, 20, 1, 1), new("monkZamorakBottom", 1, 20, 1, 1) } });
             
+            toAdd.Add(new("Jonny the Beard", "arravJonny", 2, 8, 0, false, "1d2-1", "Fire", 30, "Melee", reqs: [ new("Data", 1, "PhoenixTask", false, "equals")] ) { 
+                DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("arravIntel", 1, 1, 1, 1) }
+            });
 
 
             // Lumbridge Catacombs
             {
                 toAdd.Add(new("Kayle", "questBloodPactKayle", 1, 8, 0, true, "1d3-1", "Slash", 1, "Ranged", reqs: new() { new("QuestAt", 20, "MI_BloodPact")}, proper: true) { DropTable = new() { new("chargebowKayle", 1, 1, 1, 1) } });
                 toAdd.Add(new("Caitlin", "questBloodPactCaitlin", 1, 8, 0, true, "1d3-1", "Ranged", 1, "Magic", reqs: new() { new("QuestAt", 40, "MI_BloodPact")}, inaccessible: true, proper: true) { DropTable = new() {  } });
-                toAdd.Add(new("Reese", "questBloodPactReese", 1, 8, 0, true, "1d3-1", "Air", 1, "Melee", reqs: new() { new("QuestAt", 60, "MI_BloodPact")}, proper: true) { DropTable = new() { new("swordReese", 1, 1, 1, 1) } });
+                toAdd.Add(new("Reese", "questBloodPactReese", 1, 8, 0, false, "1d3-1", "Air", 1, "Melee", reqs: new() { new("QuestAt", 60, "MI_BloodPact")}, proper: true) { DropTable = new() { new("swordReese", 1, 1, 1, 1) } });
 
                 toAdd.Add(new("Warped cockroach", "warpedCockroach", 1, 5, 0, false, "1d2-1", "Crush", 1, "Ranged") {
                     DropTable = new() { 

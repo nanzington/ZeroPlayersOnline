@@ -357,7 +357,7 @@
                 if (MiscString == "Graveyard") { if (p.PizazzGraveyard >= MiscInt) { return true; } }
             }
 
-            if (RequirementType == "ItemOwned") {
+            if (RequirementType == "ItemOwned") { 
                 foreach (var kv in p.Inventory) { if (kv.ID == MiscString) { return true; } }
                 foreach (var kv in p.Equipment) { if (kv.Value.ID == MiscString) { return true; } }
                 foreach (var kv in p.BankedItems) { if (kv.ID == MiscString) { return true; } }

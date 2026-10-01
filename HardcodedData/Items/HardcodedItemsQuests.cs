@@ -1,5 +1,4 @@
-﻿using GoRogue.GameFramework;
-using ZeroPlayersOnline.DataTypes;
+﻿using ZeroPlayersOnline.DataTypes;
 using ZeroPlayersOnline.HardcodedData;
 
 namespace ZeroPlayersOnline.Hardcodes {
@@ -11,10 +10,10 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Kayle's chargebow", "A brightly colored chargebow that fires magical arrows.", "chargebowKayle", ColorLib.Oak, 1, trade: false) {
                 EquipSlot = "Weapon", EquipTier = 2, EquipLevel = 1, EquipDamageType = "RangedStandard", EquipSkill = "Ranged", EquipAmmo = "Chargebow", AttackSpeed = 1, TwoHanded = true
             });
-            itemsToAdd.Add(new Item("Caitlin's staff", "A spell-casting aid. Provides unlimited air runes.", "staffCaitlin", Color.DarkGray, 1) {
+            itemsToAdd.Add(new Item("Caitlin's staff", "A spell-casting aid. Provides unlimited air runes.", "staffCaitlin", Color.DarkGray, 1, trade: false) {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", CountsAsIDs = [ "runeAir" ], UseInt4 = -1, MustBeEquipped = true
             });
-            itemsToAdd.Add(new Item("Reese's sword", "Old, battered, and not very sharp.", "swordReese", Color.DarkGray, 1) {
+            itemsToAdd.Add(new Item("Reese's sword", "Old, battered, and not very sharp.", "swordReese", Color.DarkGray, 1, trade: false) {
                 EquipSlot = "Weapon",  EquipTier = 2, EquipSkill = "Attack", EquipLevel = 1, EquipDamageType = "Slash"
             });
 
@@ -67,7 +66,29 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Wig [Q]", "A grey woollen wig. (Prince Ali Rescue)", "princeAliWig", 255, 255, 255, 30, trade: false));
             itemsToAdd.Add(new Item("Blonde wig [Q]", "A wig that has been dyed blonde. (Prince Ali Rescue)", "princeAliWigBlonde", Color.Yellow, 30, trade: false));
             
-            itemsToAdd.Add(new Item("Shield of Arrav (book) [Q]", "'The Shield of Arrav' by A R Wright. (Shield of Arrav)", "bookArrav", Color.DodgerBlue, 5) { ConsumedOnUse = false, UseString = "Book", UseString2 = "bookArrav"});
+            itemsToAdd.Add(new Item("Research package [Q]", "This contains some vital research. (Rune Mysteries)", "rmPackage", Color.MediumPurple, 30, trade: false));
+            itemsToAdd.Add(new Item("Research notes [Q]", "They seem to be written in some kind of code. (Rune Mysteries)", "rmNotes", Color.White, 30, trade: false));
+             
+            itemsToAdd.Add(new Item("Doogle leaves", "A tasty herb, good for seasoning.", "doogle", Color.ForestGreen, 2));
+            itemsToAdd.Add(new Item("Seasoned sardine [Q]", "Sardine flavored with doogle leaves. (Gertrude's Cat)", "sardineSeasoned", Color.PaleGreen, 10));
+            itemsToAdd.Add(new Item("Fluffs' kitten [Q]", "It looks lost. (Gertrude's Cat)", "kittenFluffs", Color.Gray, 1, trade: false));
+            
+            itemsToAdd.Add(new Item("The Shield of Arrav (book) [Q]", "'The Shield of Arrav' by A R Wright. (Shield of Arrav)", "bookArrav", Color.DodgerBlue, 5) { ConsumedOnUse = false, UseString = "Book", UseString2 = "bookArrav"});
+            itemsToAdd.Add(new Item("Phoenix crossbow", "A crossbow made from pine, stamped with the Phoenix Gang insignia. Fires bolts.", "crossbowPhoenix", ColorLib.Pine, 10) {
+                EquipSlot = "Weapon", EquipTier = 1, EquipLevel = 1, EquipDamageType = "RangedHeavy", EquipSkill = "Ranged", EquipAmmo = "RangedHeavy", AttackSpeed = 1
+            });
+            itemsToAdd.Add(new Item("Intel report [Q]", "An intelligence report. (Shield of Arrav)", "arravIntel", Color.White, 10, trade: false) { ConsumedOnUse = false, UseString = "Book", UseString2 = "arravIntel" });
+            itemsToAdd.Add(new Item("Broken shield, left [Q]", "The left half of a broken shield. (Shield of Arrav)", "arravShieldLeft", Color.CadetBlue, 10, trade: false));
+            itemsToAdd.Add(new Item("Broken shield, right [Q]", "The right half of a broken shield. (Shield of Arrav)", "arravShieldRight", Color.CadetBlue, 10, trade: false));
+            itemsToAdd.Add(new Item("The Shield of Arrav [Q]", "The restored shield of Arrav. (Shield of Arrav)", "arravShield", Color.CadetBlue, 10, trade: false));
+
+            itemsToAdd.Add(new Item("Cowbell amulet", "A very fashionable a-moo-let. Charge with air runes to teleport to the Groats cow pen.", "amuletCowbell", Color.Goldenrod, 350, trade: false) { EquipSlot = "Amulet", ConsumedOnUse = false, UsesCharges = true, UseString = "Teleport", UseString2 = "MIST_GroatsFarmCows", ChargeItem = "runeAir" });
+            itemsToAdd.Add(new Item("Milk sample [Q]", "A sample of milk from Cassius. (The Ides of Milk)", "sampleMilk", Color.White, 1, trade: false) { UseString = "MilkSample", UseInt = 1 });
+            itemsToAdd.Add(new Item("Milk sample [Q]", "A second, slightly milkier sample of milk from Cassius. (The Ides of Milk)", "sampleMilk2", Color.White, 1, trade: false) { UseString = "MilkSample", UseInt = 0 });
+            itemsToAdd.Add(new Item("The Groats Principles [Q]", "A book containing the teachings of Old Farmer Groats. (The Ides of Milk)", "bookGroats", Color.ForestGreen, 3, trade: false) { ConsumedOnUse = false, UseString = "Book", UseString2 = "bookGroats" });
+            itemsToAdd.Add(new Item("Brutus' name tag [Q]", "The bull dropped a tag saying 'Brutus'. Cassius won't be pleased. (The Ides of Milk)", "idesNameTag", Color.White, 1, trade: false));
+            
+            itemsToAdd.Add(new Item("Combat lamp (1k)", "Grants 1,000 experience to your choice of Attack, Strength, Defense, Constitution, Ranged, Magic, or Prayer.", "lampCombat1k", Color.White, 1, trade: false) { ConsumedOnUse = false, UseString = "LampChoice", UseString2 = "Attack,Strength,Defense,Constitution,Ranged,Magic,Prayer", UseInt = 1000 });
             
 
             for (int i = 0; i < itemsToAdd.Count; i++) {

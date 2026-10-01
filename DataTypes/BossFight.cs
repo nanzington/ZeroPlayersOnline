@@ -32,7 +32,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public int KillItemCount = 0;
 
         public List<ItemDrop> DropTable = new();
-
+        public double ExpMultiplier = 1.0;
 
         [JsonIgnore]
         public int CurrentLane = 0;
@@ -46,6 +46,8 @@ namespace ZeroPlayersOnline.DataTypes {
         public double TimeLastAttacked = 0;
         [JsonIgnore]
         public double MovesSinceSpecial = 0;
+        [JsonIgnore]
+        public int LaneWhenMoveSelected = -1;
 
         public BossFight(string name, string id, int level, int maxHp, string weakness, int dr, int respawn, string defDmgDice, string defDmgType, double attackSpeed = 1000, int attacksBetween = 3, int lanes = 3, bool aggro = false, string specialCat = "", List<BossAttack> specials = null, List<ItemDrop> drops = null) {
             ID = id;

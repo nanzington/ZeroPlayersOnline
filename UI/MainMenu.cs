@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 using ZeroPlayersOnline.DataTypes;
 using ZeroPlayersOnline.Hardcodes;
 using Key = SadConsole.Input.Keys;
@@ -21,6 +22,26 @@ namespace ZeroPlayersOnline.UI {
             mini.Con.Clear();
             mini.SingleSquare.Clear();
 
+            mini.Con.Print(131, 0, "VOLUME: ");
+            mini.Con.PrintClickable(139, 0, new ColoredString("-", Color.White, Color.Transparent), () => {
+                double qty = 0.01;
+                if (Helper.EitherShift()) { qty *= 5.0; }
+                if (Helper.EitherControl()) { qty *= 10.0; }
+                
+                GameLoop.GlobalOptions.MusicVolume = Math.Clamp(GameLoop.GlobalOptions.MusicVolume - qty, 0, GameLoop.GlobalOptions.MusicVolume);
+                GameLoop.SaveGlobalPrefs();
+            });
+
+            mini.Con.Print(141, 0, $"{GameLoop.GlobalOptions.MusicVolume:0.00}".ToString());
+
+            mini.Con.PrintClickable(146, 0, new ColoredString("+", Color.White, Color.Transparent), () => {
+                double qty = 0.01;
+                if (Helper.EitherShift()) { qty *= 5.0; }
+                if (Helper.EitherControl()) { qty *= 10.0; }
+                
+                GameLoop.GlobalOptions.MusicVolume = Math.Clamp(GameLoop.GlobalOptions.MusicVolume + qty, GameLoop.GlobalOptions.MusicVolume, 1.0);
+                GameLoop.SaveGlobalPrefs();
+            });
 
             //Point mousePos = new MouseScreenObjectState(mini.Con, GameHost.Instance.Mouse).CellPosition;   
 
@@ -103,6 +124,17 @@ namespace ZeroPlayersOnline.UI {
             mini.SingleSquare.Print(offX + 48, offY + 2, "XXXXX", Color.White, Color.Black);
             mini.SingleSquare.Print(offX + 48, offY + 3, "X", Color.White, Color.Black);
             mini.SingleSquare.Print(offX + 48, offY + 4, "XXXXX", Color.White, Color.Black);
+
+            
+
+            mini.Con.Print(1, 45, "Links and Credits:", Color.White, Color.Black);
+            mini.Con.PrintClickable(1, 47, new ColoredString("Join us on Discord!", Color.DodgerBlue, Color.Black), () => {
+                Process.Start(new ProcessStartInfo("https://discord.gg/yJXRKTPnkc") { UseShellExecute = true });
+            });
+
+            mini.Con.PrintClickable(21, 47, new ColoredString("Music by UnpragmaticCovers", Color.Crimson, Color.Black), () => {
+                Process.Start(new ProcessStartInfo("https://www.youtube.com/@UnpragmaticCovers") { UseShellExecute = true });
+            });
 
 
             if (LeftParticles.Count < 100) {
@@ -188,6 +220,10 @@ namespace ZeroPlayersOnline.UI {
                 mini.Con.PrintClickable(98 + 19, 11, new ColoredString("Yes", SkippingTutorialIsland == 1 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SkippingTutorialIsland = 1; });
                 mini.Con.PrintClickable(98 + 23, 11, new ColoredString("Cape", SkippingTutorialIsland == 2 ? Color.AnsiGreen : Color.DarkSlateGray, Color.Black), () => { SkippingTutorialIsland = 2; }); 
 
+                mini.Con.Print(92, 12, "  All Music Unlocked: ");
+                mini.Con.PrintClickable(98 + 16, 12, new ColoredString("No", !GameLoop.ZPO.player.AllSongsUnlocked ? Color.White : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.AllSongsUnlocked = false; });
+                mini.Con.PrintClickable(98 + 19, 12, new ColoredString("Yes", GameLoop.ZPO.player.AllSongsUnlocked ? Color.Green : Color.DarkSlateGray, Color.Black), () => { GameLoop.ZPO.player.AllSongsUnlocked = true; });
+                
 
                 int printY = 13;
 
@@ -407,6 +443,10 @@ namespace ZeroPlayersOnline.UI {
                     haunted.CurrentStage = 90; 
                 }
 
+                if (!GameLoop.ZPO.player.AllSongsUnlocked) {
+                    GameLoop.ZPO.player.UnlockedSongs.Add("Lux Aeterna");
+                }
+
                 if (SkippingTutorialIsland == 2) {
                     if (GameLoop.ZPO.ItemLibrary.TryGetValue("capeCompTI", out Item? cape)) {
                         foreach (var kv in GameLoop.ZPO.player.Skills) {
@@ -429,6 +469,8 @@ namespace ZeroPlayersOnline.UI {
                         }
 
                         GameLoop.ZPO.player.TryPickup(cape, 1);
+
+                        GameLoop.ZPO.ManualSave(false);
                     }
                 }
             }
@@ -438,7 +480,15 @@ namespace ZeroPlayersOnline.UI {
             MenuMode = "Main";
             GameLoop.ZPO.TimeLastTicked = Helper.Time();
 
+            GameLoop.SoundManager.CurrentSong = "";
+            GameLoop.SoundManager.music.StopAllSounds();
+            GameLoop.SoundManager.PickMusic();
+
             PerformUpdateMaintenance();
+
+            if (GameLoop.ZPO.player.ActiveGE.Where(o => o.Resolved).ToList().Count > 0) {
+                GameLoop.ZPO.Log.AddMessage("You have items waiting to be collected from the Grand Exchange.");
+            }
         }
 
         public void PerformUpdateMaintenance() {

@@ -81,6 +81,17 @@ namespace ZeroPlayersOnline {
             if (Atlas.ContainsKey(player.NavLoc)) {
                 Location curr = Atlas[player.NavLoc];
 
+                if (curr.UPCsong != "") {
+                    if (!player.AllSongsUnlocked && !player.UnlockedSongs.Contains(curr.UPCsong)) { 
+                        player.UnlockedSongs.Add(curr.UPCsong); 
+                        Log.AddMessage("You have unlocked the song: " + curr.UPCsong, Color.Turquoise);
+                    }
+
+                    if (player.MusicMode == "Auto" && GameLoop.SoundManager.CurrentSong != curr.UPCsong && GameLoop.SoundManager.PlayingSounds.Count == 0) {
+                        GameLoop.SoundManager.PickMusic(curr.UPCsong);
+                    }
+                }
+
                 string dispName = curr.DisplayName;
 
                 if (curr.MazeMap != "") {
@@ -197,12 +208,16 @@ namespace ZeroPlayersOnline {
                                             curr.MonstersHere[j].AttackingPlayer = false;
                                         }
                                     }
-                                } else {
+                                } else { 
                                     if (conns[i].Requirements is List<Requirement> req) {
                                         Log.AddMessage("Missing some requirements to go there: " + (conns[i].OnlyNeedOneReq ? "(only need one)" : ""), Color.Crimson);
 
                                         for (int j = 0; j < req.Count; j++) {
                                             Log.AddMessage("| " + req[j].GetSummary(), req[j].CheckRequirement(player, false, true) ? Color.Lime : Color.Crimson); 
+                                        }
+
+                                        if (conns[i].ExpTo != "" && conns[i].Level > 0) {
+                                            Log.AddMessage("| " + conns[i].Level + " " + conns[i].ExpTo, player.GetEffectiveSkillLevel(conns[i].ExpTo) >= conns[i].Level ? Color.Lime : Color.Crimson);
                                         }
                                     }
                                 }
@@ -276,7 +291,7 @@ namespace ZeroPlayersOnline {
 
                             if (boss.UsingMove != -1) {
                                 if (boss.Specials.Count > boss.UsingMove) {
-                                    if (boss.Specials[boss.UsingMove].HitsLanes.Contains(i)) {
+                                    if (boss.Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(i)) {
                                         if (timeToAttack > boss.AttackSpeedInMS / 2.0) {
                                             col = Color.Yellow;
                                         } else {
@@ -292,7 +307,7 @@ namespace ZeroPlayersOnline {
 
                             if (boss.UsingMove != -1) {
                                 if (boss.Specials.Count > boss.UsingMove) {
-                                    if (boss.Specials[boss.UsingMove].HitsLanes.Contains(i)) {
+                                    if (boss.Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(i)) {
                                         if (timeToAttack > boss.AttackSpeedInMS / 2.0) {
                                             col = Color.Yellow;
                                         } else {
@@ -333,7 +348,7 @@ namespace ZeroPlayersOnline {
                                 safespotting = true;
                             }
 
-                            if (!safespotting && boss.UsingMove != -1 && boss.Specials.Count > boss.UsingMove && !boss.Specials[boss.UsingMove].HitsLanes.Contains(boss.CurrentLane)) {
+                            if (!safespotting && boss.UsingMove != -1 && boss.Specials.Count > boss.UsingMove && !boss.Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(boss.CurrentLane)) {
                                 safespotting = true;
                                 Log.AddMessage(new ColoredString("You deftly dodge out of the way of the boss' special attack.", Color.Green, Color.Black));
                             } 
@@ -407,6 +422,7 @@ namespace ZeroPlayersOnline {
 
                                 if (boss.MovesSinceSpecial == boss.AttacksBetweenSpecials && boss.Specials.Count > 0) {
                                     boss.UsingMove = GameLoop.rand.Next(boss.Specials.Count);
+                                    boss.LaneWhenMoveSelected = boss.CurrentLane;
                                     Log.AddMessage(boss.Specials[boss.UsingMove].WarningText, Color.Yellow);
                                 }
                             }
@@ -562,7 +578,7 @@ namespace ZeroPlayersOnline {
                                 }
 
                                 if (player.IsMaging()) {  
-                                    player.TryGrantExp("Magic", (pdmg * 4), Log, SidebarManager.RecentlyTrainedSkills);
+                                    player.TryGrantExp("Magic", (int) (pdmg * 4 * boss.ExpMultiplier), Log, SidebarManager.RecentlyTrainedSkills);
 
                                     string cast = player.CanCast(SpellLibrary[player.CastingSpell]);
                                     if (cast != "") { 
@@ -570,20 +586,24 @@ namespace ZeroPlayersOnline {
                                         player.CastingSpell = "";
                                     }
                                 } else if (usedAmmo) { 
-                                    player.TryGrantExp("Ranged", pdmg * 4, Log, SidebarManager.RecentlyTrainedSkills);
+                                    player.TryGrantExp("Ranged", (int) (pdmg * 4 * boss.ExpMultiplier), Log, SidebarManager.RecentlyTrainedSkills);
                                 } else {
                                     if (player.OffenseExpSplit > 0 && !reachedKillLimit)
-                                        player.TryGrantExp("Attack", pdmg * player.OffenseExpSplit, Log, SidebarManager.RecentlyTrainedSkills);
+                                        player.TryGrantExp("Attack", (int) (pdmg * player.OffenseExpSplit * boss.ExpMultiplier), Log, SidebarManager.RecentlyTrainedSkills);
 
                                     if (player.OffenseExpSplit < 4 && !reachedKillLimit)
-                                        player.TryGrantExp("Strength", pdmg * (4 - player.OffenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
+                                        player.TryGrantExp("Strength", (int) (pdmg * (4 - player.OffenseExpSplit) * boss.ExpMultiplier), Log, SidebarManager.RecentlyTrainedSkills);
                                 }
 
                                 if (player.DefenseExpSplit > 0 && !reachedKillLimit)
-                                    player.TryGrantExp("Defense", pdmg * player.DefenseExpSplit, Log, SidebarManager.RecentlyTrainedSkills);
+                                    player.TryGrantExp("Defense", (int) (pdmg * player.DefenseExpSplit * boss.ExpMultiplier), Log, SidebarManager.RecentlyTrainedSkills);
 
                                 if (player.DefenseExpSplit < 4 && !reachedKillLimit)
-                                    player.TryGrantExp("Constitution", pdmg * (4 - player.DefenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
+                                    player.TryGrantExp("Constitution", (int) (pdmg * (4 - player.DefenseExpSplit) * boss.ExpMultiplier), Log, SidebarManager.RecentlyTrainedSkills);
+
+                                if (boss.ID == player.SlayerTask|| boss.CountsAsSlayer.Contains(player.SlayerTask)) {
+                                    player.TryGrantExp("Slayer", (int) (pdmg * 4 * boss.ExpMultiplier), Log, SidebarManager.RecentlyTrainedSkills);
+                                } 
 
                                 if (boss.CurrentHP <= 0) {
                                     bool canKill = true;
@@ -1002,9 +1022,9 @@ namespace ZeroPlayersOnline {
                                         if (player.DefenseExpSplit < 4 && !reachedKillLimit)
                                             player.TryGrantExp("Constitution", pdmg * (4 - player.DefenseExpSplit), Log, SidebarManager.RecentlyTrainedSkills);
 
-                                        if (AttackingMonster.ID == player.SlayerTask) {
+                                        if (AttackingMonster.ID == player.SlayerTask|| AttackingMonster.CountsAsSlayer.Contains(player.SlayerTask)) {
                                             player.TryGrantExp("Slayer", pdmg * 4, Log, SidebarManager.RecentlyTrainedSkills);
-                                        }
+                                        }  
 
                                         if (AttackingMonster.CurrentHP <= 0) {
                                             bool canKill = true;
@@ -1406,8 +1426,35 @@ namespace ZeroPlayersOnline {
                                     station.TryProcessItem(player, Log, ItemLibrary, SidebarManager.RecentlyTrainedSkills); 
 
                                     if (station.OpensUI) {
-                                        ExtraWindows.CraftingMenu.IsVisible = true;
-                                        ExtraWindows.CraftingType = station.Name;
+                                        if (station.Name == "Grand Exchange") {
+                                            if (player.GrandExchangeMode != 2) {
+                                                ExtraWindows.GrandExchange.IsVisible = true;
+                                                ExtraWindows.GECollectOnly = false;
+                                                ExtraWindows.GESellView = null;
+                                                ExtraWindows.GEListView = null;
+                                                ExtraWindows.GESearchFilter = "";
+                                                ExtraWindows.GEFilterSave = "";
+                                                ExtraWindows.UpdateGEItems();
+                                            } else {
+                                                Log.AddMessage("You are not permitted to use the Grand Exchange.");
+                                            }
+                                        } else if (station.Name == "GE Bank") {
+                                            if (player.GrandExchangeMode != 2) {
+                                                ExtraWindows.GrandExchange.IsVisible = true;
+                                                ExtraWindows.GECollectOnly = true;
+                                                ExtraWindows.GESellView = null;
+                                                ExtraWindows.GEListView = null;
+                                                ExtraWindows.GEInventory = false;
+                                                ExtraWindows.GESearchFilter = "";
+                                                ExtraWindows.GEFilterSave = "";
+                                                ExtraWindows.GEItems = new();
+                                            } else { 
+                                                Log.AddMessage("You are not permitted to use the Grand Exchange.");
+                                            }
+                                        } else {
+                                            ExtraWindows.CraftingMenu.IsVisible = true;
+                                            ExtraWindows.CraftingType = station.Name;
+                                        }
                                     }
                                 });
 
@@ -1465,13 +1512,40 @@ namespace ZeroPlayersOnline {
                                     continue;
                                 }
 
-                                mini.Con.PrintClickable(resourceX + 2, resourceY, "| " + thisOne.Name, () => {
+                                mini.Con.PrintClickable(resourceX + 2, resourceY, "| " + thisOne.Name, () => { 
                                     if (!ClueLogic.GenericStep(player, Log, "Speak", thisOne.ID) && !ClueLogic.GenericStep(player, Log, "Anagram", thisOne.ID)) {
                                         CurrDialogueStage = 0;
                                         ConversationPartner = thisOne;
 
                                         if (ConversationPartner.Dialogue.ContainsKey(CurrDialogueStage)) {
-                                            Log.AddMessage((ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker != "" ? ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker : ConversationPartner.Name) + ": " + ConversationPartner.Dialogue[CurrDialogueStage].Text);
+                                            string altSpeaker = ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker;
+                                            if (altSpeaker == "") {
+                                                foreach (var text in ConversationPartner.Dialogue[CurrDialogueStage].Text) {
+                                                    if (text.CheckReq()) {
+                                                        if (text.Text != "")
+                                                            Log.AddMessage(ConversationPartner.Name + ": " + text.Text.Replace("@", player.Name));
+                                                        break;
+                                                    }
+                                                } 
+                                            } else {
+                                                if (altSpeaker == "-") { 
+                                                    foreach (var text in ConversationPartner.Dialogue[CurrDialogueStage].Text) {
+                                                        if (text.CheckReq()) { 
+                                                            if (text.Text != "")
+                                                                Log.AddMessage(text.Text.Replace("@", player.Name));
+                                                            break;
+                                                        }
+                                                    }
+                                                } else { 
+                                                    foreach (var text in ConversationPartner.Dialogue[CurrDialogueStage].Text) {
+                                                        if (text.CheckReq()) { 
+                                                            if (text.Text != "")
+                                                                Log.AddMessage(altSpeaker + ": " + text.Text.Replace("@", player.Name));
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
 
                                         SelectedMenu = "Chat";
@@ -1561,8 +1635,37 @@ namespace ZeroPlayersOnline {
                                             CurrDialogueStage = choice.LeadsToStage;
 
                                             if (ConversationPartner.Dialogue.ContainsKey(CurrDialogueStage)) {
-                                                Log.AddMessage((ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker != "" ? ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker : ConversationPartner.Name) + ": " + ConversationPartner.Dialogue[CurrDialogueStage].Text);
+                                                string altSpeaker = ConversationPartner.Dialogue[CurrDialogueStage].AltSpeaker;
+                                                if (altSpeaker == "") {
+                                                    foreach (var text in ConversationPartner.Dialogue[CurrDialogueStage].Text) {
+                                                        if (text.CheckReq()) {
+                                                            if (text.Text != "")
+                                                                Log.AddMessage(ConversationPartner.Name + ": " + text.Text.Replace("@", player.Name));
+                                                            break;
+                                                        }
+                                                    } 
+                                                } else {
+                                                    if (altSpeaker == "-") { 
+                                                        foreach (var text in ConversationPartner.Dialogue[CurrDialogueStage].Text) {
+                                                            if (text.CheckReq()) {
+                                                                if (text.Text != "")
+                                                                    Log.AddMessage(text.Text.Replace("@", player.Name));
+                                                                break;
+                                                            }
+                                                        }
+                                                    } else { 
+                                                        foreach (var text in ConversationPartner.Dialogue[CurrDialogueStage].Text) {
+                                                            if (text.CheckReq()) {
+                                                                if (text.Text != "")
+                                                                    Log.AddMessage(altSpeaker + ": " + text.Text.Replace("@", player.Name));
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
+
+                                            bool teleported = false;
 
                                             if (choice.TeleportTo != "") {
                                                 player.NavLoc = choice.TeleportTo;
@@ -1570,6 +1673,8 @@ namespace ZeroPlayersOnline {
                                                 if (choice.SetSpawnToo) {
                                                     player.NavRespawn = choice.TeleportTo;
                                                 }
+
+                                                teleported = true;
                                             }  
                                             
                                             choice.ConsumeItemsIfNeeded(player);
@@ -1643,6 +1748,10 @@ namespace ZeroPlayersOnline {
                                                 foreach (var act in newDia.Actions) {
                                                     act.Execute();
                                                 } 
+                                            }
+
+                                            if (teleported) {
+                                                ConversationPartner = null;
                                             }
                                         } else {
                                             if (choice.ClickReqs != null) {
@@ -2104,6 +2213,27 @@ namespace ZeroPlayersOnline {
                 }
             }
 
+            mini.Win.Print(120, 49, "[VOLUME:         ]");
+            mini.Win.PrintClickable(129, 49, new ColoredString("-", Color.White, Color.Transparent), () => {
+                double qty = 0.01;
+                if (Helper.EitherShift()) { qty *= 5.0; }
+                if (Helper.EitherControl()) { qty *= 10.0; }
+                
+                GameLoop.GlobalOptions.MusicVolume = Math.Clamp(GameLoop.GlobalOptions.MusicVolume - qty, 0, GameLoop.GlobalOptions.MusicVolume);
+                GameLoop.SaveGlobalPrefs();
+            });
+
+            mini.Win.Print(131, 49, $"{GameLoop.GlobalOptions.MusicVolume:0.00}".ToString());
+
+            mini.Win.PrintClickable(136, 49, new ColoredString("+", Color.White, Color.Transparent), () => {
+                double qty = 0.01;
+                if (Helper.EitherShift()) { qty *= 5.0; }
+                if (Helper.EitherControl()) { qty *= 10.0; }
+                
+                GameLoop.GlobalOptions.MusicVolume = Math.Clamp(GameLoop.GlobalOptions.MusicVolume + qty, GameLoop.GlobalOptions.MusicVolume, 1.0);
+                GameLoop.SaveGlobalPrefs();
+            });
+
 
             mini.Win.PrintClickable(143, 49, "[SAVE]", () => { ManualSave(); });
         }
@@ -2152,6 +2282,9 @@ namespace ZeroPlayersOnline {
             mini.DoubleSquare.Clear();
             mini.QuadSquare.Clear();
 
+            mini.Win.Clear();
+            Helper.DrawBox(mini.Win, 0, 0, 148, 48);
+
 
             SidebarManager.Draw(mini, player); 
             LogDraw(mini); 
@@ -2195,6 +2328,15 @@ namespace ZeroPlayersOnline {
 
             if (ExtraWindows.Shop.IsVisible)
                 ExtraWindows.ShopDraw();
+
+            if (ExtraWindows.LampMenu.IsVisible)
+                ExtraWindows.LampDraw();
+
+            if (ExtraWindows.GrandExchange.IsVisible)
+                ExtraWindows.GrandExchangeDraw();
+
+            if (ExtraWindows.CatMenu.IsVisible)
+                ExtraWindows.CatDraw();
 
             if (TimeLastTicked + 1000 < Helper.Time()) {
                 TickTime();
@@ -2369,8 +2511,10 @@ namespace ZeroPlayersOnline {
                // player.TryPickup(new Item(ItemLibrary["wizardBlueRobeG"]), 1); 
                  //player.TryGrantExp("Magic", 50000, Log, SidebarManager.RecentlyTrainedSkills);
 
-                //player.TryPickup(new Item(ItemLibrary["clueScrollBeginner"]), 1);  
-                //player.CurrentClueBeginner = "B_HotColdAlKharidMine";
+               //player.TryPickup(new Item(ItemLibrary["arravIntel"]), 1);  
+              //  player.CurrentClueBeginner = "B_CharlieMining";
+                //player.TryPickup(new Item(ItemLibrary["fishRawCod"]), 1);  
+
 
                 //player.NavLoc = "MIST_VarrockPalaceBailey";
                 //player.TryPickup(new Item(ItemLibrary["uncutRuby"]), 1);
@@ -2390,6 +2534,7 @@ namespace ZeroPlayersOnline {
 
                     Log.AddMessage(cask.Name + " log completed in average " + (totalCycles / simCount) + " opens over " + simCount + " simulations.");
                 }*/ 
+
                 ItemUseLogic.UsingSlot = -1;
             }
         }
@@ -2480,6 +2625,42 @@ namespace ZeroPlayersOnline {
                 if (GameLoop.rand.Next(100) == 0 && pet.PetBlurbs != null && pet.PetBlurbs.Count > 0) {
                     Log.AddMessage(pet.PetBlurbs[GameLoop.rand.Next(pet.PetBlurbs.Count)], pet.GetColor());
                 }
+
+                List<string> kittenColors = [ "kittenBlack", "kittenGray", "kittenWhite", "kittenOrange", "kittenBrown", "kittenCalico" ];
+                List<string> catColors = [ "catBlack", "catGray", "catWhite", "catOrange", "catBrown", "catCalico" ];
+                if (kittenColors.Contains(petWrap.ID)) {
+                    petWrap.MiscInt++; // Time since last fed
+                    if (petWrap.MiscInt == 1440) { // 24 minutes without being fed
+                        Log.AddMessage("Your kitten meows loudly. Seems like it might be hungry.", Color.Orange);
+                    } else if (petWrap.MiscInt == 1620) { // 27 minutes without being fed
+                        Log.AddMessage("Your kitten meows loudly. Seems like it might be VERY hungry.", Color.Crimson);
+                    } else if (petWrap.MiscInt == 1800) { // 30 minutes without being fed, run away
+                        Log.AddMessage("Your kitten gets tired of starving and runs away.", Color.Crimson);
+                        player.Equipment.Remove("Pet");
+                    }
+
+                    petWrap.MiscInt2++; // Time since last played
+                    if (petWrap.MiscInt2 == 1440) { // 24 minutes without attention
+                        Log.AddMessage("Your kitten meows loudly. Seems like it wants attention.", Color.Orange);
+                    } else if (petWrap.MiscInt2 == 1620) { // 27 minutes without attention
+                        Log.AddMessage("Your kitten meows loudly. Seems like it NEEDS attention.", Color.Crimson);
+                    } else if (petWrap.MiscInt2 == 1800) { // 30 minutes without attention, run away
+                        Log.AddMessage("Your kitten gets tired of being ignored and runs away.", Color.Crimson);
+                        player.Equipment.Remove("Pet");
+                    }
+
+                    petWrap.MiscInt3++; // Time spent on ground, aka age
+                    if (petWrap.MiscInt3 >= 10800) { // 3 hours aging
+                        petWrap.ID = petWrap.ID.Replace("kitten", "cat"); 
+                        Log.AddMessage("Your kitten has grown up into a cat!", Color.Lime);
+                    }
+                } else if (catColors.Contains(petWrap.ID)) {
+                    petWrap.MiscInt3++; // Time spent on ground, aka age
+                    if (petWrap.MiscInt3 >= 28800) { // A further 6 hours aging, 9 hours total
+                        petWrap.ID += "Overgrown";
+                        Log.AddMessage("Your cat has become overgrown.", Color.Green);
+                    }
+                }
             }
 
 
@@ -2497,6 +2678,31 @@ namespace ZeroPlayersOnline {
 
                 if (!found)
                     SidebarManager.LastFoundRecipe = null;
+            }
+
+            if (player.QuestLog.TryGetValue("MI_ShieldOfArrav", out QuestStatus? arrav) && arrav.CurrentStage != 50 && arrav.CurrentStage != -1) {
+                if (arrav.CurrentStage < 20 && !player.HasAllItems(["arravShieldLeft,1", "arravShieldRight,1"]) && (player.HasAllItems(["arravShieldLeft,1"]) || player.HasAllItems(["arravShieldRight,1"]))) {
+                    player.TryProgressQuest("MI_ShieldOfArrav", 20);
+                } 
+                if (arrav.CurrentStage < 30 && player.HasAllItems(["arravShieldLeft,1", "arravShieldRight,1"])) { player.TryProgressQuest("MI_ShieldOfArrav", 30); } 
+                if (arrav.CurrentStage < 40 && player.HasAllItems(["arravShield,1"])) { player.TryProgressQuest("MI_ShieldOfArrav", 40); }
+            }
+
+            if (player.ActiveGE.Count > 0) {
+                foreach (var ge in player.ActiveGE) {
+                    if (!ge.Resolved) {
+                        if (ge.PerSecondDenom() > 0) {
+                            if (GameLoop.rand.Next(ge.PerSecondDenom()) == 0) {
+                                ge.Resolved = true;
+                                if (ge.Buying) {
+                                    Log.AddMessage("Grand Exchange: Bought " + ge.Wrap.Quantity + "x " + ResolveItemName(ge.Wrap.ID) + " for " + (ge.Wrap.Quantity * ge.ListPrice) + "gp.", Color.Lime);
+                                } else {
+                                    Log.AddMessage("Grand Exchange: Sold " + ge.Wrap.Quantity + "x " + ResolveItemName(ge.Wrap.ID) + " for " + (ge.Wrap.Quantity * ge.ListPrice) + "gp.", Color.Lime);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -2615,6 +2821,11 @@ namespace ZeroPlayersOnline {
             HardcodedLocationsTutorial.InitLocs(Atlas, GatherSpots, MonsterLibrary);
 
             HardcodedNPCs.InitNPCs(NPCLibrary);
+            HardcodedNPCsLumbridgeDraynor.InitNPCs(NPCLibrary);
+            HardcodedNPCsVarrock.InitNPCs(NPCLibrary);
+            HardcodedNPCsAlKharid.InitNPCs(NPCLibrary);
+            HardcodedNPCsTutorial.InitNPCs(NPCLibrary);
+
             HardcodedPrayers.InitPrayers(PrayerLibrary);
             HardcodedFarmPatches.InitPatches(player.FarmingPatches);
             HardcodedClueSteps.InitClues(ClueStepLibrary);

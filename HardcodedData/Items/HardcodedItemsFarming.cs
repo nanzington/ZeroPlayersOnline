@@ -343,7 +343,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
                 // Cadava
                 itemsToAdd.Add(new Item("Cadava seed", "A cadavaberry bush seed - plant in a bush patch. (22)", "seedCadava", Color.MediumPurple, 9, true) {
-                    UseString = "PlantSeed", UseString2 = "Bush", UseString3 = "redberry",
+                    UseString = "PlantSeed", UseString2 = "Bush", UseString3 = "cadava",
                     UseInt = 22 /* Level */,  UseInt2 = 40 /* Exp On Harvest */, UseInt3 = 7200 /* Growth time in seconds */, UseInt4 = 1200 /* Regrowth time in seconds */
                 });
                 itemsToAdd.Add(new Item("Cadava berries", "Poisonous berries.", "cadava", Color.Magenta, 2));

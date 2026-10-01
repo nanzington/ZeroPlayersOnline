@@ -236,6 +236,15 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (CosmeticNote == "h") { build += new ColoredString(" (h)", Color.Turquoise, Color.Black); }
             }
 
+            if (ID == "kittenCalico" || ID == "catCalico" || ID == "catCalicoOvergrown") {
+                build += new ColoredString(" (", Color.White, Color.Black);
+                build += new ColoredString("ca", Color.DimGray, Color.Black);
+                build += new ColoredString("li", Color.White, Color.Black);
+                build += new ColoredString("co", Color.Orange, Color.Black);
+                build += new ColoredString(")", Color.White, Color.Black);
+            }
+
+
             if (noted) {
                 build += new ColoredString(" (n)", Color.Khaki, Color.Black);
             }
@@ -278,6 +287,10 @@ namespace ZeroPlayersOnline.DataTypes {
                 if (CosmeticNote == "t") { build += " (t)"; } 
                 if (CosmeticNote == "g") { build += " (g)"; }
                 if (CosmeticNote == "h") { build += " (h)"; }
+            }
+
+            if (ID == "kittenCalico") {
+                build += " (calico)";
             }
 
             if (noted) {

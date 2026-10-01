@@ -178,6 +178,7 @@ namespace ZeroPlayersOnline.Managers {
                                 if (GameLoop.ZPO.ItemLibrary.TryGetValue(curr.DigItem, out Item? dug)) {
                                     if (dug != null) {
                                         player.TryPickup(new Item(dug), dug.Quantity);
+                                        if (!player.ItemsEverObtained.Contains(dug.ID)) { player.ItemsEverObtained.Add(dug.ID); }
                                     }
                                 }
                             }
@@ -259,6 +260,7 @@ namespace ZeroPlayersOnline.Managers {
 
                                 GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it!" + (newToLog ? " (new!)" : ""), excitement, Color.Black));
                                 player.TryPickup(spawn, spawn.Quantity); 
+                                if (!player.ItemsEverObtained.Contains(spawn.ID)) { player.ItemsEverObtained.Add(spawn.ID); }
                             }
                         } else { 
                             player.GiveGold(item.UseInt);
@@ -294,7 +296,8 @@ namespace ZeroPlayersOnline.Managers {
                                 string name = (spawn.Quantity > 1 ? spawn.Quantity + "x " : "") + spawn.Name + (spawn.Quantity > 1 && spawn.Name[^1] != 's' ? "s" : "");
 
                                 GameLoop.ZPO.Log.AddMessage(new ColoredString("The casket had " + name + " in it!" + (newToLog ? " (new!)" : ""), excitement, Color.Black));
-                                player.TryPickup(spawn, spawn.Quantity); 
+                                player.TryPickup(spawn, spawn.Quantity);
+                                if (!player.ItemsEverObtained.Contains(spawn.ID)) { player.ItemsEverObtained.Add(spawn.ID); } 
                             }
                         }
                     }
@@ -318,13 +321,17 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "RedeemRunePouch") {
                     Requirement lazy = new("ItemNotOwned", 1, "pouchRune");
 
-                    if (lazy.CheckRequirement(player, false, true)) {
-                        if (GameLoop.ZPO.ResolveItem("pouchRune") is Item pouch) {
-                            player.TryPickup(pouch, 1);
-                            return true;
+                    if (GameLoop.ZPO.Atlas.TryGetValue(player.NavLoc, out Location? isBank) && isBank.IsBank) {
+                        if (lazy.CheckRequirement(player, false, true)) {
+                            if (GameLoop.ZPO.ResolveItem("pouchRune") is Item pouch) {
+                                player.TryPickup(pouch, 1);
+                                return true;
+                            }
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("You already own a rune pouch, so you should hold onto this voucher in case you lose yours.", Color.Crimson);
                         }
                     } else {
-                        GameLoop.ZPO.Log.AddMessage("You already own a rune pouch, so you should hold onto this voucher in case you lose yours.", Color.Crimson);
+                        GameLoop.ZPO.Log.AddMessage("This can only be redeemed for a rune pouch at a bank.", Color.Crimson);
                     }
 
                     return false;
@@ -429,6 +436,7 @@ namespace ZeroPlayersOnline.Managers {
                 } else if (item.UseString == "Extinguish") {
                     itemWrap.ID = item.UseString2;
                     GameLoop.ZPO.Log.AddMessage("You extinguish the " + item.Name + ".", Color.Yellow);
+                    if (!player.ItemsEverObtained.Contains(itemWrap.ID)) { player.ItemsEverObtained.Add(itemWrap.ID); }
                     return false;
                 } else if (item.UseString == "Bell") { 
                     GameLoop.ZPO.Log.AddMessage("You jangle the bell about for a bit.", Color.Yellow);
@@ -471,6 +479,7 @@ namespace ZeroPlayersOnline.Managers {
                     return false;
                 } else if (item.UseString == "Transform") {
                     itemWrap.ID = item.UseString2;
+                    if (!player.ItemsEverObtained.Contains(itemWrap.ID)) { player.ItemsEverObtained.Add(itemWrap.ID); }
                     return false;
                 } else if (item.UseString == "Teleport") {
                     if (GameLoop.ZPO.Atlas.ContainsKey(item.UseString2)) {
@@ -492,6 +501,51 @@ namespace ZeroPlayersOnline.Managers {
                     }
 
                     return false;
+                } else if (item.UseString == "ItemPack") {
+                    if (GameLoop.ZPO.ResolveItem(item.UseString2) is Item unpacked) {
+                        unpacked.Quantity = item.UseInt;
+                        
+                        player.TryPickup(unpacked, unpacked.Quantity, true);
+                    } else {
+                        GameLoop.ZPO.Log.AddMessage("It doesn't seem like there's anything in the pack just yet, so you decide to hold on to it.", Color.Crimson);
+                        return false;
+                    }
+                } else if (item.UseString == "MilkSample") {  
+                    if (item.UseInt == 1) {
+                        GameLoop.ZPO.Log.AddMessage("You drink the milk. It tastes bad.", Color.Crimson);
+                        GameLoop.ZPO.Log.AddMessage("You cough and take 1 poison damage.", Color.Crimson);
+                        GameLoop.ZPO.Log.AddMessage("Okay, it tastes *really* bad.", Color.Crimson);
+                        player.TryProgressQuest("MI_IdesOfMilk", 30);
+                    } else { 
+                        if (player.QuestLog.TryGetValue("MI_IdesOfMilk", out QuestStatus? milk)) {
+                            if (milk.CurrentStage == 60) {
+                                GameLoop.ZPO.Log.AddMessage("You drink the milk. It somehow tastes even worse, but at least doesn't hurt you this time.", Color.Crimson);
+                                player.TryProgressQuest("MI_IdesOfMilk", 70);
+                            } else { 
+                                GameLoop.ZPO.Log.AddMessage(player.Name + ": I don't think I'm ready to drink another vial of this stuff.", Color.Crimson);
+                                GameLoop.ZPO.Log.AddMessage(player.Name + ": I should find someone else to give it to.", Color.Crimson);
+                                return false;
+                            }
+                        }
+                    }
+                } else if (item.UseString == "BeefEmote") {
+                    if (GameLoop.rand.Next(100) == 0) {
+                        GameLoop.ZPO.Log.AddMessage("A whirlwind appears that picks up and swirls Beef around for a bit, before setting him back down and disappearing.", Color.Lime);
+                    } else {
+                        GameLoop.ZPO.Log.AddMessage("Beef sniffs at the air.", Color.Yellow);
+                    }
+                } else if (item.UseString == "LampChoice") {
+                    ExtraWindows.LampAmount = item.UseInt;
+                    if (item.UseString2 == "All") {
+                        ExtraWindows.LampSkills = player.Skills.Keys.Order().ToList();
+                    } else {
+                        ExtraWindows.LampSkills = item.UseString2.Split(",").ToList();
+                    }
+                    ExtraWindows.LampWrap = itemWrap;
+                    ExtraWindows.LampMenu.IsVisible = true;
+                    return false;
+                } else if (item.UseString == "CatMenu") {
+                    ExtraWindows.CatMenu.IsVisible = true;
                 }
 
                 return true;
@@ -826,8 +880,8 @@ namespace ZeroPlayersOnline.Managers {
                         player.Equipment.Remove("Weapon");
                     }
                     
-                    player.Inventory.RemoveAt(i);
-                    player.Equipment.Add(eqp.EquipSlot, new(eqp)); 
+                    player.Equipment.Add(eqp.EquipSlot, player.Inventory[i]); 
+                    player.Inventory.RemoveAt(i); 
 
                     return true;
                 }

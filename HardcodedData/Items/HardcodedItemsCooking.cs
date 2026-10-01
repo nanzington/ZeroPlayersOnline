@@ -40,6 +40,9 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Raw mackerel", "I should try cooking this.", "fishRawMackerel", 255, 255, 0, 15));
             itemsToAdd.Add(new Item("Raw slimy eel", "I should try cooking this.", "fishRawEelSlimy", 173, 216, 230, 10));
             itemsToAdd.Add(new Item("Raw cave eel", "I should try cooking this.", "fishRawEelCave", 255, 255, 0, 15));
+            
+            itemsToAdd.Add(new Item("Raw t-bone steak", "I need to cook this first.", "meatRawTbone", 138, 3, 3, 10)); 
+            itemsToAdd.Add(new Item("Cooked t-bone steak", "Seared to perfection.", "meatCookedTbone", 150, 100, 50, 10) { UseString = "Potion", UseInt4 = 1, Potion = new() { new("Heal", 9), new("Strength", 2) } }); 
              
             itemsToAdd.Add(new Item("Cooked meat", "A cooked cut of meat.", "meatCookedBeef", 150, 100, 50, 4) { UseString = "Heal", UseInt = 3 }); 
             itemsToAdd.Add(new Item("Cooked shrimps", "Some cooked shrimp.", "fishCookedShrimp", 150, 100, 50, 5) { UseString = "Heal", UseInt = 3 }); 
@@ -184,6 +187,7 @@ namespace ZeroPlayersOnline.Hardcodes {
               
             itemsToAdd.Add(new Item("Bucket of water", "A bucket filled with water.", "bucketWater", 111, 66, 33, 2));
             itemsToAdd.Add(new Item("Bucket of milk", "A bucket filled with milk.", "bucketMilk", 111, 66, 33, 2));
+            itemsToAdd.Add(new Item("Bottomless milk bucket", "It's a bucket of milk that never ends!", "bucketMilkBottomless", 111, 66, 33, 15000) { CountsAsIDs = ["bucketMilk"], UseInt4 = -1 });
             itemsToAdd.Add(new Item("Pot of cream", "Fresh cream.", "cream", Color.White, 4));
             itemsToAdd.Add(new Item("Pat of butter", "A pat of freshly churned butter.", "butter", Color.LightYellow, 8));
             itemsToAdd.Add(new Item("Cheese", "Cheese, Gromit! Cheese!", "cheese", Color.Yellow, 12));
