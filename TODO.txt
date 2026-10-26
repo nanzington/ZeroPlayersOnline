@@ -238,6 +238,15 @@ Holiday Events,
 - New Years
 - Think of more spread out across the year, maybe copy the real ones from animal crossing
 
+
+TODO: 
+- - Work on docs for combat. I also need to look over GameLoop.cs
+     - continue to write some more to fill out the blanks in the menu
+     - see if I can help assist with the bug found in quest six
+     - add guide to game settings (I'll leave this in fork)
+     - continue to write from Toonscape and see if any of the housing features could work here
+     - what am I saying of course they would
+
 Achievements
 - Kill any combat boss with Nightmare Mode enabled
 - Get the Tutorial Island Completionist Cape

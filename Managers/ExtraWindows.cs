@@ -235,6 +235,39 @@ namespace ZeroPlayersOnline.Managers {
                     "This is all a lot to take in, but hopefully with some practice it will become more natural to navigate."
                     , 78);
             }
+            else if (GuideTab == "Combat") {
+                // Combat tab was empty - filled this in from how UI_LocCombat and Player actually behave
+                // so new players aren't left guessing about lanes, grace, and prayer points.
+                printY = Guide.PrintMultiLine(22, printY,
+                    "Combat is mostly automatic once you start an attack. Click (Attack) on a monster or boss in the location panel to begin. Click again to stop. If you go about 10 minutes without clicking an enemy, your character gets tired and stops attacking until you click again." + " /n /n " +
+                    "Your combat style follows what you have equipped. A melee weapon uses Attack and Strength. A ranged weapon needs matching ammo in the Ammo slot or it deals nothing useful. Magic uses the spell you have selected and a magic-capable weapon (or bare hands at a steep tier penalty)." + " /n /n " +
+                    "Damage is rolled from a dice string based on weapon tier and the relevant skill (Strength, Ranged, or the spell's tier for Magic). Higher tiers and levels push the roll up. Defense and Constitution still matter for surviving hits and for your combat level." + " /n /n " +
+                    "Combat level is roughly (Attack + Strength + Defense + Constitution + Ranged + Magic + half of Prayer) / 4. Monsters drawn in crimson are aggressive toward you - either always, or because their aggro level is above yours." + " /n /n " +
+                    "Bosses can use multiple lanes. Click a lane to stand in it. When a boss special is winding up, threatened lanes turn yellow then crimson - step out before the hit lands. After you kill something there is a short grace window where neither side attacks." + " /n /n " +
+                    "Where several monsters share a spot, use SINGLE / ORDER / RANDOM above the list to control which one you hit. Protect prayers (from Magic, Melee, or Range) halve that damage type when active. Prayer points are limited by your effective Prayer level - you cannot stack more prayer levels than you have." + " /n /n " +
+                    "Exp from hits splits across the skills you are training (Attack/Strength or Ranged/Magic, plus Defense and Constitution, and Slayer when on task). Dark areas need a light source or fighting is a bad idea."
+                    , 78);
+            }
+            else if (GuideTab == "Skilling") {
+                // Short overview so this tab is not a blank wall. Details live in the activity panel and recipes.
+                printY = Guide.PrintMultiLine(22, printY,
+                    "Skilling happens from the activity box on the right (Resources, Processing, Farming, Hunter, and so on). Click a gathering spot or station to work it. Tools and levels matter - the game will tell you if you are missing a requirement." + " /n /n " +
+                    "Processing stations turn materials into products (smelting, cooking, crafting, etc.). Recipes are defined in the hardcoded data and shown when you open the relevant craft window." + " /n /n " +
+                    "Farming uses patches registered on the player; plant, wait, harvest. Hunter spots appear on locations that support them. Keep an eye on the message log for level-ups, depleted spots, and failed attempts."
+                    , 78);
+            }
+            else if (GuideTab == "Shops") {
+                printY = Guide.PrintMultiLine(22, printY,
+                    "Shop stock appears in the activity box when you are at a location that sells items. Click an item to buy it if you can afford it and have inventory space. Prices and stock come from the location data." + " /n /n " +
+                    "Some NPCs also trade through dialogue. If something is quest-locked or level-gated, the log will usually explain why the purchase failed."
+                    , 78);
+            }
+            else if (GuideTab == "NPC Dialogue") {
+                printY = Guide.PrintMultiLine(22, printY,
+                    "NPCs at your location show up in the activity box. Click one to open dialogue. Choices appear as clickable lines; some advance quests, unlock travel, or open shops." + " /n /n " +
+                    "Dialogue is staged - each stage can have requirements (items, quest progress, skill levels). If a choice is blocked, try another option or come back later with the right progress."
+                    , 78);
+            }
         }
          
 
